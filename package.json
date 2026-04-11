@@ -1,0 +1,10 @@
+{
+  "name": "care-trace-ai-demo",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix caretrace-ai",
+    "build": "npm run build --prefix caretrace-ai",
+    "preview": "npm run preview --prefix caretrace-ai",
+    "lint": "npm run lint --prefix caretrace-ai"
+  }
+}
