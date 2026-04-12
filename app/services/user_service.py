@@ -1,9 +1,17 @@
+from typing import Optional
 from app.database.connection import get_database
-from app.schemas.user_schema import UserCreate
+from app.schemas.user_schema import UserCreate, UserProfileUpdate
 from app.utils.helpers import serialize_mongo_doc, to_object_id
 from app.core.security import get_password_hash
 from fastapi import HTTPException
 from datetime import datetime
+
+def _strip_secrets(doc: Optional[dict]) -> Optional[dict]:
+    if not doc:
+        return doc
+    out = dict(doc)
+    out.pop("hashed_password", None)
+    return out
 
 async def create_user_service(user_in: UserCreate) -> dict:
     db = get_database()
@@ -19,13 +27,13 @@ async def create_user_service(user_in: UserCreate) -> dict:
     
     result = await db["users"].insert_one(user_dict)
     user_doc = await db["users"].find_one({"_id": result.inserted_id})
-    return serialize_mongo_doc(user_doc)
+    return serialize_mongo_doc(_strip_secrets(user_doc))
 
 async def get_all_users_service() -> list[dict]:
     db = get_database()
     users_cursor = db["users"].find()
     users = await users_cursor.to_list(length=100)
-    return [serialize_mongo_doc(u) for u in users]
+    return [serialize_mongo_doc(_strip_secrets(u)) for u in users]
 
 async def get_user_by_id_service(user_id: str) -> dict:
     db = get_database()
@@ -38,26 +46,42 @@ async def get_user_by_id_service(user_id: str) -> dict:
     if not user_doc:
         raise HTTPException(status_code=404, detail="User not found")
         
-    return serialize_mongo_doc(user_doc)
+    return serialize_mongo_doc(_strip_secrets(user_doc))
 
-async def update_user_service(user_id: str, user_in: UserCreate) -> dict:
+async def update_user_service(user_id: str, user_in: UserProfileUpdate) -> dict:
     db = get_database()
     try:
         obj_id = to_object_id(user_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid user ID format")
-        
-    update_doc = user_in.model_dump(exclude={"password"})
-    update_doc["hashed_password"] = get_password_hash(user_in.password)
+
+    update_fields = user_in.model_dump(exclude_unset=True, exclude={"password"})
+    if user_in.password:
+        update_fields["hashed_password"] = get_password_hash(user_in.password)
+
+    if not update_fields:
+        user_doc = await db["users"].find_one({"_id": obj_id})
+        if not user_doc:
+            raise HTTPException(status_code=404, detail="User not found")
+        return serialize_mongo_doc(_strip_secrets(user_doc))
+
+    if "email" in update_fields:
+        taken = await db["users"].find_one({
+            "email": update_fields["email"],
+            "_id": {"$ne": obj_id},
+        })
+        if taken:
+            raise HTTPException(status_code=400, detail="Email already registered")
+
     result = await db["users"].update_one(
         {"_id": obj_id},
-        {"$set": update_doc}
+        {"$set": update_fields}
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
-        
+
     updated_doc = await db["users"].find_one({"_id": obj_id})
-    return serialize_mongo_doc(updated_doc)
+    return serialize_mongo_doc(_strip_secrets(updated_doc))
 
 async def delete_user_service(user_id: str):
     db = get_database()

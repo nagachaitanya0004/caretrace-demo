@@ -1,0 +1,441 @@
+{
+  "app": {
+    "tagline": "Clinical clarity for your daily health"
+  },
+  "charts": {
+    "y_severity": "Severity (1–10)",
+    "x_time": "Visit / date",
+    "x_symptom": "Symptom",
+    "y_count": "Times logged",
+    "caption_trend": "Higher points mean stronger symptoms on that log. Use this to spot worsening or recovery.",
+    "caption_bars": "Simple count of how often each symptom was recorded — easy to see what dominates."
+  },
+  "navbar": {
+    "dashboard": "Dashboard",
+    "symptoms": "Symptoms",
+    "timeline": "Timeline",
+    "history": "History",
+    "analysis": "AI Analysis",
+    "alerts": "Alerts",
+    "reports": "Reports",
+    "recommendations": "Advice",
+    "settings": "Settings",
+    "logout": "Logout",
+    "search": "Search dashboard...",
+    "active_session": "Active Session",
+    "overview": "Overview",
+    "health_tracking": "Health Tracking",
+    "health_intelligence": "Health Intelligence",
+    "intelligence": "Intelligence",
+    "account": "Account",
+    "language": "Language",
+    "log_symptoms": "Log Symptoms",
+    "search_placeholder": "Search dashboard...",
+    "search_anything": "Search anything...",
+    "notifications": "Notifications",
+    "notifications_new": "new",
+    "notifications_empty": "All caught up!",
+    "open_menu": "Open menu"
+  },
+  "dashboard": {
+    "tagline": "Early Detection. Better Decisions.",
+    "welcome": "Welcome back, {{name}}",
+    "hello": "Hello, {{name}}",
+    "welcome_default": "Welcome back",
+    "loading": "Loading your health data...",
+    "tracked_count": "{{count}} symptoms tracked",
+    "today": "Today",
+    "quick_actions": "Quick Actions",
+    "log_symptom": "Log Symptom",
+    "run_analysis": "Run Analysis",
+    "view_timeline": "Timeline",
+    "testimonials_btn": "Testimonials",
+    "alert_title": "Health Alert Active",
+    "alert_body": "One or more symptoms have persisted beyond normal thresholds. Medical screening is recommended.",
+    "alert_view": "View Alerts",
+    "reminder_title": "Daily Tracking Reminder",
+    "reminder_body": "You have not logged any symptoms today. Keep your data current for accurate insights.",
+    "reminder_log": "Log Now",
+    "reminder_dismiss": "Dismiss",
+    "search": {
+      "title": "Dashboard Search",
+      "results": "Showing results for \"{{query}}\"",
+      "clear": "Clear Search",
+      "no_matches": "No dashboard matches found",
+      "no_matches_sub": "Try searching for symptom names, alerts, analysis, timeline, report, or profile keywords."
+    },
+    "stats": {
+      "logged": "Symptoms Logged",
+      "avg_sev": "Avg Severity",
+      "longest": "Longest Duration",
+      "alerts": "Active Alerts",
+      "all_time": "All time entries",
+      "across_logs": "Across all logs",
+      "single_run": "Single symptom run",
+      "needs_attention": "Needs attention",
+      "all_clear": "All clear"
+    },
+    "risk": {
+      "title": "Risk Assessment",
+      "status": "Health Status",
+      "high": "High Risk",
+      "medium": "Medium Risk",
+      "low": "Low Risk",
+      "not_assessed": "Not Assessed",
+      "no_analysis": "No analysis yet",
+      "no_analysis_sub": "Run an AI scan to see your risk level and insights.",
+      "view_report": "View Full Report",
+      "action_pending": "Run an AI analysis to get personalized recommendations."
+    },
+    "charts": {
+      "trend": "Trend",
+      "severity_timeline": "Severity Timeline",
+      "distribution": "Distribution",
+      "symptom_frequency": "Symptom Frequency",
+      "data_points": "{{count}} data points",
+      "view_timeline": "View Full Timeline →",
+      "view_report": "Generate PDF Report →",
+      "no_data": "No symptom data yet",
+      "no_data_sub": "Log your first symptom to see the chart",
+      "no_match": "No timeline points match this search",
+      "no_match_sub": "Try a symptom name, date, or broader keyword.",
+      "no_freq_match": "No symptom frequencies match this search",
+      "no_freq_data": "No data mapped",
+      "no_insight_match": "No insight cards match your search",
+      "no_insight_sub": "Try searching for profile, report, lifestyle, or analysis."
+    },
+    "insights": {
+      "title": "Intelligence",
+      "personalized_insights": "Personalized Insights",
+      "generate_report": "Generate PDF Report",
+      "profile_title": "Profile-Based Guidance",
+      "profile_body": "Based on your {{lifestyle}} profile, regular symptomatic monitoring is recommended. Your tracking consistency supports accurate predictive modeling.",
+      "profile_empty": "Complete your health profile in Settings to receive personalised guidance.",
+      "pattern_title": "Tracking Pattern",
+      "pattern_body": "You have logged {{count}} symptoms with an average severity of {{avg}}/10. Consider running an AI analysis for deeper insights."
+    },
+    "demo_meds": {
+      "label": "Demo",
+      "title": "Medications (sample)"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "subtitle": "Real feedback from pilot users and testers",
+    "roles": {
+      "pilot": "Pilot User",
+      "caregiver": "Caregiver",
+      "tester": "Beta Tester",
+      "physician": "General Physician"
+    },
+    "items": {
+      "ravi": {
+        "name": "Ravi Kumar",
+        "text": "CareTrace AI reminders made my medication routine completely stress-free. I never miss a dose now.",
+        "highlight": "completely stress-free"
+      },
+      "anitha": {
+        "name": "Anitha Reddy",
+        "text": "Tracking my father's medicines is now simple. It reduced our anxiety significantly.",
+        "highlight": "reduced our anxiety"
+      },
+      "suresh": {
+        "name": "Suresh",
+        "text": "The interface is clean and intuitive. Very practical for daily healthcare management.",
+        "highlight": "clean and intuitive"
+      },
+      "priya": {
+        "name": "Dr. Priya Sharma",
+        "text": "Solutions like CareTrace AI can improve medication adherence and patient safety.",
+        "highlight": "medication adherence"
+      }
+    }
+  },
+  "symptoms": {
+    "title": "Track Your Symptoms",
+    "subtitle": "Help us understand how you're feeling by logging your symptoms.",
+    "add_title": "Add a Symptom",
+    "voice_input": "Voice Input",
+    "listening": "Listening...",
+    "type_label": "Symptom Type",
+    "type_placeholder": "Choose a symptom",
+    "duration_label": "Duration (days)",
+    "duration_placeholder": "Enter duration",
+    "date_label": "Date",
+    "severity_label": "Severity: {{score}} ({{label}})",
+    "severity_help": "1 = Mild, 10 = Severe",
+    "submit_btn": "Add Symptom",
+    "recorded_title": "Your Recorded Symptoms",
+    "logged_on": "Logged on {{date}}",
+    "duration_display": "Duration: {{count}} day(s)",
+    "empty_state": "Please add at least one symptom to continue.",
+    "errors": {
+      "incomplete": "Please complete all fields to log your symptom.",
+      "duration_min": "Duration must be at least 1 day.",
+      "failed": "Failed tracking."
+    },
+    "notifications": {
+      "voice_active": "Microphone active... please speak clearly",
+      "voice_success": "Voice successfully transcribed: 'I had a strong fever for 3 days'",
+      "log_success": "Logged {{symptom}} successfully!"
+    },
+    "options": {
+      "headache": "Headache",
+      "fever": "Fever",
+      "cough": "Cough",
+      "fatigue": "Fatigue",
+      "nausea": "Nausea",
+      "dizziness": "Dizziness",
+      "chest pain": "Chest Pain",
+      "shortness of breath": "Shortness of Breath"
+    }
+  },
+  "timeline": {
+    "title": "Your Health Timeline",
+    "subtitle": "Review your symptom history to track patterns and progress.",
+    "list_title": "Symptom Timeline",
+    "multiple_entries": "Multiple Entries Detected",
+    "empty": {
+      "title": "No symptoms recorded yet.",
+      "body": "Go back to the symptoms page to log your active profile."
+    },
+    "trends": {
+      "increasing": "Escaped Normalcy",
+      "decreasing": "Recovery Trending",
+      "increasing_title": "Severity Increasing",
+      "decreasing_title": "Severity Decreasing"
+    },
+    "severity_weight": "Severity Weight",
+    "days_tracking": "{{count}} days tracking",
+    "get_analysis": "Get AI Analysis"
+  },
+  "history": {
+    "title": "Symptoms History",
+    "subtitle": "A comprehensive chronological record of your logged symptoms.",
+    "table": {
+      "date": "Date Logged",
+      "symptom": "Symptom",
+      "duration": "Duration",
+      "severity": "Severity"
+    },
+    "empty": {
+      "title": "No History Found",
+      "body": "You haven't logged any symptoms yet."
+    }
+  },
+  "analysis": {
+    "title": "AI Health Analysis",
+    "subtitle": "Deep recursive logic engines isolating patterns against clinical probability models to formulate actionable steps.",
+    "loading": {
+      "title": "Analyzing your structural baseline...",
+      "body": "Processing historical symptoms, mapping multi-variate interactions, and generating severity deltas..."
+    },
+    "report": {
+      "compiled": "Intelligence Report Compiled",
+      "generated": "Generated: {{date}}",
+      "risk_delta": "Calculated Risk Delta",
+      "reasoning": "Primary Reasoning",
+      "context": "Granular Context",
+      "persisted_msg": "Your symptoms have persisted longer than standard demographic limits.",
+      "clustering_msg": "Multiple compounding symptoms detected clustering geographically across identical temporal zones.",
+      "action_plan": "Action Plan",
+      "view_alerts": "View Isolated Health Alerts",
+      "view_full_report": "View Full Report →"
+    },
+    "disclaimer": "This analysis is an AI simulation formulated via mock vectors. It explicitly does not replace professional clinical diagnosis. Always consult verified medical structures.",
+    "ready": {
+      "title": "System Ready for Processing",
+      "body": "Initiate the intelligence scanner to isolate anomalies dynamically traversing your entire symptom timeline array.",
+      "run_btn": "Run Comprehensive Scan"
+    },
+    "notifications": {
+      "generating": "Generating recursive intelligence vectors...",
+      "success": "Analysis mapping generated successfully!",
+      "error": "Error binding intelligence parameters"
+    }
+  },
+  "alerts": {
+    "title": "Health Alerts & Notifications",
+    "subtitle": "Stay informed about your health status and any recommended actions.",
+    "health_alert": "Health alert",
+    "consult_reminder": "Please consult a healthcare professional for proper evaluation.",
+    "empty": {
+      "title": "No Alerts",
+      "body": "Your symptoms are within normal ranges. Continue monitoring your health."
+    },
+    "footer_disclaimer": "This is not medical advice. Always consult healthcare professionals for health concerns.",
+    "view_recommendations": "View Personalized Recommendations"
+  },
+  "reports": {
+    "title": "Analytical Health Reports",
+    "subtitle": "Review your generated health summaries and extract analytical PDF reports.",
+    "download_btn": "Download Report",
+    "compiling": "Compiling PDF...",
+    "profile": {
+      "title": "Patient Profile",
+      "name": "Name",
+      "age": "Age",
+      "gender": "Gender",
+      "lifestyle": "Lifestyle"
+    },
+    "stats": {
+      "total_symptoms": "Total Symptoms",
+      "avg_severity": "Avg Severity",
+      "longest_run": "Longest Run",
+      "days": "{{count}} day(s)"
+    },
+    "charts": {
+      "severity_trend": "Severity Trend",
+      "latest_updates": "Latest updates",
+      "empty": "No symptoms logged yet. Add entries to view a trend chart."
+    },
+    "notifications": {
+      "booting": "Booting PDF Render Matrix...",
+      "success": "Report Rendered Successfully!"
+    },
+    "disclaimer": "This report is generated by AI and does not constitute a medical diagnosis."
+  },
+  "common": {
+    "disclaimer": "Disclaimer",
+    "disclaimer_label": "Medical Disclaimer",
+    "save": "Save Changes",
+    "saving": "Processing...",
+    "retry": "Retry",
+    "close": "Close",
+    "language_choice": "Choose your preferred language.",
+    "not_available": "N/A",
+    "pending": "Pending",
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "placeholder": "Select your gender"
+    },
+    "lifestyle": {
+      "sedentary": "Sedentary (mostly sitting)",
+      "active": "Active (regular exercise)",
+      "smoker": "Smoker",
+      "placeholder": "Select your lifestyle"
+    },
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "settings": {
+    "title": "Application Settings",
+    "subtitle": "Manage your profile and application preferences.",
+    "profile_section": "Profile Configuration",
+    "full_name": "Full Name",
+    "age": "Age",
+    "preferences_section": "Preferences",
+    "push_notifications": {
+      "title": "Push Notifications",
+      "body": "Receive alerts on your device."
+    },
+    "emails": {
+      "title": "Email Updates",
+      "body": "Receive weekly summary emails."
+    },
+    "about_section": "About CareTrace AI",
+    "about_body": "CareTrace AI is a personalized health tracking system designed to help you monitor symptoms and visualize patterns over time.",
+    "notifications": {
+      "title": "Push Notifications",
+      "body": "Receive alerts on your device.",
+      "profile_success": "Profile Configuration Saved Successfully",
+      "profile_error": "Failed updating properties",
+      "pref_updated": "Preference [{{name}}] Updated",
+      "lang_applied": "Language configuration applied"
+    }
+  },
+  "recommendations": {
+    "title": "Personalized Health Recommendations",
+    "subtitle": "Based on your symptoms and AI analysis, here are tailored recommendations for your health.",
+    "section_title": "Recommended Action Steps",
+    "disclaimer": "This is not medical advice. Always consult healthcare professionals for health concerns.",
+    "empty": {
+      "title": "No analysis data available.",
+      "body": "Please complete the symptom assessment and AI analysis first."
+    },
+    "risk_plans": {
+      "low": [
+        "Continue monitoring your symptoms daily.",
+        "Maintain a healthy lifestyle with balanced nutrition.",
+        "Stay hydrated and get adequate rest.",
+        "Keep a symptom journal for future reference."
+      ],
+      "medium": [
+        "Schedule an appointment with your primary care physician.",
+        "Consider additional screening tests as recommended.",
+        "Monitor symptoms closely and note any changes.",
+        "Follow up with healthcare provider within 1-2 weeks."
+      ],
+      "high": [
+        "Consult a doctor immediately for professional evaluation.",
+        "Seek medical attention if symptoms worsen.",
+        "Follow all medical advice and treatment plans.",
+        "Keep detailed records of all symptoms and treatments."
+      ],
+      "default": [
+        "Monitor your health closely.",
+        "Consult healthcare professionals as needed."
+      ]
+    }
+  },
+  "demo": {
+    "banner": "You are using a Demo Account — data is for demonstration only."
+  },
+  "landing": {
+    "hero_title": "Your Health,",
+    "hero_title_highlight": "Intelligently Tracked",
+    "hero_subtitle": "AI-powered symptom tracking & predictive health analytics. Early detection. Better decisions. Take control of your wellness journey.",
+    "cta_login": "Sign In to Dashboard",
+    "cta_signup": "Create Free Account",
+    "cta_try_demo": "Try Demo",
+    "features_title": "Why CareTrace AI?",
+    "feature_tracking": "Smart Symptom Tracking",
+    "feature_tracking_desc": "Log and monitor symptoms with voice input, severity scoring, and intelligent categorization.",
+    "feature_analysis": "AI Risk Analysis",
+    "feature_analysis_desc": "Advanced pattern recognition algorithms analyze your symptom data to assess health risks.",
+    "feature_timeline": "Visual Health Timeline",
+    "feature_timeline_desc": "Interactive charts and timelines to visualize your health patterns over time.",
+    "feature_multilingual": "Multilingual Support",
+    "feature_multilingual_desc": "Full support for English, Hindi, Telugu, Tamil, and Kannada languages.",
+    "trusted_by": "Trusted by healthcare professionals and patients",
+    "privacy_badge": "HIPAA Compliant · End-to-End Encrypted · Your Data Stays Private"
+  },
+  "auth": {
+    "login_title": "Welcome Back",
+    "login_subtitle": "Sign in to your health intelligence dashboard",
+    "signup_title": "Join CareTrace AI",
+    "signup_subtitle": "Create your profile and start tracking symptoms in minutes.",
+    "email": "Email Address",
+    "password": "Password",
+    "full_name": "Full Name",
+    "age": "Age",
+    "gender": "Gender",
+    "lifestyle": "Lifestyle Risk Context",
+    "login_btn": "Secure Login",
+    "signup_btn": "Register Profile",
+    "already_mapped": "Already mapped?",
+    "login_natively": "Login natively",
+    "no_account": "Don't have an account?",
+    "create_profile": "Create Profile",
+    "demo_title": "Guided tour",
+    "demo_subtitle": "See charts, alerts, and AI insights with sample data—no setup required.",
+    "fill_demo": "Use demo account",
+    "constructing": "Signing in...",
+    "try_demo_title": "See the product in seconds",
+    "try_demo_subtitle": "Open a full dashboard with sample symptoms, risk analysis, and alerts—ideal for a quick tour.",
+    "try_demo_btn": "Try demo",
+    "demo_failed": "We could not reach the server. Check your connection, or try again in a moment.",
+    "signup_success": "Welcome! Your account is ready.",
+    "errors": {
+      "password_short": "Password must be at least 6 characters.",
+      "age_invalid": "Please enter a valid age.",
+      "failed": "Authentication failed. Check inputs and try again.",
+      "email_registered": "An account with this email already exists. Sign in instead."
+    }
+  }
+}

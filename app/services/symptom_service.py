@@ -17,8 +17,8 @@ async def create_symptom_service(symptom_in: SymptomCreate) -> dict:
     if not user_doc:
         raise HTTPException(status_code=404, detail="User not found")
         
-    doc = symptom_in.model_dump()
-    doc["timestamp"] = datetime.utcnow()
+    doc = symptom_in.model_dump(exclude={"logged_at"}, exclude_none=True)
+    doc["timestamp"] = symptom_in.logged_at or datetime.utcnow()
     
     result = await db["symptoms"].insert_one(doc)
     symptom_doc = await db["symptoms"].find_one({"_id": result.inserted_id})

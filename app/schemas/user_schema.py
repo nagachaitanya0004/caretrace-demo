@@ -12,6 +12,15 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str = Field(..., min_length=6, description="Raw Password Payload")
 
+class UserProfileUpdate(BaseModel):
+    """Partial profile update from settings UI (no password required)."""
+    name: Optional[str] = Field(None, min_length=1)
+    email: Optional[EmailStr] = None
+    age: Optional[int] = Field(None, gt=0)
+    gender: Optional[str] = None
+    lifestyle: Optional[str] = None
+    password: Optional[str] = Field(None, min_length=6, description="Set only to change password")
+
 class UserResponse(UserBase):
     id: str
     is_active: bool = True

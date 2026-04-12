@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
+from typing import Optional
 
 class SymptomBase(BaseModel):
     user_id: str = Field(..., description="ID of the user")
@@ -8,7 +9,7 @@ class SymptomBase(BaseModel):
     severity: int = Field(..., ge=1, le=10, description="Severity (1-10)")
 
 class SymptomCreate(SymptomBase):
-    pass
+    logged_at: Optional[datetime] = Field(None, description="When the symptom was logged (defaults to now)")
 
 class SymptomResponse(SymptomBase):
     id: str
