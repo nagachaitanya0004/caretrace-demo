@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 import asyncio
 from typing import Any
 
-from backend.app.db.db import get_database
-from backend.app.core.security import get_password_hash
-from backend.app.models.models import (
+from app.db.db import get_database
+from app.core.security import get_password_hash
+from app.models.models import (
     build_user_document,
     build_symptom_document,
     build_analysis_document,

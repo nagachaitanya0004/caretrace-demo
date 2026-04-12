@@ -2,11 +2,13 @@ from datetime import timedelta
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from backend.app.core.config import MONGO_DB, MONGO_URI
-from backend.app.core.logger import logger
-from backend.app.models.setup import get_collection_configuration
+from app.core.config import MONGO_DB, MONGO_URI
+from app.core.logger import logger
+from app.models.setup import get_collection_configuration
 
-client: AsyncIOMotorClient | None = None
+from typing import Optional
+
+client: Optional[AsyncIOMotorClient] = None
 database = None
 
 
@@ -52,7 +54,7 @@ async def init_db() -> None:
     logger.info('MongoDB initialization complete')
     
     # Ensure demo account exists
-    from backend.app.db.seed import ensure_demo_account
+    from app.db.seed import ensure_demo_account
     await ensure_demo_account()
 
 

@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field  # type: ignore[import]
 
-from backend.app.models.types import MongoModel, PyObjectId
+from app.models.types import MongoModel, PyObjectId
 
 GENDERS = ['male', 'female', 'other']
 ALERT_SEVERITIES = ['info', 'warning', 'critical']

@@ -2,8 +2,9 @@ services:
   - type: web
     name: caretrace-backend
     env: python
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "uvicorn backend.app.main:app --host 0.0.0.0 --port 10000"
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port 10000"
     autoDeploy: false
     envVars:
       - key: PYTHON_VERSION

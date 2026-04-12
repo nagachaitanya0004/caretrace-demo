@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Any, Optional, Union
 import bcrypt
 import jwt
-from backend.app.core.config import APP_NAME
+from app.core.config import APP_NAME
 
 # If you prefer moving these to config.py, that is fine.
 SECRET_KEY = "caretrace-ai-super-secret-key"  # Should be in env

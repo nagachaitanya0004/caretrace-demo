@@ -3,12 +3,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.db.db import close_db, init_db
-from backend.app.core.logger import logger
-from backend.app.core.responses import error_response, http_error_response, validation_error_response
-from backend.app.api.routes import router as api_router
-from backend.app.api.auth import router as auth_router
-from backend.app.core.config import APP_NAME, APP_VERSION
+from app.db.db import close_db, init_db
+from app.core.logger import logger
+from app.core.responses import error_response, http_error_response, validation_error_response
+from app.api.routes import router as api_router
+from app.api.auth import router as auth_router
+from app.core.config import APP_NAME, APP_VERSION
 
 app = FastAPI(title=APP_NAME, version=APP_VERSION)
 app.include_router(auth_router, prefix="/auth", tags=["auth"])

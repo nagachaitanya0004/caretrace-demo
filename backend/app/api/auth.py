@@ -7,18 +7,18 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pymongo.errors import DuplicateKeyError
 import jwt
 
-from backend.app.db.db import get_database
-from backend.app.core.responses import error_response, success_response
-from backend.app.core.security import (
+from app.db.db import get_database
+from app.core.responses import error_response, success_response
+from app.core.security import (
     ALGORITHM,
     SECRET_KEY,
     create_access_token,
     get_password_hash,
     verify_password,
 )
-from backend.app.schemas.schemas import UserCreate
-from backend.app.core.responses import serialize_document
-from backend.app.utils.user_identity import (
+from app.schemas.schemas import UserCreate
+from app.core.responses import serialize_document
+from app.utils.user_identity import (
     email_is_registered,
     find_user_by_email,
     normalize_email,

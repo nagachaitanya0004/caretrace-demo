@@ -5,13 +5,13 @@ from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query, Depends
 from pymongo.errors import DuplicateKeyError
 
-from backend.app.api.auth import get_current_user
-from backend.app.utils.user_identity import normalize_gender
+from app.api.auth import get_current_user
+from app.utils.user_identity import normalize_gender
 
-from backend.app.db.db import get_database
-from backend.app.core.responses import error_response, success_response, serialize_document, get_object_id
-from backend.app.core.logger import logger
-from backend.app.schemas.schemas import (
+from app.db.db import get_database
+from app.core.responses import error_response, success_response, serialize_document, get_object_id
+from app.core.logger import logger
+from app.schemas.schemas import (
     AlertCreate,
     AnalysisCreate,
     ReportCreate,
