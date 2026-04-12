@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build --prefix caretrace-ai/frontend",
-  "installCommand": "npm install --prefix caretrace-ai/frontend",
-  "outputDirectory": "caretrace-ai/frontend/dist",
+  "buildCommand": "npm run build --prefix frontend",
+  "installCommand": "npm install --prefix frontend",
+  "outputDirectory": "frontend/dist",
   "framework": "vite"
 }
