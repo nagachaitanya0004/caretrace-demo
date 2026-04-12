@@ -2,10 +2,19 @@ from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime, timedelta
 import bcrypt
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Same root resolution as app.core.config so seed hits the API database
+_ROOT = Path(__file__).resolve().parent
+load_dotenv(_ROOT / ".env")
 
 def seed_db():
-    client = MongoClient("mongodb://127.0.0.1:27017/")
-    db = client["caretrace_ai"]
+    mongo_uri = os.getenv("MONGO_URI", "mongodb://127.0.0.1:27017/")
+    db_name = os.getenv("DB_NAME", "caretrace_ai")
+    client = MongoClient(mongo_uri)
+    db = client[db_name]
     
     # 0. Drop schema validation across all collections
     cols = ["users", "symptoms", "analysis", "alerts", "reports"]
@@ -58,11 +67,11 @@ def seed_db():
     db["symptoms"].insert_many(symptoms_data)
     print("Injected 5 symptom timeline logs")
 
-    # 4. Inject Analysis Report
+    # 4. Inject Analysis Report (risk_level matches frontend: Low / Medium / High)
     analysis_data = {
         "_id": ObjectId("60d5ecb8b392d7001f3e3a47"),
         "user_id": user_id,
-        "risk_level": "HIGH",
+        "risk_level": "High",
         "reason": "Persistent cough for more than 14 days along with multiple symptoms. The repeated severity escalation and appearance of chest pain coupled with a smoker lifestyle places you in a high-risk trajectory.",
         "recommendation": "Consult a doctor immediately. Recommended clinical screening required regarding persistent pulmonary stress variants.",
         "timestamp": now

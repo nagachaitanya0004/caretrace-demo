@@ -26,8 +26,18 @@ async function request(endpoint, options = {}) {
   const data = isJson ? await response.json() : await response.text();
 
   if (!response.ok) {
-    // Check our custom `{ success, error... }` payload or standard error boundary fallback
-    const message = data?.message || data?.detail || 'An unexpected error occurred';
+    let message = 'An unexpected error occurred';
+    if (typeof data?.message === 'string' && data.message) {
+      message = data.message;
+    } else if (typeof data?.detail === 'string') {
+      message = data.detail;
+    } else if (Array.isArray(data?.detail) && data.detail.length) {
+      const first = data.detail[0];
+      const loc = Array.isArray(first?.loc) ? first.loc.filter(Boolean).join('.') : '';
+      message = [loc, first?.msg].filter(Boolean).join(': ') || message;
+    } else if (data?.error && typeof data.error === 'string') {
+      message = data.error;
+    }
     throw new Error(message);
   }
 
@@ -51,11 +61,3 @@ export const api = {
 
   delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
 };
-
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
-
-export default API;

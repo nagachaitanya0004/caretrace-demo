@@ -42,7 +42,8 @@ export function AuthProvider({ children }) {
     // Target the OAuth2 bypassing endpoint perfectly
     const res = await api.post('/auth/login', {
       username: email,
-      password: password
+      password: password,
+      grant_type: 'password',
     }, true);
     setToken(res.access_token);
   };

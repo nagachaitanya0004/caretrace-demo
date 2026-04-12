@@ -12,7 +12,7 @@ async def create_user_service(user_in: UserCreate) -> dict:
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
         
-    user_dict = user_in.dict(exclude={"password"})
+    user_dict = user_in.model_dump(exclude={"password"})
     user_dict["hashed_password"] = get_password_hash(user_in.password)
     user_dict["is_active"] = True
     user_dict["created_at"] = datetime.utcnow().isoformat()
@@ -47,9 +47,11 @@ async def update_user_service(user_id: str, user_in: UserCreate) -> dict:
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid user ID format")
         
+    update_doc = user_in.model_dump(exclude={"password"})
+    update_doc["hashed_password"] = get_password_hash(user_in.password)
     result = await db["users"].update_one(
         {"_id": obj_id},
-        {"$set": user_in.dict()}
+        {"$set": update_doc}
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="User not found")

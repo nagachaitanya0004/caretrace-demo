@@ -17,6 +17,7 @@ import Alerts from './pages/Alerts';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import History from './pages/History';
+import Recommendations from './pages/Recommendations';
 
 // Wrapper for pages that just use the Header, not the full sidebar Layout
 function HeaderOnlyLayout() {
@@ -62,6 +63,7 @@ function App() {
                   <Route path="/analysis" element={<Analysis />} />
                   <Route path="/alerts" element={<Alerts />} />
                   <Route path="/reports" element={<Reports />} />
+                  <Route path="/recommendations" element={<Recommendations />} />
                   <Route path="/settings" element={<Settings />} />
                 </Route>
               </Routes>

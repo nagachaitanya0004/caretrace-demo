@@ -56,6 +56,10 @@ function Signup() {
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Join CareTrace AI</h1>
           <p className="text-sm text-gray-500">Establish your predictive health footprint locally.</p>
+          <p className="text-xs text-slate-500 mt-3 px-2">
+            Want a full guided dataset (symptoms, analysis, alerts)? Use the demo login on the sign-in page after running{' '}
+            <code className="bg-slate-100 px-1 rounded">python seed.py</code> from the project root.
+          </p>
         </div>
 
         {error && (

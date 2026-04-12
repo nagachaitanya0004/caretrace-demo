@@ -4,6 +4,29 @@ import { useAuth } from './AuthContext';
 
 const AppContext = createContext();
 
+/** API returns risk_level (and mixed casing); UI expects risk: Low | Medium | High */
+function normalizeRiskLevel(level) {
+  if (level == null || level === '') return null;
+  const s = String(level).trim().toLowerCase();
+  if (s === 'low') return 'Low';
+  if (s === 'medium') return 'Medium';
+  if (s === 'high') return 'High';
+  return null;
+}
+
+function normalizeAnalysisPayload(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const risk = normalizeRiskLevel(raw.risk ?? raw.risk_level);
+  return { ...raw, risk: risk ?? raw.risk ?? raw.risk_level };
+}
+
+/** Symptoms use timestamp from API; charts/timeline expect date */
+function normalizeSymptom(s) {
+  if (!s || typeof s !== 'object') return s;
+  const date = s.date ?? s.timestamp;
+  return { ...s, date };
+}
+
 export function AppProvider({ children }) {
   const { user, token, logout } = useAuth();
   
@@ -25,13 +48,13 @@ export function AppProvider({ children }) {
       ]);
       
       setUserProfile(userRes.data || {});
-      setSymptoms(symptomsRes.data || []);
+      setSymptoms((symptomsRes.data || []).map(normalizeSymptom));
       setAlerts(alertsRes.data || []);
       
       // Auto-pull existing analysis avoiding unhandled promise rejections if it throws 404
       try {
         const anaRes = await api.get(`/analysis/${user.id}`);
-        setAnalysisResult(anaRes.data);
+        setAnalysisResult(normalizeAnalysisPayload(anaRes.data));
       } catch (e) {
         setAnalysisResult(null);
       }
@@ -69,7 +92,7 @@ export function AppProvider({ children }) {
     if (!user?.id) return;
     try {
       const res = await api.post(`/analysis/${user.id}`);
-      setAnalysisResult(res.data);
+      setAnalysisResult(normalizeAnalysisPayload(res.data));
       await fetchAppData(); // Pull new alerts if generated
     } catch (e) {
       throw e;
