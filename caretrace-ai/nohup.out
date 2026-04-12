@@ -911,3 +911,21 @@ INFO:     127.0.0.1:55827 - "GET /api/symptoms HTTP/1.1" 200 OK
 2026-04-13 00:17:21 [INFO] caretrace_ai: Request GET /api/analysis
 2026-04-13 00:17:21 [INFO] caretrace_ai: Response GET /api/analysis 200
 INFO:     127.0.0.1:55831 - "GET /api/analysis HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /auth/me
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /auth/me 200
+INFO:     127.0.0.1:56281 - "GET /auth/me HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /auth/me
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /auth/me 200
+INFO:     127.0.0.1:56282 - "GET /auth/me HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /api/users/me
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /api/symptoms
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /api/alerts
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /api/users/me 200
+INFO:     127.0.0.1:56287 - "GET /api/users/me HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /api/alerts 200
+INFO:     127.0.0.1:56289 - "GET /api/alerts HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /api/symptoms 200
+INFO:     127.0.0.1:56288 - "GET /api/symptoms HTTP/1.1" 200 OK
+2026-04-13 00:39:59 [INFO] caretrace_ai: Request GET /api/analysis
+2026-04-13 00:39:59 [INFO] caretrace_ai: Response GET /api/analysis 200
+INFO:     127.0.0.1:56292 - "GET /api/analysis HTTP/1.1" 200 OK

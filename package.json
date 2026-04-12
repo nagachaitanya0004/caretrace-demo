@@ -2,6 +2,7 @@
   "name": "care-trace-ai-demo",
   "private": true,
   "scripts": {
+    "postinstall": "npm install --prefix caretrace-ai/frontend",
     "dev": "npm run dev --prefix caretrace-ai/frontend",
     "build": "npm run build --prefix caretrace-ai/frontend",
     "preview": "npm run preview --prefix caretrace-ai/frontend",
