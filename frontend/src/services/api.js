@@ -2,7 +2,7 @@
    Prod: set VITE_API_URL to your API origin, or leave unset if the app is served from the same host as the API. */
 const BASE_URL =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? '' : 'http://127.0.0.1:8000');
+  (import.meta.env.DEV ? '' : 'https://caretrace-backend.onrender.com');
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('caretrace_token');
