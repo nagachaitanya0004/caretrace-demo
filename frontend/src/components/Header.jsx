@@ -6,6 +6,7 @@ import { useNotification } from '../NotificationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrandMark } from './BrandLogo';
 import MobileNav from './MobileNav';
+import ThemeToggle from './ThemeToggle';
 
 const MOBILE_NAV = [
   { to: '/dashboard', labelKey: 'navbar.dashboard' },
@@ -88,33 +89,36 @@ function Header() {
   }, [mobileNavOpen]);
 
   return (
-    <header className="bg-white/90 backdrop-blur-md z-30 border-b border-slate-200/70 h-14 shrink-0 flex items-center px-3 sm:px-5 relative shadow-sm">
+    <header className="bg-white/90 backdrop-blur-md z-30 border-b border-slate-200/70 h-14 shrink-0 flex items-center px-3 sm:px-5 relative shadow-sm [data-theme=dark_&]:bg-[rgba(7,13,26,0.92)] [data-theme=dark_&]:border-[#1e2e48]/80">
       <div className="flex-1 flex items-center justify-between gap-2 min-w-0">
-        <div className="flex items-center gap-2 min-w-0 md:hidden">
+
+        {/* ── Mobile left: hamburger + brand ── */}
+        <div className="flex items-center gap-2 shrink-0 md:hidden">
           <button
             type="button"
             onClick={() => setMobileNavOpen(true)}
-            className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+            className="mobile-menu-btn w-9 h-9 flex items-center justify-center rounded-xl transition-all shrink-0"
             aria-label={t('navbar.open_menu')}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
           <Link
             to="/dashboard"
-            className="flex items-center gap-2 text-zinc-800 font-bold text-base truncate min-w-0 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40"
+            className="mobile-brand-link flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40"
           >
-            <BrandMark size={30} className="shadow-md rounded-[9px]" />
-            <span className="truncate tracking-tight">
-              CareTrace <span className="text-teal-700 font-semibold">AI</span>
+            <BrandMark size={28} className="shadow-sm rounded-[8px] shrink-0" />
+            <span className="mobile-brand-text font-bold text-[15px] tracking-tight whitespace-nowrap">
+              CareTrace <span className="mobile-brand-ai">AI</span>
             </span>
           </Link>
         </div>
 
+        {/* ── Desktop centre: search ── */}
         {!isLandingPage && (
           isDashboardPage ? (
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl w-72 text-sm transition-all focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-100">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl w-64 lg:w-72 text-sm transition-all focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-100">
               <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -140,7 +144,7 @@ function Header() {
               )}
             </div>
           ) : (
-            <div className="hidden md:flex items-center gap-2 text-slate-400 text-sm px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl w-52 cursor-default select-none">
+            <div className="hidden md:flex items-center gap-2 text-slate-400 text-sm px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl w-44 lg:w-52 cursor-default select-none">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -149,16 +153,22 @@ function Header() {
           )
         )}
 
-        <div className="relative z-40 flex items-center gap-3 shrink-0">
-          {/* Custom Premium Language Switcher */}
+        {/* ── Right actions ── */}
+        <div className="relative z-40 flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
+          <ThemeToggle />
+
+          {/* Language switcher */}
           <div className="relative">
             <button
+              type="button"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:border-zinc-300 hover:bg-zinc-50 transition-all shadow-sm"
+              aria-haspopup="menu"
+              aria-expanded={showLangMenu}
+              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:border-zinc-300 hover:bg-zinc-50 transition-all shadow-sm"
             >
-              <span className="text-zinc-800">🌐</span>
+              <span className="text-zinc-800 text-[13px]">🌐</span>
               <span className="uppercase">{i18n.language.split('-')[0]}</span>
-              <svg className={`w-3 h-3 text-slate-400 transition-transform ${showLangMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${showLangMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -166,10 +176,12 @@ function Header() {
             <AnimatePresence>
               {showLangMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50 py-1.5"
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute right-0 mt-2 w-44 sm:w-48 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50 py-1.5"
+                  style={{ maxWidth: 'calc(100vw - 1rem)' }}
                 >
                   {languages.map((lang) => (
                     <button
@@ -190,10 +202,14 @@ function Header() {
             </AnimatePresence>
           </div>
 
+          {/* Notification bell */}
           {user && (
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setShowNotifications(!showNotifications)}
+                aria-haspopup="dialog"
+                aria-expanded={showNotifications}
                 className="relative w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 hover:text-zinc-800 hover:bg-zinc-50 transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +223,9 @@ function Header() {
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 top-12 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden slide-up z-50">
+                <div className="hdr-notif-panel absolute right-0 top-12 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden slide-up z-50"
+                  style={{ width: 'min(20rem, calc(100vw - 1rem))' }}
+                >
                   <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-700">{t('navbar.notifications')}</span>
                     {notifications.length > 0 && (
@@ -233,8 +251,9 @@ function Header() {
             </div>
           )}
 
+          {/* Avatar + logout — desktop only */}
           {user && (
-            <div className="flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-slate-200 min-w-0">
+            <div className="hidden md:flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-slate-200 min-w-0">
               <button
                 type="button"
                 onClick={() => {

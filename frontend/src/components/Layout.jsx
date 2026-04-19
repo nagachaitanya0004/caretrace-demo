@@ -17,7 +17,7 @@ function Layout() {
   }, [pathname]);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#f8fafc]">
+    <div className="flex h-[100dvh] min-h-screen flex-col overflow-hidden bg-[#f8fafc] [data-theme=dark_&]:bg-[#070d1a]">
       <Header />
       {showDemoBanner && (
         <div
@@ -61,4 +61,3 @@ function Layout() {
 }
 
 export default Layout;
-

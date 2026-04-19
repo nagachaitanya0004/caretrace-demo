@@ -5,9 +5,9 @@ function TestimonialCard({ item }) {
   const parts = item.text.split(item.highlight);
   
   return (
-    <div className="flex-none w-72 sm:w-80 bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-100/50 hover:shadow-2xl hover:shadow-zinc-200/40 hover:-translate-y-2 hover:scale-[1.03] hover:border-zinc-200 transition-all duration-500 relative group overflow-hidden h-full">
+    <div className="flex-none w-[min(18rem,78vw)] sm:w-80 bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-100/50 hover:shadow-xl hover:shadow-zinc-200/25 hover:-translate-y-1 hover:scale-[1.01] hover:border-zinc-200 transition-all duration-300 relative group overflow-hidden h-full">
       {/* Decorative premium accent */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-300 via-zinc-400 to-zinc-300 opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-300 via-zinc-400 to-zinc-300 opacity-15 group-hover:opacity-40 transition-opacity duration-300"></div>
       
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-3">

@@ -157,7 +157,7 @@ function Dashboard() {
       key: 'log-symptom',
       label: t('dashboard.log_symptom'),
       keywords: ['symptom', 'log', 'track', 'entry', 'record'],
-      className: 'flex items-center gap-2 px-4 py-2.5 bg-white text-zinc-800 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200',
+      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white text-zinc-800 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200',
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>,
       onClick: () => navigate('/symptoms'),
     },
@@ -165,7 +165,7 @@ function Dashboard() {
       key: 'run-analysis',
       label: t('dashboard.run_analysis'),
       keywords: ['analysis', 'risk', 'scan', 'insights', 'report'],
-      className: 'flex items-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
+      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
       onClick: () => navigate('/analysis'),
     },
@@ -173,7 +173,7 @@ function Dashboard() {
       key: 'timeline',
       label: t('dashboard.view_timeline'),
       keywords: ['timeline', 'history', 'dates', 'recent', 'symptoms'],
-      className: 'flex items-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
+      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
       onClick: () => navigate('/timeline'),
     },
@@ -181,7 +181,7 @@ function Dashboard() {
       key: 'testimonials',
       label: t('dashboard.testimonials_btn'),
       keywords: ['testimonials', 'reviews', 'feedback', 'users'],
-      className: `flex items-center gap-2 px-4 py-2.5 ${showTestimonials ? 'bg-white/30 text-white' : 'bg-white/15 text-white hover:bg-white/25'} border border-white/30 rounded-xl text-sm font-semibold transition-all duration-200`,
+      className: `flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 ${showTestimonials ? 'bg-white/30 text-white' : 'bg-white/15 text-white hover:bg-white/25'} border border-white/30 rounded-xl text-sm font-semibold transition-all duration-200`,
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>,
       onClick: () => setShowTestimonials(!showTestimonials),
     },
@@ -321,7 +321,7 @@ function Dashboard() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="gradient-ocean px-8 pt-8 pb-10 relative overflow-hidden">
+      <div className="gradient-ocean px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full pointer-events-none" />
         <div className="absolute top-4 right-28 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
 
@@ -335,7 +335,7 @@ function Dashboard() {
             {isLoading ? (
               <div className="skeleton h-9 w-64 mb-2" />
             ) : (
-              <h1 className="text-3xl font-bold text-white leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
                 {userProfile?.name ? t('dashboard.welcome', { name: userProfile.name }) : t('dashboard.hello', { name: user?.email?.split('@')[0] || t('dashboard.welcome_default') })} 👋
               </h1>
             )}
@@ -347,7 +347,7 @@ function Dashboard() {
           </div>
 
           {visibleQuickActions.length > 0 && (
-            <div className="flex flex-wrap gap-3 fade-in stagger-1">
+            <div className="flex w-full md:w-auto flex-col sm:flex-row flex-wrap gap-3 fade-in stagger-1">
               {visibleQuickActions.map((action) => (
                 <button
                   key={action.key}
@@ -363,7 +363,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 md:px-8 -mt-5 pb-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 -mt-4 sm:-mt-5 pb-8 sm:pb-10">
         
         {!hasSearchQuery && showTestimonials && <TestimonialsSection />}
 
@@ -404,7 +404,7 @@ function Dashboard() {
             <button
               type="button"
               onClick={clearDashboardSearch}
-              className="shrink-0 text-xs font-semibold text-zinc-800 bg-white hover:bg-zinc-100 border border-zinc-200 px-3 py-2 rounded-lg transition-colors"
+              className="shrink-0 w-full sm:w-auto text-xs font-semibold text-zinc-800 bg-white hover:bg-zinc-100 border border-zinc-200 px-3 py-2 rounded-lg transition-colors"
             >
               {t('dashboard.search.clear')}
             </button>
@@ -476,7 +476,7 @@ function Dashboard() {
         ) : (
           <>
             {visibleStatCards.length > 0 && (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {visibleStatCards.map((card) => (
                   <StatCard
                     key={card.key}
@@ -545,7 +545,7 @@ function Dashboard() {
 
                 {showTrendChart && (
                   <div className={`card-premium p-6 slide-up stagger-1 ${showRiskCard ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.charts.trend')}</p>
                         <h2 className="text-lg font-bold text-slate-800">{t('dashboard.charts.severity_timeline')}</h2>
@@ -599,7 +599,7 @@ function Dashboard() {
                                 stroke={chartColors.primary}
                                 strokeWidth={2.5}
                                 fill={`url(#${trendGradId})`}
-                                dot={{ r: 4, fill: '#fff', stroke: chartColors.primary, strokeWidth: 2 }}
+                                dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.primary, strokeWidth: 2 }}
                                 activeDot={{ r: 6, fill: chartColors.secondary }}
                               />
                             </AreaChart>
@@ -631,7 +631,7 @@ function Dashboard() {
               <div className={`grid grid-cols-1 gap-6 ${showDistributionCard && showInsightsCard ? 'md:grid-cols-2' : ''}`}>
                 {showDistributionCard && (
                   <div className="card-premium p-6 slide-up stagger-2">
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.charts.distribution')}</p>
                         <h2 className="text-lg font-bold text-slate-800">{t('dashboard.charts.symptom_frequency')}</h2>

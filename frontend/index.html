@@ -28,6 +28,25 @@
         -moz-osx-font-smoothing: grayscale;
       }
     </style>
+    <script>
+      (function() {
+        try {
+          const storedTheme = window.localStorage.getItem('theme');
+          const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+          const theme = storedTheme === 'dark' || storedTheme === 'light'
+            ? storedTheme
+            : (prefersDark ? 'dark' : 'light');
+
+          if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
+        } catch (error) {
+          // Silently ignore if localStorage is unavailable.
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

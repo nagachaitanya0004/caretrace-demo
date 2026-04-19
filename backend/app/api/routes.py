@@ -1,5 +1,6 @@
+from __future__ import annotations
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Optional
 
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query, Depends
@@ -130,7 +131,7 @@ async def get_user_or_404(user_id: ObjectId) -> dict[str, Any]:
 
 
 @router.get('/users')
-async def list_users(name: str | None = Query(None), gender: str | None = Query(None)):
+async def list_users(name: Optional[str] = Query(None), gender: Optional[str] = Query(None)):
     db = get_database()
     filters: dict[str, Any] = {}
     if name:
@@ -202,7 +203,7 @@ async def create_symptom(payload: SymptomCreate, current_user: dict = Depends(ge
 
 
 @router.get('/symptoms')
-async def list_symptoms(symptom: str | None = Query(None), current_user: dict = Depends(get_current_user)):
+async def list_symptoms(symptom: Optional[str] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': current_user["_id"]}
     if symptom:
@@ -255,7 +256,7 @@ async def create_alert(payload: AlertCreate, current_user: dict = Depends(get_cu
 
 
 @router.get('/alerts')
-async def list_alerts(unread_only: bool | None = Query(None), current_user: dict = Depends(get_current_user)):
+async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': current_user["_id"]}
     if unread_only is True:

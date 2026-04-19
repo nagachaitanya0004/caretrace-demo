@@ -1,12 +1,13 @@
 /** Shared Recharts styling — simple, readable, on-brand. */
 export const chartColors = {
-  primary: '#0d9488',
-  primaryMuted: 'rgba(13, 148, 136, 0.12)',
-  secondary: '#0369a1',
-  grid: '#e2e8f0',
-  axis: '#64748b',
-  tooltipBg: '#ffffff',
-  tooltipBorder: '#e2e8f0',
+  primary: 'var(--app-chart-primary, #0d9488)',
+  primaryMuted: 'var(--app-chart-primary-muted, rgba(13, 148, 136, 0.12))',
+  secondary: 'var(--app-chart-secondary, #0369a1)',
+  grid: 'var(--app-chart-grid, #e2e8f0)',
+  axis: 'var(--app-chart-axis, #64748b)',
+  tooltipBg: 'var(--app-chart-tooltip-bg, #ffffff)',
+  tooltipBorder: 'var(--app-chart-tooltip-border, #e2e8f0)',
+  dot: 'var(--app-chart-dot, #ffffff)',
 };
 
 export const axisProps = {
@@ -22,7 +23,7 @@ export const cartesianGridProps = {
 };
 
 export const tooltipContentStyle = {
-  backgroundColor: '#ffffff',
+  backgroundColor: chartColors.tooltipBg,
   borderRadius: 12,
   border: `1px solid ${chartColors.tooltipBorder}`,
   boxShadow: '0 10px 40px -10px rgba(15, 23, 42, 0.15)',

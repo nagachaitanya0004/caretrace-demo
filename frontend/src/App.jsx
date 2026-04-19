@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import { AppProvider } from './AppContext';
 import { NotificationProvider } from './NotificationContext';
+import { ThemeProvider } from './ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import Landing from './pages/Landing';
@@ -29,9 +30,10 @@ function App() {
   return (
     <NotificationProvider>
       <AuthProvider>
-        <AppProvider>
-          <Router>
-            <Routes>
+        <ThemeProvider>
+          <AppProvider>
+            <Router>
+              <Routes>
               {/* Landing Page - standalone with its own design */}
               <Route path="/" element={<Landing />} />
 
@@ -58,8 +60,9 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Routes>
-          </Router>
-        </AppProvider>
+            </Router>
+          </AppProvider>
+        </ThemeProvider>
       </AuthProvider>
     </NotificationProvider>
   );

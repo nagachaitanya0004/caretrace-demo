@@ -1,7 +1,8 @@
+from __future__ import annotations
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from typing import Any
+from typing import Any, Optional, Union
 from bson import ObjectId
 
 SENSITIVE_FIELDS = {'hashed_password', 'password', 'session_token'}
@@ -32,7 +33,7 @@ def success_response(data=None, message='') -> dict:
     }
 
 
-def error_response(message: str, error: str | dict | None = None) -> dict:
+def error_response(message: str, error: Optional[Union[str, dict]] = None) -> dict:
     payload = {
         'success': False,
         'data': None,

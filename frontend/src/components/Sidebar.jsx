@@ -112,9 +112,9 @@ function Sidebar() {
   ];
 
   return (
-    <aside className="w-60 bg-slate-900 flex-col h-full hidden md:flex shrink-0 slide-in-left">
+    <aside className="w-60 bg-slate-900 flex-col h-full hidden md:flex shrink-0">
       {/* Brand */}
-      <div className="px-4 py-5 border-b border-slate-700/50">
+      <div className="px-4 py-5 border-b border-slate-700/40">
         <NavLink
           to="/dashboard"
           className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50"
@@ -143,8 +143,8 @@ function Sidebar() {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? 'bg-teal-950/80 text-white shadow-md shadow-teal-950/30 border border-teal-800/40'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                        ? 'bg-teal-500/10 text-teal-300 shadow-sm border border-teal-500/15'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'
                     }`
                   }
                 >
@@ -159,13 +159,13 @@ function Sidebar() {
 
       {/* User strip */}
       {user && (
-        <div className="px-4 py-4 border-t border-slate-700/50">
+        <div className="px-4 py-4 border-t border-slate-700/40">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full gradient-teal flex items-center justify-center text-white font-bold text-sm shadow">
               {user.email?.charAt(0).toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="text-white text-xs font-semibold truncate">{user.email}</p>
+              <p className="text-slate-200 text-xs font-semibold truncate">{user.email}</p>
               <p className="text-slate-500 text-xs">{t('navbar.active_session')}</p>
             </div>
           </div>
