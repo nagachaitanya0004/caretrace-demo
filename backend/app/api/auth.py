@@ -66,13 +66,15 @@ async def signup(payload: UserCreate):
     if await email_is_registered(db, email_norm):
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    payload_data = payload.model_dump()
+    payload_data = payload.model_dump(exclude_none=True)
     password = payload_data.pop("password")
     payload_data["email"] = email_norm
-    payload_data["gender"] = normalize_gender(payload_data.get("gender", ""))
+    if "gender" in payload_data:
+        payload_data["gender"] = normalize_gender(payload_data["gender"])
     payload_data["hashed_password"] = get_password_hash(password)
     payload_data["created_at"] = datetime.utcnow()
     payload_data["updated_at"] = datetime.utcnow()
+    payload_data["is_onboarded"] = False
 
     try:
         result = await db.users.insert_one(payload_data)
@@ -100,3 +102,13 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @router.get("/me")
 async def read_users_me(current_user: dict = Depends(get_current_user)):
     return success_response(serialize_document(current_user), message="Current user retrieved")
+
+
+@router.patch("/onboarding/complete")
+async def complete_onboarding(current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    await db.users.update_one(
+        {"_id": current_user["_id"]},
+        {"$set": {"is_onboarded": True, "updated_at": datetime.utcnow()}},
+    )
+    return success_response(None, message="Onboarding complete")

@@ -56,6 +56,7 @@ export function AuthProvider({ children }) {
           id,
           email: data.email ?? emailFromJwt ?? undefined,
           name: data.name,
+          is_onboarded: data.is_onboarded ?? true,
         });
       } catch (err) {
         if (cancelled) return;
@@ -103,8 +104,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const authValue = useMemo(
-    () => ({ token, user, login, signup, logout, isLoadingAuth }),
-    [token, user, login, signup, logout, isLoadingAuth]
+    () => ({ token, user, setUser, login, signup, logout, isLoadingAuth }),
+    [token, user, setUser, login, signup, logout, isLoadingAuth]
   );
 
   return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;

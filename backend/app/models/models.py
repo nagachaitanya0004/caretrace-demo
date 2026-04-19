@@ -9,13 +9,17 @@ ANALYSIS_COLLECTION = 'analysis'
 ALERT_COLLECTION = 'alerts'
 REPORT_COLLECTION = 'reports'
 SESSION_COLLECTION = 'sessions'
+MEDICAL_HISTORY_COLLECTION = 'medical_history'
+FAMILY_HISTORY_COLLECTION = 'family_history'
+LIFESTYLE_DATA_COLLECTION = 'lifestyle_data'
+STRUCTURED_SYMPTOMS_COLLECTION = 'structured_symptoms'
 
 
 # MongoDB document validators for collection-level validation.
 USER_VALIDATOR = {
     '$jsonSchema': {
         'bsonType': 'object',
-        'required': ['name', 'email', 'hashed_password', 'age', 'gender', 'lifestyle', 'created_at', 'updated_at'],
+        'required': ['name', 'email', 'hashed_password', 'created_at', 'updated_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
             'name': {'bsonType': 'string', 'description': 'Full user name'},
@@ -27,6 +31,85 @@ USER_VALIDATOR = {
             'created_at': {'bsonType': 'date'},
             'updated_at': {'bsonType': 'date'},
             'meta': {'bsonType': 'object', 'description': 'Optional metadata for ML and segmentation'},
+            'is_onboarded': {'bsonType': 'bool', 'description': 'Whether the user has completed onboarding'},
+            'height_cm': {'bsonType': 'double', 'description': 'Height in centimetres'},
+            'weight_kg': {'bsonType': 'double', 'description': 'Weight in kilograms'},
+            'blood_group': {'bsonType': 'string', 'description': 'Blood group / type'},
+            'bmi': {'bsonType': 'double', 'description': 'Body Mass Index, derived from height and weight'},
+        },
+        'additionalProperties': False,
+    }
+}
+
+MEDICAL_HISTORY_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'created_at', 'updated_at'],
+        'properties': {
+            '_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': 'objectId'},
+            'conditions': {'bsonType': 'array', 'items': {'bsonType': 'string'}},
+            'medications': {'bsonType': 'array', 'items': {'bsonType': 'string'}},
+            'allergies':   {'bsonType': 'array', 'items': {'bsonType': 'string'}},
+            'surgeries':   {'bsonType': 'array', 'items': {'bsonType': 'string'}},
+            'created_at':  {'bsonType': 'date'},
+            'updated_at':  {'bsonType': 'date'},
+        },
+        'additionalProperties': False,
+    }
+}
+
+FAMILY_HISTORY_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'condition_name', 'created_at', 'updated_at'],
+        'properties': {
+            '_id':            {'bsonType': 'objectId'},
+            'user_id':        {'bsonType': 'objectId'},
+            'condition_name': {'bsonType': 'string', 'description': 'Name of the hereditary condition'},
+            'relation':       {'bsonType': 'string', 'description': 'Family relation (e.g. father, mother)'},
+            'created_at':     {'bsonType': 'date'},
+            'updated_at':     {'bsonType': 'date'},
+        },
+        'additionalProperties': False,
+    }
+}
+
+LIFESTYLE_DATA_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'created_at', 'updated_at'],
+        'properties': {
+            '_id':                  {'bsonType': 'objectId'},
+            'user_id':              {'bsonType': 'objectId'},
+            'sleep_hours':          {'bsonType': 'double',  'minimum': 0, 'maximum': 24},
+            'sleep_quality':        {'bsonType': 'string',  'enum': ['good', 'average', 'poor']},
+            'diet_type':            {'bsonType': 'string',  'enum': ['veg', 'non-veg', 'mixed']},
+            'exercise_frequency':   {'bsonType': 'string',  'enum': ['none', 'weekly', 'regular']},
+            'water_intake_liters':  {'bsonType': 'double',  'minimum': 0},
+            'smoking':              {'bsonType': 'bool'},
+            'alcohol':              {'bsonType': 'bool'},
+            'stress_level':         {'bsonType': 'int',     'minimum': 1, 'maximum': 10},
+            'created_at':           {'bsonType': 'date'},
+            'updated_at':           {'bsonType': 'date'},
+        },
+        'additionalProperties': False,
+    }
+}
+
+STRUCTURED_SYMPTOMS_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'symptom_name', 'created_at'],
+        'properties': {
+            '_id':          {'bsonType': 'objectId'},
+            'user_id':      {'bsonType': 'objectId'},
+            'symptom_name': {'bsonType': 'string',  'description': 'Name of the symptom'},
+            'severity':     {'bsonType': 'int',     'minimum': 1, 'maximum': 10},
+            'duration':     {'bsonType': 'string',  'description': 'Duration as text, e.g. "3 days"'},
+            'frequency':    {'bsonType': 'string',  'enum': ['constant', 'occasional', 'rare']},
+            'notes':        {'bsonType': 'string'},
+            'created_at':   {'bsonType': 'date'},
         },
         'additionalProperties': False,
     }
@@ -134,6 +217,7 @@ def build_user_document(name: str, email: str, hashed_password: str, age: int, g
         'created_at': now,
         'updated_at': now,
         'meta': {},
+        'is_onboarded': False,
     }
 
 

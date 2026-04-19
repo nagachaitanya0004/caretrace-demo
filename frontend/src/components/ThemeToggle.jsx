@@ -23,7 +23,7 @@ export default function ThemeToggle() {
         <span className="text-xs">☀️</span>
         <span className="text-xs">🌙</span>
       </span>
-      <span className={`thumb absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow-[0_2px_8px_rgba(15,23,42,0.22)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isDark ? 'translate-x-[22px]' : 'translate-x-0'}`} />
+      <span className={`toggle-knob absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow-[0_2px_8px_rgba(15,23,42,0.22)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isDark ? 'translate-x-[22px]' : 'translate-x-0'}`} />
       <span className="sr-only" aria-live="polite">{announce}</span>
     </button>
   );

@@ -15,7 +15,11 @@ from app.core.logger import logger
 from app.schemas.schemas import (
     AlertCreate,
     AnalysisCreate,
+    FamilyHistoryBatch,
+    LifestyleDataUpsert,
+    MedicalHistoryUpsert,
     ReportCreate,
+    StructuredSymptomCreate,
     SymptomCreate,
     UserCreate,
     UserUpdate,
@@ -24,7 +28,13 @@ from app.schemas.schemas import (
 router = APIRouter()
 
 
-
+def compute_bmi(height_cm: Optional[float], weight_kg: Optional[float]) -> Optional[float]:
+    try:
+        if height_cm and weight_kg and height_cm > 0:
+            return round(weight_kg / (height_cm / 100) ** 2, 2)
+    except Exception:
+        pass
+    return None
 
 
 def evaluate_risk(symptoms: list[dict[str, Any]]) -> tuple[str, str, str]:
@@ -167,6 +177,12 @@ async def update_user(payload: UserUpdate, current_user: dict = Depends(get_curr
         updated['gender'] = normalize_gender(str(updated['gender']))
     if not updated:
         raise HTTPException(status_code=400, detail='No changes were provided')
+    # Derive BMI whenever height or weight is being updated
+    height = updated.get('height_cm') or current_user.get('height_cm')
+    weight = updated.get('weight_kg') or current_user.get('weight_kg')
+    bmi = compute_bmi(height, weight)
+    if bmi is not None:
+        updated['bmi'] = bmi
     updated['updated_at'] = datetime.utcnow()
     result = await db.users.update_one({'_id': oid}, {'$set': updated})
     if result.matched_count == 0:
@@ -264,3 +280,108 @@ async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: d
     cursor = db.alerts.find(query).sort('created_at', -1)
     alerts = [serialize_document(item) async for item in cursor]
     return success_response(alerts, message='Alerts retrieved successfully')
+
+
+@router.put('/medical-history')
+async def upsert_medical_history(payload: MedicalHistoryUpsert, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_id = current_user['_id']
+    now = datetime.utcnow()
+    # Only write fields that were actually provided (not None)
+    fields = {k: v for k, v in payload.model_dump().items() if v is not None}
+    existing = await db.medical_history.find_one({'user_id': user_id})
+    if existing:
+        fields['updated_at'] = now
+        await db.medical_history.update_one({'user_id': user_id}, {'$set': fields})
+    else:
+        doc = {'user_id': user_id, 'conditions': [], 'medications': [], 'allergies': [], 'surgeries': [], 'created_at': now, 'updated_at': now}
+        doc.update(fields)
+        await db.medical_history.insert_one(doc)
+    record = await db.medical_history.find_one({'user_id': user_id})
+    return success_response(serialize_document(record), message='Medical history saved')
+
+
+@router.get('/medical-history')
+async def get_medical_history(current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    record = await db.medical_history.find_one({'user_id': current_user['_id']})
+    return success_response(serialize_document(record) if record else None, message='Medical history retrieved')
+
+
+@router.post('/family-history')
+async def save_family_history(payload: FamilyHistoryBatch, current_user: dict = Depends(get_current_user)):
+    """Replace all family history entries for the user with the submitted batch."""
+    db = get_database()
+    user_id = current_user['_id']
+    now = datetime.utcnow()
+    # Delete existing entries then insert the new batch (idempotent replace)
+    await db.family_history.delete_many({'user_id': user_id})
+    valid = [e for e in payload.entries if e.condition_name.strip()]
+    if valid:
+        docs = [
+            {
+                'user_id': user_id,
+                'condition_name': e.condition_name.strip(),
+                **({'relation': e.relation.strip()} if e.relation and e.relation.strip() else {}),
+                'created_at': now,
+                'updated_at': now,
+            }
+            for e in valid
+        ]
+        await db.family_history.insert_many(docs)
+    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': user_id}).sort('created_at', 1)]
+    return success_response(entries, message='Family history saved')
+
+
+@router.get('/family-history')
+async def get_family_history(current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': current_user['_id']}).sort('created_at', 1)]
+    return success_response(entries, message='Family history retrieved')
+
+
+@router.put('/lifestyle')
+async def upsert_lifestyle(payload: LifestyleDataUpsert, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_id = current_user['_id']
+    now = datetime.utcnow()
+    # Only write fields explicitly provided (not None)
+    fields = {k: v for k, v in payload.model_dump().items() if v is not None}
+    existing = await db.lifestyle_data.find_one({'user_id': user_id})
+    if existing:
+        fields['updated_at'] = now
+        await db.lifestyle_data.update_one({'user_id': user_id}, {'$set': fields})
+    else:
+        fields.update({'user_id': user_id, 'created_at': now, 'updated_at': now})
+        await db.lifestyle_data.insert_one(fields)
+    record = await db.lifestyle_data.find_one({'user_id': user_id})
+    return success_response(serialize_document(record), message='Lifestyle data saved')
+
+
+@router.get('/lifestyle')
+async def get_lifestyle(current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    record = await db.lifestyle_data.find_one({'user_id': current_user['_id']})
+    return success_response(serialize_document(record) if record else None, message='Lifestyle data retrieved')
+
+
+@router.post('/structured-symptoms')
+async def create_structured_symptom(payload: StructuredSymptomCreate, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_id = current_user['_id']
+    doc = {'user_id': user_id, 'symptom_name': payload.symptom_name.strip(), 'created_at': datetime.utcnow()}
+    if payload.severity  is not None: doc['severity']  = payload.severity
+    if payload.duration  is not None: doc['duration']  = payload.duration.strip()
+    if payload.frequency is not None: doc['frequency'] = payload.frequency
+    if payload.notes     is not None: doc['notes']     = payload.notes.strip()
+    result = await db.structured_symptoms.insert_one(doc)
+    saved = await db.structured_symptoms.find_one({'_id': result.inserted_id})
+    return success_response(serialize_document(saved), message='Structured symptom recorded')
+
+
+@router.get('/structured-symptoms')
+async def list_structured_symptoms(current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    cursor = db.structured_symptoms.find({'user_id': current_user['_id']}).sort('created_at', -1)
+    items = [serialize_document(d) async for d in cursor]
+    return success_response(items, message='Structured symptoms retrieved')

@@ -7,10 +7,18 @@ from .models import (
     ALERT_VALIDATOR,
     ANALYSIS_COLLECTION,
     ANALYSIS_VALIDATOR,
+    FAMILY_HISTORY_COLLECTION,
+    FAMILY_HISTORY_VALIDATOR,
+    LIFESTYLE_DATA_COLLECTION,
+    LIFESTYLE_DATA_VALIDATOR,
+    MEDICAL_HISTORY_COLLECTION,
+    MEDICAL_HISTORY_VALIDATOR,
     REPORT_COLLECTION,
     REPORT_VALIDATOR,
     SESSION_COLLECTION,
     SESSION_VALIDATOR,
+    STRUCTURED_SYMPTOMS_COLLECTION,
+    STRUCTURED_SYMPTOMS_VALIDATOR,
     SYMPTOM_COLLECTION,
     SYMPTOM_VALIDATOR,
     USER_COLLECTION,
@@ -61,6 +69,30 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
             'indexes': [
                 {'fields': [('session_token', 'asc')], 'unique': True, 'name': 'idx_session_token'},
                 {'fields': [('user_id', 'asc'), ('expires_at', 'asc')], 'unique': False, 'name': 'idx_session_user_expires'},
+            ],
+        },
+        MEDICAL_HISTORY_COLLECTION: {
+            'validator': MEDICAL_HISTORY_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc')], 'unique': True, 'name': 'idx_medical_history_user_id'},
+            ],
+        },
+        FAMILY_HISTORY_COLLECTION: {
+            'validator': FAMILY_HISTORY_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc')], 'unique': False, 'name': 'idx_family_history_user_id'},
+            ],
+        },
+        LIFESTYLE_DATA_COLLECTION: {
+            'validator': LIFESTYLE_DATA_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc')], 'unique': True, 'name': 'idx_lifestyle_data_user_id'},
+            ],
+        },
+        STRUCTURED_SYMPTOMS_COLLECTION: {
+            'validator': STRUCTURED_SYMPTOMS_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_structured_symptoms_user_created'},
             ],
         },
     }

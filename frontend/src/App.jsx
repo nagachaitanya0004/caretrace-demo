@@ -11,6 +11,8 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Onboarding from './pages/Onboarding';
+import HealthProfile from './pages/HealthProfile';
 import Symptoms from './pages/Symptoms';
 import Timeline from './pages/Timeline';
 import Analysis from './pages/Analysis';
@@ -41,6 +43,16 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
 
+              {/* Post-signup onboarding — protected but outside main Layout */}
+              <Route
+                path="/onboarding"
+                element={
+                  <ProtectedRoute>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Full App Layout Routes Protected by JWT */}
               <Route 
                 element={
@@ -50,6 +62,7 @@ function App() {
                 }
               >
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/health-profile" element={<HealthProfile />} />
                 <Route path="/symptoms" element={<Symptoms />} />
                 <Route path="/timeline" element={<Timeline />} />
                 <Route path="/history" element={<History />} />

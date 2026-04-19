@@ -11,9 +11,6 @@ function Signup() {
     name: '',
     email: '',
     password: '',
-    age: '',
-    gender: 'Male',
-    lifestyle: 'active'
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,21 +34,13 @@ function Signup() {
          throw new Error(t('auth.errors.password_short'));
       }
 
-      const ageNum = parseInt(formData.age, 10);
-      if (Number.isNaN(ageNum) || ageNum < 1) {
-        throw new Error(t('auth.errors.age_invalid'));
-      }
-
       await signup({
         name: formData.name.trim(),
         email: formData.email.trim(),
         password: formData.password,
-        age: ageNum,
-        gender: formData.gender,
-        lifestyle: formData.lifestyle
       });
       addNotification(t('auth.signup_success'), 'success');
-      navigate('/dashboard', { replace: true });
+      navigate('/onboarding', { replace: true });
     } catch (err) {
       const msg = err?.message || t('auth.errors.failed');
       const lower = String(msg).toLowerCase();
@@ -66,7 +55,6 @@ function Signup() {
   };
 
   const inputClass = "w-full p-3 input-premium text-sm";
-  const selectClass = "w-full p-3 input-premium text-sm appearance-none bg-white";
   const labelClass = "block text-sm font-medium text-zinc-700 mb-1.5";
 
   return (
@@ -112,30 +100,6 @@ function Signup() {
             <div>
               <label className={labelClass}>{t('auth.password')}</label>
               <input type="password" name="password" required className={inputClass} placeholder="••••••••" value={formData.password} onChange={handleChange} disabled={isLoading} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>{t('auth.age')}</label>
-                <input type="number" name="age" required min="1" className={inputClass} value={formData.age} onChange={handleChange} />
-              </div>
-              <div>
-                <label className={labelClass}>{t('auth.gender')}</label>
-                <select name="gender" value={formData.gender} onChange={handleChange} className={selectClass}>
-                  <option value="Male">{t('common.gender.male')}</option>
-                  <option value="Female">{t('common.gender.female')}</option>
-                  <option value="Other">{t('common.gender.other')}</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass}>{t('auth.lifestyle')}</label>
-              <select name="lifestyle" value={formData.lifestyle} onChange={handleChange} className={selectClass}>
-                <option value="active">{t('common.lifestyle.active')}</option>
-                <option value="sedentary">{t('common.lifestyle.sedentary')}</option>
-                <option value="smoker">{t('common.lifestyle.smoker')}</option>
-              </select>
             </div>
 
             <button

@@ -19,14 +19,14 @@ class TimestampedModel(MongoModel):
 class UserBase(MongoModel):
     name: str = Field(..., min_length=1)
     email: str = Field(..., min_length=5)
-    age: int = Field(..., gt=0)
-    gender: str = Field(..., min_length=1)
-    lifestyle: str = Field(..., min_length=1)
     meta: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=6)
+    age: Optional[int] = Field(default=None, gt=0)
+    gender: Optional[str] = Field(default=None, min_length=1)
+    lifestyle: Optional[str] = Field(default=None, min_length=1)
 
 
 class UserUpdate(BaseModel):
@@ -35,6 +35,9 @@ class UserUpdate(BaseModel):
     gender: Optional[str] = Field(default=None, min_length=1)
     lifestyle: Optional[str] = Field(default=None, min_length=1)
     meta: Optional[Dict[str, Any]] = None
+    height_cm: Optional[float] = Field(default=None, gt=0)
+    weight_kg: Optional[float] = Field(default=None, gt=0)
+    blood_group: Optional[str] = Field(default=None, min_length=1)
 
 
 class UserInDB(UserBase, TimestampedModel):
@@ -108,3 +111,38 @@ class ReportCreate(ReportBase):
 
 class ReportInDB(ReportBase, TimestampedModel):
     id: Optional[PyObjectId] = Field(alias='_id')
+
+
+class MedicalHistoryUpsert(BaseModel):
+    conditions: Optional[list[str]] = Field(default=None)
+    medications: Optional[list[str]] = Field(default=None)
+    allergies:   Optional[list[str]] = Field(default=None)
+    surgeries:   Optional[list[str]] = Field(default=None)
+
+
+class FamilyHistoryEntry(BaseModel):
+    condition_name: str = Field(..., min_length=1)
+    relation: Optional[str] = Field(default=None)
+
+
+class FamilyHistoryBatch(BaseModel):
+    entries: list[FamilyHistoryEntry] = Field(default_factory=list)
+
+
+class LifestyleDataUpsert(BaseModel):
+    sleep_hours:         Optional[float] = Field(default=None, ge=0, le=24)
+    sleep_quality:       Optional[str]   = Field(default=None)
+    diet_type:           Optional[str]   = Field(default=None)
+    exercise_frequency:  Optional[str]   = Field(default=None)
+    water_intake_liters: Optional[float] = Field(default=None, ge=0)
+    smoking:             Optional[bool]  = Field(default=None)
+    alcohol:             Optional[bool]  = Field(default=None)
+    stress_level:        Optional[int]   = Field(default=None, ge=1, le=10)
+
+
+class StructuredSymptomCreate(BaseModel):
+    symptom_name: str          = Field(..., min_length=1)
+    severity:     Optional[int]   = Field(default=None, ge=1, le=10)
+    duration:     Optional[str]   = Field(default=None)
+    frequency:    Optional[str]   = Field(default=None)
+    notes:        Optional[str]   = Field(default=None)

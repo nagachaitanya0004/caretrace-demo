@@ -1,9 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
 
 export default function ProtectedRoute({ children }) {
-  const { token, isLoadingAuth } = useAuth();
+  const { token, user, isLoadingAuth } = useAuth();
+  const location = useLocation();
 
   if (isLoadingAuth) {
     return (
@@ -13,9 +14,14 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  // If there's no JWT loaded into local storage, force them back
   if (!token) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect new users to onboarding (is_onboarded === false strictly)
+  // NULL/undefined treated as true to protect existing users
+  if (user && user.is_onboarded === false && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return children;
