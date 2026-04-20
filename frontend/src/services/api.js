@@ -88,4 +88,30 @@ export const api = {
   patch: (endpoint, body) => request(endpoint, { method: 'PATCH', body: body !== undefined ? JSON.stringify(body) : undefined }),
 
   delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
+
+  uploadFile: (endpoint, formData) => {
+    const token = localStorage.getItem('caretrace_token');
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    // Don't set Content-Type — browser sets it with the multipart boundary
+    return fetch(`${BASE_URL}${endpoint}`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    }).then(async (response) => {
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await response.json() : await response.text();
+      if (!response.ok) {
+        let message = 'An unexpected error occurred';
+        if (typeof data?.message === 'string' && data.message) message = data.message;
+        else if (typeof data?.detail === 'string') message = data.detail;
+        const err = new Error(message);
+        err.status = response.status;
+        throw err;
+      }
+      return data;
+    });
+  },
 };

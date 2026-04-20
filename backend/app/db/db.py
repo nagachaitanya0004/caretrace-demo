@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import timedelta
 
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
 
 from app.core.config import MONGO_DB, MONGO_URI
 from app.core.logger import logger
@@ -11,6 +11,7 @@ from typing import Optional
 
 client: Optional[AsyncIOMotorClient] = None
 database = None
+_gridfs_bucket: Optional[AsyncIOMotorGridFSBucket] = None
 
 
 def normalize_index_fields(fields: list[tuple[str, str]]) -> list[tuple[str, int]]:
@@ -70,3 +71,12 @@ def get_database():
     if database is None:
         raise RuntimeError('Database not initialized')
     return database
+
+
+def get_gridfs_bucket() -> AsyncIOMotorGridFSBucket:
+    """Get GridFS bucket for file storage."""
+    global _gridfs_bucket
+    if _gridfs_bucket is None:
+        db = get_database()
+        _gridfs_bucket = AsyncIOMotorGridFSBucket(db)
+    return _gridfs_bucket

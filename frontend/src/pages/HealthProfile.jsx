@@ -5,6 +5,7 @@ import PageFrame from '../components/PageFrame';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import HealthMetricsSection from '../components/HealthMetricsSection';
+import MedicalReportsSection from '../components/MedicalReportsSection';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const CONDITION_OPTIONS = ['Diabetes', 'Heart Disease', 'Hypertension', 'Cancer', 'Stroke', 'Asthma', 'Other'];
@@ -597,6 +598,9 @@ export default function HealthProfile() {
 
       {/* ── HEALTH METRICS (VITALS) ── */}
       <HealthMetricsSection addNotification={addNotification} />
+
+      {/* ── MEDICAL REPORTS ── */}
+      <MedicalReportsSection addNotification={addNotification} />
     </PageFrame>
   );
 }

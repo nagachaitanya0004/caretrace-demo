@@ -1,0 +1,4 @@
+# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/core/logger.py
+# hypothesis_version: 6.141.1
+
+['%Y-%m-%d %H:%M:%S', 'caretrace_ai']

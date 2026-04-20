@@ -15,6 +15,8 @@ from .models import (
     LIFESTYLE_DATA_VALIDATOR,
     MEDICAL_HISTORY_COLLECTION,
     MEDICAL_HISTORY_VALIDATOR,
+    MEDICAL_REPORTS_COLLECTION,
+    MEDICAL_REPORTS_VALIDATOR,
     REPORT_COLLECTION,
     REPORT_VALIDATOR,
     SESSION_COLLECTION,
@@ -93,6 +95,12 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
             'validator': HEALTH_METRICS_VALIDATOR,
             'indexes': [
                 {'fields': [('user_id', 'asc'), ('recorded_at', 'desc')], 'unique': False, 'name': 'idx_health_metrics_user_recorded'},
+            ],
+        },
+        MEDICAL_REPORTS_COLLECTION: {
+            'validator': MEDICAL_REPORTS_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc'), ('uploaded_at', 'desc')], 'unique': False, 'name': 'idx_medical_reports_user_uploaded'},
             ],
         },
     }

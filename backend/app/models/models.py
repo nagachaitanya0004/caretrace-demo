@@ -13,6 +13,7 @@ MEDICAL_HISTORY_COLLECTION = 'medical_history'
 FAMILY_HISTORY_COLLECTION = 'family_history'
 LIFESTYLE_DATA_COLLECTION = 'lifestyle_data'
 HEALTH_METRICS_COLLECTION = 'health_metrics'
+MEDICAL_REPORTS_COLLECTION = 'medical_reports'
 
 
 # MongoDB document validators for collection-level validation.
@@ -225,6 +226,22 @@ SESSION_VALIDATOR = {
             'created_at': {'bsonType': 'date'},
             'ip_address': {'bsonType': 'string'},
             'user_agent': {'bsonType': 'string'},
+        },
+        'additionalProperties': False,
+    }
+}
+
+MEDICAL_REPORTS_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'file_name', 'gridfs_file_id', 'file_type', 'uploaded_at'],
+        'properties': {
+            '_id':            {'bsonType': 'objectId'},
+            'user_id':        {'bsonType': 'objectId'},
+            'file_name':      {'bsonType': 'string', 'description': 'Original filename'},
+            'gridfs_file_id': {'bsonType': 'objectId', 'description': 'GridFS file ID'},
+            'file_type':      {'bsonType': 'string', 'enum': ['application/pdf', 'image/jpeg', 'image/png']},
+            'uploaded_at':    {'bsonType': 'date'},
         },
         'additionalProperties': False,
     }

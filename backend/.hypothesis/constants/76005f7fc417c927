@@ -1,0 +1,4 @@
+# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/core/responses.py
+# hypothesis_version: 6.141.1
+
+[400, 'Invalid request data', '_id', 'data', 'error', 'hashed_password', 'id', 'message', 'password', 'session_token', 'success']

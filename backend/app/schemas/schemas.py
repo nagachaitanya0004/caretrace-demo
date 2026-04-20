@@ -146,3 +146,12 @@ class HealthMetricsCreate(BaseModel):
     blood_sugar_mg_dl: Optional[float] = Field(default=None, ge=0)
     heart_rate_bpm:    Optional[int]   = Field(default=None, ge=20,  le=300)
     oxygen_saturation: Optional[int]   = Field(default=None, ge=50,  le=100)
+
+
+class MedicalReportResponse(BaseModel):
+    id: str
+    user_id: str
+    file_name: str
+    gridfs_file_id: str
+    file_type: str
+    uploaded_at: datetime

@@ -1,0 +1,4 @@
+# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/api/auth.py
+# hypothesis_version: 6.141.1
+
+[400, '$set', '/login', '/me', '/onboarding/complete', '/signup', 'Bearer', 'Onboarding complete', 'WWW-Authenticate', '_id', 'access_token', 'auth/login', 'bearer', 'created_at', 'email', 'gender', 'hashed_password', 'is_onboarded', 'password', 'sub', 'token_type', 'updated_at']

@@ -1,0 +1,4 @@
+# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/core/config.py
+# hypothesis_version: 6.141.1
+
+['.env', '1.0.0', 'APP_NAME', 'APP_VERSION', 'CareTrace AI Backend', 'MONGO_DB', 'MONGO_URI', 'caretrace_ai']
