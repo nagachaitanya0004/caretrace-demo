@@ -1,4 +1,0 @@
-# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/models/types.py
-# hypothesis_version: 6.141.1
-
-['Invalid ObjectId', 'from_attributes', 'json_encoders', 'object_id', 'populate_by_name', 'string', 'type']

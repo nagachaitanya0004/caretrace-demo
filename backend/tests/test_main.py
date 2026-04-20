@@ -4,10 +4,7 @@ from app.main import app
 client = TestClient(app)
 
 def test_read_main():
-    response = client.get("/")
+    response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {
-        "system": "CareTrace AI API",
-        "status": "Online",
-        "docs": "Access /docs for full API documentation"
-    }
+    assert response.json()["success"] == True
+    assert response.json()["data"]["status"] == "ok"

@@ -1,4 +1,0 @@
-# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/utils/user_identity.py
-# hypothesis_version: 6.141.1
-
-['$options', '$regex', 'email', 'f', 'female', 'i', 'm', 'male', 'man', 'non-binary', 'nonbinary', 'o', 'other', 'woman']

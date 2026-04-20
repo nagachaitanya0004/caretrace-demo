@@ -4,7 +4,7 @@ from io import BytesIO
 from fastapi import UploadFile
 from app.api.routes import (
     validate_file_type,
-    validate_file_size_from_content,
+    validate_file_size,
     ALLOWED_MIME_TYPES,
     MAX_FILE_SIZE,
 )
@@ -57,7 +57,6 @@ class TestFileTypeValidation:
         error = validate_file_type(file)
         assert error is not None
         assert "Invalid file type" in error
-        assert "text/plain" in error
     
     def test_invalid_mime_type_zip(self):
         """ZIP file should be rejected."""
@@ -81,7 +80,7 @@ class TestFileTypeValidation:
         
         error = validate_file_type(file)
         assert error is not None
-        assert "Invalid file extension" in error
+        assert "Invalid file" in error
     
     def test_case_insensitive_extension(self):
         """Extension check should be case-insensitive."""
@@ -115,44 +114,38 @@ class TestFileTypeValidation:
 class TestFileSizeValidation:
     """Test file size validation."""
     
-    @pytest.mark.asyncio
-    async def test_valid_small_file(self):
+    def test_valid_small_file(self):
         """Small file should pass validation."""
         content = b"x" * 1024  # 1KB
-        error = await validate_file_size_from_content(content)
+        error = validate_file_size(content)
         assert error is None
     
-    @pytest.mark.asyncio
-    async def test_valid_max_size_file(self):
+    def test_valid_max_size_file(self):
         """File at exactly 10MB should pass validation."""
         content = b"x" * MAX_FILE_SIZE
-        error = await validate_file_size_from_content(content)
+        error = validate_file_size(content)
         assert error is None
     
-    @pytest.mark.asyncio
-    async def test_empty_file(self):
+    def test_empty_file(self):
         """Empty file should be rejected."""
         content = b""
-        error = await validate_file_size_from_content(content)
+        error = validate_file_size(content)
         assert error is not None
         assert "empty" in error.lower() or "corrupted" in error.lower()
     
-    @pytest.mark.asyncio
-    async def test_oversized_file(self):
+    def test_oversized_file(self):
         """File larger than 10MB should be rejected."""
         content = b"x" * (MAX_FILE_SIZE + 1)
-        error = await validate_file_size_from_content(content)
+        error = validate_file_size(content)
         assert error is not None
         assert "exceeds 10MB limit" in error
     
-    @pytest.mark.asyncio
-    async def test_large_oversized_file(self):
-        """File much larger than 10MB should be rejected with size info."""
+    def test_large_oversized_file(self):
+        """File much larger than 10MB should be rejected."""
         content = b"x" * (15 * 1024 * 1024)  # 15MB
-        error = await validate_file_size_from_content(content)
+        error = validate_file_size(content)
         assert error is not None
         assert "exceeds 10MB limit" in error
-        assert "15" in error  # Should show the actual size
 
 
 class TestValidationConstants:

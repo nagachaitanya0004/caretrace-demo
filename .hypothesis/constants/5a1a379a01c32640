@@ -1,4 +1,0 @@
-# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/api/routes.py
-# hypothesis_version: 6.141.1
-
-[100, 400, 404, '$gte', '$options', '$regex', '$set', ', ', '/alerts', '/analysis', '/family-history', '/health-metrics', '/lifestyle', '/medical-history', '/symptoms', '/users', '/users/me', 'Family history saved', 'Lifestyle data saved', 'User not found', '_id', 'allergies', 'automated_signal', 'bmi', 'category', 'chest pain', 'condition_name', 'conditions', 'created_at', 'critical', 'dizziness', 'duration', 'fainting', 'gender', 'height_cm', 'high', 'i', 'is_read', 'low', 'medications', 'medium', 'message', 'metrics', 'name', 'reason', 'recorded_at', 'relation', 'risk_level', 'severe headache', 'severity', 'shortness of breath', 'source', 'summary', 'surgeries', 'symptom', 'symptom_count', 'symptom_monitoring', 'timestamp', 'updated_at', 'user_id', 'warning', 'weight_kg']

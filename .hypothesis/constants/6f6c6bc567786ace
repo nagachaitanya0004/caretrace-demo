@@ -1,4 +1,0 @@
-# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/main.py
-# hypothesis_version: 6.141.1
-
-[500, 8000, '*', '/api', '/auth', '/health', '127.0.0.1', 'Request %s %s', 'Response %s %s %s', '__main__', 'api', 'app.main:app', 'auth', 'data', 'http', 'message', 'ok', 'service', 'shutdown', 'startup', 'status', 'success']
