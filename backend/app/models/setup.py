@@ -9,6 +9,8 @@ from .models import (
     ANALYSIS_VALIDATOR,
     FAMILY_HISTORY_COLLECTION,
     FAMILY_HISTORY_VALIDATOR,
+    HEALTH_METRICS_COLLECTION,
+    HEALTH_METRICS_VALIDATOR,
     LIFESTYLE_DATA_COLLECTION,
     LIFESTYLE_DATA_VALIDATOR,
     MEDICAL_HISTORY_COLLECTION,
@@ -17,8 +19,6 @@ from .models import (
     REPORT_VALIDATOR,
     SESSION_COLLECTION,
     SESSION_VALIDATOR,
-    STRUCTURED_SYMPTOMS_COLLECTION,
-    STRUCTURED_SYMPTOMS_VALIDATOR,
     SYMPTOM_COLLECTION,
     SYMPTOM_VALIDATOR,
     USER_COLLECTION,
@@ -89,10 +89,10 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
                 {'fields': [('user_id', 'asc')], 'unique': True, 'name': 'idx_lifestyle_data_user_id'},
             ],
         },
-        STRUCTURED_SYMPTOMS_COLLECTION: {
-            'validator': STRUCTURED_SYMPTOMS_VALIDATOR,
+        HEALTH_METRICS_COLLECTION: {
+            'validator': HEALTH_METRICS_VALIDATOR,
             'indexes': [
-                {'fields': [('user_id', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_structured_symptoms_user_created'},
+                {'fields': [('user_id', 'asc'), ('recorded_at', 'desc')], 'unique': False, 'name': 'idx_health_metrics_user_recorded'},
             ],
         },
     }

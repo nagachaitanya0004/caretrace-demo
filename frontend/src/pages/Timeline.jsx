@@ -82,8 +82,14 @@ function Timeline() {
                             <span>•</span>
                             <span className="flex items-center gap-1">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                              {t('timeline.days_tracking', { count: item.duration })}
+                              {item.context?.duration_text || t('timeline.days_tracking', { count: item.duration })}
                             </span>
+                            {item.context?.frequency && (
+                              <>
+                                <span>•</span>
+                                <span className="capitalize text-teal-600 font-semibold">{item.context.frequency}</span>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>

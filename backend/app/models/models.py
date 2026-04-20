@@ -12,7 +12,7 @@ SESSION_COLLECTION = 'sessions'
 MEDICAL_HISTORY_COLLECTION = 'medical_history'
 FAMILY_HISTORY_COLLECTION = 'family_history'
 LIFESTYLE_DATA_COLLECTION = 'lifestyle_data'
-STRUCTURED_SYMPTOMS_COLLECTION = 'structured_symptoms'
+HEALTH_METRICS_COLLECTION = 'health_metrics'
 
 
 # MongoDB document validators for collection-level validation.
@@ -97,6 +97,25 @@ LIFESTYLE_DATA_VALIDATOR = {
     }
 }
 
+HEALTH_METRICS_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'recorded_at', 'created_at'],
+        'properties': {
+            '_id':                {'bsonType': 'objectId'},
+            'user_id':            {'bsonType': 'objectId'},
+            'systolic_bp':        {'bsonType': 'int',    'minimum': 50,  'maximum': 300},
+            'diastolic_bp':       {'bsonType': 'int',    'minimum': 30,  'maximum': 200},
+            'blood_sugar_mg_dl':  {'bsonType': 'double', 'minimum': 0},
+            'heart_rate_bpm':     {'bsonType': 'int',    'minimum': 20,  'maximum': 300},
+            'oxygen_saturation':  {'bsonType': 'int',    'minimum': 50,  'maximum': 100},
+            'recorded_at':        {'bsonType': 'date'},
+            'created_at':         {'bsonType': 'date'},
+        },
+        'additionalProperties': False,
+    }
+}
+
 STRUCTURED_SYMPTOMS_VALIDATOR = {
     '$jsonSchema': {
         'bsonType': 'object',
@@ -128,7 +147,14 @@ SYMPTOM_VALIDATOR = {
             'timestamp': {'bsonType': 'date', 'description': 'Event timestamp'},
             'created_at': {'bsonType': 'date'},
             'notes': {'bsonType': 'string'},
-            'context': {'bsonType': 'object', 'description': 'Optional structured metadata for future ML'},
+            'context': {
+                'bsonType': 'object',
+                'description': 'Optional structured metadata — stores frequency, source, and future ML fields',
+                'properties': {
+                    'frequency': {'bsonType': 'string', 'enum': ['constant', 'occasional', 'rare']},
+                    'source':    {'bsonType': 'string'},
+                },
+            },
         },
         'additionalProperties': False,
     }

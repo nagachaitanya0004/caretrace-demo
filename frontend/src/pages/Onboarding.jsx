@@ -2,123 +2,222 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { api } from '../services/api';
+import VitalsStep from '../components/VitalsStep';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const CONDITION_OPTIONS = ['Diabetes', 'Heart Disease', 'Hypertension', 'Cancer', 'Stroke', 'Asthma', 'Other'];
 const RELATION_OPTIONS  = ['Father', 'Mother', 'Sibling', 'Grandparent', 'Other'];
 
-const inputStyle = {
-  width: '100%',
-  padding: '0.625rem 0.75rem',
-  border: '1px solid #e5e7eb',
-  borderRadius: '0.5rem',
-  fontSize: '0.875rem',
-  color: '#111827',
-  backgroundColor: '#ffffff',
-  outline: 'none',
-  boxSizing: 'border-box',
+// All styles use CSS custom properties so dark mode works automatically
+const S = {
+  page: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'var(--app-bg)',
+    padding: '1.5rem',
+  },
+  card: {
+    width: '100%',
+    maxWidth: '500px',
+    backgroundColor: 'var(--app-surface)',
+    borderRadius: '1rem',
+    border: '1px solid var(--app-border)',
+    boxShadow: 'var(--app-shadow-medium)',
+    padding: '2.5rem',
+  },
+  stepLabel: {
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    color: 'var(--app-accent)',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    marginBottom: '1.25rem',
+  },
+  title: {
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    color: 'var(--app-text)',
+    marginBottom: '0.25rem',
+  },
+  subtitle: {
+    fontSize: '0.875rem',
+    color: 'var(--app-text-muted)',
+    marginBottom: '0.25rem',
+  },
+  sectionLabel: {
+    fontSize: '0.8125rem',
+    fontWeight: 600,
+    color: 'var(--app-text)',
+    marginBottom: '1.5rem',
+    paddingTop: '0.25rem',
+  },
+  label: {
+    display: 'block',
+    fontSize: '0.8125rem',
+    fontWeight: 500,
+    color: 'var(--app-text-muted)',
+    marginBottom: '0.375rem',
+  },
+  input: {
+    width: '100%',
+    padding: '0.625rem 0.75rem',
+    border: '1px solid var(--app-input-border)',
+    borderRadius: '0.5rem',
+    fontSize: '0.875rem',
+    color: 'var(--app-text)',
+    backgroundColor: 'var(--app-input-bg)',
+    outline: 'none',
+    boxSizing: 'border-box',
+  },
+  field: { marginBottom: '1rem' },
+  hint: {
+    fontSize: '0.75rem',
+    color: 'var(--app-text-disabled)',
+    marginBottom: '1.25rem',
+    marginTop: '-0.75rem',
+  },
+  btnPrimary: (disabled) => ({
+    flex: 1,
+    padding: '0.75rem',
+    backgroundColor: 'var(--app-accent)',
+    color: '#ffffff',
+    borderRadius: '0.5rem',
+    fontSize: '0.875rem',
+    fontWeight: 600,
+    border: 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.6 : 1,
+  }),
+  btnSecondary: (disabled) => ({
+    flex: 1,
+    padding: '0.75rem',
+    backgroundColor: 'transparent',
+    color: 'var(--app-text-muted)',
+    borderRadius: '0.5rem',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    border: '1px solid var(--app-border)',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.6 : 1,
+  }),
+  btnRow: { display: 'flex', gap: '0.75rem', marginTop: '0.5rem' },
+  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' },
+  entryRow: (cols) => ({
+    display: 'grid',
+    gridTemplateColumns: cols,
+    gap: '0.5rem',
+    marginBottom: '0.75rem',
+    alignItems: 'end',
+  }),
+  removeBtn: (disabled) => ({
+    padding: '0.5rem',
+    background: 'none',
+    border: '1px solid var(--app-border)',
+    borderRadius: '0.5rem',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    color: 'var(--app-text-disabled)',
+    opacity: disabled ? 0.4 : 1,
+  }),
+  addBtn: {
+    fontSize: '0.8125rem',
+    color: 'var(--app-accent)',
+    background: 'none',
+    border: '1px dashed var(--app-border)',
+    borderRadius: '0.5rem',
+    padding: '0.5rem 0.875rem',
+    cursor: 'pointer',
+    marginBottom: '1.25rem',
+    width: '100%',
+  },
+  toggleLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0.625rem 0.75rem',
+    border: '1px solid var(--app-border)',
+    borderRadius: '0.5rem',
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    color: 'var(--app-text)',
+  },
+  bmiText: {
+    fontSize: '0.75rem',
+    color: 'var(--app-text-muted)',
+    marginBottom: '1rem',
+    marginTop: '0.25rem',
+  },
+  progressBar: {
+    display: 'flex',
+    gap: '0.375rem',
+    marginBottom: '1.75rem',
+  },
 };
 
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.8125rem',
-  fontWeight: 500,
-  color: '#374151',
-  marginBottom: '0.375rem',
-};
-
-const fieldStyle = { marginBottom: '1rem' };
-
-// Parse a comma-separated string into a trimmed, non-empty array
 function parseList(str) {
-  return str.split(',').map((s) => s.trim()).filter(Boolean);
+  return str.split(',').map(s => s.trim()).filter(Boolean);
 }
 
 export default function Onboarding() {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState(1);
+  const [step, setStep]           = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Step 1 — Basic Information
   const [basicForm, setBasicForm] = useState({
     age: '', gender: '', height_cm: '', weight_kg: '', blood_group: '', lifestyle: '',
   });
-
-  // Step 2 — Medical History (comma-separated strings in UI, sent as arrays)
   const [medForm, setMedForm] = useState({
     conditions: '', medications: '', allergies: '', surgeries: '',
   });
-
-  // Step 3 — Family History (dynamic list of {condition, relation} rows)
   const [famEntries, setFamEntries] = useState([{ condition: '', relation: '' }]);
-
-  const addFamEntry    = () => setFamEntries(prev => [...prev, { condition: '', relation: '' }]);
-  const removeFamEntry = (i) => setFamEntries(prev => prev.filter((_, idx) => idx !== i));
-  const updateFamEntry = (i, field, value) =>
-    setFamEntries(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
-
-  // Step 4 — Lifestyle & Habits
   const [lifeForm, setLifeForm] = useState({
     sleep_hours: '', sleep_quality: '', diet_type: '',
     exercise_frequency: '', water_intake_liters: '',
     smoking: false, alcohol: false, stress_level: 5,
   });
-  const handleLifeChange = (e) => {
+
+  const addFamEntry    = () => setFamEntries(p => [...p, { condition: '', relation: '' }]);
+  const removeFamEntry = (i) => setFamEntries(p => p.filter((_, idx) => idx !== i));
+  const updateFamEntry = (i, f, v) => setFamEntries(p => p.map((e, idx) => idx === i ? { ...e, [f]: v } : e));
+
+  const handleBasicChange = e => setBasicForm(p => ({ ...p, [e.target.name]: e.target.value }));
+  const handleMedChange   = e => setMedForm(p => ({ ...p, [e.target.name]: e.target.value }));
+  const handleLifeChange  = e => {
     const { name, value, type, checked } = e.target;
-    setLifeForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
-  };
-
-  const handleBasicChange = (e) => {
-    const { name, value } = e.target;
-    setBasicForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleMedChange = (e) => {
-    const { name, value } = e.target;
-    setMedForm((prev) => ({ ...prev, [name]: value }));
+    setLifeForm(p => ({ ...p, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const finishOnboarding = async () => {
     await api.patch('/auth/onboarding/complete');
-    if (setUser) setUser((prev) => ({ ...prev, is_onboarded: true }));
+    if (setUser) setUser(p => ({ ...p, is_onboarded: true }));
     navigate('/dashboard', { replace: true });
   };
 
-  // Step 1 — save basic info then advance to step 2
   const handleStep1Next = async () => {
     setIsSubmitting(true);
     try {
       const payload = {};
-      if (basicForm.age !== '')         payload.age        = parseInt(basicForm.age, 10);
-      if (basicForm.gender !== '')      payload.gender     = basicForm.gender;
-      if (basicForm.height_cm !== '')   payload.height_cm  = parseFloat(basicForm.height_cm);
-      if (basicForm.weight_kg !== '')   payload.weight_kg  = parseFloat(basicForm.weight_kg);
+      if (basicForm.age !== '')         payload.age         = parseInt(basicForm.age, 10);
+      if (basicForm.gender !== '')      payload.gender      = basicForm.gender;
+      if (basicForm.height_cm !== '')   payload.height_cm   = parseFloat(basicForm.height_cm);
+      if (basicForm.weight_kg !== '')   payload.weight_kg   = parseFloat(basicForm.weight_kg);
       if (basicForm.blood_group !== '') payload.blood_group = basicForm.blood_group;
-      if (basicForm.lifestyle !== '')   payload.lifestyle  = basicForm.lifestyle;
-      if (Object.keys(payload).length > 0) {
-        await api.put('/api/users/me', payload);
-      }
+      if (basicForm.lifestyle !== '')   payload.lifestyle   = basicForm.lifestyle;
+      if (Object.keys(payload).length > 0) await api.put('/api/users/me', payload);
       setStep(2);
-    } catch {
-      // Failsafe: still advance
-      setStep(2);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } catch { setStep(2); }
+    finally { setIsSubmitting(false); }
   };
 
-  // Step 1 — skip directly to step 2 without saving
-  const handleStep1Skip = () => setStep(2);
-
-  // Step 2 — save medical history then advance to step 3
   const handleStep2Next = async () => {
     setIsSubmitting(true);
     try {
       const payload = {};
-      const conditions = parseList(medForm.conditions);
+      const conditions  = parseList(medForm.conditions);
       const medications = parseList(medForm.medications);
       const allergies   = parseList(medForm.allergies);
       const surgeries   = parseList(medForm.surgeries);
@@ -126,72 +225,55 @@ export default function Onboarding() {
       if (medications.length) payload.medications = medications;
       if (allergies.length)   payload.allergies   = allergies;
       if (surgeries.length)   payload.surgeries   = surgeries;
-      if (Object.keys(payload).length > 0) {
-        await api.put('/api/medical-history', payload);
-      }
+      if (Object.keys(payload).length > 0) await api.put('/api/medical-history', payload);
       setStep(3);
-    } catch {
-      setStep(3);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } catch { setStep(3); }
+    finally { setIsSubmitting(false); }
   };
 
-  // Step 2 — skip without saving
-  const handleStep2Skip = () => setStep(3);
-
-  // Step 3 — save family history then advance to step 4
   const handleStep3Next = async () => {
     setIsSubmitting(true);
     try {
       const entries = famEntries
         .filter(e => e.condition.trim())
         .map(e => ({ condition_name: e.condition.trim(), relation: e.relation || null }));
-      if (entries.length > 0) {
-        await api.post('/api/family-history', { entries });
-      }
+      if (entries.length > 0) await api.post('/api/family-history', { entries });
       setStep(4);
-    } catch {
-      setStep(4);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } catch { setStep(4); }
+    finally { setIsSubmitting(false); }
   };
 
-  // Step 3 — skip without saving
-  const handleStep3Skip = () => setStep(4);
-
-  // Step 4 — save lifestyle data then finish onboarding
   const handleStep4Next = async () => {
     setIsSubmitting(true);
     try {
       const payload = {};
-      if (lifeForm.sleep_hours !== '')        payload.sleep_hours        = parseFloat(lifeForm.sleep_hours);
-      if (lifeForm.sleep_quality !== '')      payload.sleep_quality      = lifeForm.sleep_quality;
-      if (lifeForm.diet_type !== '')          payload.diet_type          = lifeForm.diet_type;
-      if (lifeForm.exercise_frequency !== '') payload.exercise_frequency = lifeForm.exercise_frequency;
+      if (lifeForm.sleep_hours !== '')         payload.sleep_hours         = parseFloat(lifeForm.sleep_hours);
+      if (lifeForm.sleep_quality !== '')       payload.sleep_quality       = lifeForm.sleep_quality;
+      if (lifeForm.diet_type !== '')           payload.diet_type           = lifeForm.diet_type;
+      if (lifeForm.exercise_frequency !== '') payload.exercise_frequency  = lifeForm.exercise_frequency;
       if (lifeForm.water_intake_liters !== '') payload.water_intake_liters = parseFloat(lifeForm.water_intake_liters);
       payload.smoking      = lifeForm.smoking;
       payload.alcohol      = lifeForm.alcohol;
       payload.stress_level = parseInt(lifeForm.stress_level, 10);
       await api.put('/api/lifestyle', payload);
-      await finishOnboarding();
+      setStep(5);
     } catch {
-      try { await finishOnboarding(); } catch { navigate('/dashboard', { replace: true }); }
-    } finally {
-      setIsSubmitting(false);
-    }
+      setStep(5);
+    } finally { setIsSubmitting(false); }
   };
 
-  // Step 4 — skip without saving
-  const handleStep4Skip = async () => {
-    setIsSubmitting(true);
-    try {
-      await finishOnboarding();
-    } catch {
-      navigate('/dashboard', { replace: true });
-    } finally {
-      setIsSubmitting(false);
+  const handleStep5Next = async () => {
+    await finishOnboarding();
+  };
+
+  const handleSkip = async (nextStep) => {
+    if (nextStep > TOTAL_STEPS) {
+      setIsSubmitting(true);
+      try { await finishOnboarding(); }
+      catch { navigate('/dashboard', { replace: true }); }
+      finally { setIsSubmitting(false); }
+    } else {
+      setStep(nextStep);
     }
   };
 
@@ -202,39 +284,46 @@ export default function Onboarding() {
     return null;
   })();
 
-  return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f9fafb', padding: '1.5rem' }}>
-      <div style={{ width: '100%', maxWidth: '480px', backgroundColor: '#ffffff', borderRadius: '1rem', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: '2.5rem' }}>
+  const STEP_TITLES = ['Basic Information', 'Medical History', 'Family Health History', 'Lifestyle & Habits', 'Health Metrics (Optional)'];
 
-        {/* Step indicator */}
-        <p style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
-          Step {step} of {TOTAL_STEPS}
-        </p>
+  return (
+    <div style={S.page}>
+      <div style={S.card}>
+
+        {/* Progress dots */}
+        <div style={S.progressBar}>
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => (
+            <div key={i} style={{
+              flex: 1,
+              height: '3px',
+              borderRadius: '999px',
+              backgroundColor: i < step ? 'var(--app-accent)' : 'var(--app-border)',
+              transition: 'background-color 0.3s ease',
+            }} />
+          ))}
+        </div>
+
+        {/* Step label */}
+        <p style={S.stepLabel}>Step {step} of {TOTAL_STEPS}</p>
 
         {/* Header */}
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111827', marginBottom: '0.375rem' }}>
-          Complete Your Profile
-        </h1>
-        <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-          Help us personalize your health insights
-        </p>
-        <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#111827', marginBottom: '1.75rem', paddingTop: '0.25rem' }}>
-          {step === 1 ? 'Basic Information' : step === 2 ? 'Medical History' : step === 3 ? 'Family Health History' : 'Lifestyle & Habits'}
-        </p>
+        <h1 style={S.title}>Complete Your Profile</h1>
+        <p style={S.subtitle}>Help us personalize your health insights</p>
+        <p style={S.sectionLabel}>{STEP_TITLES[step - 1]}</p>
 
-        {/* ── STEP 1 ── */}
+        {/* ── STEP 1 — Basic Information ── */}
         {step === 1 && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div style={S.grid2}>
               <div>
-                <label style={labelStyle}>Age</label>
+                <label style={S.label}>Age</label>
                 <input type="number" name="age" min="1" max="120" placeholder="e.g. 28"
-                  value={basicForm.age} onChange={handleBasicChange} disabled={isSubmitting} style={inputStyle} />
+                  value={basicForm.age} onChange={handleBasicChange} disabled={isSubmitting} style={S.input} />
               </div>
               <div>
-                <label style={labelStyle}>Gender</label>
+                <label style={S.label}>Gender</label>
                 <select name="gender" value={basicForm.gender} onChange={handleBasicChange}
-                  disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                  disabled={isSubmitting} style={S.input}>
                   <option value="">Select</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
@@ -243,38 +332,38 @@ export default function Onboarding() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: bmiPreview ? '0.5rem' : '1rem' }}>
+            <div style={{ ...S.grid2, marginBottom: bmiPreview ? '0.5rem' : '1rem' }}>
               <div>
-                <label style={labelStyle}>Height (cm)</label>
+                <label style={S.label}>Height (cm)</label>
                 <input type="number" name="height_cm" min="1" step="0.1" placeholder="e.g. 170"
-                  value={basicForm.height_cm} onChange={handleBasicChange} disabled={isSubmitting} style={inputStyle} />
+                  value={basicForm.height_cm} onChange={handleBasicChange} disabled={isSubmitting} style={S.input} />
               </div>
               <div>
-                <label style={labelStyle}>Weight (kg)</label>
+                <label style={S.label}>Weight (kg)</label>
                 <input type="number" name="weight_kg" min="1" step="0.1" placeholder="e.g. 65"
-                  value={basicForm.weight_kg} onChange={handleBasicChange} disabled={isSubmitting} style={inputStyle} />
+                  value={basicForm.weight_kg} onChange={handleBasicChange} disabled={isSubmitting} style={S.input} />
               </div>
             </div>
 
             {bmiPreview && (
-              <p style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '1rem', marginTop: '0.25rem' }}>
-                BMI: <span style={{ fontWeight: 600, color: '#111827' }}>{bmiPreview}</span>
+              <p style={S.bmiText}>
+                BMI: <span style={{ fontWeight: 600, color: 'var(--app-text)' }}>{bmiPreview}</span>
               </p>
             )}
 
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Blood Group</label>
+            <div style={S.field}>
+              <label style={S.label}>Blood Group</label>
               <select name="blood_group" value={basicForm.blood_group} onChange={handleBasicChange}
-                disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                disabled={isSubmitting} style={S.input}>
                 <option value="">Select</option>
-                {BLOOD_GROUPS.map((bg) => <option key={bg} value={bg}>{bg}</option>)}
+                {BLOOD_GROUPS.map(bg => <option key={bg} value={bg}>{bg}</option>)}
               </select>
             </div>
 
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Lifestyle</label>
+            <div style={S.field}>
+              <label style={S.label}>Lifestyle</label>
               <select name="lifestyle" value={basicForm.lifestyle} onChange={handleBasicChange}
-                disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                disabled={isSubmitting} style={S.input}>
                 <option value="">Select</option>
                 <option value="active">Active</option>
                 <option value="sedentary">Sedentary</option>
@@ -282,142 +371,99 @@ export default function Onboarding() {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-              <button onClick={handleStep1Next} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111827', color: '#ffffff', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+            <div style={S.btnRow}>
+              <button onClick={handleStep1Next} disabled={isSubmitting} style={S.btnPrimary(isSubmitting)}>
                 {isSubmitting ? 'Saving…' : 'Next'}
               </button>
-              <button onClick={handleStep1Skip} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: 'transparent', color: '#6b7280', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, border: '1px solid #e5e7eb', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+              <button onClick={() => handleSkip(2)} disabled={isSubmitting} style={S.btnSecondary(isSubmitting)}>
                 Skip for now
               </button>
             </div>
           </div>
         )}
 
-        {/* ── STEP 2 ── */}
+        {/* ── STEP 2 — Medical History ── */}
         {step === 2 && (
           <div>
-            <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '1.25rem', marginTop: '-1rem' }}>
-              Separate multiple entries with commas
-            </p>
-
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Existing Conditions</label>
-              <input type="text" name="conditions" placeholder="e.g. Diabetes, Hypertension"
-                value={medForm.conditions} onChange={handleMedChange} disabled={isSubmitting} style={inputStyle} />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Current Medications</label>
-              <input type="text" name="medications" placeholder="e.g. Metformin, Aspirin"
-                value={medForm.medications} onChange={handleMedChange} disabled={isSubmitting} style={inputStyle} />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Allergies</label>
-              <input type="text" name="allergies" placeholder="e.g. Penicillin, Peanuts"
-                value={medForm.allergies} onChange={handleMedChange} disabled={isSubmitting} style={inputStyle} />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Past Surgeries</label>
-              <input type="text" name="surgeries" placeholder="e.g. Appendectomy, ACL repair"
-                value={medForm.surgeries} onChange={handleMedChange} disabled={isSubmitting} style={inputStyle} />
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-              <button onClick={handleStep2Next} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111827', color: '#ffffff', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+            <p style={S.hint}>Separate multiple entries with commas</p>
+            {[
+              { name: 'conditions',  label: 'Existing Conditions', placeholder: 'e.g. Diabetes, Hypertension' },
+              { name: 'medications', label: 'Current Medications',  placeholder: 'e.g. Metformin, Aspirin' },
+              { name: 'allergies',   label: 'Allergies',            placeholder: 'e.g. Penicillin, Peanuts' },
+              { name: 'surgeries',   label: 'Past Surgeries',       placeholder: 'e.g. Appendectomy' },
+            ].map(({ name, label, placeholder }) => (
+              <div key={name} style={S.field}>
+                <label style={S.label}>{label}</label>
+                <input type="text" name={name} placeholder={placeholder}
+                  value={medForm[name]} onChange={handleMedChange} disabled={isSubmitting} style={S.input} />
+              </div>
+            ))}
+            <div style={S.btnRow}>
+              <button onClick={handleStep2Next} disabled={isSubmitting} style={S.btnPrimary(isSubmitting)}>
                 {isSubmitting ? 'Saving…' : 'Next'}
               </button>
-              <button onClick={handleStep2Skip} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: 'transparent', color: '#6b7280', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, border: '1px solid #e5e7eb', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+              <button onClick={() => handleSkip(3)} disabled={isSubmitting} style={S.btnSecondary(isSubmitting)}>
                 Skip for now
               </button>
             </div>
           </div>
         )}
 
-        {/* ── STEP 3 ── */}
+        {/* ── STEP 3 — Family Health History ── */}
         {step === 3 && (
           <div>
-            <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '1.25rem', marginTop: '-1rem' }}>
-              Add conditions that run in your family
-            </p>
-
+            <p style={S.hint}>Add conditions that run in your family</p>
             {famEntries.map((entry, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'end' }}>
+              <div key={i} style={S.entryRow('1fr 1fr auto')}>
                 <div>
-                  {i === 0 && <label style={labelStyle}>Condition</label>}
-                  <select
-                    value={entry.condition}
-                    onChange={(e) => updateFamEntry(i, 'condition', e.target.value)}
-                    disabled={isSubmitting}
-                    style={{ ...inputStyle, backgroundColor: '#ffffff' }}
-                  >
-                    <option value="">Select or type</option>
+                  {i === 0 && <label style={S.label}>Condition</label>}
+                  <select value={entry.condition} onChange={e => updateFamEntry(i, 'condition', e.target.value)}
+                    disabled={isSubmitting} style={S.input}>
+                    <option value="">Select</option>
                     {CONDITION_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  {i === 0 && <label style={labelStyle}>Relation</label>}
-                  <select
-                    value={entry.relation}
-                    onChange={(e) => updateFamEntry(i, 'relation', e.target.value)}
-                    disabled={isSubmitting}
-                    style={{ ...inputStyle, backgroundColor: '#ffffff' }}
-                  >
-                    <option value="">Select (optional)</option>
+                  {i === 0 && <label style={S.label}>Relation</label>}
+                  <select value={entry.relation} onChange={e => updateFamEntry(i, 'relation', e.target.value)}
+                    disabled={isSubmitting} style={S.input}>
+                    <option value="">Optional</option>
                     {RELATION_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
-                <button
-                  onClick={() => removeFamEntry(i)}
+                <button onClick={() => removeFamEntry(i)}
                   disabled={isSubmitting || famEntries.length === 1}
-                  style={{ padding: '0.5rem', background: 'none', border: '1px solid #e5e7eb', borderRadius: '0.5rem', cursor: famEntries.length === 1 ? 'not-allowed' : 'pointer', color: '#9ca3af', opacity: famEntries.length === 1 ? 0.4 : 1, marginBottom: '0.05rem' }}
-                  title="Remove"
-                >
-                  ✕
-                </button>
+                  style={S.removeBtn(isSubmitting || famEntries.length === 1)}
+                  title="Remove">✕</button>
               </div>
             ))}
-
-            <button
-              onClick={addFamEntry}
-              disabled={isSubmitting}
-              style={{ fontSize: '0.8125rem', color: '#374151', background: 'none', border: '1px dashed #d1d5db', borderRadius: '0.5rem', padding: '0.5rem 0.875rem', cursor: 'pointer', marginBottom: '1.25rem', width: '100%' }}
-            >
+            <button onClick={addFamEntry} disabled={isSubmitting} style={S.addBtn}>
               + Add another condition
             </button>
-
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={handleStep3Next} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111827', color: '#ffffff', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+            <div style={S.btnRow}>
+              <button onClick={handleStep3Next} disabled={isSubmitting} style={S.btnPrimary(isSubmitting)}>
                 {isSubmitting ? 'Saving…' : 'Next'}
               </button>
-              <button onClick={handleStep3Skip} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: 'transparent', color: '#6b7280', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, border: '1px solid #e5e7eb', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+              <button onClick={() => handleSkip(4)} disabled={isSubmitting} style={S.btnSecondary(isSubmitting)}>
                 Skip for now
               </button>
             </div>
           </div>
         )}
 
-        {/* ── STEP 4 ── */}
+        {/* ── STEP 4 — Lifestyle & Habits ── */}
         {step === 4 && (
           <div>
-            {/* Sleep */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div style={S.grid2}>
               <div>
-                <label style={labelStyle}>Sleep Duration (hrs)</label>
+                <label style={S.label}>Sleep Duration (hrs)</label>
                 <input type="number" name="sleep_hours" min="0" max="24" step="0.5" placeholder="e.g. 7"
-                  value={lifeForm.sleep_hours} onChange={handleLifeChange} disabled={isSubmitting} style={inputStyle} />
+                  value={lifeForm.sleep_hours} onChange={handleLifeChange} disabled={isSubmitting} style={S.input} />
               </div>
               <div>
-                <label style={labelStyle}>Sleep Quality</label>
+                <label style={S.label}>Sleep Quality</label>
                 <select name="sleep_quality" value={lifeForm.sleep_quality} onChange={handleLifeChange}
-                  disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                  disabled={isSubmitting} style={S.input}>
                   <option value="">Select</option>
                   <option value="good">Good</option>
                   <option value="average">Average</option>
@@ -426,12 +472,11 @@ export default function Onboarding() {
               </div>
             </div>
 
-            {/* Diet + Exercise */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div style={S.grid2}>
               <div>
-                <label style={labelStyle}>Diet Type</label>
+                <label style={S.label}>Diet Type</label>
                 <select name="diet_type" value={lifeForm.diet_type} onChange={handleLifeChange}
-                  disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                  disabled={isSubmitting} style={S.input}>
                   <option value="">Select</option>
                   <option value="veg">Vegetarian</option>
                   <option value="non-veg">Non-Vegetarian</option>
@@ -439,9 +484,9 @@ export default function Onboarding() {
                 </select>
               </div>
               <div>
-                <label style={labelStyle}>Exercise Frequency</label>
+                <label style={S.label}>Exercise Frequency</label>
                 <select name="exercise_frequency" value={lifeForm.exercise_frequency} onChange={handleLifeChange}
-                  disabled={isSubmitting} style={{ ...inputStyle, backgroundColor: '#ffffff' }}>
+                  disabled={isSubmitting} style={S.input}>
                   <option value="">Select</option>
                   <option value="none">None</option>
                   <option value="weekly">Weekly</option>
@@ -450,49 +495,49 @@ export default function Onboarding() {
               </div>
             </div>
 
-            {/* Water intake */}
-            <div style={fieldStyle}>
-              <label style={labelStyle}>Water Intake (liters/day)</label>
+            <div style={S.field}>
+              <label style={S.label}>Water Intake (liters/day)</label>
               <input type="number" name="water_intake_liters" min="0" step="0.1" placeholder="e.g. 2.5"
-                value={lifeForm.water_intake_liters} onChange={handleLifeChange} disabled={isSubmitting} style={inputStyle} />
+                value={lifeForm.water_intake_liters} onChange={handleLifeChange} disabled={isSubmitting} style={S.input} />
             </div>
 
-            {/* Stress level slider */}
-            <div style={fieldStyle}>
-              <label style={labelStyle}>
-                Stress Level <span style={{ fontWeight: 700, color: '#111827' }}>{lifeForm.stress_level}</span><span style={{ color: '#9ca3af' }}>/10</span>
+            <div style={S.field}>
+              <label style={S.label}>
+                Stress Level&nbsp;
+                <span style={{ fontWeight: 700, color: 'var(--app-text)' }}>{lifeForm.stress_level}</span>
+                <span style={{ color: 'var(--app-text-disabled)' }}>/10</span>
               </label>
               <input type="range" name="stress_level" min="1" max="10" step="1"
                 value={lifeForm.stress_level} onChange={handleLifeChange} disabled={isSubmitting}
-                style={{ width: '100%', accentColor: '#111827' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.25rem' }}>
+                style={{ width: '100%', accentColor: 'var(--app-accent)' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--app-text-disabled)', marginTop: '0.25rem' }}>
                 <span>Low</span><span>High</span>
               </div>
             </div>
 
-            {/* Smoking + Alcohol toggles */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ ...S.grid2, marginBottom: '1.25rem' }}>
               {[['smoking', 'Smoking'], ['alcohol', 'Alcohol']].map(([key, label]) => (
-                <label key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.625rem 0.75rem', border: '1px solid #e5e7eb', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.875rem', color: '#374151' }}>
+                <label key={key} style={S.toggleLabel}>
                   {label}
                   <input type="checkbox" name={key} checked={lifeForm[key]} onChange={handleLifeChange}
-                    disabled={isSubmitting} style={{ width: '1rem', height: '1rem', accentColor: '#111827' }} />
+                    disabled={isSubmitting} style={{ width: '1rem', height: '1rem', accentColor: 'var(--app-accent)' }} />
                 </label>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={handleStep4Next} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111827', color: '#ffffff', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
-                {isSubmitting ? 'Saving…' : 'Finish'}
+            <div style={S.btnRow}>
+              <button onClick={handleStep4Next} disabled={isSubmitting} style={S.btnPrimary(isSubmitting)}>
+                {isSubmitting ? 'Saving…' : 'Next'}
               </button>
-              <button onClick={handleStep4Skip} disabled={isSubmitting}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: 'transparent', color: '#6b7280', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 500, border: '1px solid #e5e7eb', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+              <button onClick={() => handleSkip(5)} disabled={isSubmitting} style={S.btnSecondary(isSubmitting)}>
                 Skip for now
               </button>
             </div>
           </div>
         )}
+
+        {/* ── STEP 5 — Health Metrics (Optional) ── */}
+        {step === 5 && <VitalsStep onNext={handleStep5Next} disabled={isSubmitting} />}
 
       </div>
     </div>

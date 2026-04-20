@@ -34,6 +34,11 @@ function History() {
                         <span className="font-medium text-slate-900">
                           {t(`symptoms.options.${s.symptom}`, { defaultValue: s.symptom })}
                         </span>
+                        {s.context?.frequency && (
+                          <span className="ml-2 text-xs text-teal-700 bg-teal-50 border border-teal-100 px-1.5 py-0.5 rounded-full capitalize">
+                            {s.context.frequency}
+                          </span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {t('timeline.days_tracking', { count: s.duration })}

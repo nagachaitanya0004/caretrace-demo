@@ -158,10 +158,10 @@ export function AppProvider({ children }) {
   const addSymptom = useCallback(
     async (symptomParams) => {
       if (!user?.id) return;
-      const { date, notes, symptom, duration, severity } = symptomParams;
+      const { date, notes, symptom, duration, severity, frequency, duration_text } = symptomParams;
       const payload = {
         symptom,
-        duration: Number(duration),
+        duration: Number(duration) || 0,
         severity: Number(severity),
       };
       if (notes) payload.notes = notes;
@@ -174,6 +174,11 @@ export function AppProvider({ children }) {
       if (!payload.timestamp) {
         payload.timestamp = new Date().toISOString();
       }
+      // Store structured extras in context so they flow to all existing consumers
+      const context = {};
+      if (frequency) context.frequency = frequency;
+      if (duration_text) context.duration_text = duration_text;
+      if (Object.keys(context).length > 0) payload.context = context;
       await api.post('/api/symptoms', payload);
       await fetchAppData();
     },

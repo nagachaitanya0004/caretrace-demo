@@ -16,10 +16,10 @@ from app.schemas.schemas import (
     AlertCreate,
     AnalysisCreate,
     FamilyHistoryBatch,
+    HealthMetricsCreate,
     LifestyleDataUpsert,
     MedicalHistoryUpsert,
     ReportCreate,
-    StructuredSymptomCreate,
     SymptomCreate,
     UserCreate,
     UserUpdate,
@@ -365,23 +365,24 @@ async def get_lifestyle(current_user: dict = Depends(get_current_user)):
     return success_response(serialize_document(record) if record else None, message='Lifestyle data retrieved')
 
 
-@router.post('/structured-symptoms')
-async def create_structured_symptom(payload: StructuredSymptomCreate, current_user: dict = Depends(get_current_user)):
+@router.post('/health-metrics')
+async def create_health_metrics(payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_id = current_user['_id']
-    doc = {'user_id': user_id, 'symptom_name': payload.symptom_name.strip(), 'created_at': datetime.utcnow()}
-    if payload.severity  is not None: doc['severity']  = payload.severity
-    if payload.duration  is not None: doc['duration']  = payload.duration.strip()
-    if payload.frequency is not None: doc['frequency'] = payload.frequency
-    if payload.notes     is not None: doc['notes']     = payload.notes.strip()
-    result = await db.structured_symptoms.insert_one(doc)
-    saved = await db.structured_symptoms.find_one({'_id': result.inserted_id})
-    return success_response(serialize_document(saved), message='Structured symptom recorded')
+    now = datetime.utcnow()
+    # Only write fields that were actually provided
+    doc = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if not doc:
+        raise HTTPException(status_code=400, detail='At least one metric value is required')
+    doc.update({'user_id': user_id, 'recorded_at': now, 'created_at': now})
+    result = await db.health_metrics.insert_one(doc)
+    saved = await db.health_metrics.find_one({'_id': result.inserted_id})
+    return success_response(serialize_document(saved), message='Health metrics recorded')
 
 
-@router.get('/structured-symptoms')
-async def list_structured_symptoms(current_user: dict = Depends(get_current_user)):
+@router.get('/health-metrics')
+async def list_health_metrics(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    cursor = db.structured_symptoms.find({'user_id': current_user['_id']}).sort('created_at', -1)
-    items = [serialize_document(d) async for d in cursor]
-    return success_response(items, message='Structured symptoms retrieved')
+    cursor = db.health_metrics.find({'user_id': current_user['_id']}).sort('recorded_at', -1)
+    records = [serialize_document(d) async for d in cursor]
+    return success_response(records, message='Health metrics retrieved')

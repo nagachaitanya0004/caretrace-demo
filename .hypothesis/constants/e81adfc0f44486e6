@@ -1,0 +1,4 @@
+# file: /Users/nagachaitanya/care-trace-ai-demo/backend/app/models/setup.py
+# hypothesis_version: 6.141.1
+
+['age', 'asc', 'created_at', 'desc', 'expires_at', 'fields', 'gender', 'generated_at', 'idx_alert_severity', 'idx_report_type', 'idx_session_token', 'idx_symptom_label', 'idx_user_age', 'idx_user_gender', 'idx_user_name', 'indexes', 'name', 'recorded_at', 'report_type', 'risk_level', 'session_token', 'severity', 'symptom', 'timestamp', 'unique', 'user_id', 'validator']

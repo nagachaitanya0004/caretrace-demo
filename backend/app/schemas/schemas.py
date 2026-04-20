@@ -140,9 +140,9 @@ class LifestyleDataUpsert(BaseModel):
     stress_level:        Optional[int]   = Field(default=None, ge=1, le=10)
 
 
-class StructuredSymptomCreate(BaseModel):
-    symptom_name: str          = Field(..., min_length=1)
-    severity:     Optional[int]   = Field(default=None, ge=1, le=10)
-    duration:     Optional[str]   = Field(default=None)
-    frequency:    Optional[str]   = Field(default=None)
-    notes:        Optional[str]   = Field(default=None)
+class HealthMetricsCreate(BaseModel):
+    systolic_bp:       Optional[int]   = Field(default=None, ge=50,  le=300)
+    diastolic_bp:      Optional[int]   = Field(default=None, ge=30,  le=200)
+    blood_sugar_mg_dl: Optional[float] = Field(default=None, ge=0)
+    heart_rate_bpm:    Optional[int]   = Field(default=None, ge=20,  le=300)
+    oxygen_saturation: Optional[int]   = Field(default=None, ge=50,  le=100)
