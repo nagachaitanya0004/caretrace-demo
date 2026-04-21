@@ -30,6 +30,7 @@ app.include_router(api_router, prefix='/api', tags=['api'])
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
+    allow_origin_regex=r'^https://.*\.vercel\.app$|^https://.*\.onrender\.com$|^http://localhost:\d+$',
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
