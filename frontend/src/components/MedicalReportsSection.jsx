@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { api, unwrapApiPayload } from '../services/api';
+import { api, unwrapApiPayload, API_BASE_URL } from '../services/api';
 import Card from './Card';
 import Button from './Button';
 
@@ -145,11 +145,8 @@ export default function MedicalReportsSection({ addNotification }) {
 
   // View — open inline in new tab
   function handleView(report) {
-    const token = localStorage.getItem('caretrace_token');
-    const base = import.meta.env.VITE_API_URL ||
-      (import.meta.env.DEV ? '' : 'https://caretrace-backend.onrender.com');
     window.open(
-      `${base}/api/medical-reports/${report.id}/download?inline=true`,
+      `${API_BASE_URL}/api/medical-reports/${report.id}/download?inline=true`,
       '_blank',
       'noopener,noreferrer'
     );
@@ -157,11 +154,8 @@ export default function MedicalReportsSection({ addNotification }) {
 
   // Download — trigger browser download
   function handleDownload(report) {
-    const token = localStorage.getItem('caretrace_token');
-    const base = import.meta.env.VITE_API_URL ||
-      (import.meta.env.DEV ? '' : 'https://caretrace-backend.onrender.com');
     const a = document.createElement('a');
-    a.href = `${base}/api/medical-reports/${report.id}/download`;
+    a.href = `${API_BASE_URL}/api/medical-reports/${report.id}/download`;
     a.download = report.file_name;
     document.body.appendChild(a);
     a.click();

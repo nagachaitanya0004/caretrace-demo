@@ -4,15 +4,16 @@
   "private": true,
   "description": "CareTrace AI - Health Monitoring Platform",
   "scripts": {
+    "setup": "npm install && npm run setup:backend && npm run setup:frontend",
+    "setup:frontend": "cd frontend && npm install",
+    "setup:backend": "python3 -m venv .venv && cd backend && ../.venv/bin/pip install -r requirements.txt",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && ../.venv/bin/python -m uvicorn app.main:app --reload --port 8001",
     "dev:frontend": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
     "test": "npm run test:backend && npm run test:frontend",
     "test:backend": "cd backend && ../.venv/bin/python -m pytest tests/ -v",
-    "test:frontend": "cd frontend && npm test",
-    "install:frontend": "cd frontend && npm install",
-    "install:backend": "cd backend && ../.venv/bin/pip install -r requirements.txt"
+    "test:frontend": "cd frontend && npm test"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

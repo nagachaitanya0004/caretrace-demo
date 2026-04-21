@@ -1,12 +1,10 @@
 /* Dev: use same-origin + Vite proxy (vite.config.js) to avoid CORS and "failed to fetch".
-   Prod: set VITE_API_URL to your API origin, or leave unset if the app is served from the same host as the API. */
-const BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? '' : 'https://caretrace-backend.onrender.com');
+   Prod: set VITE_API_URL to your API origin. Leave unset only if the app and API are served from the same host. */
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 // Log the API URL being used (only in development)
 if (import.meta.env.DEV) {
-  console.log('API Base URL:', BASE_URL || 'Same origin (proxy)');
+  console.log('API Base URL:', API_BASE_URL || 'Same origin (proxy)');
 }
 
 async function request(endpoint, options = {}) {
@@ -28,7 +26,7 @@ async function request(endpoint, options = {}) {
 
   let response;
   try {
-    response = await fetch(`${BASE_URL}${endpoint}`, {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
     });
@@ -101,7 +99,7 @@ export const api = {
       headers['Authorization'] = `Bearer ${token}`;
     }
     // Don't set Content-Type — browser sets it with the multipart boundary
-    return fetch(`${BASE_URL}${endpoint}`, {
+    return fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
       headers,
       body: formData,
