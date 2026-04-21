@@ -1,0 +1,40 @@
+MIT License
+
+Copyright (c) 2024 CareTrace AI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+DISCLAIMER FOR HEALTHCARE APPLICATION:
+
+This software is provided for educational and demonstration purposes. It is NOT
+intended for use in actual medical diagnosis, treatment, or healthcare delivery
+without proper medical oversight, regulatory approval, and compliance with
+applicable healthcare regulations (HIPAA, GDPR, etc.).
+
+Users are responsible for:
+- Obtaining necessary regulatory approvals
+- Ensuring compliance with healthcare data regulations
+- Implementing appropriate security measures
+- Conducting proper medical validation
+- Obtaining professional medical oversight
+
+The authors and copyright holders assume no liability for medical decisions,
+data breaches, or regulatory violations arising from the use of this software.

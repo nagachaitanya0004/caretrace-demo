@@ -1,22 +1,35 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.db import close_db, init_db
+from app.core.config import APP_NAME, APP_VERSION, CORS_ORIGINS
 from app.core.logger import logger
 from app.core.responses import error_response, http_error_response, validation_error_response
 from app.api.routes import router as api_router
 from app.api.auth import router as auth_router
-from app.core.config import APP_NAME, APP_VERSION
 
-app = FastAPI(title=APP_NAME, version=APP_VERSION)
-app.include_router(auth_router, prefix="/auth", tags=["auth"])
-app.include_router(api_router, prefix="/api", tags=["api"])
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info('Starting %s v%s', APP_NAME, APP_VERSION)
+    await init_db()
+    yield
+    logger.info('Shutting down %s', APP_NAME)
+    await close_db()
+
+
+app = FastAPI(title=APP_NAME, version=APP_VERSION, lifespan=lifespan)
+
+app.include_router(auth_router, prefix='/auth', tags=['auth'])
+app.include_router(api_router, prefix='/api', tags=['api'])
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -29,18 +42,6 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     logger.info('Response %s %s %s', request.method, request.url.path, response.status_code)
     return response
-
-
-@app.on_event('startup')
-async def on_startup():
-    logger.info('Starting CareTrace AI backend')
-    await init_db()
-
-
-@app.on_event('shutdown')
-async def on_shutdown():
-    logger.info('Shutting down CareTrace AI backend')
-    await close_db()
 
 
 @app.exception_handler(HTTPException)
@@ -58,7 +59,7 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.exception('Unhandled exception: %s', exc)
     return JSONResponse(
         status_code=500,
-        content=error_response('Internal server error', error=str(exc)),
+        content=error_response('Internal server error'),
     )
 
 
@@ -67,11 +68,10 @@ async def health_check():
     return {
         'success': True,
         'data': {'status': 'ok', 'service': APP_NAME},
-        'message': 'CareTrace AI backend is healthy',
+        'message': f'{APP_NAME} is healthy',
     }
 
 
 if __name__ == '__main__':
     import uvicorn
-
-    uvicorn.run('app.main:app', host='127.0.0.1', port=8000, reload=True)
+    uvicorn.run('app.main:app', host='127.0.0.1', port=8001, reload=True)

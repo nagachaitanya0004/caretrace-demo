@@ -27,8 +27,17 @@ function Landing() {
     try {
       await login(DEMO_EMAIL, DEMO_PASSWORD);
       navigate('/dashboard', { replace: true });
-    } catch {
-      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Demo login failed:', error);
+      // If demo login fails, redirect to login page with a message
+      // The user can still try to login manually or sign up
+      navigate('/login', { 
+        replace: true,
+        state: { 
+          message: 'Demo account is currently unavailable. Please login or sign up.',
+          demoFailed: true 
+        }
+      });
     } finally {
       setDemoLoading(false);
     }

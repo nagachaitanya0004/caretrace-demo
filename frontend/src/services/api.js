@@ -4,6 +4,11 @@ const BASE_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? '' : 'https://caretrace-backend.onrender.com');
 
+// Log the API URL being used (only in development)
+if (import.meta.env.DEV) {
+  console.log('API Base URL:', BASE_URL || 'Same origin (proxy)');
+}
+
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('caretrace_token');
 

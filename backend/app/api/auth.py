@@ -10,9 +10,8 @@ import jwt
 
 from app.db.db import get_database
 from app.core.responses import error_response, success_response
+from app.core.config import ALGORITHM, SECRET_KEY
 from app.core.security import (
-    ALGORITHM,
-    SECRET_KEY,
     create_access_token,
     get_password_hash,
     verify_password,
