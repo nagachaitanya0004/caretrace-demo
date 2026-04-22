@@ -37,3 +37,9 @@ CORS_ORIGINS: list[str] = [
     for o in os.getenv('CORS_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
     if o.strip()
 ]
+
+# PostgreSQL Configuration (NEW - for future dual database support)
+POSTGRES_URL: str = os.getenv(
+    'POSTGRES_URL',
+    'postgresql+asyncpg://postgres:postgres@localhost:5432/caretrace_ai'
+)
