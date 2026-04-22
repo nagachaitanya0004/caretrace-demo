@@ -252,7 +252,9 @@ async def create_symptom(payload: SymptomCreate, current_user: dict = Depends(ge
     user_id = current_user["_id"]
     payload_data = {k: v for k, v in payload.model_dump().items() if v is not None}
     payload_data["user_id"] = user_id
-    payload_data['created_at'] = datetime.utcnow()
+    now = datetime.utcnow()
+    payload_data['created_at'] = now
+    payload_data['recorded_at'] = now
     result = await db.symptoms.insert_one(payload_data)
     symptom = await db.symptoms.find_one({'_id': result.inserted_id})
     await create_alert_if_needed(user_id, payload)

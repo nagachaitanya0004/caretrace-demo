@@ -89,22 +89,54 @@ function Signup() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className={labelClass}>{t('auth.full_name')}</label>
-              <input type="text" name="name" required className={inputClass} placeholder="Rahul Sharma" value={formData.name} onChange={handleChange} disabled={isLoading} />
+              <input 
+                type="text" 
+                name="name" 
+                required 
+                className={inputClass} 
+                placeholder="Enter your full name" 
+                value={formData.name} 
+                onChange={handleChange} 
+                disabled={isLoading}
+                autoComplete="name"
+              />
             </div>
 
             <div>
               <label className={labelClass}>{t('auth.email')}</label>
-              <input type="email" name="email" required className={inputClass} placeholder="you@example.com" value={formData.email} onChange={handleChange} disabled={isLoading} />
+              <input 
+                type="email" 
+                name="email" 
+                required 
+                className={inputClass} 
+                placeholder="your.email@example.com" 
+                value={formData.email} 
+                onChange={handleChange} 
+                disabled={isLoading}
+                autoComplete="email"
+              />
             </div>
 
             <div>
               <label className={labelClass}>{t('auth.password')}</label>
-              <input type="password" name="password" required className={inputClass} placeholder="••••••••" value={formData.password} onChange={handleChange} disabled={isLoading} />
+              <input 
+                type="password" 
+                name="password" 
+                required 
+                className={inputClass} 
+                placeholder="Minimum 6 characters" 
+                value={formData.password} 
+                onChange={handleChange} 
+                disabled={isLoading}
+                autoComplete="new-password"
+                minLength="6"
+              />
+              <p className="text-xs text-zinc-500 mt-1.5">Use a strong password with letters, numbers, and symbols</p>
             </div>
 
             <button
               type="submit"
-              className="w-full mt-4 py-3 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-6 py-3 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -118,11 +150,26 @@ function Signup() {
             </button>
           </form>
 
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-zinc-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 bg-white text-zinc-500">Already have an account?</span>
+              </div>
+            </div>
+          </div>
+
           <p className="text-center mt-6 text-sm text-zinc-500">
             {t('auth.already_mapped')}{' '}
-            <Link to="/login" className="text-zinc-900 hover:text-zinc-700 font-semibold transition-colors">
+            <Link to="/login" className="text-teal-600 hover:text-teal-700 font-semibold transition-colors">
               {t('auth.login_natively')}
             </Link>
+          </p>
+
+          <p className="text-center mt-6 text-xs text-zinc-400">
+            By signing up, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
       </div>

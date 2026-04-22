@@ -154,6 +154,13 @@
   "symptoms": {
     "title": "Track Your Symptoms",
     "subtitle": "Help us understand how you're feeling by logging your symptoms.",
+    "health_goal_title": "What is your goal today?",
+    "health_goals": {
+      "symptom_check": "Check current symptoms",
+      "chronic_management": "Manage an existing condition",
+      "preventive_care": "Preventive health check",
+      "general_consultation": "General consultation"
+    },
     "add_title": "Add a Symptom",
     "voice_input": "Voice Input",
     "listening": "Listening...",

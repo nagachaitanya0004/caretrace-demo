@@ -113,10 +113,11 @@ function Login() {
                 type="email"
                 required
                 className="w-full p-3 input-premium text-sm"
-                placeholder="you@example.com"
+                placeholder="your.email@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
+                autoComplete="email"
               />
             </div>
 
@@ -126,16 +127,17 @@ function Login() {
                 type="password"
                 required
                 className="w-full p-3 input-premium text-sm"
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
+                autoComplete="current-password"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -149,9 +151,20 @@ function Login() {
             </button>
           </form>
 
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-zinc-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 bg-white text-zinc-500">New to CareTrace AI?</span>
+              </div>
+            </div>
+          </div>
+
           <p className="text-center mt-6 text-sm text-zinc-500">
             {t('auth.no_account')}{' '}
-            <Link to="/signup" className="text-zinc-900 hover:text-zinc-700 font-semibold transition-colors">
+            <Link to="/signup" className="text-teal-600 hover:text-teal-700 font-semibold transition-colors">
               {t('auth.create_profile')}
             </Link>
           </p>

@@ -37,6 +37,7 @@ USER_VALIDATOR = {
             'weight_kg': {'bsonType': 'double', 'description': 'Weight in kilograms'},
             'blood_group': {'bsonType': 'string', 'description': 'Blood group / type'},
             'bmi': {'bsonType': 'double', 'description': 'Body Mass Index, derived from height and weight'},
+            'health_goal': {'bsonType': 'string', 'enum': ['symptom_check', 'chronic_management', 'preventive_care', 'general_consultation'], 'description': 'User health intent'},
         },
         'additionalProperties': False,
     }
@@ -130,6 +131,7 @@ STRUCTURED_SYMPTOMS_VALIDATOR = {
             'frequency':    {'bsonType': 'string',  'enum': ['constant', 'occasional', 'rare']},
             'notes':        {'bsonType': 'string'},
             'created_at':   {'bsonType': 'date'},
+            'recorded_at':  {'bsonType': 'date',    'description': 'Timestamp when symptom was recorded'},
         },
         'additionalProperties': False,
     }
@@ -147,6 +149,7 @@ SYMPTOM_VALIDATOR = {
             'severity': {'bsonType': 'int', 'minimum': 1, 'maximum': 10, 'description': 'Severity from 1-10'},
             'timestamp': {'bsonType': 'date', 'description': 'Event timestamp'},
             'created_at': {'bsonType': 'date'},
+            'recorded_at': {'bsonType': 'date', 'description': 'Timestamp when symptom was recorded'},
             'notes': {'bsonType': 'string'},
             'context': {
                 'bsonType': 'object',
@@ -265,13 +268,15 @@ def build_user_document(name: str, email: str, hashed_password: str, age: int, g
 
 
 def build_symptom_document(user_id: PyObjectId, symptom: str, duration: int, severity: int, timestamp: datetime, notes: Optional[str] = None, context: Optional[Dict[str, Any]] = None) -> dict:
+    now = datetime.utcnow()
     doc = {
         'user_id': user_id,
         'symptom': symptom,
         'duration': duration,
         'severity': severity,
         'timestamp': timestamp,
-        'created_at': datetime.utcnow(),
+        'created_at': now,
+        'recorded_at': now,
     }
     if notes is not None:
         doc['notes'] = notes

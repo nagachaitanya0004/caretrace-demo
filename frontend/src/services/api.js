@@ -2,7 +2,7 @@
    Prod: set VITE_API_URL to your API origin. Leave unset only if the app and API are served from the same host. */
 let baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 if (import.meta.env.PROD && !baseUrl) {
-  baseUrl = 'https://caretrace-backend.onrender.com';
+  console.warn('VITE_API_URL environment variable is not set. API requests will default to the same origin.');
 }
 export const API_BASE_URL = baseUrl;
 

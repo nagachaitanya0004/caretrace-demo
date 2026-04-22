@@ -1,14 +1,17 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../AppContext';
 import { useNotification } from '../NotificationContext';
+import { useAuth } from '../AuthContext';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
 import PageFrame from '../components/PageFrame';
+import HealthGoalSelector from '../components/HealthGoalSelector';
 import { symptomOptions } from '../data/symptoms';
 import { getSeverityLabel, formattedDate } from '../utils/health';
+import { api, unwrapApiPayload } from '../services/api';
 
 const FREQUENCY_OPTIONS = ['constant', 'occasional', 'rare'];
 const ALL_SYMPTOM_OPTIONS = [
@@ -29,6 +32,7 @@ const EMPTY_FORM = () => ({
 function Symptoms() {
   const navigate = useNavigate();
   const { symptoms, addSymptom } = useContext(AppContext);
+  const { user, setUser } = useAuth();
   const { t, i18n } = useTranslation();
   const { addNotification } = useNotification();
 
@@ -36,10 +40,26 @@ function Symptoms() {
   const [error, setError]       = useState('');
   const [saving, setSaving]     = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [healthGoal, setHealthGoal] = useState(user?.health_goal || '');
+  const [goalSaving, setGoalSaving] = useState(false);
 
   const update = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
     setError('');
+  };
+
+  const handleHealthGoalChange = async (goal) => {
+    setHealthGoal(goal);
+    setGoalSaving(true);
+    try {
+      const response = await api.put('/api/users/me', { health_goal: goal });
+      const updated = unwrapApiPayload(response);
+      setUser(updated);
+    } catch (e) {
+      console.error('Failed to update health goal:', e);
+    } finally {
+      setGoalSaving(false);
+    }
   };
 
   // Simulated voice input — fills the quick fields
@@ -84,6 +104,11 @@ function Symptoms() {
 
   return (
     <PageFrame title={t('symptoms.title')} subtitle={t('symptoms.subtitle')} headAlign="center" maxWidthClass="max-w-4xl">
+
+      {/* ── Health Goal Selector ── */}
+      <Card className="border-slate-200/80">
+        <HealthGoalSelector value={healthGoal} onChange={handleHealthGoalChange} />
+      </Card>
 
       {/* ── Single unified symptom log form ── */}
       <Card className="relative overflow-hidden border-slate-200/80">

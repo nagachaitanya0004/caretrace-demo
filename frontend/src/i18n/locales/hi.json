@@ -132,6 +132,13 @@
   "symptoms": {
     "title": "अपने लक्षणों को ट्रैक करें",
     "subtitle": "हमें यह समझने में मदद करें कि आप कैसा महसूस कर रहे हैं।",
+    "health_goal_title": "आज आपका लक्ष्य क्या है?",
+    "health_goals": {
+      "symptom_check": "वर्तमान लक्षणों की जांच करें",
+      "chronic_management": "मौजूदा स्थिति का प्रबंधन करें",
+      "preventive_care": "निवारक स्वास्थ्य जांच",
+      "general_consultation": "सामान्य परामर्श"
+    },
     "add_title": "लक्षण जोड़ें",
     "voice_input": "ध्वनि इनपुट",
     "listening": "सुन रहे हैं...",

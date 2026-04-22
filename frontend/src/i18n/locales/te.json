@@ -166,6 +166,13 @@
       "dizziness": "కళ్లు తిరగడం",
       "chest pain": "ఛాతీ నొప్పి",
       "shortness of breath": "శ్వాస ఆడకపోవడం"
+    },
+    "health_goal_title": "ఈరోజు మీ లక్ష్యం ఏమిటి?",
+    "health_goals": {
+      "symptom_check": "ప్రస్తుత లక్షణాలను తనిఖీ చేయండి",
+      "chronic_management": "ఇప్పటికే ఉన్న పరిస్థితిని నిర్వహించండి",
+      "preventive_care": "నివారణ ఆరోగ్య తనిఖీ",
+      "general_consultation": "సాధారణ సంప్రదింపు"
     }
   },
   "timeline": {

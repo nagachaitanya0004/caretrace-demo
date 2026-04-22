@@ -3,11 +3,11 @@ import { api } from '../services/api';
 
 // Validation ranges matching backend Pydantic schema
 const FIELDS = [
-  { key: 'systolic_bp',       label: 'Systolic BP (mmHg)',    min: 50,  max: 300, isFloat: false },
-  { key: 'diastolic_bp',      label: 'Diastolic BP (mmHg)',   min: 30,  max: 200, isFloat: false },
-  { key: 'blood_sugar_mg_dl', label: 'Blood Sugar (mg/dL)',   min: 0,   max: null, isFloat: true },
-  { key: 'heart_rate_bpm',    label: 'Heart Rate (bpm)',      min: 20,  max: 300, isFloat: false },
-  { key: 'oxygen_saturation', label: 'Oxygen Saturation (%)', min: 50,  max: 100, isFloat: false },
+  { key: 'systolic_bp',       label: 'Systolic BP (mmHg)',    min: 50,  max: 300, isFloat: false, placeholder: 'e.g. 120' },
+  { key: 'diastolic_bp',      label: 'Diastolic BP (mmHg)',   min: 30,  max: 200, isFloat: false, placeholder: 'e.g. 80' },
+  { key: 'blood_sugar_mg_dl', label: 'Blood Sugar (mg/dL)',   min: 0,   max: null, isFloat: true, placeholder: 'e.g. 100' },
+  { key: 'heart_rate_bpm',    label: 'Heart Rate (bpm)',      min: 20,  max: 300, isFloat: false, placeholder: 'e.g. 72' },
+  { key: 'oxygen_saturation', label: 'Oxygen Saturation (%)', min: 50,  max: 100, isFloat: false, placeholder: 'e.g. 98' },
 ];
 
 const INITIAL_FORM = {
@@ -176,6 +176,7 @@ export default function VitalsStep({ onNext, disabled }) {
             value={form[fieldDef.key]}
             onChange={handleChange}
             disabled={isDisabled}
+            placeholder={fieldDef.placeholder}
             style={errors[fieldDef.key] ? S.inputError : S.input}
             step={fieldDef.isFloat ? '0.1' : '1'}
           />

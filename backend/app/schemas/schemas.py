@@ -38,6 +38,7 @@ class UserUpdate(BaseModel):
     height_cm: Optional[float] = Field(default=None, gt=0)
     weight_kg: Optional[float] = Field(default=None, gt=0)
     blood_group: Optional[str] = Field(default=None, min_length=1)
+    health_goal: Optional[str] = Field(default=None)
 
 
 class UserInDB(UserBase, TimestampedModel):

@@ -166,6 +166,13 @@
       "dizziness": "ತಲೆಸುತ್ತು",
       "chest pain": "ಎದೆ ನೋವು",
       "shortness of breath": "ಉಸಿರಾಟದ ತೊಂದರೆ"
+    },
+    "health_goal_title": "ಇಂದು ನಿಮ್ಮ ಗುರಿ ಏನು?",
+    "health_goals": {
+      "symptom_check": "ಪ್ರಸ್ತುತ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ",
+      "chronic_management": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸ್ಥಿತಿಯನ್ನು ನಿರ್ವಹಿಸಿ",
+      "preventive_care": "ತಡೆಗಟ್ಟುವ ಆರೋಗ್ಯ ಪರಿಶೀಲನೆ",
+      "general_consultation": "ಸಾಮಾನ್ಯ ಸಮಾಲೋಚನೆ"
     }
   },
   "timeline": {
