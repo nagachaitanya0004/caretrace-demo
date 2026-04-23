@@ -6,6 +6,8 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.db import close_db, init_db
+from app.db.postgres import init_postgres, close_postgres
+from app.models.postgres_user import create_postgres_tables
 from app.core.config import APP_NAME, APP_VERSION, CORS_ORIGINS
 from app.core.logger import logger
 from app.core.responses import error_response, http_error_response, validation_error_response
@@ -17,9 +19,12 @@ from app.api.auth import router as auth_router
 async def lifespan(app: FastAPI):
     logger.info('Starting %s v%s', APP_NAME, APP_VERSION)
     await init_db()
+    await init_postgres()
+    await create_postgres_tables()
     yield
     logger.info('Shutting down %s', APP_NAME)
     await close_db()
+    await close_postgres()
 
 
 app = FastAPI(title=APP_NAME, version=APP_VERSION, lifespan=lifespan)
