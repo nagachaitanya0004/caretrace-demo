@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from pymongo.errors import DuplicateKeyError
 
 from app.api.auth import get_current_user
-from app.utils.user_identity import normalize_gender
+from app.utils.user_identity import get_user_ref, normalize_gender
 
 from app.db.db import get_database, get_gridfs_bucket
 from app.core.responses import error_response, success_response, serialize_document, get_object_id
@@ -122,7 +122,7 @@ def evaluate_risk(symptoms: list[dict[str, Any]]) -> tuple[str, str, str]:
     return 'low', reason, action_plan
 
 
-async def create_alert_if_needed(user_id: ObjectId, symptom: SymptomCreate) -> None:
+async def create_alert_if_needed(user_id: Any, symptom: SymptomCreate) -> None:
     db = get_database()
     severity = symptom.severity
     alert_level = None
@@ -166,7 +166,7 @@ async def create_alert_if_needed(user_id: ObjectId, symptom: SymptomCreate) -> N
             logger.warning('Alert duplicate skipped for user=%s', user_id)
 
 
-async def get_user_or_404(user_id: ObjectId) -> dict[str, Any]:
+async def get_user_or_404(user_id: Any) -> dict[str, Any]:
     db = get_database()
     user = await db.users.find_one({'_id': user_id})
     if not user:
@@ -235,10 +235,11 @@ async def delete_user(current_user: dict = Depends(get_current_user)):
     result = await db.users.delete_one({'_id': oid})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail='User not found')
-    await db.symptoms.delete_many({'user_id': oid})
-    await db.analysis.delete_many({'user_id': oid})
-    await db.alerts.delete_many({'user_id': oid})
-    await db.reports.delete_many({'user_id': oid})
+    user_ref = get_user_ref(current_user)
+    await db.symptoms.delete_many({'user_id': user_ref})
+    await db.analysis.delete_many({'user_id': user_ref})
+    await db.alerts.delete_many({'user_id': user_ref})
+    await db.reports.delete_many({'user_id': user_ref})
     return success_response(None, message='User and related records deleted successfully')
 
 
@@ -249,22 +250,22 @@ async def delete_user(current_user: dict = Depends(get_current_user)):
 @router.post('/symptoms')
 async def create_symptom(payload: SymptomCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user["_id"]
+    user_ref = get_user_ref(current_user)
     payload_data = {k: v for k, v in payload.model_dump().items() if v is not None}
-    payload_data["user_id"] = user_id
+    payload_data["user_id"] = user_ref
     now = datetime.utcnow()
     payload_data['created_at'] = now
     payload_data['recorded_at'] = now
     result = await db.symptoms.insert_one(payload_data)
     symptom = await db.symptoms.find_one({'_id': result.inserted_id})
-    await create_alert_if_needed(user_id, payload)
+    await create_alert_if_needed(user_ref, payload)
     return success_response(serialize_document(symptom), message='Symptom recorded successfully')
 
 
 @router.get('/symptoms')
 async def list_symptoms(symptom: Optional[str] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
-    query: dict[str, Any] = {'user_id': current_user["_id"]}
+    query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     if symptom:
         query['symptom'] = {'$regex': symptom, '$options': 'i'}
     cursor = db.symptoms.find(query).sort('timestamp', -1)
@@ -279,12 +280,12 @@ async def list_symptoms(symptom: Optional[str] = Query(None), current_user: dict
 @router.post('/analysis')
 async def create_analysis(payload: AnalysisCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user["_id"]
-    symptom_cursor = db.symptoms.find({'user_id': user_id}).sort('timestamp', -1).limit(20)
+    user_ref = get_user_ref(current_user)
+    symptom_cursor = db.symptoms.find({'user_id': user_ref}).sort('timestamp', -1).limit(20)
     recent_symptoms = [item async for item in symptom_cursor]
     risk_level, reason, action_plan = evaluate_risk(recent_symptoms)
     analysis_data = {k: v for k, v in payload.model_dump().items() if v is not None}
-    analysis_data["user_id"] = user_id
+    analysis_data["user_id"] = user_ref
     analysis_data['risk_level'] = risk_level
     analysis_data['reason'] = reason
     analysis_data['summary'] = action_plan
@@ -300,7 +301,7 @@ async def create_analysis(payload: AnalysisCreate, current_user: dict = Depends(
 @router.get('/analysis')
 async def list_analysis(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    query: dict[str, Any] = {'user_id': current_user["_id"]}
+    query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     cursor = db.analysis.find(query).sort('created_at', -1)
     items = [serialize_document(item) async for item in cursor]
     return success_response(items, message='Analyses retrieved successfully')
@@ -313,9 +314,9 @@ async def list_analysis(current_user: dict = Depends(get_current_user)):
 @router.post('/alerts')
 async def create_alert(payload: AlertCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user["_id"]
+    user_ref = get_user_ref(current_user)
     alert_data = payload.model_dump()
-    alert_data["user_id"] = user_id
+    alert_data["user_id"] = user_ref
     alert_data['created_at'] = datetime.utcnow()
     result = await db.alerts.insert_one(alert_data)
     alert = await db.alerts.find_one({'_id': result.inserted_id})
@@ -325,7 +326,7 @@ async def create_alert(payload: AlertCreate, current_user: dict = Depends(get_cu
 @router.get('/alerts')
 async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
-    query: dict[str, Any] = {'user_id': current_user["_id"]}
+    query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     if unread_only is True:
         query['is_read'] = False
     cursor = db.alerts.find(query).sort('created_at', -1)
@@ -340,25 +341,25 @@ async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: d
 @router.put('/medical-history')
 async def upsert_medical_history(payload: MedicalHistoryUpsert, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user['_id']
+    user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
     fields = {k: v for k, v in payload.model_dump().items() if v is not None}
-    existing = await db.medical_history.find_one({'user_id': user_id})
+    existing = await db.medical_history.find_one({'user_id': user_ref})
     if existing:
         fields['updated_at'] = now
-        await db.medical_history.update_one({'user_id': user_id}, {'$set': fields})
+        await db.medical_history.update_one({'user_id': user_ref}, {'$set': fields})
     else:
-        doc = {'user_id': user_id, 'conditions': [], 'medications': [], 'allergies': [], 'surgeries': [], 'created_at': now, 'updated_at': now}
+        doc = {'user_id': user_ref, 'conditions': [], 'medications': [], 'allergies': [], 'surgeries': [], 'created_at': now, 'updated_at': now}
         doc.update(fields)
         await db.medical_history.insert_one(doc)
-    record = await db.medical_history.find_one({'user_id': user_id})
+    record = await db.medical_history.find_one({'user_id': user_ref})
     return success_response(serialize_document(record), message='Medical history saved')
 
 
 @router.get('/medical-history')
 async def get_medical_history(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    record = await db.medical_history.find_one({'user_id': current_user['_id']})
+    record = await db.medical_history.find_one({'user_id': get_user_ref(current_user)})
     return success_response(serialize_document(record) if record else None, message='Medical history retrieved')
 
 
@@ -370,14 +371,14 @@ async def get_medical_history(current_user: dict = Depends(get_current_user)):
 async def save_family_history(payload: FamilyHistoryBatch, current_user: dict = Depends(get_current_user)):
     """Replace all family history entries for the user with the submitted batch."""
     db = get_database()
-    user_id = current_user['_id']
+    user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
-    await db.family_history.delete_many({'user_id': user_id})
+    await db.family_history.delete_many({'user_id': user_ref})
     valid = [e for e in payload.entries if e.condition_name.strip()]
     if valid:
         docs = [
             {
-                'user_id': user_id,
+                'user_id': user_ref,
                 'condition_name': e.condition_name.strip(),
                 **({'relation': e.relation.strip()} if e.relation and e.relation.strip() else {}),
                 'created_at': now,
@@ -386,14 +387,14 @@ async def save_family_history(payload: FamilyHistoryBatch, current_user: dict = 
             for e in valid
         ]
         await db.family_history.insert_many(docs)
-    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': user_id}).sort('created_at', 1)]
+    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': user_ref}).sort('created_at', 1)]
     return success_response(entries, message='Family history saved')
 
 
 @router.get('/family-history')
 async def get_family_history(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': current_user['_id']}).sort('created_at', 1)]
+    entries = [serialize_document(d) async for d in db.family_history.find({'user_id': get_user_ref(current_user)}).sort('created_at', 1)]
     return success_response(entries, message='Family history retrieved')
 
 
@@ -404,24 +405,24 @@ async def get_family_history(current_user: dict = Depends(get_current_user)):
 @router.put('/lifestyle')
 async def upsert_lifestyle(payload: LifestyleDataUpsert, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user['_id']
+    user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
     fields = {k: v for k, v in payload.model_dump().items() if v is not None}
-    existing = await db.lifestyle_data.find_one({'user_id': user_id})
+    existing = await db.lifestyle_data.find_one({'user_id': user_ref})
     if existing:
         fields['updated_at'] = now
-        await db.lifestyle_data.update_one({'user_id': user_id}, {'$set': fields})
+        await db.lifestyle_data.update_one({'user_id': user_ref}, {'$set': fields})
     else:
-        fields.update({'user_id': user_id, 'created_at': now, 'updated_at': now})
+        fields.update({'user_id': user_ref, 'created_at': now, 'updated_at': now})
         await db.lifestyle_data.insert_one(fields)
-    record = await db.lifestyle_data.find_one({'user_id': user_id})
+    record = await db.lifestyle_data.find_one({'user_id': user_ref})
     return success_response(serialize_document(record), message='Lifestyle data saved')
 
 
 @router.get('/lifestyle')
 async def get_lifestyle(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    record = await db.lifestyle_data.find_one({'user_id': current_user['_id']})
+    record = await db.lifestyle_data.find_one({'user_id': get_user_ref(current_user)})
     return success_response(serialize_document(record) if record else None, message='Lifestyle data retrieved')
 
 
@@ -432,12 +433,12 @@ async def get_lifestyle(current_user: dict = Depends(get_current_user)):
 @router.post('/health-metrics')
 async def create_health_metrics(payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    user_id = current_user['_id']
+    user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
     doc = {k: v for k, v in payload.model_dump().items() if v is not None}
     if not doc:
         raise HTTPException(status_code=400, detail='At least one metric value is required')
-    doc.update({'user_id': user_id, 'recorded_at': now, 'created_at': now})
+    doc.update({'user_id': user_ref, 'recorded_at': now, 'created_at': now})
     result = await db.health_metrics.insert_one(doc)
     saved = await db.health_metrics.find_one({'_id': result.inserted_id})
     return success_response(serialize_document(saved), message='Health metrics recorded')
@@ -446,7 +447,7 @@ async def create_health_metrics(payload: HealthMetricsCreate, current_user: dict
 @router.get('/health-metrics')
 async def list_health_metrics(current_user: dict = Depends(get_current_user)):
     db = get_database()
-    cursor = db.health_metrics.find({'user_id': current_user['_id']}).sort('recorded_at', -1)
+    cursor = db.health_metrics.find({'user_id': get_user_ref(current_user)}).sort('recorded_at', -1)
     records = [serialize_document(d) async for d in cursor]
     return success_response(records, message='Health metrics retrieved')
 
@@ -474,7 +475,7 @@ async def upload_medical_report(
     if size_error:
         raise HTTPException(status_code=400, detail=size_error)
 
-    user_id = current_user['_id']
+    user_ref = get_user_ref(current_user)
     mime_type = file.content_type
     original_filename = file.filename or 'unknown'
 
@@ -485,18 +486,18 @@ async def upload_medical_report(
         gridfs_file_id = await bucket.upload_from_stream(
             original_filename,
             content,
-            metadata={'user_id': user_id, 'content_type': mime_type},
+            metadata={'user_id': user_ref, 'content_type': mime_type},
         )
-        logger.info('File uploaded to GridFS: %s for user %s', gridfs_file_id, user_id)
+        logger.info('File uploaded to GridFS: %s for user %s', gridfs_file_id, user_ref)
     except Exception as exc:
-        logger.error('GridFS upload failed for user %s: %s', user_id, exc)
+        logger.error('GridFS upload failed for user %s: %s', user_ref, exc)
         raise HTTPException(status_code=500, detail='Failed to upload file to storage')
 
     # Save metadata to medical_reports collection
     db = get_database()
     now = datetime.utcnow()
     report_doc = {
-        'user_id': user_id,
+        'user_id': user_ref,
         'file_name': original_filename,
         'gridfs_file_id': gridfs_file_id,
         'file_type': mime_type,
@@ -508,7 +509,7 @@ async def upload_medical_report(
         logger.info('Metadata saved for report %s', result.inserted_id)
         return success_response(serialize_document(saved), message='Medical report uploaded successfully')
     except Exception as exc:
-        logger.error('DB insert failed for user %s, cleaning up GridFS file %s: %s', user_id, gridfs_file_id, exc)
+        logger.error('DB insert failed for user %s, cleaning up GridFS file %s: %s', user_ref, gridfs_file_id, exc)
         try:
             await bucket.delete(gridfs_file_id)
         except Exception as cleanup_exc:
@@ -520,7 +521,7 @@ async def upload_medical_report(
 async def list_medical_reports(current_user: dict = Depends(get_current_user)):
     """Retrieve all medical reports for the authenticated user."""
     db = get_database()
-    cursor = db.medical_reports.find({'user_id': current_user['_id']}).sort('uploaded_at', -1)
+    cursor = db.medical_reports.find({'user_id': get_user_ref(current_user)}).sort('uploaded_at', -1)
     reports = [serialize_document(doc) async for doc in cursor]
     return success_response(reports, message='Medical reports retrieved successfully')
 
@@ -542,7 +543,7 @@ async def download_medical_report(
     report = await db.medical_reports.find_one({'_id': oid})
     if not report:
         raise HTTPException(status_code=404, detail='Report not found')
-    if report['user_id'] != current_user['_id']:
+    if report['user_id'] != get_user_ref(current_user):
         raise HTTPException(status_code=403, detail='Access denied')
 
     # Retrieve file from GridFS
@@ -585,7 +586,7 @@ async def delete_medical_report(
     report = await db.medical_reports.find_one({'_id': oid})
     if not report:
         raise HTTPException(status_code=404, detail='Report not found')
-    if report['user_id'] != current_user['_id']:
+    if report['user_id'] != get_user_ref(current_user):
         raise HTTPException(status_code=403, detail='Access denied')
 
     # Delete from GridFS (log warning if it fails, continue)

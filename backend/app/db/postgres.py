@@ -1,17 +1,7 @@
-"""
-PostgreSQL database connection module using SQLAlchemy (async).
-
-This module provides PostgreSQL support alongside the existing MongoDB implementation.
-It does NOT replace or modify any MongoDB functionality.
-
-Usage:
-    - Use get_db() as a FastAPI dependency to get async database sessions
-    - Call init_postgres() during app startup
-    - Call close_postgres() during app shutdown
-"""
-
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from typing import AsyncGenerator, Optional
 
 from sqlalchemy.ext.asyncio import (
@@ -34,29 +24,36 @@ _engine: Optional[AsyncEngine] = None
 _async_session_maker: Optional[async_sessionmaker[AsyncSession]] = None
 
 
+def _sqlite_url() -> str:
+    """Return an async SQLite URL pointing to a file next to the backend dir."""
+    db_dir = Path(__file__).resolve().parent.parent.parent  # backend/
+    db_path = db_dir / "caretrace_local.db"
+    return f"sqlite+aiosqlite:///{db_path}"
+
+
 async def init_postgres() -> None:
     """
-    Initialize PostgreSQL connection pool.
-    
-    This function creates an async SQLAlchemy engine and session maker.
-    It does NOT interfere with MongoDB initialization.
+    Initialize SQL database connection pool.
+
+    Tries PostgreSQL first.  If the connection fails (e.g. server not
+    installed / not running), falls back to a local SQLite file so the
+    application always starts with a working ``_async_session_maker``.
     """
     global _engine, _async_session_maker
-    
+
+    # ── Attempt 1: PostgreSQL ────────────────────────────────────────
     logger.info('Initializing PostgreSQL connection')
-    
+
     try:
-        # Create async engine with connection pooling
         _engine = create_async_engine(
             POSTGRES_URL,
-            echo=False,  # Set to True for SQL query logging
+            echo=False,
             pool_size=5,
             max_overflow=10,
-            pool_pre_ping=True,  # Verify connections before using
-            pool_recycle=3600,  # Recycle connections after 1 hour
+            pool_pre_ping=True,
+            pool_recycle=3600,
         )
-        
-        # Create async session maker
+
         _async_session_maker = async_sessionmaker(
             _engine,
             class_=AsyncSession,
@@ -64,21 +61,59 @@ async def init_postgres() -> None:
             autocommit=False,
             autoflush=False,
         )
-        
+
         # Test connection
         async with _engine.begin() as conn:
             result = await conn.execute(text("SELECT 1"))
             test_value = result.scalar()
             if test_value == 1:
-                logger.info('PostgreSQL connection test successful')
+                logger.info('PostgreSQL connected successfully')
             else:
                 logger.warning('PostgreSQL connection test returned unexpected value: %s', test_value)
-        
+
         logger.info('PostgreSQL initialization complete')
-        
+        return  # success — done
+
     except Exception as exc:
-        logger.error('Failed to initialize PostgreSQL: %s', exc)
-        logger.warning('Application will continue with MongoDB only')
+        logger.warning('PostgreSQL connection failed: %s', exc)
+        # Clean up the failed engine
+        if _engine:
+            try:
+                await _engine.dispose()
+            except Exception:
+                pass
+        _engine = None
+        _async_session_maker = None
+
+    # ── Attempt 2: SQLite fallback ───────────────────────────────────
+    fallback_url = _sqlite_url()
+    logger.info('Falling back to local SQLite: %s', fallback_url)
+
+    try:
+        _engine = create_async_engine(
+            fallback_url,
+            echo=False,
+        )
+
+        _async_session_maker = async_sessionmaker(
+            _engine,
+            class_=AsyncSession,
+            expire_on_commit=False,
+            autocommit=False,
+            autoflush=False,
+        )
+
+        # Test connection
+        async with _engine.begin() as conn:
+            result = await conn.execute(text("SELECT 1"))
+            test_value = result.scalar()
+            if test_value == 1:
+                logger.info('SQLite fallback connected successfully')
+
+        logger.info('SQLite initialization complete (local development mode)')
+
+    except Exception as exc:
+        logger.error('SQLite fallback also failed: %s', exc)
         _engine = None
         _async_session_maker = None
 

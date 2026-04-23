@@ -46,3 +46,4 @@ desktop.ini
 *.cert
 secrets/
 credentials/
+*.db

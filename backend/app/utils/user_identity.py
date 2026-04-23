@@ -1,7 +1,27 @@
 """Normalize user identity fields for API + MongoDB schema validators."""
 
 import re
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
+
+from bson import ObjectId
+
+from app.core.logger import logger
+
+
+def get_user_ref(current_user: Dict[str, Any]) -> Union[str, ObjectId]:
+    """Return the best identifier for cross-collection user queries.
+
+    New users (dual-DB) have a ``user_id`` field (UUID string from PostgreSQL).
+    Old users (MongoDB-only) only have ``_id`` (ObjectId).
+
+    Returns ``user_id`` when present, otherwise falls back to ``_id``.
+    """
+    uid = current_user.get("user_id")
+    if uid:
+        logger.debug("Using UUID user_id=%s for query", uid)
+        return uid
+    logger.debug("Falling back to ObjectId _id=%s for query", current_user["_id"])
+    return current_user["_id"]
 
 
 def normalize_email(email: str) -> str:

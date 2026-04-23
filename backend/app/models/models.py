@@ -50,7 +50,7 @@ MEDICAL_HISTORY_VALIDATOR = {
         'required': ['user_id', 'created_at', 'updated_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'conditions': {'bsonType': 'array', 'items': {'bsonType': 'string'}},
             'medications': {'bsonType': 'array', 'items': {'bsonType': 'string'}},
             'allergies':   {'bsonType': 'array', 'items': {'bsonType': 'string'}},
@@ -68,7 +68,7 @@ FAMILY_HISTORY_VALIDATOR = {
         'required': ['user_id', 'condition_name', 'created_at', 'updated_at'],
         'properties': {
             '_id':            {'bsonType': 'objectId'},
-            'user_id':        {'bsonType': 'objectId'},
+            'user_id':        {'bsonType': ['objectId', 'string']},
             'condition_name': {'bsonType': 'string', 'description': 'Name of the hereditary condition'},
             'relation':       {'bsonType': 'string', 'description': 'Family relation (e.g. father, mother)'},
             'created_at':     {'bsonType': 'date'},
@@ -84,7 +84,7 @@ LIFESTYLE_DATA_VALIDATOR = {
         'required': ['user_id', 'created_at', 'updated_at'],
         'properties': {
             '_id':                  {'bsonType': 'objectId'},
-            'user_id':              {'bsonType': 'objectId'},
+            'user_id':              {'bsonType': ['objectId', 'string']},
             'sleep_hours':          {'bsonType': 'double',  'minimum': 0, 'maximum': 24},
             'sleep_quality':        {'bsonType': 'string',  'enum': ['good', 'average', 'poor']},
             'diet_type':            {'bsonType': 'string',  'enum': ['veg', 'non-veg', 'mixed']},
@@ -106,7 +106,7 @@ HEALTH_METRICS_VALIDATOR = {
         'required': ['user_id', 'recorded_at', 'created_at'],
         'properties': {
             '_id':                {'bsonType': 'objectId'},
-            'user_id':            {'bsonType': 'objectId'},
+            'user_id':            {'bsonType': ['objectId', 'string']},
             'systolic_bp':        {'bsonType': 'int',    'minimum': 50,  'maximum': 300},
             'diastolic_bp':       {'bsonType': 'int',    'minimum': 30,  'maximum': 200},
             'blood_sugar_mg_dl':  {'bsonType': 'double', 'minimum': 0},
@@ -125,7 +125,7 @@ STRUCTURED_SYMPTOMS_VALIDATOR = {
         'required': ['user_id', 'symptom_name', 'created_at'],
         'properties': {
             '_id':          {'bsonType': 'objectId'},
-            'user_id':      {'bsonType': 'objectId'},
+            'user_id':      {'bsonType': ['objectId', 'string']},
             'symptom_name': {'bsonType': 'string',  'description': 'Name of the symptom'},
             'severity':     {'bsonType': 'int',     'minimum': 1, 'maximum': 10},
             'duration':     {'bsonType': 'string',  'description': 'Duration as text, e.g. "3 days"'},
@@ -144,7 +144,7 @@ SYMPTOM_VALIDATOR = {
         'required': ['user_id', 'symptom', 'duration', 'severity', 'timestamp', 'created_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'symptom': {'bsonType': 'string', 'description': 'Symptom label or taxonomy key'},
             'duration': {'bsonType': 'int', 'minimum': 0, 'description': 'Duration in days'},
             'severity': {'bsonType': 'int', 'minimum': 1, 'maximum': 10, 'description': 'Severity from 1-10'},
@@ -171,7 +171,7 @@ ANALYSIS_VALIDATOR = {
         'required': ['user_id', 'risk_level', 'reason', 'created_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'risk_level': {'bsonType': 'string', 'enum': ['low', 'medium', 'high']},
             'reason': {'bsonType': 'string'},
             'summary': {'bsonType': 'string'},
@@ -189,7 +189,7 @@ ALERT_VALIDATOR = {
         'required': ['user_id', 'message', 'severity', 'created_at', 'is_read'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'message': {'bsonType': 'string'},
             'severity': {'bsonType': 'string', 'enum': ['info', 'warning', 'critical']},
             'created_at': {'bsonType': 'date'},
@@ -207,7 +207,7 @@ REPORT_VALIDATOR = {
         'required': ['user_id', 'summary', 'generated_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'summary': {'bsonType': 'string'},
             'generated_at': {'bsonType': 'date'},
             'report_type': {'bsonType': 'string'},
@@ -224,7 +224,7 @@ SESSION_VALIDATOR = {
         'required': ['user_id', 'session_token', 'expires_at', 'created_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
-            'user_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
             'session_token': {'bsonType': 'string'},
             'expires_at': {'bsonType': 'date'},
             'created_at': {'bsonType': 'date'},
@@ -241,7 +241,7 @@ MEDICAL_REPORTS_VALIDATOR = {
         'required': ['user_id', 'file_name', 'gridfs_file_id', 'file_type', 'uploaded_at'],
         'properties': {
             '_id':            {'bsonType': 'objectId'},
-            'user_id':        {'bsonType': 'objectId'},
+            'user_id':        {'bsonType': ['objectId', 'string']},
             'file_name':      {'bsonType': 'string', 'description': 'Original filename'},
             'gridfs_file_id': {'bsonType': 'objectId', 'description': 'GridFS file ID'},
             'file_type':      {'bsonType': 'string', 'enum': ['application/pdf', 'image/jpeg', 'image/png']},
