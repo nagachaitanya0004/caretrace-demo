@@ -23,6 +23,7 @@ USER_VALIDATOR = {
         'required': ['name', 'email', 'hashed_password', 'created_at', 'updated_at'],
         'properties': {
             '_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': 'string', 'description': 'PostgreSQL UUID, links user across both databases'},
             'name': {'bsonType': 'string', 'description': 'Full user name'},
             'email': {'bsonType': 'string', 'description': 'User email address'},
             'hashed_password': {'bsonType': 'string', 'description': 'Stored password hash'},
