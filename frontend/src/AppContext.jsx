@@ -196,7 +196,8 @@ export function AppProvider({ children }) {
 
   const riskLevel = analysisResult?.risk || 'Pending';
 
-  const demoMedications = isDemoUser ? DEMO_MEDICATIONS : [];
+  const EMPTY_MEDS = useMemo(() => [], []);
+  const demoMedications = isDemoUser ? DEMO_MEDICATIONS : EMPTY_MEDS;
 
   const value = useMemo(
     () => ({

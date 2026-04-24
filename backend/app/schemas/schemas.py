@@ -156,3 +156,54 @@ class MedicalReportResponse(BaseModel):
     gridfs_file_id: str
     file_type: str
     uploaded_at: datetime
+
+
+class ReferenceRange(BaseModel):
+    min: Optional[float] = None
+    max: Optional[float] = None
+
+
+class LabResultCreate(BaseModel):
+    test_name: str = Field(..., min_length=1)
+    value: float
+    unit: Optional[str] = None
+    reference_range: Optional[ReferenceRange] = None
+    recorded_at: Optional[datetime] = None
+
+
+class LabResultInDB(MongoModel):
+    id: Optional[PyObjectId] = Field(alias='_id')
+    user_id: Optional[PyObjectId] = None
+    test_name: str
+    value: float
+    unit: Optional[str] = None
+    reference_range: Optional[Dict[str, float]] = None
+    status: Optional[str] = None
+    recorded_at: datetime
+    created_at: datetime
+
+
+class MedicationCreate(BaseModel):
+    medication_name: str = Field(..., min_length=1)
+    dosage: Optional[str] = None
+    frequency: Optional[str] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    adherence_rate: Optional[float] = Field(default=None, ge=0, le=1)
+    side_effects: Optional[list[str]] = None
+    effectiveness_rating: Optional[int] = Field(default=None, ge=1, le=5)
+
+
+class MedicationInDB(MongoModel):
+    id: Optional[PyObjectId] = Field(alias='_id')
+    user_id: Optional[PyObjectId] = None
+    medication_name: str
+    dosage: Optional[str] = None
+    frequency: Optional[str] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    adherence_rate: Optional[float] = None
+    side_effects: Optional[list[str]] = None
+    effectiveness_rating: Optional[int] = None
+    created_at: datetime
+    updated_at: datetime

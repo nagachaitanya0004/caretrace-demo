@@ -5,11 +5,21 @@ from app.main import app
 
 client = TestClient(app)
 
-def test_read_main():
+@patch("app.db.db.get_database")
+@patch("app.db.postgres.test_postgres_connection", new_callable=AsyncMock)
+def test_read_main(mock_pg, mock_mongo):
+    # Mock Postgres connection check to return True
+    mock_pg.return_value = True
+    
+    # Mock MongoDB connection and ping
+    mock_db = AsyncMock()
+    mock_db.command = AsyncMock()
+    mock_mongo.return_value = mock_db
+
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["success"] == True
-    assert response.json()["data"]["status"] == "ok"
+    assert response.json()["data"]["status"] == "healthy"
 
 
 @pytest.mark.asyncio

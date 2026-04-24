@@ -13,7 +13,7 @@ const getInitialTheme = () => {
     }
 
     return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } catch (error) {
+  } catch {
     return 'light';
   }
 };
@@ -31,7 +31,7 @@ export function ThemeProvider({ children }) {
 
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch (error) {
+    } catch {
       // Ignore localStorage errors in private mode or restricted environments.
     }
   }, [theme]);

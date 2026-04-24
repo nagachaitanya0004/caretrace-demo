@@ -11,18 +11,21 @@ from app.api.auth import get_current_user
 from app.utils.user_identity import get_user_ref, normalize_gender
 
 from app.db.db import get_database, get_gridfs_bucket
-from app.core.responses import error_response, success_response, serialize_document, get_object_id
+from app.db.postgres import get_session_maker
+from app.models.postgres_user import PostgresUser
+from app.core.responses import success_response, serialize_document
 from app.core.logger import logger
+from sqlalchemy import select
 from app.schemas.schemas import (
     AlertCreate,
     AnalysisCreate,
     FamilyHistoryBatch,
     HealthMetricsCreate,
+    LabResultCreate,
     LifestyleDataUpsert,
     MedicalHistoryUpsert,
-    ReportCreate,
+    MedicationCreate,
     SymptomCreate,
-    UserCreate,
     UserUpdate,
 )
 
@@ -179,9 +182,13 @@ async def get_user_or_404(user_id: Any) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 @router.get('/users')
-async def list_users(name: Optional[str] = Query(None), gender: Optional[str] = Query(None)):
+async def list_users(
+    name: Optional[str] = Query(None),
+    gender: Optional[str] = Query(None),
+    current_user: dict = Depends(get_current_user),
+):
     db = get_database()
-    filters: dict[str, Any] = {}
+    filters: dict[str, Any] = {'_id': current_user['_id']}
     if name:
         filters['name'] = {'$regex': name, '$options': 'i'}
     if gender:
@@ -191,55 +198,183 @@ async def list_users(name: Optional[str] = Query(None), gender: Optional[str] = 
     return success_response(users, message='Users retrieved successfully')
 
 
-@router.post('/users')
-async def create_user(payload: UserCreate):
-    db = get_database()
-    payload_data = payload.model_dump()
-    payload_data.update({'created_at': datetime.utcnow(), 'updated_at': datetime.utcnow()})
-    result = await db.users.insert_one(payload_data)
-    user = await db.users.find_one({'_id': result.inserted_id})
-    return success_response(serialize_document(user), message='User created successfully')
-
-
 @router.get('/users/me')
 async def get_user_me(current_user: dict = Depends(get_current_user)):
     return success_response(serialize_document(current_user), message='User retrieved successfully')
 
 
+# Fields in UserUpdate that PostgreSQL users table also stores
+_PG_USER_FIELDS = {'name', 'age', 'gender', 'height_cm', 'weight_kg', 'blood_group', 'bmi', 'health_goal'}
+
+
 @router.put('/users/me')
 async def update_user(payload: UserUpdate, current_user: dict = Depends(get_current_user)):
-    oid = current_user["_id"]
+    oid = current_user['_id']
     db = get_database()
+
     updated = {k: v for k, v in payload.model_dump().items() if v is not None}
     if 'gender' in updated:
         updated['gender'] = normalize_gender(str(updated['gender']))
     if not updated:
         raise HTTPException(status_code=400, detail='No changes were provided')
+
     height = updated.get('height_cm') or current_user.get('height_cm')
     weight = updated.get('weight_kg') or current_user.get('weight_kg')
     bmi = compute_bmi(height, weight)
     if bmi is not None:
         updated['bmi'] = bmi
     updated['updated_at'] = datetime.utcnow()
-    result = await db.users.update_one({'_id': oid}, {'$set': updated})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail='User not found')
+
+    # ── Step 1: Update PostgreSQL (UUID users only) ──────────────────
+    pg_user_id: str | None = current_user.get('user_id')  # None for legacy ObjectId-only users
+    pg_session = None
+    if pg_user_id:
+        session_maker = get_session_maker()
+        if session_maker is None:
+            raise HTTPException(status_code=503, detail='Profile update service temporarily unavailable')
+        pg_fields = {k: v for k, v in updated.items() if k in _PG_USER_FIELDS}
+        if pg_fields:
+            pg_session = session_maker()
+            try:
+                pg_user = (
+                    await pg_session.execute(select(PostgresUser).where(PostgresUser.id == pg_user_id))
+                ).scalars().first()
+                if pg_user is None:
+                    await pg_session.close()
+                    raise HTTPException(status_code=404, detail='User not found')
+                for field, value in pg_fields.items():
+                    setattr(pg_user, field, value)
+                await pg_session.flush()  # validate constraints before touching MongoDB
+                logger.info('PG user %s flushed for update', pg_user_id)
+            except HTTPException:
+                await pg_session.close()
+                raise
+            except Exception as exc:
+                await pg_session.rollback()
+                await pg_session.close()
+                logger.error('PG update failed for user %s: %r', pg_user_id, exc)
+                raise HTTPException(status_code=500, detail='Profile update failed')
+
+    # ── Step 2: Update MongoDB ───────────────────────────────────────
+    try:
+        result = await db.users.update_one({'_id': oid}, {'$set': updated})
+        if result.matched_count == 0:
+            if pg_session:
+                await pg_session.rollback()
+                await pg_session.close()
+            raise HTTPException(status_code=404, detail='User not found')
+    except HTTPException:
+        raise
+    except Exception as exc:
+        if pg_session:
+            await pg_session.rollback()
+            await pg_session.close()
+        logger.error('MongoDB update failed for user %s: %r', oid, exc)
+        raise HTTPException(status_code=500, detail='Profile update failed')
+
+    # ── Step 3: Commit PostgreSQL ────────────────────────────────────
+    if pg_session:
+        try:
+            await pg_session.commit()
+            logger.info('PG user %s committed', pg_user_id)
+        except Exception as exc:
+            await pg_session.rollback()
+            await pg_session.close()
+            logger.error('PG commit failed for user %s: %r', pg_user_id, exc)
+            raise HTTPException(status_code=500, detail='Profile update failed')
+        finally:
+            await pg_session.close()
+
     user = await db.users.find_one({'_id': oid})
     return success_response(serialize_document(user), message='User updated successfully')
 
 
 @router.delete('/users/me')
 async def delete_user(current_user: dict = Depends(get_current_user)):
-    oid = current_user["_id"]
+    oid = current_user['_id']
+    pg_user_id: str | None = current_user.get('user_id')
     db = get_database()
-    result = await db.users.delete_one({'_id': oid})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail='User not found')
+
+    # ── Step 1: Mark PostgreSQL row for deletion (UUID users only) ───
+    pg_session = None
+    if pg_user_id:
+        session_maker = get_session_maker()
+        if session_maker is None:
+            raise HTTPException(status_code=503, detail='Account deletion service temporarily unavailable')
+        pg_session = session_maker()
+        try:
+            pg_user = (
+                await pg_session.execute(select(PostgresUser).where(PostgresUser.id == pg_user_id))
+            ).scalars().first()
+            if pg_user is None:
+                await pg_session.close()
+                raise HTTPException(status_code=404, detail='User not found')
+            await pg_session.delete(pg_user)
+            await pg_session.flush()  # hold transaction open until MongoDB succeeds
+            logger.info('PG user %s marked for deletion (flushed)', pg_user_id)
+        except HTTPException:
+            await pg_session.close()
+            raise
+        except Exception as exc:
+            await pg_session.rollback()
+            await pg_session.close()
+            logger.error('PG delete failed for user %s: %r', pg_user_id, exc)
+            raise HTTPException(status_code=500, detail='Account deletion failed')
+
+    # ── Step 2: Delete from MongoDB ──────────────────────────────────
     user_ref = get_user_ref(current_user)
-    await db.symptoms.delete_many({'user_id': user_ref})
-    await db.analysis.delete_many({'user_id': user_ref})
-    await db.alerts.delete_many({'user_id': user_ref})
-    await db.reports.delete_many({'user_id': user_ref})
+    try:
+        result = await db.users.delete_one({'_id': oid})
+        if result.deleted_count == 0:
+            if pg_session:
+                await pg_session.rollback()
+                await pg_session.close()
+            raise HTTPException(status_code=404, detail='User not found')
+
+        # Delete all related collections
+        await db.symptoms.delete_many({'user_id': user_ref})
+        await db.analysis.delete_many({'user_id': user_ref})
+        await db.alerts.delete_many({'user_id': user_ref})
+        await db.reports.delete_many({'user_id': user_ref})
+        await db.lab_results.delete_many({'user_id': user_ref})
+        await db.medication_tracking.delete_many({'user_id': user_ref})
+        await db.medical_history.delete_many({'user_id': user_ref})
+        await db.family_history.delete_many({'user_id': user_ref})
+        await db.lifestyle_data.delete_many({'user_id': user_ref})
+        await db.health_metrics.delete_many({'user_id': user_ref})
+
+        # Delete medical report files from GridFS then metadata
+        bucket = get_gridfs_bucket()
+        async for report in db.medical_reports.find({'user_id': user_ref}):
+            try:
+                await bucket.delete(report['gridfs_file_id'])
+            except Exception as exc:
+                logger.warning('GridFS delete failed for file %s: %r', report['gridfs_file_id'], exc)
+        await db.medical_reports.delete_many({'user_id': user_ref})
+
+        logger.info('MongoDB user %s and all related data deleted', oid)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        if pg_session:
+            await pg_session.rollback()
+            await pg_session.close()
+        logger.error('MongoDB delete failed for user %s: %r', oid, exc)
+        raise HTTPException(status_code=500, detail='Account deletion failed')
+
+    # ── Step 3: Commit PostgreSQL ────────────────────────────────────
+    if pg_session:
+        try:
+            await pg_session.commit()
+            logger.info('PG user %s deletion committed', pg_user_id)
+        except Exception as exc:
+            await pg_session.rollback()
+            await pg_session.close()
+            logger.error('PG commit failed for user %s: %r', pg_user_id, exc)
+            raise HTTPException(status_code=500, detail='Account deletion failed')
+        finally:
+            await pg_session.close()
+
     return success_response(None, message='User and related records deleted successfully')
 
 
@@ -510,10 +645,21 @@ async def upload_medical_report(
         return success_response(serialize_document(saved), message='Medical report uploaded successfully')
     except Exception as exc:
         logger.error('DB insert failed for user %s, cleaning up GridFS file %s: %s', user_ref, gridfs_file_id, exc)
-        try:
-            await bucket.delete(gridfs_file_id)
-        except Exception as cleanup_exc:
-            logger.warning('Failed to clean up GridFS file %s: %s', gridfs_file_id, cleanup_exc)
+        import asyncio
+        cleanup_success = False
+        for attempt in range(1, 4):
+            try:
+                await bucket.delete(gridfs_file_id)
+                cleanup_success = True
+                logger.info('GridFS cleanup SUCCESS: deleted orphan file %s on attempt %d', gridfs_file_id, attempt)
+                break
+            except Exception as cleanup_exc:
+                logger.error('GridFS cleanup FAILED on attempt %d for file %s: %s', attempt, gridfs_file_id, cleanup_exc)
+                await asyncio.sleep(0.5)
+        
+        if not cleanup_success:
+            logger.critical('CRITICAL: Failed to clean up orphan GridFS file %s after 3 attempts!', gridfs_file_id)
+            
         raise HTTPException(status_code=500, detail='Failed to save file metadata')
 
 
@@ -602,3 +748,100 @@ async def delete_medical_report(
     logger.info('Deleted medical report metadata %s', oid)
 
     return success_response(None, message='Medical report deleted successfully')
+
+
+# ---------------------------------------------------------------------------
+# Lab results endpoints
+# ---------------------------------------------------------------------------
+
+@router.post('/lab-results')
+async def create_lab_result(payload: LabResultCreate, current_user: dict = Depends(get_current_user)):
+    """Add a lab result for the authenticated user."""
+    db = get_database()
+    user_ref = get_user_ref(current_user)
+    now = datetime.utcnow()
+    
+    doc = {
+        'user_id': user_ref,
+        'test_name': payload.test_name,
+        'value': payload.value,
+        'recorded_at': payload.recorded_at or now,
+        'created_at': now,
+    }
+    
+    if payload.unit:
+        doc['unit'] = payload.unit
+    
+    if payload.reference_range:
+        ref_dict = {k: v for k, v in payload.reference_range.model_dump().items() if v is not None}
+        if ref_dict:
+            doc['reference_range'] = ref_dict
+            # Auto-calculate status
+            min_val = ref_dict.get('min')
+            max_val = ref_dict.get('max')
+            if min_val is not None and payload.value < min_val:
+                doc['status'] = 'abnormal'
+            elif max_val is not None and payload.value > max_val:
+                doc['status'] = 'abnormal'
+            elif min_val is not None or max_val is not None:
+                doc['status'] = 'normal'
+    
+    result = await db.lab_results.insert_one(doc)
+    saved = await db.lab_results.find_one({'_id': result.inserted_id})
+    return success_response(serialize_document(saved), message='Lab result recorded successfully')
+
+
+@router.get('/lab-results')
+async def list_lab_results(current_user: dict = Depends(get_current_user)):
+    """Get all lab results for the authenticated user."""
+    db = get_database()
+    cursor = db.lab_results.find({'user_id': get_user_ref(current_user)}).sort('recorded_at', -1)
+    results = [serialize_document(d) async for d in cursor]
+    return success_response(results, message='Lab results retrieved successfully')
+
+
+# ---------------------------------------------------------------------------
+# Medication tracking endpoints
+# ---------------------------------------------------------------------------
+
+@router.post('/medications')
+async def create_medication(payload: MedicationCreate, current_user: dict = Depends(get_current_user)):
+    """Add a medication entry for the authenticated user."""
+    db = get_database()
+    user_ref = get_user_ref(current_user)
+    now = datetime.utcnow()
+    
+    doc = {
+        'user_id': user_ref,
+        'medication_name': payload.medication_name,
+        'created_at': now,
+        'updated_at': now,
+    }
+    
+    if payload.dosage:
+        doc['dosage'] = payload.dosage
+    if payload.frequency:
+        doc['frequency'] = payload.frequency
+    if payload.start_date:
+        doc['start_date'] = payload.start_date
+    if payload.end_date:
+        doc['end_date'] = payload.end_date
+    if payload.adherence_rate is not None:
+        doc['adherence_rate'] = payload.adherence_rate
+    if payload.side_effects:
+        doc['side_effects'] = payload.side_effects
+    if payload.effectiveness_rating is not None:
+        doc['effectiveness_rating'] = payload.effectiveness_rating
+    
+    result = await db.medication_tracking.insert_one(doc)
+    saved = await db.medication_tracking.find_one({'_id': result.inserted_id})
+    return success_response(serialize_document(saved), message='Medication recorded successfully')
+
+
+@router.get('/medications')
+async def list_medications(current_user: dict = Depends(get_current_user)):
+    """Get all medications for the authenticated user."""
+    db = get_database()
+    cursor = db.medication_tracking.find({'user_id': get_user_ref(current_user)}).sort('created_at', -1)
+    medications = [serialize_document(d) async for d in cursor]
+    return success_response(medications, message='Medications retrieved successfully')

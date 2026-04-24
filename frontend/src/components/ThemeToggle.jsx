@@ -1,14 +1,9 @@
-import { useState, useEffect } from 'react';
 import { useTheme } from '../ThemeContext';
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
-  const [announce, setAnnounce] = useState('');
-
-  useEffect(() => {
-    setAnnounce(isDark ? 'Dark mode enabled' : 'Light mode enabled');
-  }, [isDark]);
+  const announce = isDark ? 'Dark mode enabled' : 'Light mode enabled';
 
   return (
     <button

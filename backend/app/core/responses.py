@@ -53,6 +53,6 @@ def http_error_response(exc: HTTPException) -> JSONResponse:
 
 def validation_error_response(exc: RequestValidationError) -> JSONResponse:
     return JSONResponse(
-        status_code=400,
+        status_code=422,
         content=error_response('Invalid request data', error=exc.errors()),
     )

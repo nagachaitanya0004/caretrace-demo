@@ -574,7 +574,7 @@ export default function HealthProfile() {
             </div>
             <div>
               <label className={labelCls}>
-                Stress Level <span className="font-semibold text-gray-800">{lifestyleForm.stress_level}</span><span className="text-gray-400">/10</span>
+                Stress Level <span className="font-semibold text-gray-800">{lifestyleForm.stress_level}</span><span className="text-gray-400">/10</span>
               </label>
               <input type="range" name="stress_level" min="1" max="10" step="1"
                 value={lifestyleForm.stress_level} onChange={handleLifestyleChange}

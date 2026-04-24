@@ -161,7 +161,7 @@ function parseList(str) {
 }
 
 export default function Onboarding() {
-  const { user, setUser } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const [step, setStep]           = useState(1);

@@ -87,24 +87,38 @@ async def create_postgres_tables() -> None:
     This function:
     - Uses CREATE TABLE IF NOT EXISTS semantics
     - Logs successful table creation
-    - Handles errors gracefully without crashing the application
+    - Raises RuntimeError on critical errors (application cannot start without PostgreSQL tables)
     - Does NOT interfere with MongoDB initialization
     
     The function is called during application startup after PostgreSQL
     connection initialization.
+    
+    Raises:
+        RuntimeError: If engine is not initialized or table creation fails
     """
     from app.db.postgres import get_engine
     
     engine = get_engine()
     
     if engine is None:
-        logger.warning("PostgreSQL engine not initialized, skipping table creation")
-        return
+        error_msg = (
+            "PostgreSQL engine not initialized - cannot create tables. "
+            "Ensure init_postgres() was called successfully before table creation."
+        )
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
     
     try:
+        logger.info("Creating PostgreSQL tables...")
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("PostgreSQL tables created successfully")
     except Exception as exc:
-        logger.error(f"Failed to create PostgreSQL tables: {exc}")
-        logger.warning("Application will continue with MongoDB only")
+        error_msg = (
+            f"PostgreSQL table creation failed: {exc}. "
+            f"Error type: {type(exc).__name__}. "
+            "Please verify: (1) database user has CREATE TABLE privileges, "
+            "(2) schema exists and is accessible, (3) no conflicting table definitions exist."
+        )
+        logger.error(error_msg)
+        raise RuntimeError(error_msg) from exc

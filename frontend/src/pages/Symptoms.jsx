@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../AppContext';
@@ -41,7 +41,6 @@ function Symptoms() {
   const [saving, setSaving]     = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [healthGoal, setHealthGoal] = useState(user?.health_goal || '');
-  const [goalSaving, setGoalSaving] = useState(false);
 
   const update = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -50,15 +49,12 @@ function Symptoms() {
 
   const handleHealthGoalChange = async (goal) => {
     setHealthGoal(goal);
-    setGoalSaving(true);
     try {
       const response = await api.put('/api/users/me', { health_goal: goal });
       const updated = unwrapApiPayload(response);
       setUser(updated);
     } catch (e) {
       console.error('Failed to update health goal:', e);
-    } finally {
-      setGoalSaving(false);
     }
   };
 
