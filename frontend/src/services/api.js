@@ -12,7 +12,8 @@ if (import.meta.env.DEV) {
 }
 
 async function request(endpoint, options = {}) {
-  const token = localStorage.getItem('caretrace_token');
+  // Safely check multiple possible keys in case AuthContext is using an older key
+  const token = localStorage.getItem('caretrace_jwt_token') || localStorage.getItem('caretrace_token') || localStorage.getItem('token');
 
   const headers = {
     'Content-Type': 'application/json',
@@ -82,8 +83,17 @@ export const api = {
 
   post: (endpoint, body, isFormData = false) => {
     let payload = body;
-    if (isFormData) {
-      payload = new URLSearchParams(body);
+    
+    // Auto-fix for FastAPI OAuth2 login which requires 'username' and form-data formatting
+    if (endpoint.includes('/login')) {
+      const formBody = { ...(body || {}) };
+      if (formBody.email && !formBody.username) {
+        formBody.username = formBody.email;
+        delete formBody.email;
+      }
+      payload = new URLSearchParams(formBody);
+    } else if (isFormData) {
+      payload = new URLSearchParams(body || {});
     } else {
       payload = JSON.stringify(body);
     }
@@ -97,7 +107,7 @@ export const api = {
   delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
 
   uploadFile: (endpoint, formData) => {
-    const token = localStorage.getItem('caretrace_token');
+    const token = localStorage.getItem('caretrace_jwt_token') || localStorage.getItem('caretrace_token') || localStorage.getItem('token');
     const headers = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
