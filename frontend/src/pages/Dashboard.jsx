@@ -34,22 +34,22 @@ const matchesSearch = (query, ...values) => {
 };
 
 function StatCard({ icon, label, value, sub, accent = 'blue', delay = '' }) {
-  const colors = {
-    blue: 'from-teal-600 to-cyan-700',
-    teal: 'from-sky-600 to-blue-800',
-    rose: 'from-rose-500 to-rose-700',
-    amber: 'from-amber-400 to-orange-600',
+  const iconBg = {
+    blue:  'bg-[var(--app-accent)]/10 text-[var(--app-accent)]',
+    teal:  'bg-[var(--app-info-bg,rgba(99,179,237,0.12))] text-[var(--app-info)]',
+    rose:  'bg-[var(--app-danger-bg)] text-[var(--app-danger)]',
+    amber: 'bg-[var(--app-warning-bg)] text-[var(--app-warning)]',
   };
 
   return (
     <div className={`card-premium p-5 flex items-center gap-4 fade-in ${delay}`}>
-      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${colors[accent]} flex items-center justify-center shadow-md shrink-0`}>
+      <div className={`w-12 h-12 rounded-[var(--radius-lg)] flex items-center justify-center shrink-0 ${iconBg[accent] ?? iconBg.blue}`}>
         {icon}
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-0.5">{label}</p>
-        <p className="text-2xl font-bold text-slate-800 leading-none">{value}</p>
-        {sub && <p className="text-xs text-slate-400 mt-1">{sub}</p>}
+        <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide mb-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[var(--app-text)] leading-none">{value}</p>
+        {sub && <p className="text-xs text-[var(--app-text-disabled)] mt-1">{sub}</p>}
       </div>
     </div>
   );
@@ -59,15 +59,14 @@ const CustomTooltip = ({ active, payload, label, t }) => {
   if (active && payload?.length) {
     return (
       <div className="px-3 py-2.5 text-sm" style={tooltipContentStyle}>
-        <p className="font-semibold text-slate-800 mb-1">{label}</p>
-        <p className="text-teal-800 font-semibold">
+        <p className="font-semibold text-[var(--app-text)] mb-1">{label}</p>
+        <p className="text-[var(--app-success)] font-semibold">
           {t('history.table.severity')}: {payload[0]?.value}
-          <span className="text-slate-500 font-normal"> /10</span>
+          <span className="text-[var(--app-text-muted)] font-normal"> /10</span>
         </p>
       </div>
     );
   }
-
   return null;
 };
 
@@ -76,11 +75,15 @@ function Dashboard() {
   const { t, i18n } = useTranslation();
   const trendGradId = `dash-trend-${useId().replace(/:/g, '')}`;
 
+  useEffect(() => {
+    document.title = `Dashboard — CareTrace AI`;
+  }, []);
+
   const riskMeta = {
-    High: { color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-200', dot: 'bg-rose-500', label: t('dashboard.risk.high', 'High Risk') },
-    Medium: { color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', dot: 'bg-amber-500', label: t('dashboard.risk.medium', 'Medium Risk') },
-    Low: { color: 'text-teal-600', bg: 'bg-teal-50', border: 'border-teal-200', dot: 'bg-teal-500', label: t('dashboard.risk.low', 'Low Risk') },
-    default: { color: 'text-slate-500', bg: 'bg-slate-50', border: 'border-slate-200', dot: 'bg-slate-400', label: t('dashboard.risk.not_assessed', 'Not Assessed') },
+    High:    { color: 'text-[var(--app-danger)]',  bg: 'bg-[var(--app-danger-bg)]',  border: 'border-[var(--app-danger-border)]',  dot: 'bg-[var(--app-danger)]',  label: t('dashboard.risk.high', 'High Risk') },
+    Medium:  { color: 'text-[var(--app-warning)]', bg: 'bg-[var(--app-warning-bg)]', border: 'border-[var(--app-warning-border,var(--app-border))]', dot: 'bg-[var(--app-warning)]', label: t('dashboard.risk.medium', 'Medium Risk') },
+    Low:     { color: 'text-[var(--app-success)]', bg: 'bg-[var(--app-success-bg)]', border: 'border-[var(--app-success-border,var(--app-border))]', dot: 'bg-[var(--app-success)]', label: t('dashboard.risk.low', 'Low Risk') },
+    default: { color: 'text-[var(--app-text-muted)]', bg: 'bg-[var(--app-surface-soft)]', border: 'border-[var(--app-border)]', dot: 'bg-[var(--app-text-disabled)]', label: t('dashboard.risk.not_assessed', 'Not Assessed') },
   };
   const [searchParams, setSearchParams] = useSearchParams();
   const {
@@ -153,12 +156,17 @@ function Dashboard() {
     setSearchParams(nextParams, { replace: true });
   };
 
+  // Shared action button class — token-driven, no hardcoded colors
+  const actionCls = 'inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--radius-lg)] text-sm font-semibold transition-all duration-200';
+  const actionPrimary = `${actionCls} bg-[var(--app-surface)] text-[var(--app-text)] shadow-[var(--shadow-l1)] hover:shadow-[var(--shadow-l2)] hover:-translate-y-0.5`;
+  const actionGhost   = `${actionCls} bg-white/15 text-white border border-white/30 hover:bg-white/25`;
+
   const quickActions = [
     {
       key: 'log-symptom',
       label: t('dashboard.log_symptom'),
       keywords: ['symptom', 'log', 'track', 'entry', 'record'],
-      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white text-zinc-800 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200',
+      className: actionPrimary,
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>,
       onClick: () => navigate('/symptoms'),
     },
@@ -166,7 +174,7 @@ function Dashboard() {
       key: 'run-analysis',
       label: t('dashboard.run_analysis'),
       keywords: ['analysis', 'risk', 'scan', 'insights', 'report'],
-      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
+      className: actionGhost,
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
       onClick: () => navigate('/analysis'),
     },
@@ -174,7 +182,7 @@ function Dashboard() {
       key: 'timeline',
       label: t('dashboard.view_timeline'),
       keywords: ['timeline', 'history', 'dates', 'recent', 'symptoms'],
-      className: 'flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 bg-white/15 text-white border border-white/30 rounded-xl text-sm font-semibold hover:bg-white/25 transition-all duration-200',
+      className: actionGhost,
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
       onClick: () => navigate('/timeline'),
     },
@@ -182,7 +190,7 @@ function Dashboard() {
       key: 'testimonials',
       label: t('dashboard.testimonials_btn'),
       keywords: ['testimonials', 'reviews', 'feedback', 'users'],
-      className: `flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2.5 ${showTestimonials ? 'bg-white/30 text-white' : 'bg-white/15 text-white hover:bg-white/25'} border border-white/30 rounded-xl text-sm font-semibold transition-all duration-200`,
+      className: `${actionGhost} ${showTestimonials ? 'bg-white/30' : ''}`,
       icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>,
       onClick: () => setShowTestimonials(!showTestimonials),
     },
@@ -201,7 +209,7 @@ function Dashboard() {
       value: isLoading ? '—' : symptoms.length,
       sub: t('dashboard.stats.all_time'),
       keywords: ['symptoms', 'logged', 'entries', 'tracking', 'count'],
-      icon: <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+      icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
     },
     {
       key: 'avg-severity',
@@ -211,7 +219,7 @@ function Dashboard() {
       value: isLoading ? '—' : avgSev,
       sub: t('dashboard.stats.across_logs'),
       keywords: ['average', 'severity', 'logs', 'symptoms', 'score'],
-      icon: <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
+      icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
     },
     {
       key: 'longest-duration',
@@ -221,7 +229,7 @@ function Dashboard() {
       value: isLoading ? '—' : longestRun ? `${longestRun}d` : '—',
       sub: t('dashboard.stats.single_run'),
       keywords: ['longest', 'duration', 'run', 'days', 'symptom'],
-      icon: <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+      icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
     },
     {
       key: 'active-alerts',
@@ -231,7 +239,7 @@ function Dashboard() {
       value: isLoading ? '—' : String(alerts?.length ?? 0),
       sub: hasAlert() ? t('dashboard.stats.needs_attention') : t('dashboard.stats.all_clear'),
       keywords: ['alerts', 'warning', 'health alert', 'attention', 'risk'],
-      icon: <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
+      icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
     },
   ];
 
@@ -247,11 +255,11 @@ function Dashboard() {
         ? t('dashboard.insights.profile_body', { lifestyle: userProfile.lifestyle })
         : t('dashboard.insights.profile_empty'),
       keywords: ['profile', 'guidance', 'lifestyle', 'settings', 'recommendations'],
-      className: 'p-4 bg-zinc-50 rounded-2xl border border-zinc-100',
-      iconWrapClassName: 'w-8 h-8 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0',
-      titleClassName: 'text-sm font-semibold text-zinc-900 mb-0.5',
-      bodyClassName: 'text-xs text-zinc-800 leading-relaxed',
-      icon: <svg className="w-4 h-4 text-zinc-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
+      className: 'p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-xl)] border border-[var(--app-border)]',
+      iconWrapClassName: 'w-8 h-8 rounded-[var(--radius-md)] bg-[var(--app-surface-elevated)] flex items-center justify-center shrink-0',
+      titleClassName: 'text-sm font-semibold text-[var(--app-text)] mb-0.5',
+      bodyClassName: 'text-xs text-[var(--app-text-muted)] leading-relaxed',
+      icon: <svg className="w-4 h-4 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
     },
     ...(symptoms.length > 0
       ? [
@@ -260,11 +268,11 @@ function Dashboard() {
             title: t('dashboard.insights.pattern_title'),
             body: t('dashboard.insights.pattern_body', { count: symptoms.length, avg: avgSev }),
             keywords: ['tracking', 'pattern', 'severity', 'analysis', 'symptoms', 'trend'],
-            className: 'p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl border border-teal-100',
-            iconWrapClassName: 'w-8 h-8 rounded-xl bg-teal-100 flex items-center justify-center shrink-0',
-            titleClassName: 'text-sm font-semibold text-teal-900 mb-0.5',
-            bodyClassName: 'text-xs text-teal-700 leading-relaxed',
-            icon: <svg className="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
+            className: 'p-4 bg-[var(--app-accent)]/5 rounded-[var(--radius-xl)] border border-[var(--app-accent)]/10',
+            iconWrapClassName: 'w-8 h-8 rounded-[var(--radius-md)] bg-[var(--app-accent)]/10 flex items-center justify-center shrink-0',
+            titleClassName: 'text-sm font-semibold text-[var(--app-text)] mb-0.5',
+            bodyClassName: 'text-xs text-[var(--app-text-muted)] leading-relaxed',
+            icon: <svg className="w-4 h-4 text-[var(--app-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
           },
         ]
       : []),
@@ -329,18 +337,18 @@ function Dashboard() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="fade-in">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-zinc-200 text-xs font-semibold uppercase tracking-widest">CareTrace AI</span>
-              <span className="text-zinc-300/50">·</span>
-              <span className="text-zinc-200 text-xs">{t('dashboard.tagline')}</span>
+              <span className="text-white/70 text-xs font-semibold uppercase tracking-widest">CareTrace AI</span>
+              <span className="text-white/30">·</span>
+              <span className="text-white/70 text-xs">{t('dashboard.tagline')}</span>
             </div>
             {isLoading ? (
               <div className="skeleton h-9 w-64 mb-2" />
             ) : (
-              <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white/95 leading-tight">
                 {userProfile?.name ? t('dashboard.welcome', { name: userProfile.name }) : t('dashboard.hello', { name: user?.email?.split('@')[0] || t('dashboard.welcome_default') })} 👋
               </h1>
             )}
-            <p className="text-zinc-200 text-sm mt-1.5 font-medium">
+            <p className="text-white/70 text-sm mt-1.5 font-medium">
               {isLoading
                 ? t('dashboard.loading')
                 : t('dashboard.tracked_count', { count: symptoms.length })} · {new Date().toLocaleDateString(i18n.language, { weekday: 'long', month: 'long', day: 'numeric' })}
@@ -369,25 +377,25 @@ function Dashboard() {
         {!hasSearchQuery && showTestimonials && <TestimonialsSection />}
 
         {!hasSearchQuery && demoMedications.length > 0 && (
-          <div className="card-premium mb-6 p-6 border-sky-100 bg-white slide-up">
+          <div className="card-premium mb-6 p-6 slide-up">
             <div className="flex items-center justify-between gap-4 mb-4">
               <div>
-                <p className="text-xs font-semibold text-sky-700 uppercase tracking-wide">
+                <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">
                   {t('dashboard.demo_meds.label')}
                 </p>
-                <h2 className="text-lg font-bold text-slate-800">{t('dashboard.demo_meds.title')}</h2>
+                <h2 className="text-lg font-bold text-[var(--app-text)]">{t('dashboard.demo_meds.title')}</h2>
               </div>
             </div>
             <ul className="divide-y divide-slate-100">
               {demoMedications.map((med) => (
                 <li key={med.name} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                   <div>
-                    <p className="font-semibold text-slate-800">{med.name}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="font-semibold text-[var(--app-text)]">{med.name}</p>
+                    <p className="text-sm text-[var(--app-text-muted)]">
                       {med.dose} · {med.schedule}
                     </p>
                   </div>
-                  {med.notes && <p className="text-xs text-slate-400 sm:text-right max-w-md">{med.notes}</p>}
+                  {med.notes && <p className="text-xs text-[var(--app-text-disabled)] sm:text-right max-w-md">{med.notes}</p>}
                 </li>
               ))}
             </ul>
@@ -395,17 +403,17 @@ function Dashboard() {
         )}
 
         {hasSearchQuery && (
-          <div className="card-premium mb-6 border-zinc-100 bg-zinc-50/80 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 fade-in">
+          <div className="card-premium mb-6 border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 fade-in">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-600">{t('dashboard.search.title')}</p>
-              <p className="text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">{t('dashboard.search.title')}</p>
+              <p className="text-sm text-[var(--app-text)]">
                 {t('dashboard.search.results', { query: searchLabel })}
               </p>
             </div>
             <button
               type="button"
               onClick={clearDashboardSearch}
-              className="shrink-0 w-full sm:w-auto text-xs font-semibold text-zinc-800 bg-white hover:bg-zinc-100 border border-zinc-200 px-3 py-2 rounded-lg transition-colors"
+              className="shrink-0 w-full sm:w-auto min-h-[44px] text-xs font-semibold text-[var(--app-text)] bg-[var(--app-surface)] hover:bg-[var(--app-surface-soft)] border border-[var(--app-border)] px-3 py-2 rounded-lg transition-colors"
             >
               {t('dashboard.search.clear')}
             </button>
@@ -413,19 +421,19 @@ function Dashboard() {
         )}
 
         {showAlertBanner && (
-          <div className="alert-pulse card-premium mb-6 border-rose-200 bg-rose-50/80 p-4 flex items-start gap-4 fade-in">
-            <div className="w-9 h-9 bg-rose-100 rounded-xl flex items-center justify-center shrink-0">
-              <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="alert-pulse card-premium mb-6 border-[var(--app-danger-border)] bg-[var(--app-danger-bg)] p-4 flex items-start gap-4 fade-in">
+            <div className="w-9 h-9 bg-[var(--app-danger-bg)] rounded-xl flex items-center justify-center shrink-0 border border-[var(--app-danger-border)]">
+              <svg className="w-5 h-5 text-[var(--app-danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-rose-800 text-sm">{t('dashboard.alert_title')}</h3>
-              <p className="text-rose-700 text-sm mt-0.5">{t('dashboard.alert_body')}</p>
+              <h3 className="font-bold text-[var(--app-danger-text)] text-sm">{t('dashboard.alert_title')}</h3>
+              <p className="text-[var(--app-danger-text)] text-sm mt-0.5 opacity-80">{t('dashboard.alert_body')}</p>
             </div>
             <button
               onClick={() => navigate('/alerts')}
-              className="shrink-0 text-xs font-semibold text-rose-700 bg-rose-100 hover:bg-rose-200 border border-rose-200 px-3 py-1.5 rounded-lg transition-colors"
+              className="shrink-0 min-h-[44px] text-xs font-semibold text-[var(--app-danger-text)] bg-[var(--app-danger-bg)] hover:opacity-80 border border-[var(--app-danger-border)] px-3 py-1.5 rounded-lg transition-opacity"
             >
               {t('dashboard.alert_view')}
             </button>
@@ -433,26 +441,26 @@ function Dashboard() {
         )}
 
         {showReminderBanner && (
-          <div className="card-premium mb-6 border-indigo-100 bg-indigo-50/70 p-4 flex items-center gap-4 fade-in stagger-1">
-            <div className="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
-              <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="card-premium mb-6 border-[var(--app-info-border,var(--app-border))] bg-[var(--app-info-bg)] p-4 flex items-center gap-4 fade-in stagger-1">
+            <div className="w-9 h-9 bg-[var(--app-info-bg)] rounded-xl flex items-center justify-center shrink-0 border border-[var(--app-info-border,var(--app-border))]">
+              <svg className="w-5 h-5 text-[var(--app-info)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-indigo-800 text-sm">{t('dashboard.reminder_title')}</p>
-              <p className="text-indigo-600 text-xs mt-0.5">{t('dashboard.reminder_body')}</p>
+              <p className="font-semibold text-[var(--app-info,var(--app-text))] text-sm">{t('dashboard.reminder_title')}</p>
+              <p className="text-[var(--app-info,var(--app-text-muted))] text-xs mt-0.5 opacity-80">{t('dashboard.reminder_body')}</p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => navigate('/symptoms')}
-                className="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition-colors"
+                className="min-h-[44px] text-xs font-semibold text-[var(--brand-accent-on)] bg-[var(--app-accent)] hover:opacity-90 px-3 py-1.5 rounded-lg transition-opacity"
               >
                 {t('dashboard.reminder_log')}
               </button>
               <button
                 onClick={() => setReminderDismissed(true)}
-                className="text-xs text-indigo-400 hover:text-indigo-600 transition-colors"
+                className="text-xs text-[var(--app-text-disabled)] hover:text-[var(--app-text-muted)] transition-colors min-h-[44px] flex items-center"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -463,14 +471,14 @@ function Dashboard() {
         )}
 
         {!hasSearchMatches && hasSearchQuery ? (
-          <div className="card-premium p-8 text-center border-dashed border-slate-200 bg-slate-50/70 fade-in">
-            <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mx-auto mb-4 shadow-sm">
-              <svg className="w-7 h-7 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="card-premium p-8 text-center border-dashed border-[var(--app-border)] bg-[var(--app-surface-soft)] fade-in">
+            <div className="w-14 h-14 rounded-2xl bg-[var(--app-surface-elevated)] border border-[var(--app-border)] flex items-center justify-center mx-auto mb-4 shadow-sm">
+              <svg className="w-7 h-7 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h2 className="text-lg font-bold text-slate-800 mb-1">{t('dashboard.search.no_matches')}</h2>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
+            <h2 className="text-lg font-bold text-[var(--app-text)] mb-1">{t('dashboard.search.no_matches')}</h2>
+            <p className="text-sm text-[var(--app-text-muted)] max-w-md mx-auto">
               {t('dashboard.search.no_matches_sub')}
             </p>
           </div>
@@ -498,8 +506,8 @@ function Dashboard() {
                   <div className={`card-premium p-6 ${meta.bg} ${meta.border} border slide-up ${showTrendChart ? '' : 'lg:col-span-3'}`}>
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.risk.title')}</p>
-                        <h2 className="text-lg font-bold text-slate-800 mt-0.5">{t('dashboard.risk.status')}</h2>
+                        <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.risk.title')}</p>
+                        <h2 className="text-lg font-bold text-[var(--app-text)] mt-0.5">{t('dashboard.risk.status')}</h2>
                       </div>
                       <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${meta.border} ${meta.bg}`}>
                         <span className={`w-2 h-2 rounded-full ${meta.dot} ${risk === 'High' ? 'animate-pulse' : ''}`} />
@@ -509,16 +517,16 @@ function Dashboard() {
 
                     {!analysisResult ? (
                       <div className="py-6 flex flex-col items-center text-center">
-                        <div className="w-14 h-14 rounded-2xl bg-white/60 border border-slate-200 flex items-center justify-center mb-4 shadow-sm">
-                          <svg className="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-14 h-14 rounded-2xl bg-[var(--app-surface-elevated)] border border-[var(--app-border)] flex items-center justify-center mb-4 shadow-sm">
+                          <svg className="w-7 h-7 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                           </svg>
                         </div>
-                        <p className="text-sm text-slate-600 font-medium mb-1">{t('dashboard.risk.no_analysis')}</p>
-                        <p className="text-xs text-slate-400 mb-4">{t('dashboard.risk.no_analysis_sub')}</p>
+                        <p className="text-sm text-[var(--app-text-muted)] font-medium mb-1">{t('dashboard.risk.no_analysis')}</p>
+                        <p className="text-xs text-[var(--app-text-disabled)] mb-4">{t('dashboard.risk.no_analysis_sub')}</p>
                         <button
                           onClick={() => navigate('/analysis')}
-                          className="px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-700 hover:to-cyan-800 text-white text-xs font-semibold rounded-xl transition-all shadow-md"
+                          className="px-4 min-h-[44px] py-2 bg-[var(--app-accent)] hover:opacity-90 text-[var(--brand-accent-on)] text-xs font-semibold rounded-[var(--radius-lg)] transition-opacity shadow-[var(--shadow-l1)]"
                         >
                           {t('dashboard.run_analysis')}
                         </button>
@@ -530,12 +538,12 @@ function Dashboard() {
                             ? t(`dashboard.risk.${String(risk).toLowerCase()}`, { defaultValue: risk })
                             : meta.label}
                         </div>
-                        <p className="text-sm text-slate-700 leading-relaxed mb-4 bg-white/50 p-3 rounded-xl border border-white">
+                        <p className="text-sm text-[var(--app-text)] leading-relaxed mb-4 bg-[var(--app-surface-soft)] p-3 rounded-xl border border-[var(--app-border)]">
                           {analysisResult.reason}
                         </p>
                         <button
                           onClick={() => navigate('/analysis')}
-                          className="w-full py-2 text-xs font-semibold text-slate-600 bg-white/70 hover:bg-white border border-slate-200 rounded-xl transition-all"
+                          className="w-full min-h-[44px] py-2 text-xs font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface-elevated)] hover:bg-[var(--app-surface-soft)] border border-[var(--app-border)] rounded-xl transition-all"
                         >
                           {t('analysis.report.view_full_report', 'View Full Report →')}
                         </button>
@@ -548,10 +556,10 @@ function Dashboard() {
                   <div className={`card-premium p-6 slide-up stagger-1 ${showRiskCard ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
                     <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.charts.trend')}</p>
-                        <h2 className="text-lg font-bold text-slate-800">{t('dashboard.charts.severity_timeline')}</h2>
+                        <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.charts.trend')}</p>
+                        <h2 className="text-lg font-bold text-[var(--app-text)]">{t('dashboard.charts.severity_timeline')}</h2>
                       </div>
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-xs text-[var(--app-text-disabled)] font-medium">
                         {t('dashboard.charts.data_points', { count: (hasSearchQuery ? filteredChartData : chartData).length })}
                       </span>
                     </div>
@@ -606,19 +614,19 @@ function Dashboard() {
                             </AreaChart>
                           </ResponsiveContainer>
                         </div>
-                        <p className="mt-3 text-xs text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+                        <p className="mt-3 text-xs text-[var(--app-text-muted)] leading-relaxed border-t border-[var(--app-border)] pt-3">
                           {t('charts.caption_trend')}
                         </p>
                       </div>
                     ) : (
-                      <div className="h-48 flex flex-col items-center justify-center bg-slate-50/60 rounded-2xl border border-dashed border-slate-200">
-                        <svg className="w-10 h-10 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="h-48 flex flex-col items-center justify-center bg-[var(--app-surface-soft)] rounded-2xl border border-dashed border-[var(--app-border)]">
+                        <svg className="w-10 h-10 text-[var(--app-text-disabled)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                         </svg>
-                        <p className="text-sm font-medium text-slate-400">
+                        <p className="text-sm font-medium text-[var(--app-text-muted)]">
                           {hasSearchQuery ? t('dashboard.charts.no_match') : t('dashboard.charts.no_data')}
                         </p>
-                        <p className="text-xs text-slate-300 mt-1">
+                        <p className="text-xs text-[var(--app-text-disabled)] mt-1">
                           {hasSearchQuery ? t('dashboard.charts.no_match_sub') : t('dashboard.charts.no_data_sub')}
                         </p>
                       </div>
@@ -634,8 +642,8 @@ function Dashboard() {
                   <div className="card-premium p-6 slide-up stagger-2">
                     <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.charts.distribution')}</p>
-                        <h2 className="text-lg font-bold text-slate-800">{t('dashboard.charts.symptom_frequency')}</h2>
+                        <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.charts.distribution')}</p>
+                        <h2 className="text-lg font-bold text-[var(--app-text)]">{t('dashboard.charts.symptom_frequency')}</h2>
                       </div>
                     </div>
 
@@ -679,13 +687,13 @@ function Dashboard() {
                             </BarChart>
                           </ResponsiveContainer>
                         </div>
-                        <p className="mt-3 text-xs text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+                        <p className="mt-3 text-xs text-[var(--app-text-muted)] leading-relaxed border-t border-[var(--app-border)] pt-3">
                           {t('charts.caption_bars')}
                         </p>
                       </div>
                     ) : (
-                      <div className="h-48 flex flex-col items-center justify-center bg-slate-50/60 rounded-2xl border border-dashed border-slate-200">
-                        <p className="text-sm font-medium text-slate-400">
+                      <div className="h-48 flex flex-col items-center justify-center bg-[var(--app-surface-soft)] rounded-2xl border border-dashed border-[var(--app-border)]">
+                        <p className="text-sm font-medium text-[var(--app-text-muted)]">
                           {hasSearchQuery ? t('dashboard.charts.no_freq_match') : t('dashboard.charts.no_freq_data')}
                         </p>
                       </div>
@@ -693,7 +701,7 @@ function Dashboard() {
 
                     <button
                       onClick={() => navigate('/timeline')}
-                      className="mt-4 w-full py-2.5 text-xs font-semibold text-zinc-800 hover:text-zinc-800 bg-zinc-50 hover:bg-zinc-100 rounded-xl transition-colors"
+                      className="mt-4 w-full min-h-[44px] py-2.5 text-xs font-semibold text-[var(--app-text)] bg-[var(--app-surface-soft)] hover:bg-[var(--app-surface-elevated)] rounded-xl transition-colors"
                     >
                       {t('dashboard.charts.view_timeline')}
                     </button>
@@ -703,8 +711,8 @@ function Dashboard() {
                 {showInsightsCard && (
                   <div className="card-premium p-6 slide-up stagger-3">
                     <div className="mb-5">
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.insights.title')}</p>
-                      <h2 className="text-lg font-bold text-slate-800">{t('dashboard.insights.personalized_insights')}</h2>
+                      <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.insights.title')}</p>
+                      <h2 className="text-lg font-bold text-[var(--app-text)]">{t('dashboard.insights.personalized_insights')}</h2>
                     </div>
 
                     <div className="space-y-3">
@@ -723,16 +731,16 @@ function Dashboard() {
                           </div>
                         ))
                       ) : (
-                        <div className="py-6 text-center bg-slate-50/70 rounded-2xl border border-dashed border-slate-200">
-                          <p className="text-sm font-medium text-slate-500">{t('dashboard.charts.no_insight_match')}</p>
-                          <p className="text-xs text-slate-400 mt-1">{t('dashboard.charts.no_insight_sub')}</p>
+                        <div className="py-6 text-center bg-[var(--app-surface-soft)] rounded-2xl border border-dashed border-[var(--app-border)]">
+                          <p className="text-sm font-medium text-[var(--app-text-muted)]">{t('dashboard.charts.no_insight_match')}</p>
+                          <p className="text-xs text-[var(--app-text-disabled)] mt-1">{t('dashboard.charts.no_insight_sub')}</p>
                         </div>
                       )}
                     </div>
 
                     <button
                       onClick={() => navigate('/reports')}
-                      className="mt-4 w-full py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                      className="mt-4 w-full min-h-[44px] py-2.5 text-xs font-semibold text-[var(--app-text-muted)] hover:text-[var(--app-text)] bg-[var(--app-surface-soft)] hover:bg-[var(--app-surface-elevated)] rounded-xl transition-colors"
                     >
                       {t('dashboard.charts.view_report')}
                     </button>

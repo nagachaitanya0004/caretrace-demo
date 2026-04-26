@@ -2,54 +2,116 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CareTrace AI - Personalized Health Intelligence</title>
-    
-    <!-- Premium Global & Regional Font Support -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Kannada:wght@100..900&family=Noto+Sans+Devanagari:wght@100..900&family=Noto+Sans+Tamil:wght@100..900&family=Noto+Sans+Telugu:wght@100..900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- ── Primary SEO ──────────────────────────────────────────── -->
+    <title>CareTrace AI — Personalized Health Tracking & Intelligence</title>
+    <meta name="description" content="CareTrace AI helps you log symptoms, track health patterns, and generate clinician-ready timelines. Log once. Know sooner." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://caretrace.ai/" />
+
+    <!-- ── Open Graph ────────────────────────────────────────────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://caretrace.ai/" />
+    <meta property="og:title" content="CareTrace AI — Personalized Health Tracking & Intelligence" />
+    <meta property="og:description" content="Log symptoms, track health patterns, and generate clinician-ready timelines. Log once. Know sooner." />
+    <meta property="og:image" content="https://caretrace.ai/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="CareTrace AI" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- ── Twitter / X Card ──────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@CareTraceAI" />
+    <meta name="twitter:title" content="CareTrace AI — Personalized Health Tracking" />
+    <meta name="twitter:description" content="Log symptoms, track health patterns, and generate clinician-ready timelines." />
+    <meta name="twitter:image" content="https://caretrace.ai/og-image.png" />
+
+    <!-- ── Theme & PWA ───────────────────────────────────────────── -->
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="application-name" content="CareTrace AI" />
+    <meta name="apple-mobile-web-app-title" content="CareTrace AI" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- ── Favicon ───────────────────────────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- ── Font Loading — display=optional prevents render-blocking ─
+         Preconnect first, then load with display=optional so the
+         browser never blocks paint waiting for fonts.
+         ──────────────────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      fetchpriority="high"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=optional"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=optional" rel="stylesheet" /></noscript>
+
+    <!-- ── Structured data (JSON-LD) ─────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CareTrace AI",
+      "url": "https://caretrace.ai",
+      "description": "CareTrace AI helps you log symptoms, track health patterns, and generate clinician-ready timelines.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <!-- ── Critical inline styles — prevent FOUC and CLS ────────── -->
     <style>
-      :root {
-        font-family: 'Inter', 'Noto Sans', sans-serif;
-      }
-      /* Script-Specific Font Overrides */
-      [lang="te"] { font-family: 'Noto Sans Telugu', sans-serif; }
-      [lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
-      [lang="ta"] { font-family: 'Noto Sans Tamil', sans-serif; }
-      [lang="kn"] { font-family: 'Noto Sans Kannada', sans-serif; }
-      
-      body {
-        margin: 0;
-        padding: 0;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    </style>
-    <script>
-      (function() {
-        try {
-          const storedTheme = window.localStorage.getItem('theme');
-          const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-          const theme = storedTheme === 'dark' || storedTheme === 'light'
-            ? storedTheme
-            : (prefersDark ? 'dark' : 'light');
+      /* Font stack — matches globals.css so no layout shift */
+      :root { font-family: 'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif; }
 
-          if (theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          } else {
-            document.documentElement.removeAttribute('data-theme');
-          }
-        } catch (error) {
-          // Silently ignore if localStorage is unavailable.
-        }
+      /* Script-specific font overrides */
+      :lang(te) { font-family: 'Noto Sans Telugu', 'Noto Sans', sans-serif; }
+      :lang(hi) { font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif; }
+      :lang(ta) { font-family: 'Noto Sans Tamil', 'Noto Sans', sans-serif; }
+      :lang(kn) { font-family: 'Noto Sans Kannada', 'Noto Sans', sans-serif; }
+
+      /* Prevent margin/padding flash */
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; padding: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+      /* Prevent white flash in dark mode before JS hydrates */
+      html[data-theme="dark"] { background-color: #03070f; color: #e8eeff; }
+      html:not([data-theme="dark"]) { background-color: #fafafa; color: #111827; }
+    </style>
+
+    <!-- ── Theme init — runs before paint to prevent flash ──────── -->
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('theme');
+          var d = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var t = s === 'dark' || s === 'light' ? s : (d ? 'dark' : 'light');
+          if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (e) {}
       })();
     </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- ── Noscript fallback ─────────────────────────────────────── -->
+    <noscript>
+      <div style="padding:2rem;text-align:center;font-family:system-ui,sans-serif;">
+        <strong>CareTrace AI</strong> requires JavaScript to run.
+        Please enable JavaScript in your browser settings.
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

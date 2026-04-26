@@ -95,8 +95,12 @@ function Symptoms() {
     }
   };
 
-  const inputCls = 'w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-600';
-  const labelCls = 'block text-sm font-medium text-gray-700 mb-1';
+  const inputCls =
+    'w-full px-3.5 py-2.5 bg-[var(--app-input-bg)] text-[var(--app-text)] ' +
+    'border border-[var(--app-input-border)] rounded-[var(--radius-lg)] text-sm ' +
+    'placeholder:text-[var(--app-text-disabled)] transition-colors duration-150 ' +
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:border-[var(--brand-accent)]';
+  const labelCls = 'block text-sm font-medium text-[var(--app-text)] mb-1';
 
   return (
     <PageFrame title={t('symptoms.title')} subtitle={t('symptoms.subtitle')} headAlign="center" maxWidthClass="max-w-4xl">
@@ -183,7 +187,7 @@ function Symptoms() {
               min="1" max="10"
               value={form.severity}
               onChange={e => update('severity', e.target.value)}
-              className="w-full accent-teal-600 mt-1"
+              className="w-full accent-[var(--brand-accent)] mt-1"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-0.5">
               <span>Mild</span><span>Severe</span>
@@ -264,7 +268,7 @@ function Symptoms() {
                   <div className="flex items-center gap-2 mt-0.5">
                     <p className="text-sm text-gray-500">{t('symptoms.logged_on', { date: formattedDate(symptom.date, i18n.language) })}</p>
                     {symptom.context?.frequency && (
-                      <span className="text-xs text-teal-700 bg-teal-50 border border-teal-100 px-1.5 py-0.5 rounded-full capitalize">
+                      <span className="text-xs text-[var(--app-accent)] bg-[var(--app-accent)]/10 border border-[var(--app-accent)]/20 px-1.5 py-0.5 rounded-full capitalize">
                         {symptom.context.frequency}
                       </span>
                     )}
@@ -288,7 +292,7 @@ function Symptoms() {
         {symptoms.length === 0 ? (
           <p className="text-slate-500 text-sm">{t('symptoms.empty_state')}</p>
         ) : (
-          <Button onClick={() => navigate('/timeline')} className="bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-700 hover:to-cyan-800">
+          <Button intent="cta" onClick={() => navigate('/timeline')}>
             {t('dashboard.view_timeline')}
           </Button>
         )}

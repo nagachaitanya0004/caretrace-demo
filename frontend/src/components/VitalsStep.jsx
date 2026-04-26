@@ -42,7 +42,7 @@ const S = {
   inputError: {
     width: '100%',
     padding: '0.625rem 0.75rem',
-    border: '1px solid #ef4444',
+    border: '1px solid var(--app-danger, #ef4444)',
     borderRadius: '0.5rem',
     fontSize: '0.875rem',
     color: 'var(--app-text)',
@@ -52,7 +52,7 @@ const S = {
   },
   errorText: {
     fontSize: '0.75rem',
-    color: '#ef4444',
+    color: 'var(--app-danger, #ef4444)',
     marginTop: '0.25rem',
   },
   btnRow: { display: 'flex', gap: '0.75rem', marginTop: '0.5rem' },
@@ -60,7 +60,7 @@ const S = {
     flex: 1,
     padding: '0.75rem',
     backgroundColor: 'var(--app-accent)',
-    color: '#ffffff',
+    color: 'var(--brand-accent-on, #000)',
     borderRadius: '0.5rem',
     fontSize: '0.875rem',
     fontWeight: 600,

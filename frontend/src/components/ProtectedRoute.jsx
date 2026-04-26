@@ -1,15 +1,18 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
-
 export default function ProtectedRoute({ children }) {
   const { token, user, isLoadingAuth } = useAuth();
   const location = useLocation();
 
   if (isLoadingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-12 h-12 border-4 border-zinc-200 border-t-zinc-800 rounded-full animate-spin"></div>
+      <div
+        className="min-h-screen flex items-center justify-center bg-[var(--app-bg)]"
+        role="status"
+        aria-label="Loading"
+      >
+        <span className="w-12 h-12 rounded-full border-4 border-[var(--app-border)] border-t-[var(--app-text)] animate-spin" />
       </div>
     );
   }

@@ -83,7 +83,7 @@ const S = {
     flex: 1,
     padding: '0.75rem',
     backgroundColor: 'var(--app-accent)',
-    color: '#ffffff',
+    color: 'var(--brand-accent-on, #000)',
     borderRadius: '0.5rem',
     fontSize: '0.875rem',
     fontWeight: 600,

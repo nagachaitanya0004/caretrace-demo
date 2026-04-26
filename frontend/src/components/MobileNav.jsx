@@ -143,7 +143,7 @@ export default function MobileNav({ isOpen, onClose }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-[6px] z-[60] md:hidden cursor-default border-none p-0"
+          className="fixed inset-0 bg-[var(--app-bg)]/60 backdrop-blur-[6px] z-[60] md:hidden cursor-default border-none p-0"
           aria-label={t('common.close', 'Close')}
           onClick={onClose}
         />
@@ -186,7 +186,7 @@ export default function MobileNav({ isOpen, onClose }) {
           {/* Signed-in user info */}
           {user && (
             <div className="nav-drawer-user mx-4 mb-3 px-3.5 py-3 rounded-2xl flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl gradient-teal flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow-sm shrink-0">
                 {user.email?.charAt(0).toUpperCase()}
               </div>
               <div className="overflow-hidden">

@@ -9,7 +9,7 @@ function PageFrame({
 }) {
   const centered = headAlign === 'center';
   return (
-    <div className={`page-frame ${maxWidthClass} ${className}`}>
+    <div className={`page-frame ${maxWidthClass} ${className}`} role="region" aria-label={title}>
       <header className={`page-header ${centered ? 'text-center' : ''}`}>
         <div className={`flex flex-col gap-4 lg:flex-row lg:items-start ${centered ? 'lg:justify-center' : 'lg:justify-between'}`}>
           <div className={`min-w-0 ${centered ? 'max-w-2xl mx-auto' : ''}`}>

@@ -126,7 +126,7 @@ function Sidebar() {
       <div className="sidebar-brand">
         <NavLink
           to="/dashboard"
-          className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50"
+          className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)]/50"
         >
           <BrandLockup
             variant="dark"
@@ -162,12 +162,12 @@ function Sidebar() {
       {user && (
         <div className="sidebar-user">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full gradient-teal flex items-center justify-center text-white font-bold text-sm shadow">
+            <div className="w-8 h-8 rounded-full bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow">
               {user.email?.charAt(0).toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="text-slate-200 text-xs font-semibold truncate">{user.email}</p>
-              <p className="text-slate-500 text-xs">{t('navbar.active_session')}</p>
+              <p className="text-[var(--app-text-muted)] text-xs font-semibold truncate">{user.email}</p>
+              <p className="text-[var(--app-text-disabled)] text-xs">{t('navbar.active_session')}</p>
             </div>
           </div>
         </div>

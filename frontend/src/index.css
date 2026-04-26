@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,15 +12,56 @@
   --color-primary-800: #1e293b;
   --color-primary-900: #0f172a;
   
-  --color-accent-400: #10b981; /* strictly for success/healthy metric */
+  --color-accent-400: #10b981;
   --color-accent-600: #059669;
+
+  /* ── Semantic status tokens ─────────────────────────── */
+  --color-success:    #059669;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-success-text: #065f46;
+  --color-warning:    #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-warning-text: #78350f;
+  --color-danger:     #dc2626;
+  --color-danger-bg:  #fff1f2;
+  --color-danger-border: #fecdd3;
+  --color-danger-text: #881337;
+  --color-info:       #0369a1;
+  --color-info-bg:    #eff6ff;
+  --color-info-border: #bfdbfe;
+  --color-info-text:  #1e3a5f;
 }
 
 :root {
   color-scheme: light;
+
+  /* ── Unified Token Tier ─────────────────────────────── */
+  --surface-base:    #ffffff;
+  --surface-1:       #f8fafc;
+  --surface-2:       #f1f5f9;
+  --brand-accent:    #000000; /* light mode: Absolute Black */
+  --brand-accent-on: #ffffff;
+
+  /* Elevation Scale — single source of truth for all shadows */
+  --shadow-l1: 0 1px 3px rgba(15,23,42,0.06), 0 4px 16px rgba(15,23,42,0.06);
+  --shadow-l2: 0 8px 32px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.05);
+  --shadow-l3: 0 24px 64px rgba(15,23,42,0.12), 0 8px 24px rgba(15,23,42,0.07);
+
+  /* Radius Scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Focus ring — standardized */
+  --focus-ring: 0 0 0 2px var(--brand-accent);
+
+  /* ── App aliases (point to unified tokens) ──────────── */
   --app-bg: #fafafa;
-  --app-surface: #ffffff;
-  --app-surface-elevated: #f8fafc;
+  --app-surface: var(--surface-base);
+  --app-surface-elevated: var(--surface-1);
   --app-surface-soft: #f5f7fb;
   --app-surface-floating: rgba(255, 255, 255, 0.92);
   --app-text: #111827;
@@ -30,16 +70,26 @@
   --app-border: #e2e8f0;
   --app-border-soft: rgba(148, 163, 184, 0.24);
   --app-border-hover: #cbd5e1;
-  --app-accent: #14b8a6;
-  --app-accent-hover: #0f9f93;
-  --app-accent-glow: rgba(20, 184, 166, 0.16);
-  --app-ring: rgba(20, 184, 166, 0.18);
+  --app-accent: var(--brand-accent);
+  --app-accent-hover: #1a1a1a;
+  --app-accent-glow: rgba(0, 0, 0, 0.12);
+  --app-ring: rgba(0, 0, 0, 0.14);
   --app-input-bg: #ffffff;
   --app-input-border: #d1d5db;
-  --app-shadow-small: 0 8px 24px rgba(15, 23, 42, 0.06);
-  --app-shadow-medium: 0 14px 34px rgba(15, 23, 42, 0.08);
-  --app-shadow-large: 0 24px 54px rgba(15, 23, 42, 0.12);
-  --app-chart-primary: #0d9488;
+  --app-danger: var(--color-danger);
+  --app-danger-bg: var(--color-danger-bg);
+  --app-danger-border: var(--color-danger-border);
+  --app-danger-text: var(--color-danger-text);
+  --app-success: var(--color-success);
+  --app-success-bg: var(--color-success-bg);
+  --app-warning: var(--color-warning);
+  --app-warning-bg: var(--color-warning-bg);
+  --app-info: var(--color-info);
+  --app-info-bg: var(--color-info-bg);
+  --app-shadow-small:  var(--shadow-l1);
+  --app-shadow-medium: var(--shadow-l2);
+  --app-shadow-large:  var(--shadow-l3);
+  --app-chart-primary: #0d9488; /* light mode chart — teal is correct for health data */
   --app-chart-primary-muted: rgba(13, 148, 136, 0.12);
   --app-chart-secondary: #0369a1;
   --app-chart-grid: #e2e8f0;
@@ -62,6 +112,34 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+
+  /* ── Unified Token Tier (dark) ──────────────────────── */
+  --surface-base: #000000;
+  --surface-1:    #0A0A0A;
+  --surface-2:    #141414;
+  --brand-accent:    #E2FF32; /* dark mode: Surgical Volt */
+  --brand-accent-on: #000000;
+
+  /* Elevation Scale (dark) */
+  --shadow-l1:
+    0 2px 8px rgba(0,0,0,0.7),
+    0 1px 2px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  --shadow-l2:
+    0 8px 32px rgba(0,0,0,0.75),
+    0 2px 8px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(255,255,255,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  --shadow-l3:
+    0 20px 60px rgba(0,0,0,0.85),
+    0 8px 24px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+
+  /* Focus ring (dark) */
+  --focus-ring: 0 0 0 2px #E2FF32;
+
+  /* ── App aliases (dark) ─────────────────────────────── */
   --app-bg: #03070f;
   --app-surface: #080f1c;
   --app-surface-elevated: #0c1525;
@@ -75,30 +153,29 @@
   --app-border-hover: #243650;
   --app-input-bg: #060c18;
   --app-input-border: #162030;
-  --app-accent: #4fd1c5;
-  --app-accent-hover: #2bbfb0;
-  --app-accent-glow: rgba(79, 209, 197, 0.18);
-  --app-ring: rgba(79, 209, 197, 0.22);
-  --app-shadow-small:
-    0 2px 8px rgba(0, 0, 0, 0.7),
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --app-shadow-medium:
-    0 8px 32px rgba(0, 0, 0, 0.75),
-    0 2px 8px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --app-shadow-large:
-    0 20px 60px rgba(0, 0, 0, 0.85),
-    0 8px 24px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --app-danger: #f87171;
+  --app-danger-bg: rgba(251, 113, 133, 0.12);
+  --app-danger-border: rgba(251, 113, 133, 0.28);
+  --app-danger-text: #fda4af;
+  --app-success: #34d399;
+  --app-success-bg: rgba(52, 211, 153, 0.12);
+  --app-warning: #fbbf24;
+  --app-warning-bg: rgba(251, 191, 36, 0.12);
+  --app-info: #63b3ed;
+  --app-info-bg: rgba(99, 179, 237, 0.12);
+  --app-accent: var(--brand-accent);
+  --app-accent-hover: #d4f020;
+  --app-accent-glow: rgba(226, 255, 50, 0.18);
+  --app-ring: rgba(226, 255, 50, 0.22);
+  --app-shadow-small:  var(--shadow-l1);
+  --app-shadow-medium: var(--shadow-l2);
+  --app-shadow-large:  var(--shadow-l3);
   --app-shadow-glow:
-    0 0 0 1px rgba(79, 209, 197, 0.15),
+    0 0 0 1px rgba(226, 255, 50, 0.15),
     0 8px 32px rgba(0, 0, 0, 0.7),
-    0 0 24px rgba(79, 209, 197, 0.06);
-  --app-chart-primary: #4fd1c5;
-  --app-chart-primary-muted: rgba(79, 209, 197, 0.15);
+    0 0 24px rgba(226, 255, 50, 0.06);
+  --app-chart-primary: #E2FF32;
+  --app-chart-primary-muted: rgba(226, 255, 50, 0.15);
   --app-chart-secondary: #63b3ed;
   --app-chart-grid: rgba(80, 110, 160, 0.12);
   --app-chart-axis: #7a96b8;
@@ -140,13 +217,144 @@ body {
   min-height: 100dvh;
 }
 
-body, body * {
-  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.landing-shell {
+  font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
-img, video, svg, canvas, [data-no-transition] {
-  transition: none !important;
+/* ─── Landing Cinematic Theme ────────────────────────────
+   Applied as a class on the landing shell div.
+   Overrides app tokens for the cinematic dark context.
+   No inline style injection needed in components.
+   ──────────────────────────────────────────────────── */
+.landing-cinematic {
+  --brand-accent:         #E2FF32;
+  --brand-accent-on:      #000000;
+  --app-bg:               #000000;
+  --app-surface:          #0A0A0A;
+  --app-surface-elevated: #141414;
+  --app-surface-soft:     #1a1a1a;
+  --app-text:             #FFFFFF;
+  --app-text-muted:       #a1a1aa;
+  --app-text-disabled:    #52525b;
+  --app-border:           rgba(255,255,255,0.08);
+  --app-border-hover:     rgba(255,255,255,0.16);
+  --app-input-bg:         #0A0A0A;
+  --app-input-border:     rgba(255,255,255,0.12);
+  --app-accent:           #E2FF32;
+  --app-ring:             rgba(226,255,50,0.22);
+  /* Landing-specific semantic tokens */
+  --color-base:           #000000;
+  --color-surface:        #0A0A0A;
+  --color-elevated:       #141414;
+  --color-text-primary:   #FFFFFF;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary:  #52525b;
+  --color-text-on-accent: #000000;
+  --color-surface-light:  rgba(255,255,255,0.12);
+  --color-surface-border: rgba(255,255,255,0.08);
+  --color-elevated-light: rgba(255,255,255,0.22);
+  --color-elevated-border:rgba(255,255,255,0.12);
+  --color-hairline:       rgba(255,255,255,0.08);
+  --color-grid-soft:      rgba(255,255,255,0.08);
+  --color-accent-soft:    rgba(226,255,50,0.14);
+  --color-accent-ambient: rgba(226,255,50,0.22);
+  --color-accent-shadow:  rgba(226,255,50,0.28);
+  --landing-accent:       #E2FF32;
+  --noise-opacity:        0.04;
+  /* Elevation (cinematic) */
+  --shadow-l1:
+    0 2px 8px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  --shadow-l2:
+    inset 0 0.5px 0 rgba(255,255,255,0.12),
+    0 0 0 0.5px rgba(255,255,255,0.08),
+    0 24px 72px rgba(0,0,0,0.52);
+  --shadow-l3:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 0 0 1px rgba(255,255,255,0.12),
+    0 36px 120px rgba(0,0,0,0.68),
+    0 0 52px rgba(226,255,50,0.28);
 }
+
+/* ─── Button Glow Classes (decoupled motion) ─────────────
+   Applied by Button component via GLOW map.
+   Hover shadows live here, not in JS.
+   ──────────────────────────────────────────────────── */
+.btn-glow-cta:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 0 0 1px rgba(226,255,50,0.3),
+    0 8px 32px rgba(226,255,50,0.28),
+    0 2px 8px rgba(0,0,0,0.2);
+}
+.btn-glow-primary:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 8px 24px rgba(0,0,0,0.18);
+}
+/* Secondary (glass): white/silver glow only — no volt bleed */
+.btn-glow-secondary:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    0 0 0 1px rgba(255,255,255,0.18),
+    0 36px 96px rgba(0,0,0,0.66);
+}
+
+/* Range input — accent from token */
+input[type='range'] {
+  accent-color: var(--brand-accent, #000000);
+}
+
+.landing-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  transform: translateZ(0);
+}
+
+/* ── Landing hero background glow ───────────────────────────────
+   blur() is expensive on mobile Safari — reduce by 50% on small screens.
+   ─────────────────────────────────────────────────────────────── */
+.hero-glow {
+  background:
+    radial-gradient(circle at 16% 14%, var(--color-accent-ambient), transparent 28%),
+    radial-gradient(circle at 84% 18%, rgba(255,255,255,0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 26%);
+  filter: blur(64px);
+}
+/* Mobile: reduce accent opacity to 0.14 (from 0.22) to prevent color drowning,
+   and halve the blur radius to prevent Safari compositing frame drops. */
+@media (max-width: 640px) {
+  .hero-glow {
+    background:
+      radial-gradient(circle at 16% 14%, rgba(226,255,50,0.14), transparent 28%),
+      radial-gradient(circle at 84% 18%, rgba(255,255,255,0.05), transparent 24%),
+      linear-gradient(180deg, rgba(255,255,255,0.01) 0%, transparent 26%);
+    filter: blur(32px);
+  }
+}
+
+/* ── DashboardMockup ambient glow ──────────────────────────────────────────────────────────────── */
+/* will-change: transform is ONLY applied to: (1) DashboardMockup wrapper, (2) fixed header.
+   No other elements use will-change to prevent excess compositor layer memory. */
+.mockup-glow {
+  filter: blur(128px);
+}
+@media (max-width: 640px) {
+  .mockup-glow {
+    filter: blur(64px);
+  }
+}
+
+/* ── Hero section paint containment ────────────────────────────────────────────────────────────── */
+/* contain:paint prevents overflow repaints from the hero glows bleeding into adjacent sections.
+   Applied via inline style on <section id="hero"> in Landing.jsx. */
+#hero {
+  contain: paint;
+}
+
+
 
 /* ─── Scrollbar ─────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -186,8 +394,8 @@ img, video, svg, canvas, [data-no-transition] {
 }
 
 @keyframes borderGlow {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.12); }
-  50%      { box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.3), 0 0 24px rgba(79, 209, 197, 0.07); }
+  0%, 100% { box-shadow: 0 0 0 1px rgba(226, 255, 50, 0.12); }
+  50%      { box-shadow: 0 0 0 1px rgba(226, 255, 50, 0.3), 0 0 24px rgba(226, 255, 50, 0.07); }
 }
 
 /* ─── Dark-mode cinematic enter animations ───────────── */
@@ -229,8 +437,8 @@ img, video, svg, canvas, [data-no-transition] {
   50% {
     box-shadow:
       0 12px 48px rgba(0,0,0,0.82),
-      0 0 0 1px rgba(79,209,197,0.1),
-      0 0 40px rgba(79,209,197,0.05);
+      0 0 0 1px rgba(226,255,50,0.1),
+      0 0 40px rgba(226,255,50,0.05);
   }
 }
 
@@ -333,11 +541,11 @@ img, video, svg, canvas, [data-no-transition] {
 [data-theme="dark"] .card-premium:hover {
   border-color: var(--dark-border-hover);
   box-shadow:
-    0 0 0 1px rgba(79, 209, 197, 0.13),
+    0 0 0 1px rgba(226, 255, 50, 0.1),
     0 16px 48px rgba(0, 0, 0, 0.75),
     0 4px 16px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 0 28px rgba(79, 209, 197, 0.05);
+    0 0 28px rgba(226, 255, 50, 0.04);
   transform: translateY(-3px);
 }
 [data-theme="dark"] .glass-card,
@@ -369,7 +577,7 @@ img, video, svg, canvas, [data-no-transition] {
 }
 [data-theme="dark"] .theme-toggle {
   background: #080f1c;
-  border-color: rgba(79, 209, 197, 0.18);
+  border-color: rgba(226, 255, 50, 0.14);
   color: #e8eeff;
   box-shadow:
     0 2px 10px rgba(0, 0, 0, 0.6),
@@ -378,16 +586,16 @@ img, video, svg, canvas, [data-no-transition] {
 }
 [data-theme="dark"] .theme-toggle:hover {
   background: #0c1525;
-  border-color: rgba(79, 209, 197, 0.3);
+  border-color: rgba(226, 255, 50, 0.28);
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(79, 209, 197, 0.13),
-    0 0 18px rgba(79, 209, 197, 0.06);
+    0 0 0 1px rgba(226, 255, 50, 0.1),
+    0 0 18px rgba(226, 255, 50, 0.05);
   transform: translateY(-1px);
 }
 [data-theme="dark"] .gradient-hero {
   background:
-    radial-gradient(ellipse at 70% 0%, rgba(79, 209, 197, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 0%, rgba(226, 255, 50, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 0% 100%, rgba(99, 102, 241, 0.07) 0%, transparent 50%),
     linear-gradient(160deg, #03070f 0%, #060c18 50%, #080f1c 100%);
 }
@@ -403,13 +611,13 @@ img, video, svg, canvas, [data-no-transition] {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 [data-theme="dark"] .from-teal-50 {
-  --tw-gradient-from: rgba(45, 212, 191, 0.14) var(--tw-gradient-from-position);
-  --tw-gradient-to: rgba(45, 212, 191, 0) var(--tw-gradient-to-position);
+  --tw-gradient-from: rgba(226, 255, 50, 0.1) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(226, 255, 50, 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 [data-theme="dark"] .from-teal-50\/40 {
-  --tw-gradient-from: rgba(45, 212, 191, 0.1) var(--tw-gradient-from-position);
-  --tw-gradient-to: rgba(45, 212, 191, 0) var(--tw-gradient-to-position);
+  --tw-gradient-from: rgba(226, 255, 50, 0.07) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(226, 255, 50, 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 [data-theme="dark"] .to-cyan-50 {
@@ -474,7 +682,7 @@ img, video, svg, canvas, [data-no-transition] {
 [data-theme="dark"] .bg-teal-50\/40,
 [data-theme="dark"] .bg-teal-100,
 [data-theme="dark"] .bg-teal-200 {
-  background-color: rgba(45, 212, 191, 0.12);
+  background-color: rgba(226, 255, 50, 0.08);
 }
 [data-theme="dark"] .bg-indigo-50,
 [data-theme="dark"] .bg-indigo-50\/70,
@@ -527,7 +735,7 @@ img, video, svg, canvas, [data-no-transition] {
 }
 [data-theme="dark"] .border-teal-100\/50,
 [data-theme="dark"] .border-teal-200 {
-  border-color: rgba(45, 212, 191, 0.24);
+  border-color: rgba(226, 255, 50, 0.2);
 }
 [data-theme="dark"] .border-emerald-200,
 [data-theme="dark"] .border-green-100,
@@ -640,7 +848,7 @@ img, video, svg, canvas, [data-no-transition] {
   background-color: rgba(251, 113, 133, 0.12);
 }
 [data-theme="dark"] .hover\:bg-teal-50:hover {
-  background-color: rgba(79, 209, 197, 0.12);
+  background-color: rgba(226, 255, 50, 0.08);
 }
 [data-theme="dark"] .hover\:bg-indigo-50:hover {
   background-color: rgba(129, 140, 248, 0.13);
@@ -721,14 +929,7 @@ img, video, svg, canvas, [data-no-transition] {
 }
 
 /* ─── Dark Mode — Smooth Hover Transitions ───────────── */
-/* Single source of truth: every interactive element in dark mode
-   uses a slow-out spring curve so hover feels effortless */
-[data-theme="dark"] *,
-[data-theme="dark"] *::before,
-[data-theme="dark"] *::after {
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-duration: 220ms;
-}
+/* Scoped to specific properties only — no blanket * transition trap */
 
 /* Heavier elements (cards, panels) get a longer, springier ease */
 [data-theme="dark"] .card-premium,
@@ -778,8 +979,8 @@ img, video, svg, canvas, [data-no-transition] {
 /* ─── Dark Mode Premium Enhancements ─────────────────── */
 [data-theme="dark"] body {
   background-image:
-    radial-gradient(ellipse at 15% 0%, rgba(79, 209, 197, 0.05) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 15% 0%, rgba(226, 255, 50, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 45%),
     radial-gradient(ellipse at 50% 50%, rgba(6, 11, 22, 0.6) 0%, transparent 70%);
   background-attachment: fixed;
 }
@@ -821,7 +1022,7 @@ img, video, svg, canvas, [data-no-transition] {
   border-color: var(--app-accent);
   box-shadow:
     0 0 0 3px var(--app-ring),
-    0 0 16px rgba(79, 209, 197, 0.08),
+    0 0 16px rgba(226, 255, 50, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
   outline: none;
 }
@@ -829,11 +1030,11 @@ img, video, svg, canvas, [data-no-transition] {
 /* ─── Dark Mode Accent Button Glow ───────────────────── */
 [data-theme="dark"] .bg-teal-600,
 [data-theme="dark"] .bg-teal-500 {
-  box-shadow: 0 4px 14px rgba(79, 209, 197, 0.22), 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(226, 255, 50, 0.22), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 [data-theme="dark"] .bg-teal-600:hover,
 [data-theme="dark"] .bg-teal-500:hover {
-  box-shadow: 0 6px 22px rgba(79, 209, 197, 0.3), 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 22px rgba(226, 255, 50, 0.3), 0 2px 8px rgba(0, 0, 0, 0.5);
   transform: translateY(-1px);
 }
 
@@ -845,7 +1046,7 @@ img, video, svg, canvas, [data-no-transition] {
   background: linear-gradient(135deg, #0f766e 0%, #0e7490 45%, #0369a1 100%);
 }
 .gradient-teal {
-  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  background: linear-gradient(135deg, #E2FF32 0%, #c8e620 100%);
 }
 .gradient-rose {
   background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
@@ -1159,10 +1360,10 @@ img, video, svg, canvas, [data-no-transition] {
   background: rgba(255, 255, 255, 0.05);
 }
 .sidebar-link--active {
-  background: rgba(20, 184, 166, 0.1);
-  color: #5eead4;
+  background: rgba(226, 255, 50, 0.08);
+  color: #E2FF32;
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  border: 1px solid rgba(20, 184, 166, 0.15);
+  border: 1px solid rgba(226, 255, 50, 0.15);
 }
 [data-theme="dark"] .sidebar-link--idle { color: #7a96b8; }
 [data-theme="dark"] .sidebar-link--idle:hover {
@@ -1170,11 +1371,11 @@ img, video, svg, canvas, [data-no-transition] {
   background: rgba(255, 255, 255, 0.05);
 }
 [data-theme="dark"] .sidebar-link--active {
-  background: rgba(79, 209, 197, 0.1);
-  color: #4fd1c5;
-  border-color: rgba(79, 209, 197, 0.18);
+  background: rgba(226, 255, 50, 0.08);
+  color: #E2FF32;
+  border-color: rgba(226, 255, 50, 0.18);
   box-shadow:
-    inset 0 0 0 1px rgba(79, 209, 197, 0.12),
+    inset 0 0 0 1px rgba(226, 255, 50, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -1285,13 +1486,13 @@ img, video, svg, canvas, [data-no-transition] {
 /* ─── Header mobile brand ────────────────────────────── */
 /* Light mode */
 .nav-brand-name   { color: #1e293b; }
-.nav-brand-suffix { color: #0d9488; font-weight: 600; }
+.nav-brand-suffix { color: #000000; font-weight: 600; }
 .nav-hamburger    { color: #64748b; }
 .nav-hamburger:hover { background: rgba(241, 245, 249, 0.9); color: #0f172a; }
 
 /* Dark mode */
 [data-theme="dark"] .nav-brand-name   { color: #e8eeff; }
-[data-theme="dark"] .nav-brand-suffix { color: #4fd1c5; }
+[data-theme="dark"] .nav-brand-suffix { color: #E2FF32; }
 [data-theme="dark"] .nav-hamburger    { color: #7a96b8; }
 [data-theme="dark"] .nav-hamburger:hover {
   background: rgba(255, 255, 255, 0.07);
@@ -1325,7 +1526,7 @@ img, video, svg, canvas, [data-no-transition] {
 }
 
 .nav-drawer-brand-name    { color: #1e293b; }
-.nav-drawer-brand-suffix  { color: #0d9488; }
+.nav-drawer-brand-suffix  { color: #000000; }
 .nav-drawer-brand-tagline { color: #94a3b8; }
 
 .nav-drawer-close { color: #94a3b8; }
@@ -1349,12 +1550,12 @@ img, video, svg, canvas, [data-no-transition] {
   background: rgba(241, 245, 249, 0.9);
 }
 .nav-drawer-item--active {
-  background: rgba(20, 184, 166, 0.08);
-  color: #0f766e;
-  border: 1px solid rgba(20, 184, 166, 0.18);
-  box-shadow: 0 1px 4px rgba(20, 184, 166, 0.08);
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--brand-accent);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
-.nav-drawer-item--active .nav-drawer-item-icon { color: #0d9488; }
+.nav-drawer-item--active .nav-drawer-item-icon { color: var(--brand-accent); }
 .nav-drawer-item--idle   .nav-drawer-item-icon { color: #94a3b8; }
 
 .nav-drawer-footer {
@@ -1388,7 +1589,7 @@ img, video, svg, canvas, [data-no-transition] {
 }
 
 [data-theme="dark"] .nav-drawer-brand-name    { color: #e8eeff; }
-[data-theme="dark"] .nav-drawer-brand-suffix  { color: #4fd1c5; }
+[data-theme="dark"] .nav-drawer-brand-suffix  { color: #E2FF32; }
 [data-theme="dark"] .nav-drawer-brand-tagline { color: #2d4268; }
 
 [data-theme="dark"] .nav-drawer-close { color: #3a5070; }
@@ -1412,14 +1613,14 @@ img, video, svg, canvas, [data-no-transition] {
   background: rgba(255, 255, 255, 0.05);
 }
 [data-theme="dark"] .nav-drawer-item--active {
-  background: rgba(79, 209, 197, 0.09);
-  color: #4fd1c5;
-  border: 1px solid rgba(79, 209, 197, 0.2);
+  background: rgba(226, 255, 50, 0.07);
+  color: var(--brand-accent);
+  border: 1px solid rgba(226, 255, 50, 0.18);
   box-shadow:
     0 1px 8px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
-[data-theme="dark"] .nav-drawer-item--active .nav-drawer-item-icon { color: #4fd1c5; }
+[data-theme="dark"] .nav-drawer-item--active .nav-drawer-item-icon { color: var(--brand-accent); }
 [data-theme="dark"] .nav-drawer-item--idle   .nav-drawer-item-icon { color: #243650; }
 
 [data-theme="dark"] .nav-drawer-footer {
@@ -1471,12 +1672,6 @@ img, video, svg, canvas, [data-no-transition] {
   .page-outlet-animate {
     overflow-x: hidden;
     width: 100%;
-  }
-
-  /* Page titles scale down gracefully */
-  h1 {
-    font-size: clamp(1.2rem, 5vw, 1.5rem);
-    line-height: 1.3;
   }
 
   /* Cards: tighter radius on small screens */

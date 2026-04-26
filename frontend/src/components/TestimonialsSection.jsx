@@ -1,36 +1,57 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-function TestimonialCard({ item }) {
-  const parts = item.text.split(item.highlight);
-  
+// Avatar color pairs — semantic, not brand colors
+const AVATAR_COLORS = [
+  'bg-[var(--app-surface-soft)] text-[var(--app-text)]',
+  'bg-emerald-500/10 text-emerald-600',
+  'bg-[var(--app-accent)]/10 text-[var(--app-text)]',
+  'bg-sky-500/10 text-sky-600',
+];
+
+function StarRating({ rating, max = 5 }) {
   return (
-    <div className="flex-none w-[min(18rem,78vw)] sm:w-80 bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-100/50 hover:shadow-xl hover:shadow-zinc-200/25 hover:-translate-y-1 hover:scale-[1.01] hover:border-zinc-200 transition-all duration-300 relative group overflow-hidden h-full">
-      {/* Decorative premium accent */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-300 via-zinc-400 to-zinc-300 opacity-15 group-hover:opacity-40 transition-opacity duration-300"></div>
-      
+    <div className="flex gap-0.5" aria-label={`${rating} out of ${max} stars`}>
+      {Array.from({ length: max }, (_, i) => (
+        <svg
+          key={i}
+          className={`w-3.5 h-3.5 ${i < rating ? 'text-amber-400' : 'text-[var(--app-border)]'} fill-current`}
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function TestimonialCard({ item, colorClass }) {
+  const parts = item.text.split(item.highlight);
+  return (
+    <article className="flex-none w-[min(18rem,78vw)] sm:w-80 bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] p-6 shadow-[var(--shadow-l1)] h-full">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-3">
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm shadow-inner shrink-0 ${item.color}`}>
+          <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm shrink-0 ${colorClass}`}>
             {item.initials}
           </div>
           <div className="min-w-0">
-            <h4 className="text-sm font-extrabold text-slate-800 truncate">{item.name}</h4>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">{item.role}</p>
+            <h4 className="text-sm font-bold text-[var(--app-text)] truncate">{item.name}</h4>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--app-text-disabled)] truncate">
+              {item.role}
+            </p>
           </div>
         </div>
-        <div className="flex text-amber-400 gap-0.5 mt-1 shrink-0">
-          {[...Array(5)].map((_, i) => (
-            <svg key={i} className={`w-3.5 h-3.5 ${i < item.rating ? 'fill-current' : 'text-slate-200 fill-current'}`} viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          ))}
+        <div className="mt-1 shrink-0">
+          <StarRating rating={item.rating} />
         </div>
       </div>
-      <p className="text-sm text-slate-600 leading-relaxed italic">
-        "{parts[0]}<span className="font-bold text-slate-800 not-italic">{item.highlight}</span>{parts[1]}"
+      <p className="text-sm text-[var(--app-text-muted)] leading-relaxed italic">
+        &ldquo;{parts[0]}
+        <strong className="font-bold text-[var(--app-text)] not-italic">{item.highlight}</strong>
+        {parts[1]}&rdquo;
       </p>
-    </div>
+    </article>
   );
 }
 
@@ -41,128 +62,106 @@ export default function TestimonialsSection() {
 
   const scroll = (direction) => {
     if (!scrollRef.current) return;
-    const amount = direction === 'left' ? -340 : 340;
-    scrollRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+    scrollRef.current.scrollBy({ left: direction === 'left' ? -340 : 340, behavior: 'smooth' });
   };
 
   const testimonialsData = [
     {
-      name: t('testimonials.items.ravi.name'),
-      role: t('testimonials.roles.pilot'),
-      text: t('testimonials.items.ravi.text'),
+      name:      t('testimonials.items.ravi.name'),
+      role:      t('testimonials.roles.pilot'),
+      text:      t('testimonials.items.ravi.text'),
       highlight: t('testimonials.items.ravi.highlight'),
-      rating: 5,
-      initials: "RK",
-      color: "bg-zinc-100 text-zinc-800"
+      rating: 5, initials: 'RK',
     },
     {
-      name: t('testimonials.items.anitha.name'),
-      role: t('testimonials.roles.caregiver'),
-      text: t('testimonials.items.anitha.text'),
+      name:      t('testimonials.items.anitha.name'),
+      role:      t('testimonials.roles.caregiver'),
+      text:      t('testimonials.items.anitha.text'),
       highlight: t('testimonials.items.anitha.highlight'),
-      rating: 5,
-      initials: "AR",
-      color: "bg-green-100 text-green-700"
+      rating: 5, initials: 'AR',
     },
     {
-      name: t('testimonials.items.suresh.name'),
-      role: t('testimonials.roles.tester'),
-      text: t('testimonials.items.suresh.text'),
+      name:      t('testimonials.items.suresh.name'),
+      role:      t('testimonials.roles.tester'),
+      text:      t('testimonials.items.suresh.text'),
       highlight: t('testimonials.items.suresh.highlight'),
-      rating: 4,
-      initials: "S",
-      color: "bg-teal-100 text-teal-700"
+      rating: 4, initials: 'S',
     },
     {
-      name: t('testimonials.items.priya.name'),
-      role: t('testimonials.roles.physician'),
-      text: t('testimonials.items.priya.text'),
+      name:      t('testimonials.items.priya.name'),
+      role:      t('testimonials.roles.physician'),
+      text:      t('testimonials.items.priya.text'),
       highlight: t('testimonials.items.priya.highlight'),
-      rating: 5,
-      initials: "PS",
-      color: "bg-indigo-100 text-indigo-700"
-    }
+      rating: 5, initials: 'PS',
+    },
   ];
 
+  // Auto-scroll — pauses on hover/focus for accessibility
   useEffect(() => {
     if (isPaused) return;
-    
     const interval = setInterval(() => {
-      if (scrollRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        const maxScroll = scrollWidth - clientWidth;
-        
-        if (scrollLeft >= maxScroll - 10) {
-          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
-        }
+      if (!scrollRef.current) return;
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      if (scrollLeft >= scrollWidth - clientWidth - 10) {
+        scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
       }
     }, 5000);
-
     return () => clearInterval(interval);
   }, [isPaused]);
 
   return (
-    <div className="w-full py-6 pb-2 fade-in relative group/section">
+    <section className="w-full py-6 pb-2 fade-in" aria-label="User testimonials">
       <div className="flex items-center justify-between mb-4 px-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-zinc-50 text-zinc-600 flex items-center justify-center shrink-0">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          <div className="w-8 h-8 rounded-full bg-[var(--app-surface-soft)] text-[var(--app-text-muted)] flex items-center justify-center shrink-0">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-800 leading-tight">{t('testimonials.title')}</h2>
-            <p className="text-xs font-medium text-slate-500">{t('testimonials.subtitle')}</p>
+            <h2 className="text-lg font-bold text-[var(--app-text)] leading-tight">{t('testimonials.title')}</h2>
+            <p className="text-xs font-medium text-[var(--app-text-muted)]">{t('testimonials.subtitle')}</p>
           </div>
         </div>
-        
-        {/* Physical Scroll Navigation Buttons */}
-        <div className="flex items-center gap-2 transition-opacity duration-300 sm:opacity-0 sm:group-hover/section:opacity-100">
-          <button 
-            type="button"
-            onClick={() => scroll('left')}
-            className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-zinc-800 hover:border-zinc-300 hover:bg-zinc-50 shadow-sm transition-all active:scale-95"
-            aria-label="Scroll left"
-          >
-            <svg className="w-4 h-4 pr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button 
-            type="button"
-            onClick={() => scroll('right')}
-            className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-zinc-800 hover:border-zinc-300 hover:bg-zinc-50 shadow-sm transition-all active:scale-95"
-            aria-label="Scroll right"
-          >
-            <svg className="w-4 h-4 pl-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+
+        {/* Scroll controls */}
+        <div className="flex items-center gap-2">
+          {['left', 'right'].map((dir) => (
+            <button
+              key={dir}
+              type="button"
+              onClick={() => scroll(dir)}
+              className="w-8 h-8 rounded-full bg-[var(--app-surface)] border border-[var(--app-border)] flex items-center justify-center text-[var(--app-text-muted)] hover:text-[var(--app-text)] hover:border-[var(--app-border-hover)] hover:bg-[var(--app-surface-soft)] shadow-[var(--shadow-l1)] transition-colors duration-150 active:scale-95"
+              aria-label={dir === 'left' ? 'Scroll testimonials left' : 'Scroll testimonials right'}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
+                  d={dir === 'left' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
+              </svg>
+            </button>
+          ))}
         </div>
       </div>
 
-      <div 
-        ref={scrollRef} 
+      {/* Scrollable track — no inline style tag, scrollbar hidden via globals.css */}
+      <div
+        ref={scrollRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        className="flex overflow-x-auto gap-4 pb-6 pt-1 px-2 snap-x snap-mandatory hide-scrollbars no-scrollbar cursor-grab active:cursor-grabbing" 
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        onFocus={() => setIsPaused(true)}
+        onBlur={() => setIsPaused(false)}
+        className="flex overflow-x-auto gap-4 pb-6 pt-1 px-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
+        role="list"
+        aria-label="Testimonials carousel"
       >
         {testimonialsData.map((item, idx) => (
-          <div key={idx} className="snap-start shrink-0">
-            <TestimonialCard item={item} />
+          <div key={idx} className="snap-start shrink-0" role="listitem">
+            <TestimonialCard item={item} colorClass={AVATAR_COLORS[idx % AVATAR_COLORS.length]} />
           </div>
         ))}
       </div>
-      
-      {/* Optional styling to force hide scrollbars if standard classes fail */}
-      <style>{`
-        .hide-scrollbars::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-    </div>
+    </section>
   );
 }

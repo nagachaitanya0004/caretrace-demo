@@ -26,6 +26,6 @@ export const tooltipContentStyle = {
   backgroundColor: chartColors.tooltipBg,
   borderRadius: 12,
   border: `1px solid ${chartColors.tooltipBorder}`,
-  boxShadow: '0 10px 40px -10px rgba(15, 23, 42, 0.15)',
+  boxShadow: 'var(--shadow-l2)',
   fontSize: 13,
 };

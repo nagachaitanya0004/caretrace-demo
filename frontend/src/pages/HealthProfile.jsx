@@ -35,12 +35,12 @@ function parseList(str) {
 function SectionHeader({ title, icon, editing, onEdit, onCancel, onSave, saving }) {
   return (
     <div className="flex items-center justify-between mb-5">
-      <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+      <h2 className="text-lg font-semibold text-[var(--app-text)] flex items-center gap-2">
         {icon}
         {title}
       </h2>
       {!editing ? (
-        <Button variant="secondary" onClick={onEdit}>
+        <Button intent="secondary" size="sm" onClick={onEdit}>
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H9v-2a2 2 0 01.586-1.414z" />
           </svg>
@@ -48,8 +48,8 @@ function SectionHeader({ title, icon, editing, onEdit, onCancel, onSave, saving 
         </Button>
       ) : (
         <div className="flex gap-2">
-          <Button variant="outline" onClick={onCancel} disabled={saving}>Cancel</Button>
-          <Button variant="primary" onClick={onSave} disabled={saving}>
+          <Button intent="ghost" size="sm" onClick={onCancel} disabled={saving}>Cancel</Button>
+          <Button intent="primary" size="sm" onClick={onSave} loading={saving}>
             {saving ? 'Saving…' : 'Save'}
           </Button>
         </div>
@@ -62,14 +62,18 @@ function DisplayRow({ label, value }) {
   const isEmpty = value === 'Not provided';
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
-      <span className={`text-sm ${isEmpty ? 'text-gray-400 italic' : 'text-gray-800 font-medium'}`}>{value}</span>
+      <span className="text-xs font-medium text-[var(--app-text-disabled)] uppercase tracking-wide">{label}</span>
+      <span className={`text-sm ${isEmpty ? 'text-[var(--app-text-disabled)] italic' : 'text-[var(--app-text)] font-medium'}`}>{value}</span>
     </div>
   );
 }
 
-const fieldCls = "w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600";
-const labelCls = "block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1";
+const fieldCls =
+  'w-full px-3 py-2 bg-[var(--app-input-bg)] text-[var(--app-text)] ' +
+  'border border-[var(--app-input-border)] rounded-[var(--radius-md)] text-sm ' +
+  'transition-colors duration-150 ' +
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:border-[var(--brand-accent)]';
+const labelCls = 'block text-xs font-medium text-[var(--app-text-muted)] uppercase tracking-wide mb-1';
 
 // ── main page ─────────────────────────────────────────────────────────────────
 
@@ -287,7 +291,7 @@ export default function HealthProfile() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-zinc-200 border-t-zinc-800 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[var(--app-border)] border-t-[var(--app-text)] rounded-full animate-spin" />
       </div>
     );
   }
@@ -299,11 +303,11 @@ export default function HealthProfile() {
       maxWidthClass="max-w-3xl"
     >
       {/* ── BASIC INFORMATION ── */}
-      <Card className="border-slate-200/80">
+      <Card elevation={1}>
         <SectionHeader
           title="Basic Information"
           icon={
-            <svg className="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           }
@@ -356,8 +360,8 @@ export default function HealthProfile() {
               </div>
             </div>
             {bmi && (
-              <p className="text-xs text-gray-500">
-                BMI: <span className="font-semibold text-gray-800">{bmi}</span>
+              <p className="text-xs text-[var(--app-text-muted)]">
+                BMI: <span className="font-semibold text-[var(--app-text)]">{bmi}</span>
               </p>
             )}
             <div className="grid grid-cols-2 gap-4">
@@ -385,11 +389,11 @@ export default function HealthProfile() {
       </Card>
 
       {/* ── MEDICAL HISTORY ── */}
-      <Card className="border-slate-200/80">
+      <Card elevation={1}>
         <SectionHeader
           title="Medical History"
           icon={
-            <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[var(--app-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           }
@@ -409,7 +413,7 @@ export default function HealthProfile() {
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-xs text-gray-400 -mt-2 mb-1">Separate multiple entries with commas</p>
+            <p className="text-xs text-[var(--app-text-disabled)] -mt-2 mb-1">Separate multiple entries with commas</p>
             {[
               { key: 'conditions',  label: 'Existing Conditions', placeholder: 'e.g. Diabetes, Hypertension' },
               { key: 'medications', label: 'Current Medications',  placeholder: 'e.g. Metformin, Aspirin' },
@@ -428,7 +432,7 @@ export default function HealthProfile() {
       </Card>
 
       {/* ── FAMILY HISTORY ── */}
-      <Card className="border-slate-200/80">
+      <Card elevation={1}>
         <SectionHeader
           title="Family Health History"
           icon={
@@ -445,14 +449,14 @@ export default function HealthProfile() {
 
         {!editingFam ? (
           famHist.length === 0 ? (
-            <p className="text-sm text-gray-400 italic">Not provided</p>
+            <p className="text-sm text-[var(--app-text-disabled)] italic">Not provided</p>
           ) : (
             <div className="space-y-2">
               {famHist.map((e, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm">
-                  <span className="font-medium text-gray-800">{e.condition_name}</span>
+                  <span className="font-medium text-[var(--app-text)]">{e.condition_name}</span>
                   {e.relation && (
-                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{e.relation}</span>
+                    <span className="text-xs text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] px-2 py-0.5 rounded-full">{e.relation}</span>
                   )}
                 </div>
               ))}
@@ -460,7 +464,7 @@ export default function HealthProfile() {
           )
         ) : (
           <div className="space-y-3">
-            <p className="text-xs text-gray-400 -mt-2">Add hereditary conditions and the family member affected</p>
+            <p className="text-xs text-[var(--app-text-disabled)] -mt-2">Add hereditary conditions and the family member affected</p>
             {famRows.map((row, i) => (
               <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-end">
                 <div>
@@ -482,7 +486,7 @@ export default function HealthProfile() {
                 <button
                   onClick={() => removeFamRow(i)}
                   disabled={famRows.length === 1}
-                  className="px-2 py-2 text-gray-400 hover:text-rose-500 border border-gray-200 rounded-md text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="px-2 py-2 text-[var(--app-text-muted)] hover:text-rose-500 border border-[var(--app-border)] rounded-[var(--radius-md)] text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   title="Remove"
                 >
                   ✕
@@ -491,7 +495,7 @@ export default function HealthProfile() {
             ))}
             <button
               onClick={addFamRow}
-              className="w-full text-sm text-gray-500 border border-dashed border-gray-300 rounded-md py-2 hover:border-gray-400 hover:text-gray-700 transition-colors"
+              className="w-full text-sm text-[var(--app-text-muted)] border border-dashed border-[var(--app-border)] rounded-[var(--radius-md)] py-2 hover:border-[var(--app-border-hover)] hover:text-[var(--app-text)] transition-colors"
             >
               + Add another condition
             </button>
@@ -500,7 +504,7 @@ export default function HealthProfile() {
       </Card>
 
       {/* ── LIFESTYLE & HABITS ── */}
-      <Card className="border-slate-200/80">
+      <Card elevation={1}>
         <SectionHeader
           title="Lifestyle & Habits"
           icon={
@@ -574,21 +578,23 @@ export default function HealthProfile() {
             </div>
             <div>
               <label className={labelCls}>
-                Stress Level <span className="font-semibold text-gray-800">{lifestyleForm.stress_level}</span><span className="text-gray-400">/10</span>
+                Stress Level{' '}
+                <span className="font-semibold text-[var(--app-text)]">{lifestyleForm.stress_level}</span>
+                <span className="text-[var(--app-text-disabled)]">/10</span>
               </label>
               <input type="range" name="stress_level" min="1" max="10" step="1"
                 value={lifestyleForm.stress_level} onChange={handleLifestyleChange}
-                className="w-full accent-zinc-800" />
-              <div className="flex justify-between text-xs text-gray-400 mt-1">
+                className="w-full" style={{ accentColor: 'var(--brand-accent)' }} />
+              <div className="flex justify-between text-xs text-[var(--app-text-disabled)] mt-1">
                 <span>Low</span><span>High</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[['smoking', 'Smoking'], ['alcohol', 'Alcohol']].map(([key, label]) => (
-                <label key={key} className="flex items-center justify-between px-3 py-2.5 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50">
+                <label key={key} className="flex items-center justify-between px-3 py-2.5 border border-[var(--app-border)] rounded-[var(--radius-md)] text-sm text-[var(--app-text)] cursor-pointer hover:bg-[var(--app-surface-soft)] transition-colors">
                   {label}
                   <input type="checkbox" name={key} checked={lifestyleForm[key]} onChange={handleLifestyleChange}
-                    className="w-4 h-4 accent-zinc-800" />
+                    className="w-4 h-4" style={{ accentColor: 'var(--brand-accent)' }} />
                 </label>
               ))}
             </div>

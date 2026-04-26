@@ -29,7 +29,7 @@ function Layout() {
           <button
             type="button"
             onClick={() => { clearLoadError(); refreshData(); }}
-            className="font-semibold text-rose-800 underline underline-offset-2 hover:text-rose-950"
+            className="font-semibold text-[var(--app-danger)] underline underline-offset-2 hover:opacity-80 transition-opacity"
           >
             {t('common.retry')}
           </button>

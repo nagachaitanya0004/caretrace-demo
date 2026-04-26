@@ -89,7 +89,7 @@ function Header() {
           </button>
           <Link
             to="/dashboard"
-            className="nav-brand-link flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40"
+            className="nav-brand-link flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)]/40"
           >
             <BrandMark size={28} className="shadow-sm rounded-[8px] shrink-0" />
             <span className="nav-brand-name font-bold text-[15px] tracking-tight whitespace-nowrap">
@@ -102,7 +102,7 @@ function Header() {
         {!isLandingPage && (
           isDashboardPage ? (
             <div className="header-search lg:w-72">
-              <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[var(--app-text-muted)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
@@ -116,7 +116,7 @@ function Header() {
                 <button
                   type="button"
                   onClick={() => updateSearch('')}
-                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  className="text-[var(--app-text-muted)] hover:text-[var(--app-text)] transition-colors"
                   aria-label={t('dashboard.search.clear')}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@ function Header() {
             </div>
           ) : (
             <div className="header-search w-44 lg:w-52 cursor-default select-none">
-              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <span className="text-slate-400 text-sm">{t('navbar.search_anything')}</span>
@@ -172,18 +172,12 @@ function Header() {
                     <button
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
-                        currentLang === lang.code
-                          ? 'font-bold'
-                          : ''
+                      className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-[var(--app-text)] hover:bg-[var(--app-surface-soft)] ${
+                        currentLang === lang.code ? 'font-bold bg-[var(--app-surface-soft)]' : ''
                       }`}
-                      style={{
-                        background: currentLang === lang.code ? 'var(--app-surface-soft)' : 'transparent',
-                        color: 'var(--app-text)',
-                      }}
                     >
                       <span>{lang.native}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded font-bold" style={{ background: 'var(--app-surface-soft)', color: 'var(--app-text-muted)' }}>{lang.label}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-[var(--app-surface-elevated)] text-[var(--app-text-muted)]">{lang.label}</span>
                     </button>
                   ))}
                 </motion.div>
@@ -233,10 +227,10 @@ function Header() {
                       ))
                     ) : (
                       <div className="px-4 py-8 text-center">
-                        <svg className="w-8 h-8 text-slate-200 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-8 h-8 text-[var(--app-text-disabled)] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        <p className="text-slate-400 text-xs">{t('navbar.notifications_empty')}</p>
+                        <p className="text-[var(--app-text-disabled)] text-xs">{t('navbar.notifications_empty')}</p>
                       </div>
                     )}
                   </div>
@@ -247,7 +241,7 @@ function Header() {
 
           {/* Avatar + logout — desktop only */}
           {user && (
-            <div className="hidden md:flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-slate-200 min-w-0">
+            <div className="hidden md:flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-[var(--app-border)] min-w-0">
               <button
                 type="button"
                 onClick={() => {
@@ -259,10 +253,10 @@ function Header() {
                 className="avatar-btn"
                 title={t('navbar.settings')}
               >
-                <div className="w-8 h-8 shrink-0 rounded-xl gradient-teal flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                <div className="w-8 h-8 shrink-0 rounded-xl bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow-sm">
                   {user.email?.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-sm font-medium text-slate-700 hidden lg:block max-w-[140px] truncate">{user.email}</span>
+                <span className="text-sm font-medium text-[var(--app-text-muted)] hidden lg:block max-w-[140px] truncate">{user.email}</span>
               </button>
               <button
                 type="button"
