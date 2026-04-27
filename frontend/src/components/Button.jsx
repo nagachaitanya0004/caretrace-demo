@@ -6,7 +6,7 @@ const spring = { type: 'spring', stiffness: 320, damping: 24, mass: 0.55 };
 
 // ─── Single shared base ───────────────────────────────────────────────────────
 const BASE =
-  'inline-flex items-center justify-center gap-2 font-semibold tracking-normal ' +
+  'inline-flex items-center justify-center gap-2 font-semibold tracking-normal leading-[normal] ' +
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] ' +
   'focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-bg)] ' +
   'disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-150 ' +

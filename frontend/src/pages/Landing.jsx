@@ -17,24 +17,21 @@ const APP_LANGUAGES = [
 
 const TRUST_SIGNALS = [
   {
-    eyebrow: 'Continuity',
-    title: 'Every symptom becomes part of a living record.',
-    detail:
-      'Instead of isolated logs, the system accumulates context so clinicians can understand velocity, recurrence, and drift at a glance.',
+    eyebrowKey: 'landing.trust_continuity_eyebrow',
+    titleKey: 'landing.trust_continuity_title',
+    detailKey: 'landing.trust_continuity_detail',
     iconPath: 'M4 13h4l2-8 4 14 2-6h4',
   },
   {
-    eyebrow: 'Signal',
-    title: 'Patterns surface without visual clutter.',
-    detail:
-      'The interface is quiet on purpose, which makes deviations, persistent symptoms, and recovery arcs feel immediate and unmistakable.',
+    eyebrowKey: 'landing.trust_signal_eyebrow',
+    titleKey: 'landing.trust_signal_title',
+    detailKey: 'landing.trust_signal_detail',
     iconPath: 'M4 18l6-6 4 4 6-8M4 6h16',
   },
   {
-    eyebrow: 'Privacy',
-    title: 'Sensitive health data stays protected by default.',
-    detail:
-      'Encryption, consent boundaries, and restrained data surfaces are treated as part of the product experience, not a legal footnote.',
+    eyebrowKey: 'landing.trust_privacy_eyebrow',
+    titleKey: 'landing.trust_privacy_title',
+    detailKey: 'landing.trust_privacy_detail',
     iconPath: 'M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4zm0 6v4m0 4h.01',
   },
 ];
@@ -42,61 +39,54 @@ const TRUST_SIGNALS = [
 const WORKFLOW_STEPS = [
   {
     number: '01',
-    title: 'Capture subtle change',
-    description:
-      'Log symptoms, intensity, and daily notes in a flow that feels precise enough for care and effortless enough for habit.',
+    titleKey: 'landing.workflow_step1_title',
+    descriptionKey: 'landing.workflow_step1_desc',
     iconPath: 'M8 7h8M8 12h8m-8 5h5M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z',
   },
   {
     number: '02',
-    title: 'Model the trajectory',
-    description:
-      'Temporal analysis transforms individual check-ins into a coherent narrative, revealing progression, stability, or recovery.',
+    titleKey: 'landing.workflow_step2_title',
+    descriptionKey: 'landing.workflow_step2_desc',
     iconPath: 'M4 18l6-6 4 4 6-8M4 6h16',
   },
   {
     number: '03',
-    title: 'Act with clinical clarity',
-    description:
-      'Review the record, understand the pattern, and bring sharper context into every decision or appointment that follows.',
+    titleKey: 'landing.workflow_step3_title',
+    descriptionKey: 'landing.workflow_step3_desc',
     iconPath: 'M9 17v-3m3 3v-6m3 6V9M7 21h10a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-3.414-3.414A2 2 0 0013.586 2H7a2 2 0 00-2 2v15a2 2 0 002 2z',
   },
 ];
 
 const FEATURE_CARDS = [
   {
-    eyebrow: 'Timeline',
-    title: 'A longitudinal view that behaves like product, not paperwork.',
-    description:
-      'Symptoms, reports, and inferred shifts live in one continuous visual system so the story of change remains readable over time.',
-    metric: 'Unified health narrative',
+    eyebrowKey: 'landing.feature_timeline_eyebrow',
+    titleKey: 'landing.feature_timeline_card_title',
+    descriptionKey: 'landing.feature_timeline_card_desc',
+    metricKey: 'landing.feature_timeline_card_metric',
     iconPath: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
     className: 'md:col-span-7',
   },
   {
-    eyebrow: 'Analysis',
-    title: 'AI outputs designed to be read by humans.',
-    description:
-      'Risk summaries, pattern detection, and contextual prompts feel deliberate, legible, and calm rather than machine-generated noise.',
-    metric: 'Readable intelligence',
+    eyebrowKey: 'landing.feature_analysis_eyebrow',
+    titleKey: 'landing.feature_analysis_card_title',
+    descriptionKey: 'landing.feature_analysis_card_desc',
+    metricKey: 'landing.feature_analysis_card_metric',
     iconPath: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
     className: 'md:col-span-5',
   },
   {
-    eyebrow: 'Tracking',
-    title: 'Clean inputs produce trustworthy signals.',
-    description:
-      'Structured symptom capture keeps the downstream analysis stable by reducing ambiguity before it ever enters the system.',
-    metric: 'Higher data fidelity',
+    eyebrowKey: 'landing.feature_tracking_eyebrow',
+    titleKey: 'landing.feature_tracking_card_title',
+    descriptionKey: 'landing.feature_tracking_card_desc',
+    metricKey: 'landing.feature_tracking_card_metric',
     iconPath: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     className: 'md:col-span-4',
   },
   {
-    eyebrow: 'Access',
-    title: 'Localized by design, not translated as an afterthought.',
-    description:
-      'Multilingual support is integrated into the product architecture so access scales without diluting tone, clarity, or trust.',
-    metric: 'Five-language system',
+    eyebrowKey: 'landing.feature_access_eyebrow',
+    titleKey: 'landing.feature_access_title',
+    descriptionKey: 'landing.feature_access_desc',
+    metricKey: 'landing.feature_access_metric',
     iconPath: 'M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129',
     className: 'md:col-span-8',
   },
@@ -104,60 +94,60 @@ const FEATURE_CARDS = [
 
 const SECURITY_PILLARS = [
   {
-    title: 'Consent-led sharing',
-    description: 'The patient remains in control of where sensitive context moves and who sees it next.',
+    titleKey: 'landing.security_pillar1_title',
+    descriptionKey: 'landing.security_pillar1_desc',
   },
   {
-    title: 'Protected transport and storage',
-    description: 'The infrastructure treats security as part of the interaction model, not a separate compliance layer.',
+    titleKey: 'landing.security_pillar2_title',
+    descriptionKey: 'landing.security_pillar2_desc',
   },
   {
-    title: 'Outputs built for real review',
-    description: 'Exports, alerts, and summaries remain concise enough for human judgment inside clinical workflows.',
+    titleKey: 'landing.security_pillar3_title',
+    descriptionKey: 'landing.security_pillar3_desc',
   },
 ];
 
 const FOOTER_COLUMNS = [
   {
-    title: 'Product',
+    titleKey: 'landing.footer_product',
     links: [
-      { label: 'Features', to: '/#features' },
-      { label: 'Workflow', to: '/#workflow' },
-      { label: 'Security', to: '/#security' },
+      { labelKey: 'landing.footer_features', to: '/#features' },
+      { labelKey: 'landing.footer_workflow', to: '/#workflow' },
+      { labelKey: 'landing.footer_security', to: '/#security' },
     ],
   },
   {
-    title: 'Access',
+    titleKey: 'landing.footer_access',
     links: [
-      { label: 'Create Account', to: '/signup' },
-      { label: 'Sign In', to: '/login' },
-      { label: 'About CareTrace', to: '/#about' },
+      { labelKey: 'landing.footer_create_account', to: '/signup' },
+      { labelKey: 'landing.footer_sign_in', to: '/login' },
+      { labelKey: 'landing.footer_about', to: '/#about' },
     ],
   },
 ];
 
 const DASHBOARD_METRICS = [
   {
-    label: 'Resting HR',
+    labelKey: 'landing.metric_resting_hr',
     value: '62',
-    unit: 'bpm',
+    unitKey: 'landing.metric_bpm',
     iconPath: 'M4 13h3l2-7 4 13 2-6h3',
   },
   {
-    label: 'Sleep Recovery',
+    labelKey: 'landing.metric_sleep_recovery',
     value: '08.4',
-    unit: 'hrs',
+    unitKey: 'landing.metric_hrs',
     iconPath: 'M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z',
   },
 ];
 
 const GRAPH_BASE_POINTS = [
-  { label: 'Jan', x: 32, y: 122, value: 58 },
-  { label: 'Feb', x: 92, y: 110, value: 64 },
-  { label: 'Mar', x: 154, y: 82, value: 73 },
-  { label: 'Apr', x: 222, y: 58, value: 84 },
-  { label: 'May', x: 286, y: 74, value: 79 },
-  { label: 'Jun', x: 348, y: 38, value: 92 },
+  { labelKey: 'landing.month_jan', x: 32, y: 122, value: 58 },
+  { labelKey: 'landing.month_feb', x: 92, y: 110, value: 64 },
+  { labelKey: 'landing.month_mar', x: 154, y: 82, value: 73 },
+  { labelKey: 'landing.month_apr', x: 222, y: 58, value: 84 },
+  { labelKey: 'landing.month_may', x: 286, y: 74, value: 79 },
+  { labelKey: 'landing.month_jun', x: 348, y: 38, value: 92 },
 ];
 
 const GRAPH_GUIDES = ['100', '80', '60', '40'];
@@ -336,6 +326,7 @@ function WorkflowCard({ number, title, description, iconPath, delay }) {
 }
 
 const DashboardMockup = memo(function DashboardMockup() {
+  const { t } = useTranslation();
   const gradientId = useId().replace(/:/g, '');
   const areaGradientId = `landing-area-${gradientId}`;
   const strokeGradientId = `landing-stroke-${gradientId}`;
@@ -406,9 +397,9 @@ const DashboardMockup = memo(function DashboardMockup() {
               </span>
             </div>
             <div className="space-y-2">
-              <p className={eyebrowClass}>Profile</p>
+              <p className={eyebrowClass}>{t('landing.mockup_profile')}</p>
               <p className="text-sm font-medium tracking-normal text-[var(--color-text-primary)]">
-                Sarah Jenkins
+                {t('landing.mockup_name')}
               </p>
             </div>
           </div>
@@ -420,7 +411,7 @@ const DashboardMockup = memo(function DashboardMockup() {
             transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.4 }}
             className={cx('px-4 py-4 text-right', elevatedToneClass, 'rounded-[24px]')}
           >
-            <p className={eyebrowClass}>Health Score</p>
+            <p className={eyebrowClass}>{t('landing.mockup_health_score')}</p>
             <div className="mt-4 flex items-baseline justify-end gap-2">
               <span className="text-4xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)]">
                 94
@@ -512,7 +503,7 @@ const DashboardMockup = memo(function DashboardMockup() {
 
                 return (
                   <motion.g
-                    key={`${point.label}-${point.x}-${point.y}`}
+                    key={`${point.labelKey}-${point.x}-${point.y}`}
                     initial={{ opacity: 0, scale: 0.75 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, amount: 0.45 }}
@@ -565,13 +556,13 @@ const DashboardMockup = memo(function DashboardMockup() {
                 <span className="h-3 w-3 rounded-full bg-[var(--landing-accent)] shadow-[0_0_28px_rgba(226,255,50,0.72)]" />
                 <div className="flex items-center gap-4">
                   <div>
-                    <p className={eyebrowClass}>Pattern detected</p>
+                    <p className={eyebrowClass}>{t('landing.mockup_pattern_detected')}</p>
                     <p className="mt-2 text-sm font-medium tracking-normal text-[var(--color-text-primary)]">
-                      {tooltipPoint.label}
+                      {t(tooltipPoint.labelKey)}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={eyebrowClass}>Score</p>
+                    <p className={eyebrowClass}>{t('landing.mockup_score')}</p>
                     <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
                       {tooltipPoint.value}
                     </p>
@@ -585,7 +576,7 @@ const DashboardMockup = memo(function DashboardMockup() {
         <div className="mt-8 grid grid-cols-2 gap-4">
           {DASHBOARD_METRICS.map((metric, index) => (
             <motion.div
-              key={metric.label}
+              key={metric.labelKey}
               initial={{ opacity: 0, y: 16, scale: 0.96 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.45 }}
@@ -596,7 +587,7 @@ const DashboardMockup = memo(function DashboardMockup() {
                 <div className={cx('flex h-10 w-10 items-center justify-center rounded-[16px]', elevatedToneClass)}>
                   <Icon path={metric.iconPath} className="h-4 w-4 text-[var(--landing-accent)]" />
                 </div>
-                <span className={eyebrowClass}>{metric.label}</span>
+                <span className={eyebrowClass}>{t(metric.labelKey)}</span>
               </div>
 
               <div className="mt-6 flex items-baseline gap-2">
@@ -604,7 +595,7 @@ const DashboardMockup = memo(function DashboardMockup() {
                   {metric.value}
                 </span>
                 <span className="text-sm tracking-normal text-[var(--color-text-tertiary)]">
-                  {metric.unit}
+                  {t(metric.unitKey)}
                 </span>
               </div>
             </motion.div>
@@ -778,7 +769,7 @@ function Landing() {
                   transition={microSpring}
                   onClick={() => setLangMenuOpen((open) => !open)}
                   className={cx(
-                    'inline-flex min-h-12 items-center gap-2 sm:gap-3 rounded-full px-3 sm:px-4 text-sm font-medium tracking-normal text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
+                    'inline-flex min-h-[3.5rem] items-center gap-2 sm:gap-3 rounded-full px-3 sm:px-4 py-2.5 text-sm font-medium tracking-normal leading-snug text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
                     surfaceToneClass,
                   )}
                 >
@@ -786,7 +777,7 @@ function Landing() {
                     path="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     className="h-4 w-4 shrink-0 text-[var(--landing-accent)]"
                   />
-                  <span className="hidden sm:inline">{activeLanguageCode.toUpperCase()}</span>
+                  <span className="hidden sm:inline leading-snug">{activeLanguageCode.toUpperCase()}</span>
                   <Icon path="M19 9l-7 7-7-7" className="hidden sm:block h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
                 </motion.button>
 
@@ -819,13 +810,13 @@ function Landing() {
                               transition={microSpring}
                               onClick={() => changeLanguage(language.code)}
                               className={cx(
-                                'flex min-h-12 w-full items-center justify-between rounded-[16px] px-4 text-left text-sm tracking-normal transition-colors duration-200',
+                                'flex min-h-[3.5rem] w-full items-center justify-between rounded-[16px] px-4 py-2.5 text-left text-sm tracking-normal leading-snug transition-colors duration-200',
                                 isActive
                                   ? 'bg-[#0A0A0A] text-[var(--color-text-primary)]'
                                   : 'text-[var(--color-text-secondary)] hover:bg-[#0A0A0A] hover:text-[var(--color-text-primary)]',
                               )}
                             >
-                              <span className="font-medium tracking-normal">
+                              <span className="font-medium tracking-normal leading-snug">
                                 {language.native}
                                 <span className="ml-2 text-[var(--color-text-tertiary)]">
                                   ({language.label})
@@ -882,42 +873,44 @@ function Landing() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={heroSpring}
-                className="w-full max-w-[42rem] justify-self-start text-left"
+                className="w-full max-w-[42rem] justify-self-start text-left min-w-0"
               >
-                {/* Trusted By badge — flush to px-6 container axis, self-start prevents flex stretch */}
-                <div className="inline-flex self-start items-center gap-3 rounded-full bg-[var(--landing-accent)] px-4 py-1.5 text-[var(--color-text-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_rgba(226,255,50,0.2)]">
-                  <span className="h-2 w-2 rounded-full bg-[#000000]" />
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--color-text-on-accent)]">
-                    {t('landing.trusted_by')}
-                  </span>
+                {/* Trusted By badge + h1: True Flush alignment lock */}
+                <div className="flex flex-col items-start ml-0 pl-0 min-w-0 max-w-full">
+                  <div className="inline-flex items-center gap-3 rounded-full bg-[var(--landing-accent)] px-4 py-3 text-[var(--color-text-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_rgba(226,255,50,0.2)]">
+                    <span className="h-2 w-2 rounded-full bg-[#000000]" />
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.15em] leading-relaxed text-[var(--color-text-on-accent)]">
+                      {t('landing.trusted_by')}
+                    </span>
+                  </div>
+
+                  <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] antialiased text-[var(--color-text-primary)] sm:text-6xl sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[1.02] break-words hyphens-auto text-balance max-w-full">
+                    {t('landing.hero_headline')}
+                  </h1>
                 </div>
 
-                <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.05em] antialiased text-[var(--color-text-primary)] sm:text-6xl sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[1.02]">
-                  Stop guessing. Start tracking.
-                </h1>
-
-                <p className="mt-4 sm:mt-8 max-w-[40rem] text-lg leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-xl">
-                  Clinical clarity for the chronic trajectory.
+                <p className="mt-4 sm:mt-8 max-w-[40rem] text-lg leading-[1.6] tracking-normal text-[var(--color-text-secondary)] sm:text-xl sm:leading-[1.6]">
+                  {t('landing.hero_subtitle')}
                 </p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                   <Button
                     intent="cta"
                     onClick={() => navigate('/signup')}
-                    className="w-full min-h-[56px] sm:w-auto sm:min-w-[12rem] sm:min-h-12"
+                    className="w-full min-h-[3.5rem] sm:w-auto sm:min-w-[12rem]"
                   >
-                    {t('landing.cta_signup')}
+                    <span className="leading-snug">{t('landing.cta_signup')}</span>
                   </Button>
                   <Button
                     intent="secondary"
                     onClick={handleTryDemo}
                     disabled={demoLoading || isLoadingAuth}
-                    className="w-full min-h-[56px] sm:w-auto sm:min-w-[12rem] sm:min-h-12"
+                    className="w-full min-h-[3.5rem] sm:w-auto sm:min-w-[12rem]"
                   >
                     {demoLoading ? (
                       <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-text-tertiary)] border-t-[var(--color-text-primary)]" />
                     ) : null}
-                    {t('landing.cta_try_demo')}
+                    <span className="leading-snug">{t('landing.cta_try_demo')}</span>
                   </Button>
                 </div>
 
@@ -925,26 +918,26 @@ function Landing() {
                 <div className="mt-8 grid gap-4 grid-cols-1 xl:grid-cols-3">
                   {[
                     {
-                      title: 'Logged in 12 seconds',
-                      detail: 'Engineered for habit, not paperwork.',
+                      titleKey: 'landing.mini_card_1_title',
+                      detailKey: 'landing.mini_card_1_detail',
                     },
                     {
-                      title: 'Patterns you would have missed',
-                      detail: 'The system connects check-ins across weeks, not just today’s reading.',
+                      titleKey: 'landing.mini_card_2_title',
+                      detailKey: 'landing.mini_card_2_detail',
                     },
                     {
-                      title: 'Export a clinical timeline',
-                      detail: 'Bring a structured record to your next appointment. No more “I can’t remember.”',
+                      titleKey: 'landing.mini_card_3_title',
+                      detailKey: 'landing.mini_card_3_detail',
                     },
                   ].map((item) => (
                     <Panel
-                      key={item.title}
+                      key={item.titleKey}
                       tone="surface"
                       className="rounded-[24px] p-6"
                     >
-                      <p className={eyebrowClass}>{item.title}</p>
+                      <p className={eyebrowClass}>{t(item.titleKey)}</p>
                       <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                        {item.detail}
+                        {t(item.detailKey)}
                       </p>
                     </Panel>
                   ))}
@@ -963,7 +956,7 @@ function Landing() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {TRUST_SIGNALS.map((signal, index) => (
                 <Panel
-                  key={signal.title}
+                  key={signal.titleKey}
                   as={motion.article}
                   tone="surface"
                   initial={{ opacity: 0, y: 32 }}
@@ -976,13 +969,13 @@ function Landing() {
                     <Icon path={signal.iconPath} className="h-5 w-5 text-[var(--landing-accent)]" />
                   </div>
                   <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--color-text-tertiary)]">
-                    {signal.eyebrow}
+                    {t(signal.eyebrowKey)}
                   </p>
                   <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
-                    {signal.title}
+                    {t(signal.titleKey)}
                   </h2>
                   <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                    {signal.detail}
+                    {t(signal.detailKey)}
                   </p>
                 </Panel>
               ))}
@@ -993,9 +986,9 @@ function Landing() {
         <section id="workflow" className="scroll-mt-32 py-16 sm:py-24">
           <div className={frameClass}>
             <SectionHeader
-              eyebrow="Workflow"
-              title="Capture the signal. Ignore the noise."
-              description="Every surface is tuned to make continuity feel obvious, reduce interpretation friction, and keep the product emotionally calm even as the data grows more complex."
+              eyebrow={t('landing.workflow_eyebrow')}
+              title={t('landing.workflow_title')}
+              description={t('landing.workflow_desc')}
             />
 
             <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -1004,8 +997,8 @@ function Landing() {
                   key={step.number}
                   delay={index * 0.08}
                   number={step.number}
-                  title={step.title}
-                  description={step.description}
+                  title={t(step.titleKey)}
+                  description={t(step.descriptionKey)}
                   iconPath={step.iconPath}
                 />
               ))}
@@ -1016,20 +1009,20 @@ function Landing() {
         <section id="features" className="scroll-mt-32 py-16 sm:py-24">
           <div className={frameClass}>
             <SectionHeader
-              eyebrow="Platform"
+              eyebrow={t('landing.platform_eyebrow')}
               title={t('landing.features_title')}
-              description="A stronger product system creates stronger care experiences: cleaner inputs, calmer hierarchy, and outputs that feel trustworthy at first glance."
+              description={t('landing.platform_desc')}
             />
 
             <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-12">
               {FEATURE_CARDS.map((feature, index) => (
                 <FeatureCard
-                  key={feature.title}
+                  key={feature.titleKey}
                   delay={index * 0.08}
-                  eyebrow={feature.eyebrow}
-                  title={feature.title}
-                  description={feature.description}
-                  metric={feature.metric}
+                  eyebrow={t(feature.eyebrowKey)}
+                  title={t(feature.titleKey)}
+                  description={t(feature.descriptionKey)}
+                  metric={t(feature.metricKey)}
                   iconPath={feature.iconPath}
                   className={feature.className}
                 />
@@ -1049,17 +1042,17 @@ function Landing() {
 
               <div className="relative grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,0.9fr)] lg:items-end">
                 <div>
-                  <span className={eyebrowClass}>Security</span>
+                  <span className={eyebrowClass}>{t('landing.security_eyebrow')}</span>
                   <h2 className="mt-4 max-w-[14ch] text-4xl font-semibold leading-[0.96] tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-5xl">
-                    Private health intelligence with visible restraint.
+                    {t('landing.security_title')}
                   </h2>
                   <p className="mt-8 max-w-[40rem] text-base leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-lg">
-                    The system feels premium because it removes friction without removing rigor. Access is deliberate, sharing is contextual, and every layer protects the signal instead of overwhelming it.
+                    {t('landing.security_desc')}
                   </p>
 
                   <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                     <Button intent="cta" onClick={() => navigate('/signup')} className="w-full sm:w-auto sm:min-w-[12rem]">
-                      Create Free Account
+                      {t('landing.security_cta_signup')}
                     </Button>
                     <Button
                       intent="secondary"
@@ -1086,7 +1079,7 @@ function Landing() {
                 <div className="grid gap-4">
                   {SECURITY_PILLARS.map((pillar, index) => (
                     <Panel
-                      key={pillar.title}
+                      key={pillar.titleKey}
                       as={motion.div}
                       tone="surface"
                       initial={{ opacity: 0, y: 32 }}
@@ -1097,10 +1090,10 @@ function Landing() {
                     >
                       <p className={eyebrowClass}>{`0${index + 1}`}</p>
                       <h3 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
-                        {pillar.title}
+                        {t(pillar.titleKey)}
                       </h3>
                       <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                        {pillar.description}
+                        {t(pillar.descriptionKey)}
                       </p>
                     </Panel>
                   ))}
@@ -1148,10 +1141,10 @@ function Landing() {
               id="cta-heading"
               className="text-4xl font-semibold leading-[1.06] tracking-[-0.05em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl"
             >
-              Health happens between appointments.
+              {t('landing.cta_heading')}
             </h2>
             <p className="mt-6 text-lg leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-xl">
-              CareTrace exists for everything in between.
+              {t('landing.cta_copy')}
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button
@@ -1160,7 +1153,7 @@ function Landing() {
                 onClick={() => navigate('/signup')}
                 className="w-full sm:w-auto sm:min-w-[14rem]"
               >
-                Create Free Account
+                {t('landing.cta_signup')}
               </Button>
               <Button
                 intent="secondary"
@@ -1172,7 +1165,7 @@ function Landing() {
                 {demoLoading && (
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-text-tertiary)] border-t-[var(--color-text-primary)]" />
                 )}
-                Try the Interactive Demo
+                {t('landing.cta_demo_btn')}
               </Button>
             </div>
           </motion.div>
@@ -1190,22 +1183,22 @@ function Landing() {
                 <BrandLockup variant="dark" />
               </Link>
               <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                CareTrace exists for the 99% of health that happens between appointments. Precision tracking for the chronic trajectory.
+                {t('landing.footer_mission')}
               </p>
             </div>
 
             <div className="grid gap-12 sm:grid-cols-2">
               {FOOTER_COLUMNS.map((column) => (
-                <div key={column.title}>
-                  <h2 className={eyebrowClass}>{column.title}</h2>
+                <div key={column.titleKey}>
+                  <h2 className={eyebrowClass}>{t(column.titleKey)}</h2>
                   <ul className="mt-6 space-y-4">
                     {column.links.map((link) => (
-                      <li key={link.label}>
+                      <li key={link.labelKey}>
                         <Link
                           to={link.to}
                           className="text-sm tracking-normal text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-text-primary)]"
                         >
-                          {link.label}
+                          {t(link.labelKey)}
                         </Link>
                       </li>
                     ))}
@@ -1216,25 +1209,25 @@ function Landing() {
           </div>
 
           <div className="mt-16 flex flex-col gap-4 border-t border-[var(--color-hairline)] pt-8 text-sm tracking-normal text-[var(--color-text-tertiary)] sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {new Date().getFullYear()} CareTrace AI. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} CareTrace AI. {t('landing.footer_copyright')}</p>
             <div className="flex flex-wrap items-center gap-6">
               <Link
                 to="/#security"
                 className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
               >
-                Security
+                {t('landing.footer_security')}
               </Link>
               <Link
                 to="/login"
                 className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
               >
-                Sign In
+                {t('landing.footer_sign_in')}
               </Link>
               <Link
                 to="/signup"
                 className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
               >
-                Get Started
+                {t('landing.footer_get_started')}
               </Link>
             </div>
           </div>
