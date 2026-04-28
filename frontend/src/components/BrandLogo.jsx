@@ -1,5 +1,3 @@
-import { useId } from 'react';
-
 export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' }) {
   return (
     <svg

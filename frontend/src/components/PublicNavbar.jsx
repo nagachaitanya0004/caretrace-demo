@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,23 +19,22 @@ function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false,
   const location = useLocation();
   const light = variant === 'light';
   const langPrefix = (i18n.resolvedLanguage || i18n.language || 'en').split('-')[0];
-  const [langMenuOpen, setLangMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setLangMenuOpen(false);
-  }, [location.pathname, location.hash]);
+  const routeKey = `${location.pathname}${location.hash}`;
+  const [langMenu, setLangMenu] = useState({ open: false, routeKey });
+  const langMenuOpen = langMenu.open && langMenu.routeKey === routeKey;
+  const closeLangMenu = useCallback(() => setLangMenu({ open: false, routeKey }), [routeKey]);
 
   useEffect(() => {
     if (!langMenuOpen) return undefined;
-    const onKeyDown = (e) => { if (e.key === 'Escape') setLangMenuOpen(false); };
+    const onKeyDown = (e) => { if (e.key === 'Escape') closeLangMenu(); };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [langMenuOpen]);
+  }, [closeLangMenu, langMenuOpen]);
 
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
     localStorage.setItem('i18nextLng', code);
-    setLangMenuOpen(false);
+    closeLangMenu();
   };
 
   const positionClass = embedded
@@ -60,7 +59,10 @@ function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false,
             aria-haspopup="menu"
             aria-expanded={langMenuOpen}
             aria-label={t('navbar.language')}
-            onClick={() => setLangMenuOpen((open) => !open)}
+            onClick={() => setLangMenu((current) => ({
+              open: current.routeKey === routeKey ? !current.open : true,
+              routeKey,
+            }))}
             className={`inline-flex min-h-[2.5rem] sm:min-h-[2.75rem] items-center gap-2 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-medium tracking-normal leading-snug transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 ${
               light
                 ? 'bg-[var(--app-surface)] border border-[var(--app-border)] text-[var(--app-text)] hover:border-[var(--app-border-hover)] shadow-sm'
@@ -82,7 +84,7 @@ function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false,
                 <div
                   className="fixed inset-0 z-40"
                   aria-hidden="true"
-                  onClick={() => setLangMenuOpen(false)}
+                  onClick={closeLangMenu}
                 />
                 <motion.div
                   initial={{ opacity: 0, scale: 0.94, y: 8 }}

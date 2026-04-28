@@ -9,6 +9,7 @@ from pymongo.errors import DuplicateKeyError
 
 from app.api.auth import get_current_user
 from app.utils.user_identity import get_user_ref, normalize_gender
+from app.services.data_access import atomic_dual_database_update
 
 from app.db.db import get_database, get_gridfs_bucket
 from app.db.postgres import get_session_maker
@@ -376,6 +377,42 @@ async def delete_user(current_user: dict = Depends(get_current_user)):
             await pg_session.close()
 
     return success_response(None, message='User and related records deleted successfully')
+
+
+@router.patch('/auth/onboarding/complete', status_code=200)
+async def complete_onboarding(current_user: dict = Depends(get_current_user)):
+    """
+    Mark the user's onboarding process as complete.
+    This is an atomic operation that updates both PostgreSQL and MongoDB.
+    """
+    user_id = current_user.get('user_id')
+    if not user_id:
+        # This check ensures we're dealing with a modern user who has a UUID.
+        raise HTTPException(
+            status_code=400,
+            detail="Onboarding completion is not available for this user account type."
+        )
+
+    mongo_oid = current_user.get('_id')
+
+    try:
+        await atomic_dual_database_update(
+            user_id=user_id,
+            postgres_update_fn=lambda pg_user: setattr(pg_user, 'is_onboarded', True),
+            mongo_collection="users",
+            mongo_filter={"_id": mongo_oid},
+            mongo_update={"$set": {"is_onboarded": True, "updated_at": datetime.utcnow()}}
+        )
+        return success_response(None, message='Onboarding completed successfully')
+    except Exception as exc:
+        logger.error(
+            "Failed to complete onboarding for user_id=%s: %s",
+            user_id, exc
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="A server error occurred while saving your onboarding status. Please try again."
+        )
 
 
 # ---------------------------------------------------------------------------

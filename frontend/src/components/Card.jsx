@@ -8,9 +8,11 @@ const ELEVATION = {
   3: 'bg-[var(--app-surface-elevated)] border border-[var(--app-border)] shadow-[var(--shadow-l3)]',
 };
 
-function Card({ children, elevation = 1, className = '', as: Tag = 'div', ...props }) {
+function Card({ children, elevation = 1, className = '', as = 'div', ...props }) {
+  const Component = as;
+
   return (
-    <Tag
+    <Component
       className={cx(
         'rounded-[var(--radius-xl)] p-6',
         ELEVATION[elevation] ?? ELEVATION[1],
@@ -19,7 +21,7 @@ function Card({ children, elevation = 1, className = '', as: Tag = 'div', ...pro
       {...props}
     >
       {children}
-    </Tag>
+    </Component>
   );
 }
 

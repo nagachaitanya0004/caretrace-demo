@@ -11,7 +11,6 @@
  * ========================================================================== */
 
 import { createContext, useState, useEffect, useContext, useCallback, useMemo, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { api, unwrapApiPayload, tokenManager, observability, AUTH_EVENTS } from './services/api';
 
 export const AuthContext = createContext();
@@ -266,7 +265,17 @@ export function AuthProvider({ children }) {
   // ============================================================================
 
   const updateUser = useCallback((updates) => {
-    setUser(prev => prev ? { ...prev, ...updates } : null);
+    setUser((prev) => {
+      if (typeof updates === 'function') {
+        return updates(prev);
+      }
+
+      if (!prev) {
+        return updates ?? null;
+      }
+
+      return { ...prev, ...updates };
+    });
   }, []);
 
   // ============================================================================

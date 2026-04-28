@@ -500,6 +500,87 @@
     "footer_copyright": "All rights reserved.",
     "footer_get_started": "Get started"
   },
+  "onboarding": {
+    "title": "Let's set up your profile",
+    "subtitle": "This helps us personalize your health insights.",
+    "step_counter": "Step {{current}} of {{total}} · {{stepName}}",
+    "steps": {
+      "basic": "About you",
+      "medical": "Your health history",
+      "family": "Family health",
+      "lifestyle": "Daily habits",
+      "vitals": "Additional health data"
+    },
+    "actions": {
+      "next": "Next",
+      "saving": "Saving your data...",
+      "skip": "Skip (you can add this later)",
+      "add_condition": "Add another condition",
+      "remove": "Remove"
+    },
+    "basic": {
+      "age": "Age",
+      "age_placeholder": "e.g. 28",
+      "gender": "Gender",
+      "gender_select": "Choose an option",
+      "height": "Height (cm)",
+      "height_placeholder": "e.g. 170",
+      "weight": "Weight (kg)",
+      "weight_placeholder": "e.g. 65",
+      "bmi_label": "Estimated BMI:",
+      "blood_group": "Blood group",
+      "blood_group_select": "Choose an option",
+      "lifestyle": "Current lifestyle",
+      "lifestyle_select": "Choose an option",
+      "lifestyle_active": "Active",
+      "lifestyle_sedentary": "Sedentary",
+      "lifestyle_smoker": "Smoker"
+    },
+    "medical": {
+      "hint": "You can add multiple using commas.",
+      "conditions": "Existing conditions",
+      "conditions_placeholder": "e.g. Asthma, Hypertension",
+      "medications": "Current medications",
+      "medications_placeholder": "e.g. Aspirin",
+      "allergies": "Allergies",
+      "allergies_placeholder": "e.g. Peanuts, Penicillin",
+      "surgeries": "Past surgeries",
+      "surgeries_placeholder": "e.g. Appendectomy"
+    },
+    "family": {
+      "hint": "Add conditions that run in your family (optional).",
+      "condition": "Condition",
+      "condition_select": "Choose an option",
+      "relation": "Relation",
+      "relation_select": "Optional"
+    },
+    "lifestyle": {
+      "sleep": "Sleep duration (hours per night)",
+      "sleep_placeholder": "e.g. 7",
+      "sleep_quality": "Sleep quality",
+      "quality_select": "Choose an option",
+      "quality_good": "Good",
+      "quality_average": "Average",
+      "quality_poor": "Poor",
+      "diet": "Diet type",
+      "diet_select": "Choose an option",
+      "diet_veg": "Vegetarian",
+      "diet_nonveg": "Non-vegetarian",
+      "diet_mixed": "Mixed",
+      "exercise": "Exercise frequency",
+      "ex_select": "Choose an option",
+      "ex_none": "None",
+      "ex_weekly": "A few times a week",
+      "ex_regular": "Daily or almost daily",
+      "water": "Water intake (liters per day)",
+      "water_placeholder": "e.g. 2.5",
+      "stress": "Stress level",
+      "stress_low": "Low",
+      "stress_high": "High",
+      "smoking": "Smoking",
+      "alcohol": "Alcohol"
+    }
+  },
   "auth": {
     "login_title": "Welcome back",
     "login_subtitle": "Sign in to your account.",

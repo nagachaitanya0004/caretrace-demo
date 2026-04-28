@@ -1,21 +1,9 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { useEffect } from 'react';
 
 export default function ProtectedRoute({ children }) {
-  const { token, user, isLoadingAuth, logout } = useAuth();
+  const { token, user, isLoadingAuth } = useAuth();
   const location = useLocation();
-
-  // Listen for global auth expiration events
-  useEffect(() => {
-    const handleAuthExpired = () => {
-      // Auth already cleared by event handler in AuthContext
-      // This just ensures component re-renders
-    };
-
-    window.addEventListener('auth:token-expired', handleAuthExpired);
-    return () => window.removeEventListener('auth:token-expired', handleAuthExpired);
-  }, []);
 
   if (isLoadingAuth) {
     return (
@@ -30,13 +18,15 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Redirect new users to onboarding (is_onboarded === false strictly)
-  // NULL/undefined treated as true to protect existing users
-  if (user && user.is_onboarded === false && location.pathname !== '/onboarding') {
+  if (user?.is_onboarded === false && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
+  }
+
+  if (user?.is_onboarded === true && location.pathname === '/onboarding') {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
