@@ -1,9 +1,21 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useEffect } from 'react';
 
 export default function ProtectedRoute({ children }) {
-  const { token, user, isLoadingAuth } = useAuth();
+  const { token, user, isLoadingAuth, logout } = useAuth();
   const location = useLocation();
+
+  // Listen for global auth expiration events
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      // Auth already cleared by event handler in AuthContext
+      // This just ensures component re-renders
+    };
+
+    window.addEventListener('auth:token-expired', handleAuthExpired);
+    return () => window.removeEventListener('auth:token-expired', handleAuthExpired);
+  }, []);
 
   if (isLoadingAuth) {
     return (
