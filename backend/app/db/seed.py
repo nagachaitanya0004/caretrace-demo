@@ -20,13 +20,39 @@ async def ensure_demo_account() -> None:
     db = get_database()
     email = "rahul@demo.com"
 
-    if await db.users.find_one({"email": email}):
-        return  # Demo account already exists
-
     session_maker = get_session_maker()
     if session_maker is None:
         logger.error("Seed skipped — PostgreSQL not initialized")
         return
+
+    # ── Step 0: Reset existing demo account ─────────────────────────
+    # Ensure demo account is safely wiped and fresh on every server restart
+    existing_mongo = await db.users.find_one({"email": email})
+    if existing_mongo:
+        mongo_user_id = existing_mongo["_id"]
+        pg_user_id_ref = existing_mongo.get("user_id")
+        
+        await db.users.delete_one({"_id": mongo_user_id})
+        
+        refs = [mongo_user_id]
+        if pg_user_id_ref:
+            refs.append(pg_user_id_ref)
+            
+        for coll in [db.symptoms, db.analysis, db.alerts, db.reports, db.lab_results, db.medication_tracking]:
+            await coll.delete_many({"user_id": {"$in": refs}})
+            
+    pg_session = session_maker()
+    try:
+        pg_user_to_delete = (
+            await pg_session.execute(select(PostgresUser).where(PostgresUser.email == email))
+        ).scalars().first()
+        if pg_user_to_delete:
+            await pg_session.delete(pg_user_to_delete)
+            await pg_session.commit()
+    except Exception:
+        await pg_session.rollback()
+    finally:
+        await pg_session.close()
 
     pg_user_id = str(uuid.uuid4())
     hashed_pw = get_password_hash("demo1234")
@@ -47,7 +73,11 @@ async def ensure_demo_account() -> None:
                 name="Rahul Sharma",
                 age=34,
                 gender="male",
-                is_onboarded=False,
+                height_cm=175,
+                weight_kg=72,
+                blood_group="O+",
+                bmi=23.5,
+                is_onboarded=True,
             )
             pg_session.add(pg_user)
             await pg_session.flush()
@@ -71,8 +101,13 @@ async def ensure_demo_account() -> None:
         "age": 34,
         "gender": "male",
         "lifestyle": "sedentary",
-        "is_onboarded": False,
+        "height_cm": 175,
+        "weight_kg": 72,
+        "blood_group": "O+",
+        "bmi": 23.5,
+        "is_onboarded": True,
         "meta": {},
+        "is_demo": True,
         "created_at": now,
         "updated_at": now,
     }
@@ -96,35 +131,123 @@ async def ensure_demo_account() -> None:
             await pg_session.close()
         return
 
-    user_id = result.inserted_id
+    # Dual-DB applications track related records using the pg_user_id
+    user_ref = pg_user_id
 
     # ── Step 3: Seed related demo data ──────────────────────────────
     now_delta = now
-    symptoms = [
-        build_symptom_document(user_id, "Frequent head tension", 3, 5, now_delta - timedelta(days=5), notes="Mostly in the afternoon"),
-        build_symptom_document(user_id, "Blurry vision", 1, 4, now_delta - timedelta(days=2), notes="Occurred after staring at screen"),
-        build_symptom_document(user_id, "Fatigue", 5, 6, now_delta - timedelta(days=1), notes="Waking up tired"),
-    ]
+    
+    # 1. Symptoms Timeline (15 days of progressive data)
+    symptoms = []
+    for day in range(15, -1, -1):
+        date_mark = now_delta - timedelta(days=day)
+        if day > 10:
+            symptoms.append(build_symptom_document(user_ref, "Fatigue", 3, 2, date_mark, notes="Mild tiredness in the evening"))
+        elif day > 5:
+            symptoms.append(build_symptom_document(user_ref, "Fatigue", 5, 4, date_mark, notes="Waking up tired"))
+            symptoms.append(build_symptom_document(user_ref, "Blurry vision", 2, 3, date_mark, notes="Slight screen strain"))
+        elif day > 1:
+            symptoms.append(build_symptom_document(user_ref, "Fatigue", 7, 5, date_mark, notes="Exhausted throughout the day"))
+            symptoms.append(build_symptom_document(user_ref, "Frequent head tension", 4, 5, date_mark, notes="Afternoon headaches"))
+            symptoms.append(build_symptom_document(user_ref, "Blurry vision", 5, 4, date_mark, notes="Difficulty reading screens"))
+        else:
+            symptoms.append(build_symptom_document(user_ref, "Fatigue", 4, 6, date_mark, notes="Feeling slightly better after rest"))
+            symptoms.append(build_symptom_document(user_ref, "Frequent head tension", 2, 5, date_mark, notes="Subsided mostly"))
+            
     await db.symptoms.insert_many(symptoms)
 
-    await db.analysis.insert_one(build_analysis_document(
-        user_id,
-        "medium",
-        "Recent pattern of headaches and blurry vision paired with fatigue could indicate digital eye strain or migraines.",
-        "Consider an eye exam or screen-time reduction.",
-        {"symptom_count": 3},
-    ))
+    # 2. AI Analysis (Evolving risk over time)
+    analyses = [
+        build_analysis_document(user_ref, "low", "Baseline health is stable with minor fatigue.", "Maintain current sleep habits.", {"symptom_count": 5}),
+        build_analysis_document(user_ref, "medium", "Increasing pattern of fatigue paired with mild ocular strain.", "Consider reducing screen time and taking frequent breaks.", {"symptom_count": 12}),
+        build_analysis_document(user_ref, "high", "Significant cluster of head tension, blurry vision, and severe fatigue.", "Highly recommend an ergonomic assessment and optometrist visit.", {"symptom_count": 19}),
+    ]
+    analyses[0]["created_at"] = now_delta - timedelta(days=14)
+    analyses[1]["created_at"] = now_delta - timedelta(days=7)
+    analyses[2]["created_at"] = now_delta - timedelta(days=1)
+    await db.analysis.insert_many(analyses)
 
-    await db.alerts.insert_one(build_alert_document(
-        user_id,
-        "Consistent elevated fatigue reported over 5 days. Monitor sleep patterns.",
-        "warning",
-        False,
-    ))
+    # 3. Alerts System (Critical, warning, resolved)
+    alerts = [
+        build_alert_document(user_ref, "Hydration levels appear adequate. Baseline established.", "info", True),
+        build_alert_document(user_ref, "Consistent elevated fatigue reported over 5 days. Monitor sleep patterns closely.", "warning", False),
+        build_alert_document(user_ref, "Symptom cluster detected: Head tension and blurry vision. Action recommended.", "critical", False),
+    ]
+    alerts[0]["created_at"] = now_delta - timedelta(days=12)
+    alerts[1]["created_at"] = now_delta - timedelta(days=5)
+    alerts[2]["created_at"] = now_delta - timedelta(days=2)
+    await db.alerts.insert_many(alerts)
 
-    await db.reports.insert_one(build_report_document(
-        user_id,
-        "Patient shows persistent fatigue and mild ocular symptoms. Lifestyle is marked as sedentary, indicating possible ergonomic strain.",
-    ))
+    # 4. Reports (Structured milestones)
+    reports = [
+        build_report_document(user_ref, "Initial Onboarding Baseline: Patient reports sedentary lifestyle. Vitals within normal limits. Occasional fatigue noted."),
+        build_report_document(user_ref, "Mid-Month Review: Emergence of digital eye strain indicators. Patient advised on 20-20-20 rule for screen time."),
+        build_report_document(user_ref, "Urgent Assessment: Correlation found between consecutive days of high stress/fatigue and severe afternoon head tension."),
+    ]
+    reports[0]["created_at"] = now_delta - timedelta(days=14)
+    reports[1]["created_at"] = now_delta - timedelta(days=7)
+    reports[2]["created_at"] = now_delta - timedelta(days=1)
+    await db.reports.insert_many(reports)
+
+    # 5. Lab Results (Time-series variation)
+    labs = [
+        {
+            "user_id": user_ref,
+            "test_name": "Complete Blood Count (CBC)",
+            "value": "Normal",
+            "reference_range": "Standard",
+            "status": "completed",
+            "recorded_at": now_delta - timedelta(days=15),
+            "created_at": now_delta - timedelta(days=15),
+        },
+        {
+            "user_id": user_ref,
+            "test_name": "Vitamin D, 25-Hydroxy",
+            "value": "22 ng/mL",
+            "reference_range": "30-100 ng/mL",
+            "status": "completed",
+            "recorded_at": now_delta - timedelta(days=8),
+            "created_at": now_delta - timedelta(days=8),
+        },
+        {
+            "user_id": user_ref,
+            "test_name": "Comprehensive Metabolic Panel",
+            "value": "Pending",
+            "reference_range": "Standard",
+            "status": "pending",
+            "recorded_at": now_delta - timedelta(days=1),
+            "created_at": now_delta - timedelta(days=1),
+        }
+    ]
+    await db.lab_results.insert_many(labs)
+
+    # 6. Medications (Active and historical)
+    meds = [
+        {
+            "user_id": user_ref,
+            "medication_name": "Vitamin D3",
+            "dosage": "2000 IU",
+            "frequency": "Daily",
+            "adherence": "High",
+            "created_at": now_delta - timedelta(days=15),
+        },
+        {
+            "user_id": user_ref,
+            "medication_name": "Ibuprofen",
+            "dosage": "400 mg",
+            "frequency": "As needed for head tension",
+            "adherence": "Medium",
+            "created_at": now_delta - timedelta(days=5),
+        },
+        {
+            "user_id": user_ref,
+            "medication_name": "Artificial Tears",
+            "dosage": "1 drop per eye",
+            "frequency": "Twice daily",
+            "adherence": "Low",
+            "created_at": now_delta - timedelta(days=2),
+        }
+    ]
+    await db.medication_tracking.insert_many(meds)
 
     logger.info("Seed: Demo account fully initialised (pg_id=%s)", pg_user_id)

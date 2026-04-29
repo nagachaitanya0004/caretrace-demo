@@ -1,36 +1,13 @@
 """
 Unified Data Access Layer for CareTrace AI.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DATABASE RESPONSIBILITIES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Database Responsibilities:
+- PostgreSQL: structured, relational, identity-critical data (User identity, profile fields)
+- MongoDB: dynamic, schema-flexible, time-series health data (lab_results, symptoms, etc.)
 
-PostgreSQL  — structured, relational, identity-critical data
-  • User identity (UUID primary key, email, hashed_password)
-  • Structured profile fields (age, gender, height_cm, weight_kg, bmi)
-  • Onboarding state (is_onboarded)
-
-MongoDB     — dynamic, schema-flexible, time-series health data
-  • lab_results       — lab test values, reference ranges, status
-  • medication_tracking — medications, dosage, adherence, side effects
-  • symptoms          — symptom logs with severity and duration
-  • health_metrics    — vitals (BP, heart rate, blood sugar, SpO2)
-  • analysis          — AI risk assessments
-  • alerts            — automated health notifications
-  • medical_history   — conditions, medications, allergies, surgeries
-  • family_history    — hereditary condition records
-  • lifestyle_data    — sleep, diet, exercise, stress
-  • medical_reports   — uploaded PDF/image file metadata (GridFS)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-USER ID STRATEGY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-New users  → user_id (UUID string, from PostgreSQL) — preferred
-Legacy users → _id (ObjectId, MongoDB-only) — fallback
-
-Always resolve via get_user_ref() from app.utils.user_identity.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+User ID Strategy:
+- New users: user_id (UUID string, from PostgreSQL)
+- Legacy users: _id (ObjectId, MongoDB-only)
 """
 
 from __future__ import annotations
@@ -47,8 +24,6 @@ from app.db.postgres import get_session_maker
 from app.models.postgres_user import PostgresUser
 from app.utils.user_identity import get_user_ref
 
-
-# ── PostgreSQL helpers ────────────────────────────────────────────────────────
 
 async def _fetch_postgres_profile(user_id: str) -> Optional[Dict[str, Any]]:
     """
@@ -94,8 +69,6 @@ async def _fetch_postgres_profile(user_id: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-# ── MongoDB helpers ───────────────────────────────────────────────────────────
-
 async def _fetch_mongo_collection(
     collection_name: str,
     user_ref: Any,
@@ -127,8 +100,6 @@ async def _fetch_mongo_collection(
         return []
 
 
-# ── Profile fallback from MongoDB ────────────────────────────────────────────
-
 def _build_mongo_profile_fallback(current_user: Dict[str, Any]) -> Dict[str, Any]:
     """
     Build a profile dict from the MongoDB user document.
@@ -141,8 +112,6 @@ def _build_mongo_profile_fallback(current_user: Dict[str, Any]) -> Dict[str, Any
     doc.setdefault("user_id", str(current_user.get("user_id") or current_user.get("_id", "")))
     return doc
 
-
-# ── Atomic Dual-Database Operations ──────────────────────────────────────────
 
 class DualDatabaseTransaction:
     """
@@ -473,8 +442,6 @@ async def atomic_dual_database_update(
     )
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
-
 async def get_complete_user_data(current_user: Dict[str, Any]) -> Dict[str, Any]:
     """
     Aggregate a user's full health profile from both databases.
@@ -506,7 +473,6 @@ async def get_complete_user_data(current_user: Dict[str, Any]) -> Dict[str, Any]
         user_ref, "uuid" if is_uuid else "objectid",
     )
 
-    # ── 1. Profile ────────────────────────────────────────────────────────────
     if is_uuid:
         profile = await _fetch_postgres_profile(user_ref)
         if profile is None:
@@ -520,7 +486,6 @@ async def get_complete_user_data(current_user: Dict[str, Any]) -> Dict[str, Any]
         # Legacy user: no PostgreSQL row exists
         profile = _build_mongo_profile_fallback(current_user)
 
-    # ── 2. MongoDB collections (concurrent) ───────────────────────────────────
     labs_task = _fetch_mongo_collection(
         collection_name="lab_results",
         user_ref=user_ref,
