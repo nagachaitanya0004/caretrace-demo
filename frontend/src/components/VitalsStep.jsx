@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import Button from './Button';
 import Input from './Input';
@@ -34,6 +35,7 @@ function validateField(fieldDef, rawValue) {
 }
 
 export default function VitalsStep({ onNext, disabled }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,10 +106,11 @@ export default function VitalsStep({ onNext, disabled }) {
   };
 
   return (
-    <div>
+    <div className="space-y-1">
       {FIELDS.map((fieldDef) => (
         <Input
           key={fieldDef.key}
+          id={`vitals-${fieldDef.key}`}
           className="mb-4"
           label={fieldDef.label}
           type="number"
@@ -117,13 +120,14 @@ export default function VitalsStep({ onNext, disabled }) {
           disabled={isDisabled}
           placeholder={fieldDef.placeholder}
           step={fieldDef.isFloat ? '0.1' : '1'}
+          inputClassName="tabular-nums"
           error={errors[fieldDef.key]}
           aria-invalid={!!errors[fieldDef.key]}
-          aria-describedby={errors[fieldDef.key] ? `err-${fieldDef.key}` : undefined}
+          aria-describedby={errors[fieldDef.key] ? `err-vitals-${fieldDef.key}` : undefined}
         />
       ))}
 
-      <div className="flex gap-3 mt-2">
+      <div className="flex gap-3 pt-2">
         <Button
           onClick={handleNext}
           disabled={isDisabled}
@@ -132,7 +136,7 @@ export default function VitalsStep({ onNext, disabled }) {
           loading={isSubmitting}
           className="flex-1"
         >
-          Next
+          {isSubmitting ? t('common.saving', 'Saving…') : t('common.next', 'Next')}
         </Button>
         <Button
           onClick={handleSkip}
@@ -141,7 +145,7 @@ export default function VitalsStep({ onNext, disabled }) {
           size="md"
           className="flex-1"
         >
-          Skip
+          {t('common.skip', 'Skip')}
         </Button>
       </div>
     </div>

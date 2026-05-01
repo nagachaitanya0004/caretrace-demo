@@ -11,10 +11,16 @@ export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' })
       aria-label={title}
     >
       <title>{title}</title>
-      <rect width="40" height="40" rx="10" fill="#E2FF32" />
+      <defs>
+        <linearGradient id="caretrace-volt" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#E8FF5F" />
+          <stop offset="100%" stopColor="#D3F41E" />
+        </linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="10" fill="url(#caretrace-volt)" />
       <path
         d="M10 20h4l1.2-5 2.3 12 2.5-14 2.2 7H30"
-        stroke="#000000"
+        stroke="#0a0a0a"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

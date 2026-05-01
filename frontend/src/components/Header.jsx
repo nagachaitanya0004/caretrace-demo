@@ -19,12 +19,6 @@ function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const notifRef = useRef(null);
 
-  const handleLogout = () => {
-    setDrawerOpen(false);
-    logout();
-    navigate('/login');
-  };
-
   useEffect(() => {
     if (!showNotifications) return;
     const handleClickOutside = (e) => {
@@ -82,7 +76,7 @@ function Header() {
 
           {/* Notification bell */}
           {user && (
-            <div className="relative" ref={notifRef}>
+            <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -102,9 +96,11 @@ function Header() {
 
               {showNotifications && (
                 <div
+                  ref={notifRef}
                   className="notif-panel absolute right-0 top-12 rounded-2xl overflow-hidden slide-up z-50"
                   role="dialog"
                   aria-label={t('navbar.notifications', 'Notifications')}
+                  aria-modal="false"
                   style={{ width: 'min(20rem, calc(100vw - 1rem))' }}
                 >
                   <div className="px-4 py-3 border-b border-[var(--app-border)] flex items-center justify-between">
@@ -136,36 +132,7 @@ function Header() {
             </div>
           )}
 
-          {/* Avatar + logout — desktop only */}
-          {user && (
-            <div className="hidden md:flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-[var(--app-border)] min-w-0">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowNotifications(false);
-                  setDrawerOpen(false);
-                  navigate('/settings');
-                }}
-                className="avatar-btn"
-                title={t('navbar.settings')}
-              >
-                <div className="w-8 h-8 shrink-0 rounded-xl bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow-sm">
-                  {user.email?.charAt(0).toUpperCase()}
-                </div>
-                <span className="text-sm font-medium text-[var(--app-text-muted)] hidden lg:block max-w-[140px] truncate">{user.email}</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleLogout}
-                title={t('navbar.logout')}
-                className="logout-btn"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
-            </div>
-          )}
+
         </div>
       </div>
 

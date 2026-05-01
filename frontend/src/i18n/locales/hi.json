@@ -24,7 +24,8 @@
     "notifications": "सूचनाएं",
     "notifications_new": "नई",
     "notifications_empty": "सब कुछ ठीक है!",
-    "open_menu": "मेनू खोलें"
+    "open_menu": "मेनू खोलें",
+    "health_profile": "स्वास्थ्य प्रोफ़ाइल"
   },
   "dashboard": {
     "tagline": "जल्दी पता लगाना। बेहतर निर्णय।",
@@ -74,7 +75,8 @@
       "no_analysis": "अभी तक कोई विश्लेषण नहीं हुआ",
       "no_analysis_sub": "अपना जोखिम स्तर और जानकारी देखने के लिए AI स्कैन करें।",
       "view_report": "पूरी रिपोर्ट देखें",
-      "action_pending": "व्यक्तिगत अनुशंसाएँ प्राप्त करने के लिए AI विश्लेषण चलाएं।"
+      "action_pending": "व्यक्तिगत अनुशंसाएँ प्राप्त करने के लिए AI विश्लेषण चलाएं।",
+      "last_updated": "अंतिम अपडेट"
     },
     "charts": {
       "trend": "प्रवृत्ति",
@@ -91,7 +93,10 @@
       "no_freq_match": "कोई लक्षण आवृत्ति इस खोज से मेल नहीं खाती",
       "no_freq_data": "कोई डेटा मैप नहीं हुआ",
       "no_insight_match": "कोई इनसाइट कार्ड आपकी खोज से मेल नहीं खाता",
-      "no_insight_sub": "प्रोफाइल, रिपोर्ट, जीवनशैली या विश्लेषण खोजने का प्रयास करें।"
+      "no_insight_sub": "प्रोफाइल, रिपोर्ट, जीवनशैली या विश्लेषण खोजने का प्रयास करें।",
+      "trend_aria": "Symptom severity over time",
+      "distribution_aria": "Symptom frequency distribution",
+      "data_points_label": "entries"
     },
     "insights": {
       "title": "इंटेलिजेंस",
@@ -101,12 +106,23 @@
       "profile_body": "आपकी {{lifestyle}} प्रोफ़ाइल के आधार पर, नियमित लक्षणात्मक निगरानी की सिफारिश की जाती है।",
       "profile_empty": "व्यक्तिगत मार्गदर्शन प्राप्त करने के लिए सेटिंग्स में अपनी स्वास्थ्य प्रोफ़ाइल पूरी करें।",
       "pattern_title": "ट्रैकिंग पैटर्न",
-      "pattern_body": "आपने {{count}} लक्षणों को {{avg}}/10 की औसत गंभीरता के साथ दर्ज किया है।"
+      "pattern_body": "आपने {{count}} लक्षणों को {{avg}}/10 की औसत गंभीरता के साथ दर्ज किया है।",
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights"
     },
     "demo_meds": {
       "label": "डेमो",
-      "title": "दवाएं (नमूना)"
-    }
+      "title": "दवाएं (नमूना)",
+      "sample_badge": "नमूना डेटा"
+    },
+    "error": {
+      "title": "Dashboard Error",
+      "subtitle": "Your data is safe. Please reload.",
+      "stats": "Statistics unavailable"
+    },
+    "greeting_morning": "Good morning, {{name}}",
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_evening": "Good evening, {{name}}"
   },
   "testimonials": {
     "title": "हमारे उपयोगकर्ता क्या कहते हैं",
@@ -289,13 +305,34 @@
       "booting": "PDF रेंडर मैट्रिक्स शुरू हो रहा है...",
       "success": "रिपोर्ट सफलतापूर्वक तैयार की गई!"
     },
-    "disclaimer": "यह रिपोर्ट AI द्वारा तैयार की गई है और इसमें चिकित्सा निदान शामिल नहीं है।"
+    "disclaimer": "यह रिपोर्ट AI द्वारा तैयार की गई है और इसमें चिकित्सा निदान शामिल नहीं है।",
+    "view": "View",
+    "download": "Download",
+    "delete": "Delete",
+    "select_file": "Upload Report",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "empty": "No medical reports uploaded yet",
+    "upload_success": "Medical report uploaded successfully",
+    "upload_error": "Failed to upload file",
+    "delete_success": "Medical report deleted",
+    "delete_error": "Failed to delete report",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "delete_dialog": {
+      "title": "Delete Report",
+      "body": "Are you sure you want to delete",
+      "warning": "This cannot be undone."
+    }
   },
   "common": {
     "disclaimer": "अस्वीकरण",
     "disclaimer_label": "चिकित्सा अस्वीकरण",
     "save": "परिवर्तन सहेजें",
     "saving": "संसाधित किया जा रहा है...",
+    "cancel": "रद्द करें",
     "language_choice": "अपनी पसंदीदा भाषा चुनें।",
     "not_available": "अनुपलब्ध",
     "pending": "लंबित",
@@ -317,7 +354,9 @@
       "high": "उच्च"
     },
     "retry": "पुनः प्रयास करें",
-    "close": "बंद करें"
+    "close": "बंद करें",
+    "next": "Next",
+    "skip": "Skip"
   },
   "settings": {
     "title": "एप्लिकेशन सेटिंग्स",
@@ -535,5 +574,14 @@
     "y_count": "दर्ज बार",
     "caption_trend": "ऊंचे बिंदु उस लॉग पर मजबूत लक्षण दर्शाते हैं।",
     "caption_bars": "प्रत्येक लक्षण कितनी बार दर्ज किया गया — आसानी से देखें।"
+  },
+  "health_metrics": {
+    "title": "स्वास्थ्य मेट्रिक्स (वाइटल्स)",
+    "add_entry": "प्रविष्टि जोड़ें",
+    "not_provided": "उपलब्ध नहीं",
+    "form_subtitle": "अपने वर्तमान वाइटल साइन्स दर्ज करें",
+    "error_empty": "कृपया कम से कम एक मेट्रिक मान दर्ज करें",
+    "success": "वाइटल्स दर्ज किए गए",
+    "error_save": "वाइटल्स सहेजने में विफल"
   }
 }

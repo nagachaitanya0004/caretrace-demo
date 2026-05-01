@@ -23,7 +23,8 @@
     "search_anything": "ఏదైనా వెతకండి...",
     "notifications": "నోటిఫికేషన్లు",
     "notifications_new": "కొత్తవి",
-    "notifications_empty": "అంతా పూర్తయింది!"
+    "notifications_empty": "అంతా పూర్తయింది!",
+    "health_profile": "ఆరోగ్య ప్రొఫైల్"
   },
   "dashboard": {
     "tagline": "త్వరగా గుర్తించడం. మెరుగైన నిర్ణయాలు.",
@@ -73,7 +74,8 @@
       "no_analysis": "ఇంకా విశ్లేషణ లేదు",
       "no_analysis_sub": "మీ రిస్క్ లెవల్ మరియు ఇన్సైట్స్ చూడటానికి AI స్కాన్ చేయండి.",
       "view_report": "పూర్తి నివేదిక",
-      "action_pending": "వ్యక్తిగత సూచనలను పొందడానికి AI విశ్లేషణను అమలు చేయండి."
+      "action_pending": "వ్యక్తిగత సూచనలను పొందడానికి AI విశ్లేషణను అమలు చేయండి.",
+      "last_updated": "చివరి అప్డేట్"
     },
     "charts": {
       "trend": "ఒక అలవాటుగా",
@@ -84,7 +86,10 @@
       "view_report": "PDF నివేదికను రూపొందించండి →",
       "data_points": "{{count}} డేటా పాయింట్లు",
       "no_data": "ఇంకా ఎటువంటి లక్షణాల డేటా లేదు",
-      "no_data_sub": "చార్ట్ చూడటానికి మీ మొదటి లక్షణాన్ని నమోదు చేయండి"
+      "no_data_sub": "చార్ట్ చూడటానికి మీ మొదటి లక్షణాన్ని నమోదు చేయండి",
+      "trend_aria": "Symptom severity over time",
+      "distribution_aria": "Symptom frequency distribution",
+      "data_points_label": "entries"
     },
     "insights": {
       "title": "మేధస్సు",
@@ -94,7 +99,20 @@
       "profile_body": "మీ {{lifestyle}} ప్రొఫైల్ ఆధారంగా ఈ సూచనలు అందించబడ్డాయి.",
       "profile_empty": "సెట్టింగ్‌లలో మీ ఆరోగ్య ప్రొఫైల్‌ను పూర్తి చేయడం ద్వారా వ్యక్తిగత సూచనలను పొందండి.",
       "pattern_title": "ట్రాకింగ్ నమూనా",
-      "pattern_body": "మీరు {{count}} లక్షణాలను {{avg}}/10 సగటు తీవ్రతతో నమోదు చేశారు."
+      "pattern_body": "మీరు {{count}} లక్షణాలను {{avg}}/10 సగటు తీవ్రతతో నమోదు చేశారు.",
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights"
+    },
+    "error": {
+      "title": "Dashboard Error",
+      "subtitle": "Your data is safe. Please reload.",
+      "stats": "Statistics unavailable"
+    },
+    "greeting_morning": "Good morning, {{name}}",
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_evening": "Good evening, {{name}}",
+    "demo_meds": {
+      "sample_badge": "Sample Data"
     }
   },
   "testimonials": {
@@ -278,13 +296,34 @@
       "booting": "PDF Render Matrix బూట్ అవుతోంది...",
       "success": "నివేదిక విజయవంతంగా రూపొందించబడింది!"
     },
-    "disclaimer": "ఈ నివేదిక AI ద్వారా రూపొందించబడినది మరియు ఇది వైద్య నిర్ధారణ కాదు."
+    "disclaimer": "ఈ నివేదిక AI ద్వారా రూపొందించబడినది మరియు ఇది వైద్య నిర్ధారణ కాదు.",
+    "view": "View",
+    "download": "Download",
+    "delete": "Delete",
+    "select_file": "Upload Report",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "empty": "No medical reports uploaded yet",
+    "upload_success": "Medical report uploaded successfully",
+    "upload_error": "Failed to upload file",
+    "delete_success": "Medical report deleted",
+    "delete_error": "Failed to delete report",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "delete_dialog": {
+      "title": "Delete Report",
+      "body": "Are you sure you want to delete",
+      "warning": "This cannot be undone."
+    }
   },
   "common": {
     "disclaimer": "నిరాకరణ",
     "disclaimer_label": "వైద్య నిరాకరణ",
     "save": "మార్పులను సేవ్ చేయండి",
     "saving": "ప్రాసెస్ చేస్తున్నాము...",
+    "cancel": "రద్దు చేయండి",
     "language_choice": "మీకు ఇష్టమైన భాషను ఎంచుకోండి.",
     "not_available": "అందుబాటులో లేదు",
     "pending": "పెండింగ్‌లో ఉంది",
@@ -304,7 +343,10 @@
       "low": "తక్కువ",
       "medium": "మధ్యస్థం",
       "high": "ఎక్కువ"
-    }
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "retry": "Retry"
   },
   "settings": {
     "title": "అప్లికేషన్ సెట్టింగులు",
@@ -387,10 +429,8 @@
     "feature_multilingual_desc": "ఇంగ్లీష్, హిందీ, తెలుగు, తమిళం మరియు కన్నడ భాషలకు పూర్తి మద్దతు.",
     "mini_card_1_title": "12 సెకన్లలో నమోదు చేయబడింది",
     "mini_card_1_detail": "అలవాటు కోసం రూపొందించబడింది, కాగితపు పని కోసం కాదు.",
-    
     "mini_card_2_title": "మీరు గమనించని నమూనాలు",
     "mini_card_2_detail": "ఈ వ్యవస్థ నేటి రీడింగ్‌ను మాత్రమే కాకుండా, వారాల తరబడి చెక్-ఇన్‌లను కలుపుతుంది.",
-    
     "mini_card_3_title": "క్లినికల్ టైమ్‌లైన్‌ను ఎగుమతి చేయండి",
     "mini_card_3_detail": "మీ తదుపరి అపాయింట్‌మెంట్‌కు నిర్మాణాత్మక రికార్డును తీసుకురండి. 'నాకు గుర్తులేదు' అనేది ఇక వద్దు.",
     "trusted_by": "ఆరోగ్య నిపుణులు మరియు రోగులచే విశ్వసించబడింది",
@@ -507,5 +547,14 @@
       "failed": "ధృవీకరణ విఫలమైంది. వివరాలను తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.",
       "email_registered": "ఈ ఈమెయిల్‌తో ఖాతా ఇప్పటికే ఉంది. సైన్ ఇన్ చేయండి."
     }
+  },
+  "health_metrics": {
+    "title": "ఆరోగ్య మెట్రిక్స్ (వైటల్స్)",
+    "add_entry": "ఎంట్రీ జోడించండి",
+    "not_provided": "అందుబాటులో లేదు",
+    "form_subtitle": "మీ ప్రస్తుత వైటల్ సైన్స్ నమోదు చేయండి",
+    "error_empty": "దయచేసి కనీసం ఒక మెట్రిక్ విలువను నమోదు చేయండి",
+    "success": "వైటల్స్ నమోదు చేయబడ్డాయి",
+    "error_save": "వైటల్స్ సేవ్ చేయడం విఫలమైంది"
   }
 }

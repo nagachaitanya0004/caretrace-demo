@@ -603,10 +603,10 @@ export default function HealthProfile() {
       </Card>
 
       {/* ── HEALTH METRICS (VITALS) ── */}
-      <HealthMetricsSection addNotification={addNotification} />
+      <HealthMetricsSection />
 
       {/* ── MEDICAL REPORTS ── */}
-      <MedicalReportsSection addNotification={addNotification} />
+      <MedicalReportsSection />
     </PageFrame>
   );
 }

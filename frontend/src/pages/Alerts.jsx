@@ -15,7 +15,7 @@ function Alerts() {
     <PageFrame title={t('alerts.title')} subtitle={t('alerts.subtitle')} headAlign="center" maxWidthClass="max-w-4xl">
       {hasAlert() ? (
         <div className="space-y-4">
-          {alerts.map((alert) => (
+          {alerts.filter((v, i, a) => a.findIndex(t => t.message === v.message) === i).map((alert) => (
             <Card
               key={alert.id}
               elevation={1}

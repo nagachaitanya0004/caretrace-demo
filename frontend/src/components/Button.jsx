@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const cx = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -77,13 +77,14 @@ function Button({
   onClick,
   ...props
 }) {
+  const shouldReduceMotion = useReducedMotion();
   const isDisabled = loading || props.disabled;
 
   return (
     <motion.button
       type={type}
-      whileHover={isDisabled ? undefined : { scale: 1.01, y: -1 }}
-      whileTap={isDisabled ? undefined : { scale: 0.98, y: 0 }}
+      whileHover={isDisabled || shouldReduceMotion ? undefined : { scale: 1.01, y: -1 }}
+      whileTap={isDisabled || shouldReduceMotion ? undefined : { scale: 0.98, y: 0 }}
       transition={spring}
       onClick={onClick}
       disabled={isDisabled}

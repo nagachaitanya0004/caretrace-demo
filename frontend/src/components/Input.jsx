@@ -9,6 +9,7 @@ const BASE_INPUT =
   'focus-visible:border-[var(--brand-accent)] ' +
   'disabled:opacity-50 disabled:cursor-not-allowed';
 
+// token gap: no --app-danger-input-border token
 const ERROR_INPUT = 'border-rose-500 focus-visible:ring-rose-500';
 
 const LABEL_BASE = 'block text-sm font-medium text-[var(--app-text)] mb-1.5';

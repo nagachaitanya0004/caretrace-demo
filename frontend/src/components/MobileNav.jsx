@@ -98,7 +98,7 @@ function buildNavGroups(t) {
       label: t('navbar.account', 'Account'),
       items: [
         {
-          name: 'Health Profile',
+          name: t('navbar.health_profile', 'Health Profile'),
           path: '/health-profile',
           icon: (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

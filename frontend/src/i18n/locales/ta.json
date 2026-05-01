@@ -23,7 +23,8 @@
     "search_anything": "எதையும் தேடுங்கள்...",
     "notifications": "அறிவிப்புகள்",
     "notifications_new": "புதிய",
-    "notifications_empty": "எல்லாம் சரி!"
+    "notifications_empty": "எல்லாம் சரி!",
+    "health_profile": "ஆரோக்கிய சுயவிவரம்"
   },
   "dashboard": {
     "tagline": "ஆரம்பகால கண்டறிதல். சிறந்த முடிவுகள்.",
@@ -73,7 +74,8 @@
       "no_analysis": "இன்னும் பகுப்பாய்வு இல்லை",
       "no_analysis_sub": "உங்கள் ஆரோக்கிய நுண்ணறிவுகளைக் காண AI ஸ்கேன் செய்யவும்.",
       "view_report": "முழு அறிக்கையையும் காண்க",
-      "action_pending": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைப் பெற AI பகுப்பாய்வை இயக்கவும்."
+      "action_pending": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைப் பெற AI பகுப்பாய்வை இயக்கவும்.",
+      "last_updated": "கடைசியாக புதுப்பிக்கப்பட்டது"
     },
     "charts": {
       "trend": "போக்கு",
@@ -84,7 +86,10 @@
       "view_report": "PDF அறிக்கையை உருவாக்கு →",
       "data_points": "{{count}} தரவு புள்ளிகள்",
       "no_data": "இன்னும் அறிகுறிகள் தரவு இல்லை",
-      "no_data_sub": "விளக்கப்படத்தைப் பார்க்க உங்கள் முதல் அறிகுறியைப் பதிவு செய்யவும்"
+      "no_data_sub": "விளக்கப்படத்தைப் பார்க்க உங்கள் முதல் அறிகுறியைப் பதிவு செய்யவும்",
+      "trend_aria": "Symptom severity over time",
+      "distribution_aria": "Symptom frequency distribution",
+      "data_points_label": "entries"
     },
     "insights": {
       "title": "நுண்ணறிவு",
@@ -94,7 +99,20 @@
       "profile_body": "உங்கள் {{lifestyle}} சுயவிவரத்தின் அடிப்படையில் இந்த முடிவுகள் வழங்கப்படுகின்றன.",
       "profile_empty": "தனிப்பயனாக்கப்பட்ட வழிகாட்டலைப் பெற அமைப்புகளில் உங்கள் ஆரோக்கிய சுயவிவரத்தைப் பூர்த்தி செய்யவும்.",
       "pattern_title": "கண்காணிப்பு முறை",
-      "pattern_body": "நீங்கள் {{count}} அறிகுறிகளை {{avg}}/10 சராசரி தீவிரத்துடன் பதிவு செய்துள்ளீர்கள்."
+      "pattern_body": "நீங்கள் {{count}} அறிகுறிகளை {{avg}}/10 சராசரி தீவிரத்துடன் பதிவு செய்துள்ளீர்கள்.",
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights"
+    },
+    "error": {
+      "title": "Dashboard Error",
+      "subtitle": "Your data is safe. Please reload.",
+      "stats": "Statistics unavailable"
+    },
+    "greeting_morning": "Good morning, {{name}}",
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_evening": "Good evening, {{name}}",
+    "demo_meds": {
+      "sample_badge": "Sample Data"
     }
   },
   "testimonials": {
@@ -278,13 +296,34 @@
       "booting": "PDF கோப்புத் தயார் செய்யப்படுகிறது...",
       "success": "அறிக்கை வெற்றிகரமாக உருவாக்கப்பட்டது!"
     },
-    "disclaimer": "இந்த அறிக்கை AI மூலம் உருவாக்கப்பட்டது மற்றும் இது மருத்துவக் கணிப்பு அல்ல."
+    "disclaimer": "இந்த அறிக்கை AI மூலம் உருவாக்கப்பட்டது மற்றும் இது மருத்துவக் கணிப்பு அல்ல.",
+    "view": "View",
+    "download": "Download",
+    "delete": "Delete",
+    "select_file": "Upload Report",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "empty": "No medical reports uploaded yet",
+    "upload_success": "Medical report uploaded successfully",
+    "upload_error": "Failed to upload file",
+    "delete_success": "Medical report deleted",
+    "delete_error": "Failed to delete report",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "delete_dialog": {
+      "title": "Delete Report",
+      "body": "Are you sure you want to delete",
+      "warning": "This cannot be undone."
+    }
   },
   "common": {
     "disclaimer": "பொறுப்புத் துறப்பு",
     "disclaimer_label": "மருத்துவ மறுப்பு",
     "save": "மாற்றங்களைச் சேமி",
     "saving": "செயலாக்கப்படுகிறது...",
+    "cancel": "ரத்து செய்க",
     "language_choice": "உங்கள் விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
     "not_available": "கிடைக்கவில்லை",
     "pending": "நிலுவையில் உள்ளது",
@@ -304,7 +343,10 @@
       "low": "குறைவு",
       "medium": "நடுத்தரம்",
       "high": "அதிகம்"
-    }
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "retry": "Retry"
   },
   "settings": {
     "title": "பயன்பாட்டு அமைப்புகள்",
@@ -434,10 +476,8 @@
     "platform_desc": "வலுவான தயாரிப்பு அமைப்பு வலுவான பராமரிப்பு அனுபவங்களை உருவாக்குகிறது: சுத்தமான உள்ளீடுகள், அமைதியான படிநிலை மற்றும் முதல் பார்வையிலேயே நம்பகமாக உணரும் வெளியீடுகள்.",
     "mini_card_1_title": "12 வினாடிகளில் பதிவு செய்யப்பட்டது",
     "mini_card_1_detail": "பழக்கத்திற்காக வடிவமைக்கப்பட்டுள்ளது, காகித வேலைகளுக்கு அல்ல.",
-    
     "mini_card_2_title": "நீங்கள் தவறவிட்டிருக்கக்கூடிய வடிவங்கள்",
     "mini_card_2_detail": "இந்த அமைப்பு இன்றைய வாசிப்பை மட்டும் அல்லாமல், வாரங்களான பதிவுகளையும் இணைக்கிறது.",
-    
     "mini_card_3_title": "மருத்துவ காலவரிசையை ஏற்றுமதி செய்க",
     "mini_card_3_detail": "உங்கள் அடுத்த சந்திப்பிற்கு ஒரு கட்டமைக்கப்பட்ட பதிவைக் கொண்டு வாருங்கள். 'எனக்கு நினைவில்லை' என்பது இனி வேண்டாம்.",
     "feature_timeline_card_title": "காகிதப்பணியாக அல்ல, தயாரிப்பாக நடந்துகொள்ளும் நீண்டகால பார்வை.",
@@ -508,5 +548,14 @@
       "failed": "அங்கீகாரம் தோல்வியடைந்தது. உள்ளீடுகளைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
       "email_registered": "இந்த மின்னஞ்சலுடன் ஏற்கனவே கணக்கு உள்ளது. உள்நுழையவும்."
     }
+  },
+  "health_metrics": {
+    "title": "ஆரோக்கிய மெட்ரிக்ஸ் (வைட்டல்ஸ்)",
+    "add_entry": "பதிவு சேர்க்கவும்",
+    "not_provided": "கிடைக்கவில்லை",
+    "form_subtitle": "உங்கள் தற்போதைய வைட்டல் சைன்ஸ் உள்ளிடுக",
+    "error_empty": "Please enter at least one metric value",
+    "error_save": "Failed to save vitals",
+    "success": "Vitals recorded"
   }
 }

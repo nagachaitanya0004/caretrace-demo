@@ -35,7 +35,8 @@
     "notifications": "Notifications",
     "notifications_new": "new",
     "notifications_empty": "You're all caught up.",
-    "open_menu": "Open menu"
+    "open_menu": "Open menu",
+    "health_profile": "Health Profile"
   },
   "dashboard": {
     "tagline": "Understand your health over time.",
@@ -91,7 +92,8 @@
       "no_analysis": "No analysis yet",
       "no_analysis_sub": "Run an analysis to see your health summary.",
       "view_report": "View report",
-      "action_pending": "Run an analysis to get your next steps."
+      "action_pending": "Run an analysis to get your next steps.",
+      "last_updated": "Last updated"
     },
     "charts": {
       "trend": "Trend",
@@ -108,7 +110,10 @@
       "no_freq_match": "No results found.",
       "no_freq_data": "No data yet.",
       "no_insight_match": "No results found.",
-      "no_insight_sub": "Try adjusting your search."
+      "no_insight_sub": "Try adjusting your search.",
+      "trend_aria": "Symptom severity over time",
+      "distribution_aria": "Symptom frequency distribution",
+      "data_points_label": "entries"
     },
     "insights": {
       "title": "Your insights",
@@ -118,12 +123,23 @@
       "profile_body": "Tracking daily helps us provide better support for a {{lifestyle}} lifestyle.",
       "profile_empty": "Complete your profile to get more relevant insights.",
       "pattern_title": "Your recent patterns",
-      "pattern_body": "You've logged {{count}} times with an average severity of {{avg}}/10. Run an analysis to learn more."
+      "pattern_body": "You've logged {{count}} times with an average severity of {{avg}}/10. Run an analysis to learn more.",
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights"
     },
     "demo_meds": {
       "label": "Demo",
-      "title": "Sample medications"
-    }
+      "title": "Sample medications",
+      "sample_badge": "Sample Data"
+    },
+    "error": {
+      "title": "Dashboard Error",
+      "subtitle": "Your data is safe. Please reload.",
+      "stats": "Statistics unavailable"
+    },
+    "greeting_morning": "Good morning, {{name}}",
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_evening": "Good evening, {{name}}"
   },
   "testimonials": {
     "title": "What Our Users Say",
@@ -290,6 +306,9 @@
     "upload_failed": "Failed to upload file.",
     "delete_success": "Medical report deleted.",
     "delete_failed": "Failed to delete report.",
+    "view": "View",
+    "upload": "Upload",
+    "uploading": "Uploading…",
     "profile": {
       "title": "Your profile",
       "name": "Name",
@@ -312,13 +331,29 @@
       "booting": "Preparing your file...",
       "success": "Your file is ready."
     },
-    "disclaimer": "This is for informational purposes only. Always consult a doctor."
+    "disclaimer": "This is for informational purposes only. Always consult a doctor.",
+    "download": "Download",
+    "delete": "Delete",
+    "select_file": "Upload Report",
+    "empty": "No medical reports uploaded yet",
+    "upload_error": "Failed to upload file",
+    "delete_error": "Failed to delete report",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "delete_dialog": {
+      "title": "Delete Report",
+      "body": "Are you sure you want to delete",
+      "warning": "This cannot be undone."
+    }
   },
   "common": {
     "disclaimer": "Disclaimer",
     "disclaimer_label": "Disclaimer",
     "save": "Save changes",
     "saving": "Saving...",
+    "cancel": "Cancel",
     "retry": "Try again",
     "close": "Close",
     "language_choice": "Choose a language.",
@@ -340,7 +375,9 @@
       "low": "Low",
       "medium": "Medium",
       "high": "High"
-    }
+    },
+    "next": "Next",
+    "skip": "Skip"
   },
   "settings": {
     "title": "Settings",
@@ -625,5 +662,14 @@
       "failed": "We couldn’t sign you in. Please check your details and try again.",
       "email_registered": "An account with this email already exists. Try signing in instead."
     }
+  },
+  "health_metrics": {
+    "title": "Health Metrics (Vitals)",
+    "add_entry": "Add Entry",
+    "not_provided": "Not provided",
+    "form_subtitle": "Enter your current vital signs",
+    "error_empty": "Please enter at least one metric value",
+    "success": "Vitals recorded",
+    "error_save": "Failed to save vitals"
   }
 }

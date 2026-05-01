@@ -37,7 +37,7 @@ function Layout() {
       )}
       <div className="flex flex-1 overflow-hidden min-h-0">
         <Sidebar />
-        <main ref={mainRef} className="page-content">
+        <main ref={mainRef} className="page-content pr-0 lg:pr-20">
           <div key={pathname} className="page-outlet-animate min-h-full">
             <Outlet />
           </div>

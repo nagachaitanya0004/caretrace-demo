@@ -21,6 +21,7 @@ function formatDate(iso) {
 function FileTypeIcon({ fileType }) {
   const isPdf = fileType === 'application/pdf';
   return (
+    // token gap: text-rose-500 used for PDF icon — no --app-danger-icon token defined
     <svg
       className={`w-8 h-8 flex-shrink-0 ${isPdf ? 'text-rose-500' : 'text-[var(--app-accent)]'}`}
       fill="none"
@@ -35,6 +36,7 @@ function FileTypeIcon({ fileType }) {
 }
 
 function ReportCard({ report, onView, onDownload, onDelete }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between p-3 border border-[var(--app-border)] rounded-[var(--radius-lg)] bg-[var(--app-surface)] hover:bg-[var(--app-surface-soft)] transition-colors duration-150">
       <div className="flex items-center gap-3 min-w-0">
@@ -55,7 +57,7 @@ function ReportCard({ report, onView, onDownload, onDelete }) {
 
 export default function MedicalReportsSection() {
   const { t } = useTranslation();
-  const { addNotification } = useNotification();
+  const { addNotification: notify } = useNotification();
   const [reports, setReports]           = useState([]);
   const [loading, setLoading]           = useState(true);
   const [uploading, setUploading]       = useState(false);
@@ -81,11 +83,11 @@ export default function MedicalReportsSection() {
     if (!file) return;
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     if (!ALLOWED_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(ext)) {
-      addNotification(t('reports.allowed_types_error', 'Only PDF, JPG, and PNG files are allowed'), 'error');
+      notify(t('reports.error.invalid_type', 'Only PDF, JPG, and PNG files are allowed'), 'error');
       return;
     }
     if (file.size > MAX_SIZE) {
-      addNotification(t('reports.size_error', 'File size must be under 10MB'), 'error');
+      notify(t('reports.error.too_large', 'File size must be under 10 MB'), 'error');
       return;
     }
     setSelectedFile(file);
@@ -98,11 +100,11 @@ export default function MedicalReportsSection() {
       const formData = new FormData();
       formData.append('file', selectedFile);
       await api.uploadFile('/api/medical-reports/upload', formData);
-      addNotification(t('reports.upload_success', 'Medical report uploaded successfully'), 'success');
+      notify(t('reports.upload_success', 'Medical report uploaded successfully'), 'success');
       setSelectedFile(null);
       await fetchReports();
     } catch (err) {
-      addNotification(err.message || t('reports.upload_failed', 'Failed to upload file'), 'error');
+      notify(err.message || t('reports.upload_error', 'Failed to upload file'), 'error');
     } finally { setUploading(false); }
   }
 
@@ -126,9 +128,9 @@ export default function MedicalReportsSection() {
     try {
       await api.delete(`/api/medical-reports/${report.id}`);
       setReports((prev) => prev.filter((r) => r.id !== report.id));
-      addNotification(t('reports.delete_success', 'Medical report deleted'), 'success');
+      notify(t('reports.delete_success', 'Medical report deleted'), 'success');
     } catch (err) {
-      addNotification(err.message || t('reports.delete_failed', 'Failed to delete report'), 'error');
+      notify(err.message || t('reports.delete_error', 'Failed to delete report'), 'error');
     }
   }
 
@@ -153,23 +155,23 @@ export default function MedicalReportsSection() {
           accept=".pdf,.jpg,.jpeg,.png"
           className="sr-only"
           onChange={handleFileSelect}
-          aria-label="Select medical report file"
+          aria-label={t('reports.select_file', 'Upload Report')}
         />
         <Button intent="secondary" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
           </svg>
-          {t('reports.upload_button', 'Upload Report')}
+          {t('reports.select_file', 'Upload Report')}
         </Button>
 
         {selectedFile && (
           <>
             <span className="text-sm text-[var(--app-text-muted)] truncate max-w-xs">{selectedFile.name}</span>
             <Button intent="primary" size="sm" onClick={handleUpload} loading={uploading}>
-              {uploading ? 'Uploading…' : 'Upload'}
+              {uploading ? t('reports.uploading', 'Uploading\u2026') : t('reports.upload', 'Upload')}
             </Button>
             <Button intent="ghost" size="sm" onClick={() => setSelectedFile(null)} disabled={uploading}>
-              Cancel
+              {t('common.cancel', 'Cancel')}
             </Button>
           </>
         )}
@@ -206,12 +208,13 @@ export default function MedicalReportsSection() {
         >
           <div className="bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] shadow-[var(--shadow-l3)] p-6 max-w-sm w-full mx-4">
             <h3 id="delete-dialog-title" className="text-base font-semibold text-[var(--app-text)] mb-2">
-              {t('reports.delete_title', 'Delete Report')}
+              {t('reports.delete_dialog.title', 'Delete Report')}
             </h3>
             <p className="text-sm text-[var(--app-text-muted)] mb-5">
-              {t('reports.delete_confirm', 'Are you sure you want to delete')} {' '}
+              {t('reports.delete_dialog.body', 'Are you sure you want to delete')} {' '}
               <span className="font-medium text-[var(--app-text)]">{confirmDelete.file_name}</span>?
-              {t('reports.delete_warning', 'This cannot be undone.')}
+              {' '}
+              {t('reports.delete_dialog.warning', 'This cannot be undone.')}
             </p>
             <div className="flex gap-3 justify-end">
               <Button intent="ghost" size="sm" onClick={() => setConfirmDelete(null)}>{t('common.cancel', 'Cancel')}</Button>

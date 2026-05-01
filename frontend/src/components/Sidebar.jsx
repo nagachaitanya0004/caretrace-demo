@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BrandLockup } from './BrandLogo';
 
 function Sidebar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { t } = useTranslation();
 
   const navGroups = [
@@ -99,7 +99,7 @@ function Sidebar() {
       label: t('navbar.account', 'Account'),
       items: [
         {
-          name: 'Health Profile',
+          name: t('navbar.health_profile', 'Health Profile'),
           path: '/health-profile',
           icon: (
             <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,8 +131,7 @@ function Sidebar() {
           <BrandLockup
             variant="dark"
             size="md"
-            showTagline
-            tagline={t('navbar.health_intelligence', 'Health Intelligence')}
+            showTagline={false}
           />
         </NavLink>
       </div>
@@ -161,14 +160,27 @@ function Sidebar() {
 
       {user && (
         <div className="sidebar-user">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow">
-              {user.email?.charAt(0).toUpperCase()}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-8 h-8 rounded-full bg-[var(--brand-accent)] flex items-center justify-center text-[var(--brand-accent-on)] font-bold text-sm shadow shrink-0">
+                {user.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-[var(--app-text-muted)] text-xs font-semibold truncate">{user.email}</p>
+                <p className="text-[var(--app-text-disabled)] text-[10px] uppercase tracking-wider">{t('navbar.active_session')}</p>
+              </div>
             </div>
-            <div className="overflow-hidden">
-              <p className="text-[var(--app-text-muted)] text-xs font-semibold truncate">{user.email}</p>
-              <p className="text-[var(--app-text-disabled)] text-xs">{t('navbar.active_session')}</p>
-            </div>
+            
+            <button
+              onClick={() => logout()}
+              className="logout-btn"
+              title={t('navbar.logout', 'Sign out')}
+              aria-label={t('navbar.logout', 'Sign out')}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
