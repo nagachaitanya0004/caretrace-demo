@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { api, unwrapApiPayload, API_BASE_URL } from '../services/api';
 import Card from './Card';
 import Button from './Button';
+import { useTranslation } from 'react-i18next';
+import { useNotification } from '../NotificationContext';
 
 const ALLOWED_TYPES      = ['application/pdf', 'image/jpeg', 'image/png'];
 const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png'];
@@ -43,15 +45,17 @@ function ReportCard({ report, onView, onDownload, onDelete }) {
         </div>
       </div>
       <div className="flex gap-2 flex-shrink-0 ml-3">
-        <Button intent="ghost" size="sm" onClick={onView}>View</Button>
-        <Button intent="ghost" size="sm" onClick={onDownload}>Download</Button>
-        <Button intent="danger" size="sm" onClick={onDelete}>Delete</Button>
+        <Button intent="ghost" size="sm" onClick={onView}>{t('reports.view', 'View')}</Button>
+        <Button intent="ghost" size="sm" onClick={onDownload}>{t('reports.download', 'Download')}</Button>
+        <Button intent="danger" size="sm" onClick={onDelete}>{t('reports.delete', 'Delete')}</Button>
       </div>
     </div>
   );
 }
 
-export default function MedicalReportsSection({ addNotification }) {
+export default function MedicalReportsSection() {
+  const { t } = useTranslation();
+  const { addNotification } = useNotification();
   const [reports, setReports]           = useState([]);
   const [loading, setLoading]           = useState(true);
   const [uploading, setUploading]       = useState(false);
@@ -77,11 +81,11 @@ export default function MedicalReportsSection({ addNotification }) {
     if (!file) return;
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     if (!ALLOWED_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(ext)) {
-      addNotification('Only PDF, JPG, and PNG files are allowed', 'error');
+      addNotification(t('reports.allowed_types_error', 'Only PDF, JPG, and PNG files are allowed'), 'error');
       return;
     }
     if (file.size > MAX_SIZE) {
-      addNotification('File size must be under 10MB', 'error');
+      addNotification(t('reports.size_error', 'File size must be under 10MB'), 'error');
       return;
     }
     setSelectedFile(file);
@@ -94,11 +98,11 @@ export default function MedicalReportsSection({ addNotification }) {
       const formData = new FormData();
       formData.append('file', selectedFile);
       await api.uploadFile('/api/medical-reports/upload', formData);
-      addNotification('Medical report uploaded successfully', 'success');
+      addNotification(t('reports.upload_success', 'Medical report uploaded successfully'), 'success');
       setSelectedFile(null);
       await fetchReports();
     } catch (err) {
-      addNotification(err.message || 'Failed to upload file', 'error');
+      addNotification(err.message || t('reports.upload_failed', 'Failed to upload file'), 'error');
     } finally { setUploading(false); }
   }
 
@@ -122,9 +126,9 @@ export default function MedicalReportsSection({ addNotification }) {
     try {
       await api.delete(`/api/medical-reports/${report.id}`);
       setReports((prev) => prev.filter((r) => r.id !== report.id));
-      addNotification('Medical report deleted', 'success');
+      addNotification(t('reports.delete_success', 'Medical report deleted'), 'success');
     } catch (err) {
-      addNotification(err.message || 'Failed to delete report', 'error');
+      addNotification(err.message || t('reports.delete_failed', 'Failed to delete report'), 'error');
     }
   }
 
@@ -137,7 +141,7 @@ export default function MedicalReportsSection({ addNotification }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          Medical Reports
+          {t('reports.title', 'Medical Reports')}
         </h2>
       </div>
 
@@ -155,7 +159,7 @@ export default function MedicalReportsSection({ addNotification }) {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
           </svg>
-          Upload Report
+          {t('reports.upload_button', 'Upload Report')}
         </Button>
 
         {selectedFile && (
@@ -177,7 +181,7 @@ export default function MedicalReportsSection({ addNotification }) {
           <span className="w-8 h-8 rounded-full border-4 border-[var(--app-border)] border-t-[var(--app-text)] animate-spin" />
         </div>
       ) : reports.length === 0 ? (
-        <p className="text-[var(--app-text-disabled)] italic text-sm">No medical reports uploaded yet</p>
+        <p className="text-[var(--app-text-disabled)] italic text-sm">{t('reports.empty', 'No medical reports uploaded yet')}</p>
       ) : (
         <div className="space-y-3">
           {reports.map((report) => (
@@ -202,16 +206,16 @@ export default function MedicalReportsSection({ addNotification }) {
         >
           <div className="bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] shadow-[var(--shadow-l3)] p-6 max-w-sm w-full mx-4">
             <h3 id="delete-dialog-title" className="text-base font-semibold text-[var(--app-text)] mb-2">
-              Delete Report
+              {t('reports.delete_title', 'Delete Report')}
             </h3>
             <p className="text-sm text-[var(--app-text-muted)] mb-5">
-              Are you sure you want to delete{' '}
+              {t('reports.delete_confirm', 'Are you sure you want to delete')} {' '}
               <span className="font-medium text-[var(--app-text)]">{confirmDelete.file_name}</span>?
-              This cannot be undone.
+              {t('reports.delete_warning', 'This cannot be undone.')}
             </p>
             <div className="flex gap-3 justify-end">
-              <Button intent="ghost" size="sm" onClick={() => setConfirmDelete(null)}>Cancel</Button>
-              <Button intent="danger" size="sm" onClick={handleDeleteConfirm}>Delete</Button>
+              <Button intent="ghost" size="sm" onClick={() => setConfirmDelete(null)}>{t('common.cancel', 'Cancel')}</Button>
+              <Button intent="danger" size="sm" onClick={handleDeleteConfirm}>{t('reports.delete', 'Delete')}</Button>
             </div>
           </div>
         </div>

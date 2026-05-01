@@ -39,6 +39,12 @@
   },
   "dashboard": {
     "tagline": "Understand your health over time.",
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "greeting_default": "Good to see you",
     "welcome": "Good to see you, {{name}}.",
     "hello": "Hi, {{name}}.",
     "welcome_default": "Good to see you.",
@@ -278,6 +284,12 @@
     "subtitle": "Review and download your health records.",
     "download_btn": "Download",
     "compiling": "Preparing your file...",
+    "allowed_types_error": "Only PDF, JPG, and PNG files are allowed.",
+    "size_error": "File size must be under 10MB.",
+    "upload_success": "Medical report uploaded successfully.",
+    "upload_failed": "Failed to upload file.",
+    "delete_success": "Medical report deleted.",
+    "delete_failed": "Failed to delete report.",
     "profile": {
       "title": "Your profile",
       "name": "Name",

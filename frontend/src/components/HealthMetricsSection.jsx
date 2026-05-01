@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { api, unwrapApiPayload } from '../services/api';
 import Card from './Card';
 import Button from './Button';
+import Input from './Input';
+import { useNotification } from '../NotificationContext';
 
 const FIELDS = [
   { key: 'systolic_bp',       label: 'Systolic BP',       unit: 'mmHg',  min: 50,  max: 300, isFloat: false },
@@ -15,21 +17,6 @@ const INITIAL_FORM = {
   systolic_bp: '', diastolic_bp: '', blood_sugar_mg_dl: '',
   heart_rate_bpm: '', oxygen_saturation: '',
 };
-
-// ── Token-driven field styles ─────────────────────────────────────────────────
-const fieldCls =
-  'w-full px-3 py-2 bg-[var(--app-input-bg)] text-[var(--app-text)] ' +
-  'border border-[var(--app-input-border)] rounded-[var(--radius-md)] text-sm ' +
-  'transition-colors duration-150 ' +
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:border-[var(--brand-accent)]';
-
-const fieldErrorCls =
-  'w-full px-3 py-2 bg-[var(--app-input-bg)] text-[var(--app-text)] ' +
-  'border border-[var(--app-danger)] rounded-[var(--radius-md)] text-sm ' +
-  'transition-colors duration-150 ' +
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-danger)]';
-
-const labelCls = 'block text-xs font-medium text-[var(--app-text-muted)] uppercase tracking-wide mb-1';
 
 function validateField(fieldDef, rawValue) {
   if (rawValue === '' || rawValue == null) return null;
@@ -52,9 +39,10 @@ function DisplayRow({ label, value }) {
   );
 }
 
-export default function HealthMetricsSection({ addNotification }) {
+export default function HealthMetricsSection() {
   const [latest, setLatest]   = useState(null);
   const [loading, setLoading] = useState(true);
+  const { addNotification } = useNotification();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm]       = useState(INITIAL_FORM);
   const [errors, setErrors]   = useState({});
@@ -161,28 +149,20 @@ export default function HealthMetricsSection({ addNotification }) {
           <p className="text-xs text-[var(--app-text-disabled)] -mt-2 mb-1">Enter your current vital signs</p>
           <div className="grid grid-cols-2 gap-4">
             {FIELDS.map((f) => (
-              <div key={f.key}>
-                <label className={labelCls} htmlFor={`metric-${f.key}`}>
-                  {f.label} ({f.unit})
-                </label>
-                <input
-                  id={`metric-${f.key}`}
-                  type="number"
-                  name={f.key}
-                  value={form[f.key]}
-                  onChange={handleChange}
-                  disabled={saving}
-                  className={errors[f.key] ? fieldErrorCls : fieldCls}
-                  step={f.isFloat ? '0.1' : '1'}
-                  aria-invalid={!!errors[f.key]}
-                  aria-describedby={errors[f.key] ? `err-${f.key}` : undefined}
-                />
-                {errors[f.key] && (
-                  <p id={`err-${f.key}`} className="text-xs text-[var(--app-danger)] mt-1" role="alert">
-                    {errors[f.key]}
-                  </p>
-                )}
-              </div>
+              <Input
+                key={f.key}
+                id={`metric-${f.key}`}
+                label={`${f.label} (${f.unit})`}
+                type="number"
+                name={f.key}
+                value={form[f.key]}
+                onChange={handleChange}
+                disabled={saving}
+                step={f.isFloat ? '0.1' : '1'}
+                error={errors[f.key]}
+                aria-invalid={!!errors[f.key]}
+                aria-describedby={errors[f.key] ? `err-${f.key}` : undefined}
+              />
             ))}
           </div>
           <div className="flex gap-2 pt-2">

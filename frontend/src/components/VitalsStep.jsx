@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { api } from '../services/api';
+import Button from './Button';
+import Input from './Input';
 
 // Validation ranges matching backend Pydantic schema
 const FIELDS = [
@@ -16,70 +18,6 @@ const INITIAL_FORM = {
   blood_sugar_mg_dl: '',
   heart_rate_bpm: '',
   oxygen_saturation: '',
-};
-
-// CSS custom-property inline styles matching existing onboarding steps
-const S = {
-  field: { marginBottom: '1rem' },
-  label: {
-    display: 'block',
-    fontSize: '0.8125rem',
-    fontWeight: 500,
-    color: 'var(--app-text-muted)',
-    marginBottom: '0.375rem',
-  },
-  input: {
-    width: '100%',
-    padding: '0.625rem 0.75rem',
-    border: '1px solid var(--app-input-border)',
-    borderRadius: '0.5rem',
-    fontSize: '0.875rem',
-    color: 'var(--app-text)',
-    backgroundColor: 'var(--app-input-bg)',
-    outline: 'none',
-    boxSizing: 'border-box',
-  },
-  inputError: {
-    width: '100%',
-    padding: '0.625rem 0.75rem',
-    border: '1px solid var(--app-danger, #ef4444)',
-    borderRadius: '0.5rem',
-    fontSize: '0.875rem',
-    color: 'var(--app-text)',
-    backgroundColor: 'var(--app-input-bg)',
-    outline: 'none',
-    boxSizing: 'border-box',
-  },
-  errorText: {
-    fontSize: '0.75rem',
-    color: 'var(--app-danger, #ef4444)',
-    marginTop: '0.25rem',
-  },
-  btnRow: { display: 'flex', gap: '0.75rem', marginTop: '0.5rem' },
-  btnPrimary: (disabled) => ({
-    flex: 1,
-    padding: '0.75rem',
-    backgroundColor: 'var(--app-accent)',
-    color: 'var(--brand-accent-on, #000)',
-    borderRadius: '0.5rem',
-    fontSize: '0.875rem',
-    fontWeight: 600,
-    border: 'none',
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    opacity: disabled ? 0.6 : 1,
-  }),
-  btnSecondary: (disabled) => ({
-    flex: 1,
-    padding: '0.75rem',
-    backgroundColor: 'transparent',
-    color: 'var(--app-text-muted)',
-    borderRadius: '0.5rem',
-    fontSize: '0.875rem',
-    fontWeight: 500,
-    border: '1px solid var(--app-border)',
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    opacity: disabled ? 0.6 : 1,
-  }),
 };
 
 function validateField(fieldDef, rawValue) {
@@ -168,39 +106,43 @@ export default function VitalsStep({ onNext, disabled }) {
   return (
     <div>
       {FIELDS.map((fieldDef) => (
-        <div key={fieldDef.key} style={S.field}>
-          <label style={S.label}>{fieldDef.label}</label>
-          <input
-            type="number"
-            name={fieldDef.key}
-            value={form[fieldDef.key]}
-            onChange={handleChange}
-            disabled={isDisabled}
-            placeholder={fieldDef.placeholder}
-            style={errors[fieldDef.key] ? S.inputError : S.input}
-            step={fieldDef.isFloat ? '0.1' : '1'}
-          />
-          {errors[fieldDef.key] && (
-            <p style={S.errorText}>{errors[fieldDef.key]}</p>
-          )}
-        </div>
+        <Input
+          key={fieldDef.key}
+          className="mb-4"
+          label={fieldDef.label}
+          type="number"
+          name={fieldDef.key}
+          value={form[fieldDef.key]}
+          onChange={handleChange}
+          disabled={isDisabled}
+          placeholder={fieldDef.placeholder}
+          step={fieldDef.isFloat ? '0.1' : '1'}
+          error={errors[fieldDef.key]}
+          aria-invalid={!!errors[fieldDef.key]}
+          aria-describedby={errors[fieldDef.key] ? `err-${fieldDef.key}` : undefined}
+        />
       ))}
 
-      <div style={S.btnRow}>
-        <button
+      <div className="flex gap-3 mt-2">
+        <Button
           onClick={handleNext}
           disabled={isDisabled}
-          style={S.btnPrimary(isDisabled)}
+          intent="primary"
+          size="md"
+          loading={isSubmitting}
+          className="flex-1"
         >
-          {isSubmitting ? 'Saving…' : 'Next'}
-        </button>
-        <button
+          Next
+        </Button>
+        <Button
           onClick={handleSkip}
           disabled={isDisabled}
-          style={S.btnSecondary(isDisabled)}
+          intent="ghost"
+          size="md"
+          className="flex-1"
         >
           Skip
-        </button>
+        </Button>
       </div>
     </div>
   );

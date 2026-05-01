@@ -3,20 +3,20 @@ const cx = (...classes) => classes.filter(Boolean).join(' ');
 // Semantic intent → token-mapped color pairs
 // Background and text use CSS custom properties so dark mode works automatically
 const VARIANTS = {
-  default:  'bg-[var(--app-surface-soft)]   text-[var(--app-text-muted)]',
-  success:  'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-  warning:  'bg-amber-500/10   text-amber-600  dark:text-amber-400',
-  danger:   'bg-rose-500/10    text-rose-600   dark:text-rose-400',
-  info:     'bg-sky-500/10     text-sky-600    dark:text-sky-400',
-  accent:   'bg-[var(--brand-accent)]/10 text-[var(--app-text)]',
+  default:  'bg-[var(--badge-default-bg)] text-[var(--badge-default-text)] border border-[var(--app-border)]',
+  success:  'bg-[var(--badge-success-bg)] text-[var(--badge-success-text)] border border-[var(--app-success)]/20',
+  warning:  'bg-[var(--badge-warning-bg)] text-[var(--badge-warning-text)] border border-[var(--app-warning)]/20',
+  danger:   'bg-[var(--badge-danger-bg)] text-[var(--badge-danger-text)] border border-[var(--app-danger)]/20',
+  info:     'bg-[var(--badge-info-bg)] text-[var(--badge-info-text)] border border-[var(--app-info)]/20',
+  accent:   'bg-[var(--badge-accent-bg)] text-[var(--badge-accent-text)] border border-[var(--brand-accent)]/20',
   // Severity aliases — map to semantic variants
-  low:      'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-  medium:   'bg-amber-500/10   text-amber-600  dark:text-amber-400',
-  high:     'bg-rose-500/10    text-rose-600   dark:text-rose-400',
-  severe:   'bg-rose-500/10    text-rose-600   dark:text-rose-400',
-  mild:     'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-  moderate: 'bg-amber-500/10   text-amber-600  dark:text-amber-400',
-  pending:  'bg-[var(--app-surface-soft)] text-[var(--app-text-muted)]',
+  low:      'bg-[var(--badge-success-bg)] text-[var(--badge-success-text)] border border-[var(--app-success)]/20',
+  medium:   'bg-[var(--badge-warning-bg)] text-[var(--badge-warning-text)] border border-[var(--app-warning)]/20',
+  high:     'bg-[var(--badge-danger-bg)] text-[var(--badge-danger-text)] border border-[var(--app-danger)]/20',
+  severe:   'bg-[var(--badge-danger-bg)] text-[var(--badge-danger-text)] border border-[var(--app-danger)]/20',
+  mild:     'bg-[var(--badge-success-bg)] text-[var(--badge-success-text)] border border-[var(--app-success)]/20',
+  moderate: 'bg-[var(--badge-warning-bg)] text-[var(--badge-warning-text)] border border-[var(--app-warning)]/20',
+  pending:  'bg-[var(--badge-default-bg)] text-[var(--badge-default-text)] border border-[var(--app-border)]',
 };
 
 function Badge({ children, variant = 'default', className = '' }) {
