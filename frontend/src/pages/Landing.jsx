@@ -258,14 +258,17 @@ function SectionHeader({ eyebrow, title, description, align = 'center' }) {
 
   return (
     <div className={cx('flex flex-col gap-4', alignmentClass)}>
-      <span className={eyebrowClass}>{eyebrow}</span>
+      <div className="flex items-center gap-3">
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--landing-accent)]" />
+        <span className={eyebrowClass}>{eyebrow}</span>
+      </div>
       <h2 className={sectionTitleClass}>{title}</h2>
       <p className={sectionCopyClass}>{description}</p>
     </div>
   );
 }
 
-function FeatureCard({ eyebrow, title, description, metric, iconPath, className, delay }) {
+function FeatureCard({ eyebrow, title, description, metric, iconPath, className, delay, isPrimary }) {
   return (
     <Panel
       as={motion.article}
@@ -274,7 +277,11 @@ function FeatureCard({ eyebrow, title, description, metric, iconPath, className,
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-96px' }}
       transition={{ ...cardSpring, delay }}
-      className={cx('flex h-full flex-col justify-between p-6 sm:p-8', className)}
+      className={cx(
+        'group flex h-full flex-col justify-between p-6 sm:p-8 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-[var(--landing-accent)]',
+        isPrimary && '[box-shadow:inset_0_0.5px_0_var(--color-surface-light),0_0_0_0.5px_var(--color-surface-border),0_24px_72px_rgba(0,0,0,0.52),0_0_0_1px_rgba(226,255,50,0.06)]',
+        className
+      )}
     >
       <div className="flex items-start justify-between gap-8">
         <div className="space-y-4">
@@ -309,16 +316,16 @@ function WorkflowCard({ number, title, description, iconPath, delay }) {
       className="flex h-full flex-col p-6 sm:p-8"
     >
       <div className="flex items-center justify-between">
-        <span className={eyebrowClass}>{number}</span>
+        <span className={cx(eyebrowClass, 'text-[var(--landing-accent)]')}>{number}</span>
         <div className={cx('flex h-14 w-14 items-center justify-center rounded-[16px]', elevatedToneClass)}>
           <Icon path={iconPath} className="h-5 w-5 text-[var(--landing-accent)]" />
         </div>
       </div>
 
-      <h3 className="mt-8 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+      <h3 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
         {title}
       </h3>
-      <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
         {description}
       </p>
     </Panel>
@@ -882,17 +889,18 @@ function Landing() {
                   <div className="inline-flex items-center gap-3 rounded-full bg-[var(--landing-accent)] px-4 py-3 text-[var(--color-text-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_rgba(226,255,50,0.2)]">
                     <span className="h-2 w-2 rounded-full bg-[#000000]" />
                     <span className="text-[11px] font-semibold uppercase tracking-[0.15em] leading-relaxed text-[var(--color-text-on-accent)]">
-                      {t('landing.trusted_by')}
+                      AI-powered health intelligence
                     </span>
                   </div>
 
                   <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] antialiased text-[var(--color-text-primary)] sm:text-6xl sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[1.02] break-words hyphens-auto text-balance max-w-full">
-                    {t('landing.hero_headline')}
+                    Doctors see you once a month.<br />
+                    CareTrace watches every day.
                   </h1>
                 </div>
 
                 <p className="mt-4 sm:mt-8 max-w-[40rem] text-lg leading-[1.6] tracking-normal text-[var(--color-text-secondary)] sm:text-xl sm:leading-[1.6]">
-                  {t('landing.hero_subtitle')}
+                  Log symptoms in 12 seconds. See the pattern your doctor would have missed.
                 </p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
@@ -920,26 +928,26 @@ function Landing() {
                 <div className="mt-8 grid gap-4 grid-cols-1 xl:grid-cols-3">
                   {[
                     {
-                      titleKey: 'landing.mini_card_1_title',
-                      detailKey: 'landing.mini_card_1_detail',
+                      title: "Logged in 12 seconds",
+                      detail: "One tap intake. Symptoms, severity, notes — done before you put your phone down.",
                     },
                     {
-                      titleKey: 'landing.mini_card_2_title',
-                      detailKey: 'landing.mini_card_2_detail',
+                      title: "Patterns you would have missed",
+                      detail: "Longitudinal analysis connects weeks of subtle changes into one readable arc.",
                     },
                     {
-                      titleKey: 'landing.mini_card_3_title',
-                      detailKey: 'landing.mini_card_3_detail',
+                      title: "Clinician-ready before your appointment",
+                      detail: "Export a structured timeline. No more 'I can't remember when it started.'",
                     },
                   ].map((item) => (
                     <Panel
-                      key={item.titleKey}
+                      key={item.title}
                       tone="surface"
                       className="rounded-[24px] p-6"
                     >
-                      <p className={eyebrowClass}>{t(item.titleKey)}</p>
+                      <p className={eyebrowClass}>{item.title}</p>
                       <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                        {t(item.detailKey)}
+                        {item.detail}
                       </p>
                     </Panel>
                   ))}
@@ -953,7 +961,7 @@ function Landing() {
           </div>
         </section>
 
-        <section className="scroll-mt-32 py-16 sm:py-24">
+        <section className="scroll-mt-32 pt-0 pb-16 sm:pb-24">
           <div className={frameClass}>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {TRUST_SIGNALS.map((signal, index) => (
@@ -990,7 +998,7 @@ function Landing() {
             <SectionHeader
               eyebrow={t('landing.workflow_eyebrow')}
               title={t('landing.workflow_title')}
-              description={t('landing.workflow_desc')}
+              description="The interface gets quieter as your health data gets more complex."
             />
 
             <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -1013,21 +1021,22 @@ function Landing() {
             <SectionHeader
               eyebrow={t('landing.platform_eyebrow')}
               title={t('landing.features_title')}
-              description={t('landing.platform_desc')}
+              description="One system. Every signal. Nothing buried."
             />
 
             <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-12">
               {FEATURE_CARDS.map((feature, index) => (
-                <FeatureCard
-                  key={feature.titleKey}
-                  delay={index * 0.08}
-                  eyebrow={t(feature.eyebrowKey)}
-                  title={t(feature.titleKey)}
-                  description={t(feature.descriptionKey)}
-                  metric={t(feature.metricKey)}
-                  iconPath={feature.iconPath}
-                  className={feature.className}
-                />
+                  <FeatureCard
+                    key={feature.titleKey}
+                    delay={index * 0.08}
+                    eyebrow={t(feature.eyebrowKey)}
+                    title={t(feature.titleKey)}
+                    description={t(feature.descriptionKey)}
+                    metric={t(feature.metricKey)}
+                    iconPath={feature.iconPath}
+                    className={feature.className}
+                    isPrimary={index === 0}
+                  />
               ))}
             </div>
           </div>
@@ -1049,7 +1058,7 @@ function Landing() {
                     {t('landing.security_title')}
                   </h2>
                   <p className="mt-8 max-w-[40rem] text-base leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-lg">
-                    {t('landing.security_desc')}
+                    Your data moves only when you say so.
                   </p>
 
                   <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -1144,34 +1153,29 @@ function Landing() {
               id="cta-heading"
               className="text-4xl font-semibold leading-[1.06] tracking-[-0.05em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl"
             >
-              {t('landing.cta_heading')}
+              Your body has been keeping records. Now you can read them.
             </h2>
             <p className="mt-6 text-lg leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-xl">
-              {t('landing.cta_copy')}
+              Join patients and clinicians who stopped guessing.
             </p>
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Button
-                intent="cta"
-                size="lg"
-                onClick={() => navigate('/signup')}
-                className="w-full sm:w-auto sm:min-w-[14rem]"
-              >
-                {t('landing.cta_signup')}
-              </Button>
-              <Button
-                intent="secondary"
-                size="lg"
-                onClick={handleTryDemo}
-                disabled={demoLoading || isLoadingAuth}
-                className="w-full sm:w-auto sm:min-w-[14rem]"
-              >
-                {demoLoading && (
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-text-tertiary)] border-t-[var(--color-text-primary)]" />
-                )}
-                {t('landing.cta_demo_btn')}
-              </Button>
+            <div className="mt-10 text-sm tracking-normal text-[var(--color-text-tertiary)]">
+              No credit card required · Cancel anytime
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── Mission Section — Emotional Close ───────────────────────────────── */}
+      <section className="relative z-10 py-24 sm:py-32">
+        <div className={frameClass}>
+          <div className="flex flex-col items-center text-center gap-6">
+            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-4xl">
+              Health changes happen between appointments.
+            </h2>
+            <p className="text-lg text-[var(--color-text-secondary)] sm:text-xl">
+              CareTrace exists for everything in between.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1186,7 +1190,7 @@ function Landing() {
                 <BrandLockup variant="dark" />
               </Link>
               <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
-                {t('landing.footer_mission')}
+                Daily symptom logging turned into a clinical record. Earlier detection. More confident action.
               </p>
             </div>
 
@@ -1211,7 +1215,8 @@ function Landing() {
             </div>
           </div>
 
-          <div className="mt-16 flex flex-col gap-4 border-t border-[var(--color-hairline)] pt-8 text-sm tracking-normal text-[var(--color-text-tertiary)] sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-16 relative flex flex-col gap-4 border-t border-[var(--color-hairline)] pt-8 text-sm tracking-normal text-[var(--color-text-tertiary)] sm:flex-row sm:items-center sm:justify-between">
+            <span className="absolute top-[-1px] left-1/2 -translate-x-1/2 w-[120px] h-px bg-[var(--landing-accent)] opacity-40" />
             <p>&copy; {new Date().getFullYear()} CareTrace AI. {t('landing.footer_copyright')}</p>
             <div className="flex flex-wrap items-center gap-6">
               <Link

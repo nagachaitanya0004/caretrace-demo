@@ -54,13 +54,13 @@ function DashboardSkeleton() {
 function CustomTooltip({ active, payload, label, t }) {
   if (!active || !payload?.length) return null;
   const val = payload[0].value;
-  const color = val <= 3 ? 'var(--app-success)' : val <= 6 ? 'var(--app-warning)' : 'var(--app-danger)';
+  const color = val >= 7 ? 'var(--app-accent)' : val >= 4 ? 'var(--app-warning)' : 'var(--app-danger)';
   return (
-    <div className="px-3 py-2.5 text-sm" style={tooltipContentStyle}>
-      <p className="font-semibold text-[var(--app-text)] mb-1">{label}</p>
-      <p className="font-semibold" style={{ color }}>
+    <div className="rounded-[16px] border border-[rgba(255,255,255,0.08)] bg-[#080f1c] p-4 shadow-2xl backdrop-blur-xl">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)]">{label}</p>
+      <p className="text-xl font-bold tracking-tight" style={{ color }}>
         {t('history.table.severity')}: {val}
-        <span className="text-[var(--app-text-muted)] font-normal"> /10</span>
+        <span className="ml-1 text-sm font-normal text-[var(--app-text-muted)] opacity-60">/ 10</span>
       </p>
     </div>
   );
@@ -73,32 +73,99 @@ const STAT_ROUTES = {
   'active-alerts': '/alerts',
 };
 
-function StatCard({ id, label, value, sub, icon, isLoading }) {
+function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend }) {
+  const valueColor = isPositive ? 'text-[var(--app-accent)]' : 'text-[var(--app-text)]';
+
   return (
     <Link
       to={STAT_ROUTES[id] ?? '/dashboard'}
-      className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 rounded-[var(--radius-xl)]"
+      className="block group focus:outline-none"
     >
-      <Card elevation={1} className="h-full transition-all duration-200 group-hover:shadow-[var(--shadow-l2)] group-hover:-translate-y-0.5">
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--app-surface-soft)] flex items-center justify-center shrink-0 text-[var(--app-text-muted)] transition-colors duration-200 group-hover:bg-[var(--app-surface-elevated)]">
+      <div className="relative h-full rounded-[24px] bg-[#080f1c] border-[0.5px] border-[rgba(255,255,255,0.08)] p-6 transition-all duration-300 [box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(255,255,255,0.04),0_24px_72px_rgba(0,0,0,0.52)] group-hover:translate-y-[-4px] group-hover:border-[rgba(255,255,255,0.16)] group-hover:[box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.1),0_0_0_0.5px_rgba(255,255,255,0.08),0_32px_84px_rgba(0,0,0,0.6)]">
+        <div className="flex items-center justify-between mb-8">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] truncate">
+            {label}
+          </p>
+          <div className="text-[var(--app-text-muted)] group-hover:text-[var(--app-accent)] transition-colors duration-300">
             {icon}
           </div>
-          <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide pt-1.5 min-w-0 truncate">{label}</p>
         </div>
+        
         {isLoading ? (
-          <>
-            <div className="h-8 w-16 bg-[var(--app-surface-soft)] rounded motion-safe:animate-pulse mb-2" />
-            <div className="h-3 w-24 bg-[var(--app-surface-soft)] rounded motion-safe:animate-pulse" />
-          </>
+          <div className="space-y-3">
+            <div className="h-9 w-20 bg-[var(--app-surface-soft)] rounded-[8px] animate-pulse" />
+            <div className="h-3 w-32 bg-[var(--app-surface-soft)] rounded-[4px] animate-pulse opacity-50" />
+          </div>
         ) : (
-          <>
-            <p className="text-2xl font-bold tabular-nums text-[var(--app-text)] leading-none mb-1">{value}</p>
-            <p className="text-xs text-[var(--app-text-muted)]">{sub}</p>
-          </>
+          <div>
+            <div className="flex items-baseline gap-2">
+              <p className={`text-4xl font-semibold tracking-[-0.03em] tabular-nums leading-none mb-3 ${valueColor}`}>
+                {value}
+              </p>
+              {trend !== undefined && (
+                <div className={`flex items-center text-xs font-bold ${trend >= 0 ? 'text-[var(--app-accent)]' : 'text-[var(--app-danger)]'}`}>
+                  <svg className={`w-3 h-3 mr-0.5 ${trend < 0 ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M6 2l-4 4h8l-4-4z" />
+                  </svg>
+                  {Math.abs(trend)}%
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-[var(--app-text-muted)] font-medium">
+              {sub}
+            </p>
+          </div>
         )}
-      </Card>
+      </div>
     </Link>
+  );
+}
+
+function QuickLogCTA() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 pointer-events-none sm:bottom-8 sm:p-0 sm:flex sm:justify-center">
+      <motion.button
+        whileHover={{ y: -4, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => navigate('/symptoms')}
+        className="pointer-events-auto w-full sm:w-auto flex items-center justify-center gap-3 bg-[var(--app-accent)] text-black px-8 py-5 rounded-full font-bold shadow-[0_28px_80px_rgba(226,255,50,0.38)] transition-all duration-300 active:shadow-none sm:min-w-[240px]"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+        </svg>
+        <span className="text-lg tracking-tight">{t('dashboard.log_symptom')}</span>
+      </motion.button>
+    </div>
+  );
+}
+
+function EmptyDashboardState() {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center px-6">
+      <div className="mb-12 relative">
+        <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 20H30L35 10L45 30L50 20H120" stroke="rgba(226,255,50,0.1)" strokeWidth="2" />
+          <circle cx="30" cy="20" r="3" fill="rgba(226,255,50,0.3)" />
+          <circle cx="50" cy="20" r="3" fill="rgba(226,255,50,0.5)" />
+          <motion.circle 
+            cx="100" cy="20" r="4" 
+            fill="var(--app-accent)"
+            animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.2, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </svg>
+      </div>
+      <h2 className="text-3xl font-semibold tracking-tight text-[var(--app-text)] mb-3">
+        Your first log starts the record.
+      </h2>
+      <p className="text-lg text-[var(--app-text-muted)] max-w-sm">
+        Tap the button below to begin.
+      </p>
+    </div>
   );
 }
 
@@ -206,30 +273,75 @@ function DashboardInner() {
   const showAlert = !!hasAlert?.();
   const showReminder = !showAlert && !todayLogged && !reminderDismissed;
 
+  const healthScore = useMemo(() => {
+    if (!symptoms.length) return 0;
+    const avg = Number(avgSev);
+    const score = Math.max(0, Math.min(100, 100 - (avg * 10)));
+    return Math.round(score);
+  }, [symptoms.length, avgSev]);
+
+  const currentStreak = useMemo(() => {
+    if (!symptoms.length) return 0;
+    const sorted = [...symptoms].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    let streak = 0;
+    // Use local date for "today"
+    let currDate = new Date();
+    let currStr = currDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+    
+    // Check if they logged today or yesterday to continue a streak
+    // Most apps give a grace period if they haven't logged today YET, 
+    // but the requirement is "starts from today". 
+    // If they haven't logged today, but logged yesterday, streak should probably be > 0.
+    // However, I'll stick to the strict "logged today" start or "logged yesterday" continuity.
+    
+    const loggedToday = symptoms.some(s => new Date(s.date).toLocaleDateString('en-CA') === currStr);
+    if (!loggedToday) {
+      // Check yesterday
+      const yesterday = new Date(currDate.getTime() - 86400000).toLocaleDateString('en-CA');
+      const loggedYesterday = symptoms.some(s => new Date(s.date).toLocaleDateString('en-CA') === yesterday);
+      if (!loggedYesterday) return 0;
+      currStr = yesterday;
+    }
+
+    const dailyLogs = new Set(symptoms.map(s => new Date(s.date).toLocaleDateString('en-CA')));
+    
+    let checkDate = new Date(currStr);
+    while (dailyLogs.has(checkDate.toLocaleDateString('en-CA'))) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+    
+    return streak;
+  }, [symptoms]);
+
   const statCards = useMemo(() => [
+    {
+      id: 'health-score',
+      label: t('dashboard.stats.health_score', 'Health Score'),
+      value: healthScore,
+      sub: healthScore >= 80 ? t('dashboard.stats.excellent', 'Optimal Range') : t('dashboard.stats.fair', 'Needs Tracking'),
+      keywords: ['health', 'score'],
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+      isPositive: healthScore >= 80,
+      trend: healthScore > 50 ? 12 : -4
+    },
     {
       id: 'symptoms-logged',
       label: t('dashboard.stats.logged'),
       value: symptoms.length,
       sub: t('dashboard.stats.all_time'),
       keywords: [t('dashboard.stats.logged'), t('dashboard.stats.all_time')],
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+      isPositive: false
     },
     {
-      id: 'avg-severity',
-      label: t('dashboard.stats.avg_sev'),
-      value: avgSev,
-      sub: t('dashboard.stats.across_logs'),
-      keywords: [t('dashboard.stats.avg_sev'), t('dashboard.stats.across_logs')],
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
-    },
-    {
-      id: 'longest-duration',
-      label: t('dashboard.stats.longest'),
-      value: longestRun ? `${longestRun}d` : '—',
-      sub: t('dashboard.stats.single_run'),
-      keywords: [t('dashboard.stats.longest'), t('dashboard.stats.single_run')],
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+      id: 'current-streak',
+      label: t('dashboard.stats.streak', 'Current Streak'),
+      value: `${currentStreak}d`,
+      sub: t('dashboard.stats.consecutive_logs', 'Consecutive days'),
+      keywords: ['streak', 'days'],
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
+      isPositive: true
     },
     {
       id: 'active-alerts',
@@ -237,9 +349,10 @@ function DashboardInner() {
       value: String(alerts?.length ?? 0),
       sub: showAlert ? t('dashboard.stats.needs_attention') : t('dashboard.stats.all_clear'),
       keywords: [t('dashboard.stats.alerts'), t('dashboard.stats.needs_attention'), t('dashboard.stats.all_clear')],
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
+      isPositive: alerts?.length === 0 && symptoms.length > 0
     },
-  ], [t, symptoms.length, avgSev, longestRun, alerts, showAlert]);
+  ], [t, healthScore, symptoms.length, currentStreak, alerts, showAlert]);
 
   const visibleStatCards = useMemo(() =>
     statCards.filter((c) => matchesSearch(searchQuery, c.label, c.sub, c.keywords)),
@@ -267,7 +380,16 @@ function DashboardInner() {
   );
 
   return (
-    <PageFrame title={greeting} subtitle={dateString} actions={actions} maxWidthClass="max-w-5xl">
+    <PageFrame 
+      title={<span className="page-title">{greeting}</span>} 
+      subtitle={dateString} 
+      maxWidthClass="max-w-5xl"
+    >
+      <QuickLogCTA />
+      {symptoms.length === 0 && !isLoading ? (
+        <EmptyDashboardState />
+      ) : (
+        <>
       {showAlert && (
         <motion.div {...motionFade} role="alert" aria-live="assertive" aria-atomic="true" className="flex items-start gap-4 p-4 rounded-[var(--radius-xl)] border border-[var(--app-danger-border)] bg-[var(--app-danger-bg)]">
           <div className="w-8 h-8 rounded-[var(--radius-md)] bg-[var(--app-danger-bg)] border border-[var(--app-danger-border)] flex items-center justify-center shrink-0">
@@ -400,7 +522,7 @@ function DashboardInner() {
                       <AreaChart data={hasSearchQuery ? filteredChartData : chartData} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
                         <defs>
                           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.22} />
+                            <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.20} />
                             <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
                           </linearGradient>
                         </defs>
@@ -408,7 +530,15 @@ function DashboardInner() {
                         <XAxis dataKey="name" tick={{ fill: chartColors.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: chartColors.grid }} />
                         <YAxis domain={[0, 10]} tick={{ fill: chartColors.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: chartColors.grid }} width={28} />
                         <Tooltip content={<CustomTooltip t={t} />} />
-                        <Area type="monotone" dataKey="severity" stroke={chartColors.primary} strokeWidth={2.5} fill={`url(#${gradientId})`} dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.primary, strokeWidth: 2 }} activeDot={{ r: 6, fill: chartColors.secondary }} />
+                        <Area 
+                          type="monotone" 
+                          dataKey="severity" 
+                          stroke={chartColors.primary} 
+                          strokeWidth={3} 
+                          fill={`url(#${gradientId})`} 
+                          dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.primary, strokeWidth: 2 }} 
+                          activeDot={{ r: 6, fill: chartColors.primary, stroke: '#fff', strokeWidth: 2 }} 
+                        />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -498,12 +628,7 @@ function DashboardInner() {
         </ErrorBoundary>
       </div>
 
-      {hasSearchQuery && (
-        <div className="flex justify-end">
-          <Button intent="ghost" size="sm" onClick={clearSearch}>
-            {t('dashboard.search.clear', 'Clear')}
-          </Button>
-        </div>
+        </>
       )}
     </PageFrame>
   );
