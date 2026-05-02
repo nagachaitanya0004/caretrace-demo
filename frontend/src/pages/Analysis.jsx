@@ -7,13 +7,33 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import PageFrame from '../components/PageFrame';
 
-// Risk → semantic token mapping. No hardcoded colors anywhere.
+// Risk → semantic token mapping for consistent theming.
 const RISK_META = {
-  Low:    { textClass: 'text-emerald-600', bgClass: 'bg-emerald-500/8',  borderClass: 'border-emerald-500/20' },
-  Medium: { textClass: 'text-amber-600',   bgClass: 'bg-amber-500/8',    borderClass: 'border-amber-500/20'   },
-  High:   { textClass: 'text-rose-600',    bgClass: 'bg-rose-500/8',     borderClass: 'border-rose-500/20'    },
+  Low: {
+    textClass: 'text-[var(--app-success)]',
+    bgClass: 'bg-[var(--app-success-bg)]',
+    borderClass: 'border-[var(--color-success-border)]',
+    iconClass: 'text-[var(--app-success)]',
+  },
+  Medium: {
+    textClass: 'text-[var(--app-warning)]',
+    bgClass: 'bg-[var(--app-warning-bg)]',
+    borderClass: 'border-[var(--color-warning-border)]',
+    iconClass: 'text-[var(--app-warning)]',
+  },
+  High: {
+    textClass: 'text-[var(--app-danger)]',
+    bgClass: 'bg-[var(--app-danger-bg)]',
+    borderClass: 'border-[var(--app-danger-border)]',
+    iconClass: 'text-[var(--app-danger)]',
+  },
 };
-const DEFAULT_RISK_META = { textClass: 'text-[var(--app-text-muted)]', bgClass: 'bg-[var(--app-surface-soft)]', borderClass: 'border-[var(--app-border)]' };
+const DEFAULT_RISK_META = {
+  textClass: 'text-[var(--app-text-muted)]',
+  bgClass: 'bg-[var(--app-surface-soft)]',
+  borderClass: 'border-[var(--app-border)]',
+  iconClass: 'text-[var(--app-text-muted)]',
+};
 
 function Analysis() {
   const navigate = useNavigate();
@@ -111,7 +131,7 @@ function Analysis() {
                   <ul className="space-y-2 text-sm text-[var(--app-text-muted)]">
                     {analysisResult.reason.toLowerCase().includes('persisted') && (
                       <li className="flex items-start gap-2">
-                        <svg className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className={`w-4 h-4 mt-0.5 shrink-0 ${riskMeta.iconClass}`} fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                         {t('analysis.report.persisted_msg')}
@@ -119,7 +139,7 @@ function Analysis() {
                     )}
                     {(analysisResult.reason.toLowerCase().includes('pattern') || analysisResult.risk !== 'Low') && (
                       <li className="flex items-start gap-2">
-                        <svg className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className={`w-4 h-4 mt-0.5 shrink-0 ${riskMeta.iconClass}`} fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                         {t('analysis.report.clustering_msg')}
@@ -146,7 +166,7 @@ function Analysis() {
             </div>
 
             {/* Disclaimer */}
-            <div className="bg-amber-500/8 text-amber-700 p-4 rounded-[var(--radius-lg)] flex items-start gap-3 border border-amber-500/20">
+            <div className="bg-[var(--app-warning-bg)] text-[var(--app-warning)] p-4 rounded-[var(--radius-lg)] flex items-start gap-3 border border-[var(--color-warning-border)]">
               <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>

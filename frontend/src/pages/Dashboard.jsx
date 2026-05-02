@@ -1,4 +1,4 @@
-import { Suspense, useContext, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useContext, useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -115,7 +115,7 @@ function DashboardInner() {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
-  const gradId = useRef(`trend-${rawId.replace(/[^a-zA-Z0-9-]/g, '')}`);
+  const gradientId = useMemo(() => `trend-${rawId.replace(/[^a-zA-Z0-9-]/g, '')}`, [rawId]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const {
@@ -129,7 +129,7 @@ function DashboardInner() {
     try { return localStorage.getItem(DISMISS_KEY) === TODAY; } catch { return false; }
   });
   const dismissReminder = () => {
-    try { localStorage.setItem(DISMISS_KEY, TODAY); } catch {}
+    try { localStorage.setItem(DISMISS_KEY, TODAY); } catch { /* no-op in restricted storage mode */ }
     setReminderDismissed(true);
   };
 
@@ -146,14 +146,16 @@ function DashboardInner() {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
   });
 
-  const formatShortDate = (date) =>
-    new Date(date).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' });
+  const formatShortDate = useCallback(
+    (date) => new Date(date).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' }),
+    [i18n.language],
+  );
 
   const chartData = useMemo(() =>
     [...symptoms]
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .map((s) => ({ name: formatShortDate(s.date), severity: parseInt(s.severity, 10), symptom: s.symptom, duration: Number(s.duration) })),
-  [symptoms, i18n.language]);
+  [symptoms, formatShortDate]);
 
   const frequencyData = useMemo(() => {
     const map = {};
@@ -397,7 +399,7 @@ function DashboardInner() {
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={hasSearchQuery ? filteredChartData : chartData} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
                         <defs>
-                          <linearGradient id={gradId.current} x1="0" y1="0" x2="0" y2="1">
+                          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.22} />
                             <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
                           </linearGradient>
@@ -406,7 +408,7 @@ function DashboardInner() {
                         <XAxis dataKey="name" tick={{ fill: chartColors.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: chartColors.grid }} />
                         <YAxis domain={[0, 10]} tick={{ fill: chartColors.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: chartColors.grid }} width={28} />
                         <Tooltip content={<CustomTooltip t={t} />} />
-                        <Area type="monotone" dataKey="severity" stroke={chartColors.primary} strokeWidth={2.5} fill={`url(#${gradId.current})`} dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.primary, strokeWidth: 2 }} activeDot={{ r: 6, fill: chartColors.secondary }} />
+                        <Area type="monotone" dataKey="severity" stroke={chartColors.primary} strokeWidth={2.5} fill={`url(#${gradientId})`} dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.primary, strokeWidth: 2 }} activeDot={{ r: 6, fill: chartColors.secondary }} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>

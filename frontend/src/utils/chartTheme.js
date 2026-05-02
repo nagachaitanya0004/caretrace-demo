@@ -1,8 +1,8 @@
 /** Shared Recharts styling — simple, readable, on-brand. */
 export const chartColors = {
-  primary: 'var(--app-chart-primary, #0d9488)',
-  primaryMuted: 'var(--app-chart-primary-muted, rgba(13, 148, 136, 0.12))',
-  secondary: 'var(--app-chart-secondary, #0369a1)',
+  primary: 'var(--app-chart-primary, #E2FF32)',
+  primaryMuted: 'var(--app-chart-primary-muted, rgba(226, 255, 50, 0.18))',
+  secondary: 'var(--app-chart-secondary, #0f172a)',
   grid: 'var(--app-chart-grid, #e2e8f0)',
   axis: 'var(--app-chart-axis, #64748b)',
   tooltipBg: 'var(--app-chart-tooltip-bg, #ffffff)',

@@ -145,15 +145,15 @@ const CloudSyncIcon = ({ onRetry }) => {
 
   if (hasErrors) {
     return (
-      <div className="absolute right-6 top-6 flex items-center gap-1.5 rounded-full border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 shadow-sm fade-in sm:right-8 sm:top-8">
-        <svg className="h-3.5 w-3.5 shrink-0 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <div className="absolute right-6 top-6 flex items-center gap-1.5 rounded-full border border-[var(--app-danger-border)] bg-[var(--app-danger-bg)] px-3 py-1.5 shadow-sm fade-in sm:right-8 sm:top-8">
+        <svg className="h-3.5 w-3.5 shrink-0 text-[var(--app-danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="text-xs font-medium text-rose-500">Sync failed</span>
+        <span className="text-xs font-medium text-[var(--app-danger)]">Sync failed</span>
         <button
           type="button"
           onClick={onRetry}
-          className="ml-1 text-xs font-semibold text-rose-600 underline decoration-rose-500/30 underline-offset-2 transition-colors hover:text-rose-400"
+          className="ml-1 text-xs font-semibold text-[var(--app-danger)] underline decoration-[var(--app-danger-border)] underline-offset-2 transition-colors hover:opacity-80"
         >
           Retry
         </button>
@@ -165,7 +165,7 @@ const CloudSyncIcon = ({ onRetry }) => {
     <div className="absolute right-6 top-6 flex items-center gap-2 rounded-full border border-[var(--app-border)] bg-[var(--app-surface-soft)] px-3 py-1.5 shadow-sm transition-all fade-in sm:right-8 sm:top-8">
       <svg
         className={`h-3.5 w-3.5 shrink-0 transition-colors ${
-          isSyncing ? 'animate-pulse text-[var(--app-accent)]' : 'text-emerald-500'
+          isSyncing ? 'animate-pulse text-[var(--app-accent)]' : 'text-[var(--app-success)]'
         }`}
         fill="none"
         stroke="currentColor"

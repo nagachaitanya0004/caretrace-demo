@@ -98,12 +98,13 @@
   --app-warning-bg: var(--color-warning-bg);
   --app-info: var(--color-info);
   --app-info-bg: var(--color-info-bg);
+  --app-info-border: var(--color-info-border);
   --app-shadow-small:  var(--shadow-l1);
   --app-shadow-medium: var(--shadow-l2);
   --app-shadow-large:  var(--shadow-l3);
-  --app-chart-primary: #0d9488; /* light mode chart — teal is correct for health data */
-  --app-chart-primary-muted: rgba(13, 148, 136, 0.12);
-  --app-chart-secondary: #0369a1;
+  --app-chart-primary: var(--brand-accent);
+  --app-chart-primary-muted: rgba(226, 255, 50, 0.18);
+  --app-chart-secondary: #0f172a;
   --app-chart-grid: #e2e8f0;
   --app-chart-axis: #64748b;
   --app-chart-tooltip-bg: #ffffff;
@@ -175,6 +176,7 @@
   --app-warning-bg: rgba(251, 191, 36, 0.12);
   --app-info: #63b3ed;
   --app-info-bg: rgba(99, 179, 237, 0.12);
+  --app-info-border: rgba(99, 179, 237, 0.28);
   --badge-success-text: #34d399;
   --badge-warning-text: #fbbf24;
   --badge-danger-text: #f87171;

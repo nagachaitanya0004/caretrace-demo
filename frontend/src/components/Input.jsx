@@ -9,8 +9,7 @@ const BASE_INPUT =
   'focus-visible:border-[var(--brand-accent)] ' +
   'disabled:opacity-50 disabled:cursor-not-allowed';
 
-// token gap: no --app-danger-input-border token
-const ERROR_INPUT = 'border-rose-500 focus-visible:ring-rose-500';
+const ERROR_INPUT = 'border-[var(--app-danger)] focus-visible:ring-[var(--app-danger)]';
 
 const LABEL_BASE = 'block text-sm font-medium text-[var(--app-text)] mb-1.5';
 
@@ -37,7 +36,7 @@ function Input({
         className={cx(BASE_INPUT, error && ERROR_INPUT, inputClassName)}
         {...props}
       />
-      {error && <p className="mt-1.5 text-xs text-rose-500">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-[var(--app-danger)]">{error}</p>}
       {!error && hint && <p className="mt-1.5 text-xs text-[var(--app-text-muted)]">{hint}</p>}
     </div>
   );

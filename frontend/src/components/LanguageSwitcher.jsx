@@ -44,11 +44,11 @@ export default function LanguageSwitcher({ variant = 'light' }) {
 
   const triggerCls = isLight
     ? 'inline-flex min-h-[2.5rem] items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium bg-[var(--app-surface)] border border-[var(--app-border)] text-[var(--app-text)] hover:border-[var(--app-border-hover)] shadow-sm transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2'
-    : 'inline-flex min-h-[2.5rem] items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium bg-white/5 border border-white/10 text-white hover:bg-white/10 backdrop-blur-md transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2';
+    : 'inline-flex min-h-[2.5rem] items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium bg-[var(--app-surface-elevated)] border border-[var(--app-border)] text-[var(--app-text)] hover:bg-[var(--app-surface-soft)] hover:border-[var(--app-border-hover)] backdrop-blur-md transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2';
 
   const menuCls = isLight
     ? 'absolute right-0 top-[calc(100%+8px)] z-50 w-48 overflow-hidden rounded-[var(--radius-xl)] p-2 bg-[var(--app-surface)] border border-[var(--app-border)] shadow-[var(--shadow-l2)]'
-    : 'absolute right-0 top-[calc(100%+8px)] z-50 w-48 overflow-hidden rounded-[var(--radius-xl)] p-2 bg-[#141414] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(255,255,255,0.08),0_24px_72px_rgba(0,0,0,0.72)]';
+    : 'absolute right-0 top-[calc(100%+8px)] z-50 w-48 overflow-hidden rounded-[var(--radius-xl)] p-2 bg-[var(--app-surface)] border border-[var(--app-border)] shadow-[var(--shadow-l3)]';
 
   return (
     <div className="relative">
@@ -60,11 +60,11 @@ export default function LanguageSwitcher({ variant = 'light' }) {
         onClick={() => setIsOpen((open) => !open)}
         className={triggerCls}
       >
-        <svg className={`h-4 w-4 shrink-0 ${isLight ? 'text-[var(--app-text-muted)]' : 'text-white/70'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className={`h-4 w-4 shrink-0 ${isLight ? 'text-[var(--app-text-muted)]' : 'text-[var(--app-text-muted)]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span className="hidden sm:inline uppercase">{langCode}</span>
-        <svg className={`hidden sm:block h-3.5 w-3.5 transition-transform duration-200 ${isLight ? 'text-[var(--app-text-disabled)]' : 'text-white/50'} ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className={`hidden sm:block h-3.5 w-3.5 transition-transform duration-200 ${isLight ? 'text-[var(--app-text-disabled)]' : 'text-[var(--app-text-disabled)]'} ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -87,15 +87,15 @@ export default function LanguageSwitcher({ variant = 'light' }) {
                     isActive
                       ? isLight
                         ? 'bg-[var(--app-surface-soft)] text-[var(--app-text)] font-semibold'
-                        : 'bg-white/10 text-white font-semibold'
+                        : 'bg-[var(--app-surface-soft)] text-[var(--app-text)] font-semibold'
                       : isLight
                         ? 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]'
-                        : 'text-white/60 hover:bg-white/10 hover:text-white'
+                        : 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]'
                   }`}
                   >
                     <span>
                     {language.native}
-                      <span className={`ml-2 text-xs ${isLight ? 'text-[var(--app-text-disabled)]' : 'text-white/40'}`}>
+                      <span className={`ml-2 text-xs ${isLight ? 'text-[var(--app-text-disabled)]' : 'text-[var(--app-text-disabled)]'}`}>
                       ({language.label})
                     </span>
                   </span>

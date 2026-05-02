@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +10,10 @@ import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 
 function Header() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { t } = useTranslation();
   const { notifications } = useNotification();
   const location = useLocation();
-  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const notifRef = useRef(null);

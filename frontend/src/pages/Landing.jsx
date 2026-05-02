@@ -795,7 +795,8 @@ function Landing() {
                         exit={{ opacity: 0, scale: 0.96, y: -8 }}
                         transition={microSpring}
                         role="menu"
-                        className="absolute left-1/2 top-[calc(100%+16px)] z-50 w-48 -translate-x-1/2 overflow-hidden rounded-[24px] bg-[#141414] p-2 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(255,255,255,0.08),0_24px_72px_rgba(0,0,0,0.72)]"
+                        className="absolute left-1/2 top-[calc(100%+16px)] z-50 w-48 -translate-x-1/2 overflow-hidden rounded-[24px] p-2 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(255,255,255,0.08),0_24px_72px_rgba(0,0,0,0.72)]"
+                        style={{ backgroundColor: 'var(--color-elevated)' }}
                       >
                         {APP_LANGUAGES.map((language) => {
                           const isActive = activeLanguageCode === language.code;
@@ -812,9 +813,10 @@ function Landing() {
                               className={cx(
                                 'flex min-h-[3.5rem] w-full items-center justify-between rounded-[16px] px-4 py-2.5 text-left text-sm tracking-normal leading-snug transition-colors duration-200',
                                 isActive
-                                  ? 'bg-[#0A0A0A] text-[var(--color-text-primary)]'
-                                  : 'text-[var(--color-text-secondary)] hover:bg-[#0A0A0A] hover:text-[var(--color-text-primary)]',
+                                  ? 'text-[var(--color-text-primary)]'
+                                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]',
                               )}
+                              style={isActive ? { backgroundColor: 'var(--color-surface)' } : undefined}
                             >
                               <span className="font-medium tracking-normal leading-snug">
                                 {language.native}
@@ -1110,7 +1112,8 @@ function Landing() {
            the section bleeds directly from the security panel above.
            ──────────────────────────────────────────────────────────────────── */}
       <section
-        className="relative z-10 overflow-hidden bg-[#000000] py-32 sm:py-40"
+        className="relative z-10 overflow-hidden py-32 sm:py-40"
+        style={{ backgroundColor: 'var(--color-base)' }}
         aria-labelledby="cta-heading"
       >
         {/* Volt glow — high-diffused, centered */}
@@ -1126,7 +1129,7 @@ function Landing() {
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-          style={{ background: 'linear-gradient(to bottom, transparent, #000000)' }}
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--color-base))' }}
         />
 
         <div className={frameClass}>
