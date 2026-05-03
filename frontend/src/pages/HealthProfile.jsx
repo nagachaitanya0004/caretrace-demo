@@ -6,6 +6,7 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import HealthMetricsSection from '../components/HealthMetricsSection';
 import MedicalReportsSection from '../components/MedicalReportsSection';
+import Badge from '../components/Badge';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const CONDITION_OPTIONS = ['Diabetes', 'Heart Disease', 'Hypertension', 'Cancer', 'Stroke', 'Asthma', 'Other'];
@@ -28,6 +29,15 @@ function displayList(arr) {
 
 function parseList(str) {
   return (str || '').split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+function getBMICategory(bmiValue) {
+  const val = parseFloat(bmiValue);
+  if (!val || isNaN(val)) return null;
+  if (val < 18.5) return { label: 'Underweight', intent: 'info' };
+  if (val < 25)   return { label: 'Normal',      intent: 'success' };
+  if (val < 30)   return { label: 'Overweight',  intent: 'warning' };
+  return { label: 'Obese', intent: 'danger' };
 }
 
 // ── sub-components ────────────────────────────────────────────────────────────
@@ -325,7 +335,19 @@ export default function HealthProfile() {
             <DisplayRow label="Blood Group" value={displayVal(profile?.blood_group)} />
             <DisplayRow label="Height"      value={displayVal(profile?.height_cm, ' cm')} />
             <DisplayRow label="Weight"      value={displayVal(profile?.weight_kg, ' kg')} />
-            <DisplayRow label="BMI"         value={bmi ? bmi : 'Not provided'} />
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs font-medium text-[var(--app-text-disabled)] uppercase tracking-wide">BMI</span>
+              <div className="flex items-center gap-2">
+                <span className={`text-sm ${!bmi ? 'text-[var(--app-text-disabled)] italic' : 'text-[var(--app-text)] font-medium'}`}>
+                  {bmi || 'Not provided'}
+                </span>
+                {bmi && getBMICategory(bmi) && (
+                  <Badge intent={getBMICategory(bmi).intent} size="sm">
+                    {getBMICategory(bmi).label}
+                  </Badge>
+                )}
+              </div>
+            </div>
             <DisplayRow label="Lifestyle"   value={displayVal(profile?.lifestyle)} />
           </div>
         ) : (

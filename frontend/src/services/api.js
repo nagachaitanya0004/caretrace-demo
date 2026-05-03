@@ -321,8 +321,15 @@ async function request(endpoint, options = {}, retryCount = 0) {
   }
 
   // Parse response
-  const isJson = response.headers.get('content-type')?.includes('application/json');
-  const data = isJson ? await response.json() : await response.text();
+  const contentType = response.headers.get('content-type');
+  let data;
+  if (options.responseType === 'blob') {
+    data = await response.blob();
+  } else if (contentType?.includes('application/json')) {
+    data = await response.json();
+  } else {
+    data = await response.text();
+  }
 
   if (!response.ok) {
     let message = 'An unexpected error occurred';
@@ -455,6 +462,7 @@ export const medicationsApi = {
 
 export function unwrapApiPayload(res) {
   if (res == null) return null;
+  if (res instanceof Blob) return res;
   if (Array.isArray(res)) return res;
   
   if (typeof res === 'object') {

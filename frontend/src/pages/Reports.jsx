@@ -1,6 +1,7 @@
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../AppContext';
+import { api, unwrapApiPayload } from '../services/api';
 import { useNotification } from '../NotificationContext';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -28,14 +29,29 @@ function Reports() {
     [symptoms, i18n.language]
   );
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     setIsGenerating(true);
-    addNotification(t('reports.notifications.booting'), 'info');
-    setTimeout(() => {
+    addNotification(t('reports.compiling'), 'info');
+    try {
+      const response = await api.get('/api/reports/pdf', { responseType: 'blob' });
+      const blob = unwrapApiPayload(response);
+      
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `CareTrace_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      addNotification(t('reports.notifications.success', 'Report downloaded successfully'), 'success');
+    } catch (err) {
+      console.error('Download error:', err);
+      addNotification(t('reports.notifications.error', 'Failed to generate report'), 'error');
+    } finally {
       setIsGenerating(false);
-      addNotification(t('reports.notifications.success'), 'success');
-      window.print();
-    }, 1500);
+    }
   };
 
   const getRiskLabel = (risk) => {
@@ -48,8 +64,7 @@ function Reports() {
   };
 
   return (
-    <div className="fade-in h-full overflow-y-auto w-full">
-      <PageFrame
+    <PageFrame
         title={t('reports.title')}
         subtitle={t('reports.subtitle')}
         actions={
@@ -166,7 +181,6 @@ function Reports() {
                     tickLine={false}
                     axisLine={{ stroke: chartColors.grid }}
                     width={40}
-                    label={{ value: t('charts.y_severity'), angle: -90, position: 'insideLeft', fill: chartColors.axis, fontSize: 11 }}
                   />
                   <Tooltip
                     formatter={(value) => [`${value}/10`, t('history.table.severity')]}
@@ -184,6 +198,7 @@ function Reports() {
                   />
                 </LineChart>
               </ResponsiveContainer>
+              <p className="text-xs text-center text-[var(--app-text-muted)] mt-2">{t('charts.y_severity')}</p>
             </div>
           )}
         </Card>
@@ -194,8 +209,7 @@ function Reports() {
           <span>{t('reports.disclaimer')}</span>
         </div>
       </PageFrame>
-    </div>
-  );
+    );
 }
 
 export default Reports;

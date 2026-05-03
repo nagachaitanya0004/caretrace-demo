@@ -37,7 +37,7 @@ const DEFAULT_RISK_META = {
 
 function Analysis() {
   const navigate = useNavigate();
-  const { performAnalysis, analysisResult, symptoms, userProfile } = useContext(AppContext);
+  const { performAnalysis, analysisResult, analysisHistory } = useContext(AppContext);
   const { t, i18n } = useTranslation();
   const { addNotification } = useNotification();
   const [isLoading, setIsLoading] = useState(false);
@@ -166,12 +166,48 @@ function Analysis() {
             </div>
 
             {/* Disclaimer */}
-            <div className="bg-[var(--app-warning-bg)] text-[var(--app-warning)] p-4 rounded-[var(--radius-lg)] flex items-start gap-3 border border-[var(--color-warning-border)]">
+            <div className="bg-[var(--app-warning-bg)] text-[var(--app-warning)] p-4 rounded-[var(--radius-lg)] flex items-start gap-3 border border-[var(--color-warning-border)] mb-8">
               <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <p className="text-sm font-medium">{t('analysis.disclaimer')}</p>
             </div>
+
+            {/* Analysis History Section */}
+            {analysisHistory?.length > 1 && (
+              <div className="mt-12 pt-8 border-t border-[var(--app-border)]">
+                <h3 className="text-xl font-bold text-[var(--app-text)] mb-6 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {t('analysis.history_title', 'Analysis History')}
+                </h3>
+                <div className="space-y-3">
+                  {analysisHistory.slice(1, 6).map((item, idx) => {
+                    const itemMeta = RISK_META[item.risk] || DEFAULT_RISK_META;
+                    return (
+                      <div 
+                        key={item.id || idx} 
+                        className="flex items-center justify-between p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border)] hover:border-[var(--brand-accent)] transition-colors cursor-pointer"
+                        onClick={() => navigate('/reports')}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${itemMeta.bgClass} ${itemMeta.textClass}`}>
+                            {getRiskLabel(item.risk)}
+                          </div>
+                          <span className="text-sm font-medium text-[var(--app-text)]">
+                            {new Date(item.created_at).toLocaleDateString(i18n.language, { dateStyle: 'long' })}
+                          </span>
+                        </div>
+                        <svg className="w-4 h-4 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="py-16 flex flex-col items-center justify-center">
@@ -212,20 +248,19 @@ function Analysis() {
                     {t('analysis.loading.title', 'Processing Data')}
                   </h3>
 
+                  {/* Progress bar */}
+                  <div className="mb-6 w-full bg-[var(--app-surface-soft)] rounded-full h-2 overflow-hidden border border-[var(--app-border)]">
+                    <div
+                      className="bg-[var(--brand-accent)] h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_var(--brand-accent)]"
+                      style={{ width: `${((loadingStep + 1) / 5) * 100}%` }}
+                    />
+                  </div>
+
                   {/* Terminal */}
                   <div className="bg-[var(--app-bg)] border border-[var(--app-border)] rounded-[var(--radius-lg)] p-4 font-mono text-xs text-left h-36 overflow-hidden flex flex-col justify-end relative">
                     <div className="absolute top-0 right-0 left-0 h-4 z-10 pointer-events-none" style={{ background: 'linear-gradient(to bottom, var(--app-bg), transparent)' }} />
-                    {[0, 1, 2, 3, 4].slice(0, loadingStep + 1).map((step, idx) => {
+                    {(t('analysis.loading_steps', { returnObjects: true }) || []).slice(0, loadingStep + 1).map((stepLabel, idx) => {
                       const isLast = idx === loadingStep;
-                      const texts = [
-                        t('analysis.steps.init', '> Initializing CareTrace AI grid... OK'),
-                        t('analysis.steps.loading_profile', `> Loading biometrics for ${userProfile?.name || 'Patient'}... OK`),
-                        symptoms?.length > 0
-                          ? t('analysis.steps.analyzing_symptoms', `> Vectorizing ${symptoms.length} symptom records... OK`)
-                          : t('analysis.steps.analyzing_baseline', '> Extrapolating baseline differentials... OK'),
-                        t('analysis.steps.correlating', '> Cross-referencing risk taxonomies... RUNNING'),
-                        t('analysis.steps.finalizing', '> Compiling predictive intelligence...'),
-                      ];
                       return (
                         <div
                           key={idx}
@@ -235,21 +270,13 @@ function Analysis() {
                               : 'text-[var(--app-text-disabled)] opacity-60'
                           }`}
                         >
-                          {texts[idx]}
+                          {`> ${stepLabel}`}
                           {isLast && (
                             <span className="inline-block w-1.5 h-3.5 bg-[var(--brand-accent)] ml-1.5 align-middle animate-pulse" />
                           )}
                         </div>
                       );
                     })}
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="mt-5 w-full bg-[var(--app-surface-soft)] rounded-full h-1 overflow-hidden">
-                    <div
-                      className="bg-[var(--brand-accent)] h-1 rounded-full transition-all duration-500 ease-out"
-                      style={{ width: `${((loadingStep + 1) / 5) * 100}%` }}
-                    />
                   </div>
                 </div>
               </div>

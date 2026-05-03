@@ -298,7 +298,14 @@
       "generating": "Analyzing your data...",
       "success": "Analysis complete.",
       "error": "Something went wrong. Please try again."
-    }
+    },
+    "loading_steps": [
+      "Scanning symptom patterns...",
+      "Evaluating severity vectors...",
+      "Correlating health signals...",
+      "Computing risk probability...",
+      "Generating recommendations..."
+    ]
   },
   "alerts": {
     "title": "Your alerts",
@@ -420,8 +427,18 @@
       "profile_success": "Saved.",
       "profile_error": "Something went wrong. Please try again.",
       "pref_updated": "Saved.",
-      "lang_applied": "Saved."
-    }
+      "lang_applied": "Saved.",
+      "delete_success": "Account deleted successfully. Goodbye."
+    },
+    "preferences_section": "Preferences",
+    "theme_body": "Switch between light and dark modes.",
+    "danger_zone": "Dangerous Action Zone",
+    "delete_warning": "Deleting your account is permanent and cannot be undone. All your health data, symptoms, and medical reports will be permanently purged.",
+    "delete_account_btn": "Delete Account",
+    "confirm_delete_title": "Delete your account?",
+    "confirm_delete_body": "This action is irreversible. Please type \"DELETE\" below to proceed.",
+    "confirm_type_label": "Type DELETE to confirm",
+    "confirm_delete_btn": "Delete Permanently"
   },
   "recommendations": {
     "title": "Next steps",
@@ -452,6 +469,11 @@
         "Keep tracking your health.",
         "Consult a doctor as needed."
       ]
+    },
+    "personalized": {
+      "sedentary_exercise": "Based on your sedentary lifestyle and risk profile, consider incorporating 15 minutes of light walking daily to improve circulation.",
+      "age_screening": "Given your age group, we recommend scheduling an annual cardiovascular screening and bone density test.",
+      "chronic_specialist": "Your recent symptoms may be related to your chronic condition ({{condition}}). Consider consulting your specialist for a targeted review."
     }
   },
   "demo": {

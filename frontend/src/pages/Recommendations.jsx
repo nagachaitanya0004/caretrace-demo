@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../AppContext';
 import Card from '../components/Card';
@@ -9,9 +9,9 @@ import PageFrame from '../components/PageFrame';
 function Recommendations() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { analysisResult } = useContext(AppContext);
+  const { analysisResult, userProfile, symptoms } = useContext(AppContext);
 
-  const getRecommendations = (risk) => {
+  const getRecommendations = useCallback((risk) => {
     if (!risk) return t('recommendations.risk_plans.default', { returnObjects: true });
     const riskKey = risk.toLowerCase();
     switch (riskKey) {
@@ -20,10 +20,44 @@ function Recommendations() {
       case 'high':   return t('recommendations.risk_plans.high',   { returnObjects: true });
       default:       return t('recommendations.risk_plans.default', { returnObjects: true });
     }
-  };
+  }, [t]);
 
-  const rawRecs = analysisResult ? getRecommendations(analysisResult.risk) : [];
-  const recommendations = Array.isArray(rawRecs) ? rawRecs : [];
+  const personalizedRecs = useMemo(() => {
+    const baseRecs = analysisResult ? getRecommendations(analysisResult.risk) : [];
+    const recs = Array.isArray(baseRecs) ? [...baseRecs] : [];
+    const risk = analysisResult?.risk?.toLowerCase();
+
+    // 1. Sedentary + Medium+ Risk
+    if (userProfile?.lifestyle?.toLowerCase() === 'sedentary' && (risk === 'medium' || risk === 'high')) {
+      recs.push(t('recommendations.personalized.sedentary_exercise', 'Based on your sedentary lifestyle and risk profile, consider incorporating 15 minutes of light walking daily to improve circulation.'));
+    }
+
+    // 2. Age > 50
+    if (userProfile?.age > 50) {
+      recs.push(t('recommendations.personalized.age_screening', 'Given your age group, we recommend scheduling an annual cardiovascular screening and bone density test.'));
+    }
+
+    // 3. Chronic Match
+    const last7DaysSymptoms = (symptoms || []).filter(s => {
+      const d = new Date(s.date);
+      return (new Date() - d) / (1000 * 60 * 60 * 24) <= 7;
+    });
+    
+    if (userProfile?.conditions && Array.isArray(userProfile.conditions)) {
+      const recentSymptomNames = last7DaysSymptoms.map(s => s.symptom?.toLowerCase());
+      const matchedCondition = userProfile.conditions.find(c => recentSymptomNames.includes(c.toLowerCase()));
+      if (matchedCondition) {
+        recs.push(t('recommendations.personalized.chronic_specialist', { 
+          condition: matchedCondition,
+          defaultValue: `Your recent symptoms may be related to your chronic condition (${matchedCondition}). Consider consulting your specialist for a targeted review.`
+        }));
+      }
+    }
+
+    return recs;
+  }, [analysisResult, userProfile, symptoms, t, getRecommendations]);
+
+  const recommendations = personalizedRecs;
 
   return (
     <PageFrame

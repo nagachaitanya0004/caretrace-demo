@@ -1,6 +1,7 @@
 from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any, Optional
+from collections import Counter
 
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File
@@ -97,25 +98,72 @@ def evaluate_risk(symptoms: list[dict[str, Any]]) -> tuple[str, str, str]:
                 'No symptom data provided. The autonomous baseline assessment defaults to a nominal health status.',
                 '• STATUS: No active symptoms logged in your user profile.\n• RECOMMENDATION: Continue routine wellness activities.\n• EXPLANATION: Our systems require active diagnostic input markers to compute probability vectors.')
 
-    severity_scores = [item.get('severity', 0) for item in symptoms]
-    durations = [item.get('duration', 0) for item in symptoms]
-    symptom_names = [str(item.get('symptom', '')).lower() for item in symptoms if item.get('symptom')]
+    # Ensure symptoms are sorted by date descending for trend analysis
+    sorted_symptoms = sorted(
+        symptoms, 
+        key=lambda x: x.get('date', ''), 
+        reverse=True
+    )
+
+    severity_scores = [item.get('severity', 0) for item in sorted_symptoms]
+    durations = [item.get('duration', 0) for item in sorted_symptoms]
+    symptom_names = [str(item.get('symptom', '')).lower().strip() for item in sorted_symptoms if item.get('symptom')]
 
     unique_names = list(set(symptom_names))
-    critical_symptoms = {'chest pain', 'shortness of breath', 'severe headache', 'dizziness', 'fainting'}
+    critical_symptoms = {
+        'chest pain', 'shortness of breath', 'severe headache', 'dizziness', 
+        'fainting', 'palpitations', 'numbness', 'sudden vision loss', 'slurred speech'
+    }
     matched_critical = list(set(unique_names) & critical_symptoms)
 
     max_sev = max(severity_scores, default=0)
     avg_sev = sum(severity_scores) / max(len(severity_scores), 1)
     max_dur = max(durations, default=0)
 
+    # 1. Base Risk Assessment
+    risk_level = 'low'
+    if matched_critical or max_sev >= 8:
+        risk_level = 'high'
+    elif max_dur >= 14 or avg_sev >= 6:
+        risk_level = 'medium'
+
+    # 2. Chronic Indicator
+    counts = Counter(symptom_names)
+    chronic_flag = False
+    for name, count in counts.items():
+        if count > 3:
+            has_long_duration = any(
+                item.get('duration', 0) > 7 
+                for item in sorted_symptoms 
+                if str(item.get('symptom', '')).lower().strip() == name
+            )
+            if has_long_duration:
+                chronic_flag = True
+                if risk_level == 'low':
+                    risk_level = 'medium'
+                break
+
+    # 3. Trend Indicator (Last 3 vs Overall)
+    trend_escalated = False
+    if len(severity_scores) >= 3:
+        last_3_avg = sum(severity_scores[:3]) / 3
+        if last_3_avg > avg_sev:
+            trend_escalated = True
+            if risk_level == 'low':
+                risk_level = 'medium'
+            elif risk_level == 'medium':
+                risk_level = 'high'
+
+    # Build response strings
     names_str = ', '.join(unique_names[:3])
     if len(unique_names) > 3:
         names_str += f' (and {len(unique_names) - 3} more)'
 
-    if matched_critical or max_sev >= 8:
+    if risk_level == 'high':
         crit_str = ', '.join(matched_critical) if matched_critical else 'Extreme severity scale (>= 8/10)'
         reason = f"Calculated High Risk. The diagnostic engine identified critical anomalous priority markers: {crit_str}. A highly concerning pattern was verified across {len(symptoms)} contextual records."
+        if trend_escalated:
+            reason += " Trajectory indicates accelerating severity."
         action_plan = (
             f"• IMMEDIATE ACTION: Seek urgent medical assessment regarding your reports of {names_str}.\n"
             f"• DATA CORRELATION: Peak severity reached {max_sev}/10. This mathematically aligns with acute distress models.\n"
@@ -123,12 +171,16 @@ def evaluate_risk(symptoms: list[dict[str, Any]]) -> tuple[str, str, str]:
         )
         return 'high', reason, action_plan
 
-    if max_dur >= 14 or avg_sev >= 6:
+    if risk_level == 'medium':
         reason = f"Calculated Medium Risk. The system detected continuous, statistically persistent signals ({names_str}). Evaluation of {len(symptoms)} data points confirmed an extended duration metric or elevated threshold."
+        if chronic_flag:
+            reason += " (Chronic patterns detected)"
+        if trend_escalated:
+            reason += " (Upward severity trend identified)"
         action_plan = (
             f"• PRIMARY ACTION: Schedule a non-urgent clinical review within the next 7-14 days regarding {names_str}.\n"
             f"• DATA CORRELATION: Trajectory indicates prolonged progression (up to {max_dur} days) or elevated density (Avg Severity: {avg_sev:.1f}/10).\n"
-            "• EXPLANATION: Chronic persistence of moderate symptoms frequently maps to underlying conditions requiring standard laboratory validation rather than emergency intervention."
+            "• EXPLANATION: Chronic persistence of moderate symptoms frequently maps to underlying conditions requiring standard laboratory validation."
         )
         return 'medium', reason, action_plan
 
@@ -227,6 +279,7 @@ _PG_USER_FIELDS = {'name', 'age', 'gender', 'height_cm', 'weight_kg', 'blood_gro
 
 
 @router.put('/users/me')
+@router.patch('/users/me')
 @limiter.limit("100/minute")
 async def update_user(request: Request, payload: UserUpdate, current_user: dict = Depends(get_current_user)):
     oid = current_user['_id']
@@ -625,6 +678,54 @@ async def list_medical_reports(request: Request, current_user: dict = Depends(ge
     cursor = db.medical_reports.find({'user_id': get_user_ref(current_user)}).sort('uploaded_at', -1)
     reports = [serialize_document(doc) async for doc in cursor]
     return success_response(reports, message='Medical reports retrieved successfully')
+
+
+@router.get('/reports/pdf')
+@limiter.limit("5/minute")
+async def generate_report_pdf(request: Request, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_ref = get_user_ref(current_user)
+    user_profile = await db.users.find_one({'_id': current_user['_id']})
+    
+    # Get symptoms and latest analysis
+    now = datetime.utcnow()
+    thirty_days_ago = now - timedelta(days=30)
+    symptoms_cursor = db.symptoms.find({
+        'user_id': user_ref,
+        'date': {'$gte': thirty_days_ago.strftime('%Y-%m-%d')}
+    }).sort('date', -1)
+    symptoms = [serialize_document(s) async for s in symptoms_cursor]
+    
+    analysis = await db.analysis.find_one({'user_id': user_ref}, sort=[('created_at', -1)])
+    
+    # Check for PDF libraries (fallback to JSON as requested)
+    try:
+        from reportlab.pdfgen import canvas
+        from io import BytesIO
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer)
+        p.drawString(100, 800, f"CareTrace Health Report - {now.strftime('%Y-%m-%d')}")
+        p.drawString(100, 780, f"Patient: {user_profile.get('full_name', 'Unknown')}")
+        p.drawString(100, 760, f"Risk Level: {analysis.get('risk_level', 'N/A') if analysis else 'N/A'}")
+        p.showPage()
+        p.save()
+        buffer.seek(0)
+        return StreamingResponse(buffer, media_type='application/pdf', headers={
+            'Content-Disposition': f'attachment; filename="CareTrace_Report_{now.strftime("%Y%m%d")}.pdf"'
+        })
+    except ImportError:
+        report_data = {
+            'generated_at': now.isoformat(),
+            'patient': {
+                'name': user_profile.get('full_name'),
+                'age': user_profile.get('age'),
+                'gender': user_profile.get('gender'),
+            },
+            'symptoms_summary': symptoms,
+            'analysis': serialize_document(analysis) if analysis else None,
+            'disclaimer': 'This is a digital health summary. Falling back to JSON as PDF library is not installed.'
+        }
+        return success_response(report_data, message='PDF library not available, returning JSON summary')
 
 
 @router.get('/medical-reports/{report_id}/download')

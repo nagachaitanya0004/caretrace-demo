@@ -45,7 +45,7 @@ function normalizeSymptom(s) {
 }
 
 export function AppProvider({ children }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const demoEmail = DEMO_EMAIL.toLowerCase();
 
@@ -83,14 +83,13 @@ export function AppProvider({ children }) {
     },
   });
 
-  const { data: analysisRaw, isLoading: analysisLoading } = useQuery({
-    queryKey: ['analysis', user?.id],
+  const { data: analysesRaw, isLoading: analysisLoading } = useQuery({
+    queryKey: ['analyses', user?.id],
     queryFn: () => api.get('/api/analysis'),
     enabled: !!user?.id,
     select: (res) => {
       const list = unwrapApiPayload(res);
-      const data = Array.isArray(list) ? list[0] : list;
-      return normalizeAnalysisPayload(data);
+      return Array.isArray(list) ? list.map(normalizeAnalysisPayload) : [];
     },
   });
 
@@ -116,12 +115,18 @@ export function AppProvider({ children }) {
   }, [isDemoUser, alertsRaw, user?.id]);
 
   const analysisResult = useMemo(() => {
-    if (!isDemoUser) return analysisRaw;
-    if (analysisRaw && analysisRaw.risk !== 'Pending') {
-      return analysisRaw;
+    const list = analysesRaw || [];
+    const latest = list[0];
+    if (!isDemoUser) return latest;
+    if (latest && latest.risk !== 'Pending') {
+      return latest;
     }
     return normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: user?.id });
-  }, [isDemoUser, analysisRaw, user?.id]);
+  }, [isDemoUser, analysesRaw, user?.id]);
+
+  const analysisHistory = useMemo(() => {
+    return analysesRaw || [];
+  }, [analysesRaw]);
 
   // ── Mutations ──────────────────────────────────────────────────────────────
 
@@ -174,9 +179,8 @@ export function AppProvider({ children }) {
 
   const performAnalysisMutation = useMutation({
     mutationFn: () => api.post('/api/analysis', {}),
-    onSuccess: (res) => {
-      queryClient.setQueryData(['analysis', user?.id], normalizeAnalysisPayload(unwrapApiPayload(res)));
-      queryClient.invalidateQueries({ queryKey: ['analysis', user?.id] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['analyses', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['alerts', user?.id] });
     },
   });
@@ -203,17 +207,17 @@ export function AppProvider({ children }) {
 
   const isLoading = profileLoading || symptomsLoading || alertsLoading || analysisLoading;
   const riskLevel = analysisResult?.risk || 'Pending';
-  const demoMedications = isDemoUser ? DEMO_MEDICATIONS : [];
 
   const value = useMemo(
     () => ({
       userProfile,
       symptoms,
       analysisResult,
+      analysisHistory,
       alerts,
       isLoading,
       isDemoUser,
-      demoMedications,
+      demoMedications: isDemoUser ? DEMO_MEDICATIONS : [],
       riskLevel,
       addSymptom: addSymptomMutation.mutateAsync,
       performAnalysis: performAnalysisMutation.mutateAsync,
@@ -225,13 +229,14 @@ export function AppProvider({ children }) {
       userProfile,
       symptoms,
       analysisResult,
+      analysisHistory,
       alerts,
       isLoading,
       isDemoUser,
-      demoMedications,
       riskLevel,
       addSymptomMutation,
       performAnalysisMutation,
+      markAlertReadMutation,
       queryClient,
       user?.id
     ]
