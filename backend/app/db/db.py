@@ -100,10 +100,6 @@ async def init_db() -> None:
 
         logger.info('MongoDB initialization complete')
         
-        # Ensure demo account exists
-        from app.db.seed import ensure_demo_account
-        await ensure_demo_account()
-        
     except Exception as exc:
         # Collection/index setup failed - clean up and raise
         if client:

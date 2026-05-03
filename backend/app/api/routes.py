@@ -9,14 +9,10 @@ from pymongo.errors import DuplicateKeyError
 
 from app.api.auth import get_current_user
 from app.utils.user_identity import get_user_ref, normalize_gender
-from app.services.data_access import atomic_dual_database_update
 
 from app.db.db import get_database, get_gridfs_bucket
-from app.db.postgres import get_session_maker
-from app.models.postgres_user import PostgresUser
 from app.core.responses import success_response, serialize_document
 from app.core.logger import logger
-from sqlalchemy import select
 from app.schemas.schemas import (
     AlertCreate,
     AnalysisCreate,
@@ -29,6 +25,9 @@ from app.schemas.schemas import (
     SymptomCreate,
     UserUpdate,
 )
+from app.services.mongo.user_service import UserService
+from app.services.mongo.health_service import HealthService
+from app.services.postgres.audit_service import AuditService
 
 router = APIRouter()
 
@@ -224,199 +223,61 @@ async def update_user(payload: UserUpdate, current_user: dict = Depends(get_curr
     bmi = compute_bmi(height, weight)
     if bmi is not None:
         updated['bmi'] = bmi
-    updated['updated_at'] = datetime.utcnow()
+    
+    # Update via Service (Primary: MongoDB)
+    updated_user = await UserService.update_profile(oid, updated)
+    if not updated_user:
+        raise HTTPException(status_code=404, detail='User not found')
 
-    # ── Step 1: Update PostgreSQL (UUID users only) ──────────────────
-    pg_user_id: str | None = current_user.get('user_id')  # None for legacy ObjectId-only users
-    pg_session = None
-    if pg_user_id:
-        session_maker = get_session_maker()
-        if session_maker is None:
-            raise HTTPException(status_code=503, detail='Profile update service temporarily unavailable')
-        pg_fields = {k: v for k, v in updated.items() if k in _PG_USER_FIELDS}
-        if pg_fields:
-            pg_session = session_maker()
-            try:
-                pg_user = (
-                    await pg_session.execute(select(PostgresUser).where(PostgresUser.id == pg_user_id))
-                ).scalars().first()
-                if pg_user is None:
-                    await pg_session.close()
-                    raise HTTPException(status_code=404, detail='User not found')
-                for field, value in pg_fields.items():
-                    setattr(pg_user, field, value)
-                await pg_session.flush()  # validate constraints before touching MongoDB
-                logger.info('PG user %s flushed for update', pg_user_id)
-            except HTTPException:
-                await pg_session.close()
-                raise
-            except Exception as exc:
-                await pg_session.rollback()
-                await pg_session.close()
-                logger.error('PG update failed for user %s: %r', pg_user_id, exc)
-                raise HTTPException(status_code=500, detail='Profile update failed')
+    # Audit Log (Secondary: PostgreSQL - Non-blocking)
+    pg_user_id: str | None = current_user.get('user_id')
+    await AuditService.log_action(pg_user_id or str(oid), "user_profile_update")
 
-    # ── Step 2: Update MongoDB ───────────────────────────────────────
-    try:
-        result = await db.users.update_one({'_id': oid}, {'$set': updated})
-        if result.matched_count == 0:
-            if pg_session:
-                await pg_session.rollback()
-                await pg_session.close()
-            raise HTTPException(status_code=404, detail='User not found')
-    except HTTPException:
-        raise
-    except Exception as exc:
-        if pg_session:
-            await pg_session.rollback()
-            await pg_session.close()
-        logger.error('MongoDB update failed for user %s: %r', oid, exc)
-        raise HTTPException(status_code=500, detail='Profile update failed')
-
-    # ── Step 3: Commit PostgreSQL ────────────────────────────────────
-    if pg_session:
-        try:
-            await pg_session.commit()
-            logger.info('PG user %s committed', pg_user_id)
-        except Exception as exc:
-            await pg_session.rollback()
-            await pg_session.close()
-            logger.error('PG commit failed for user %s: %r', pg_user_id, exc)
-            raise HTTPException(status_code=500, detail='Profile update failed')
-        finally:
-            await pg_session.close()
-
-    user = await db.users.find_one({'_id': oid})
-    return success_response(serialize_document(user), message='User updated successfully')
+    return success_response(updated_user, message='User updated successfully')
 
 
 @router.delete('/users/me')
 async def delete_user(current_user: dict = Depends(get_current_user)):
     oid = current_user['_id']
     pg_user_id: str | None = current_user.get('user_id')
+    user_ref = get_user_ref(current_user)
     db = get_database()
 
-    # ── Step 1: Mark PostgreSQL row for deletion (UUID users only) ───
-    pg_session = None
+    # 1. MongoDB Delete (Primary)
+    result = await db.users.delete_one({'_id': oid})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail='User not found')
+    
+    # 2. Cleanup related data (MongoDB)
+    refs = [user_ref]
     if pg_user_id:
-        session_maker = get_session_maker()
-        if session_maker is None:
-            raise HTTPException(status_code=503, detail='Account deletion service temporarily unavailable')
-        pg_session = session_maker()
+        refs.append(pg_user_id)
+        
+    for coll_name in [
+        'symptoms', 'analysis', 'alerts', 'reports', 'lab_results', 
+        'medication_tracking', 'medical_history', 'family_history', 
+        'lifestyle_data', 'health_metrics'
+    ]:
+        await db[coll_name].delete_many({'user_id': {'$in': refs}})
+
+    # 3. Cleanup Medical Reports (GridFS + Metadata)
+    bucket = get_gridfs_bucket()
+    async for report in db.medical_reports.find({'user_id': user_ref}):
         try:
-            pg_user = (
-                await pg_session.execute(select(PostgresUser).where(PostgresUser.id == pg_user_id))
-            ).scalars().first()
-            if pg_user is None:
-                await pg_session.close()
-                raise HTTPException(status_code=404, detail='User not found')
-            await pg_session.delete(pg_user)
-            await pg_session.flush()  # hold transaction open until MongoDB succeeds
-            logger.info('PG user %s marked for deletion (flushed)', pg_user_id)
-        except HTTPException:
-            await pg_session.close()
-            raise
+            await bucket.delete(report['gridfs_file_id'])
         except Exception as exc:
-            await pg_session.rollback()
-            await pg_session.close()
-            logger.error('PG delete failed for user %s: %r', pg_user_id, exc)
-            raise HTTPException(status_code=500, detail='Account deletion failed')
+            logger.warning('GridFS delete failed for report %s: %s', report.get('file_name'), exc)
+    await db.medical_reports.delete_many({'user_id': user_ref})
 
-    # ── Step 2: Delete from MongoDB ──────────────────────────────────
-    user_ref = get_user_ref(current_user)
-    try:
-        result = await db.users.delete_one({'_id': oid})
-        if result.deleted_count == 0:
-            if pg_session:
-                await pg_session.rollback()
-                await pg_session.close()
-            raise HTTPException(status_code=404, detail='User not found')
+    # 4. Audit Log (Secondary: PostgreSQL - Non-blocking)
+    await AuditService.log_action(pg_user_id or str(oid), "user_account_deleted")
 
-        # Delete all related collections
-        await db.symptoms.delete_many({'user_id': user_ref})
-        await db.analysis.delete_many({'user_id': user_ref})
-        await db.alerts.delete_many({'user_id': user_ref})
-        await db.reports.delete_many({'user_id': user_ref})
-        await db.lab_results.delete_many({'user_id': user_ref})
-        await db.medication_tracking.delete_many({'user_id': user_ref})
-        await db.medical_history.delete_many({'user_id': user_ref})
-        await db.family_history.delete_many({'user_id': user_ref})
-        await db.lifestyle_data.delete_many({'user_id': user_ref})
-        await db.health_metrics.delete_many({'user_id': user_ref})
-
-        # Delete medical report files from GridFS then metadata
-        bucket = get_gridfs_bucket()
-        async for report in db.medical_reports.find({'user_id': user_ref}):
-            try:
-                await bucket.delete(report['gridfs_file_id'])
-            except Exception as exc:
-                logger.warning('GridFS delete failed for file %s: %r', report['gridfs_file_id'], exc)
-        await db.medical_reports.delete_many({'user_id': user_ref})
-
-        logger.info('MongoDB user %s and all related data deleted', oid)
-    except HTTPException:
-        raise
-    except Exception as exc:
-        if pg_session:
-            await pg_session.rollback()
-            await pg_session.close()
-        logger.error('MongoDB delete failed for user %s: %r', oid, exc)
-        raise HTTPException(status_code=500, detail='Account deletion failed')
-
-    # ── Step 3: Commit PostgreSQL ────────────────────────────────────
-    if pg_session:
-        try:
-            await pg_session.commit()
-            logger.info('PG user %s deletion committed', pg_user_id)
-        except Exception as exc:
-            await pg_session.rollback()
-            await pg_session.close()
-            logger.error('PG commit failed for user %s: %r', pg_user_id, exc)
-            raise HTTPException(status_code=500, detail='Account deletion failed')
-        finally:
-            await pg_session.close()
-
-    return success_response(None, message='User and related records deleted successfully')
-
-
-@router.patch('/auth/onboarding/complete', status_code=200)
-async def complete_onboarding(current_user: dict = Depends(get_current_user)):
-    """
-    Mark the user's onboarding process as complete.
-    This is an atomic operation that updates both PostgreSQL and MongoDB.
-    """
-    user_id = current_user.get('user_id')
-    if not user_id:
-        # This check ensures we're dealing with a modern user who has a UUID.
-        raise HTTPException(
-            status_code=400,
-            detail="Onboarding completion is not available for this user account type."
-        )
-
-    mongo_oid = current_user.get('_id')
-
-    try:
-        await atomic_dual_database_update(
-            user_id=user_id,
-            postgres_update_fn=lambda pg_user: setattr(pg_user, 'is_onboarded', True),
-            mongo_collection="users",
-            mongo_filter={"_id": mongo_oid},
-            mongo_update={"$set": {"is_onboarded": True, "updated_at": datetime.utcnow()}}
-        )
-        return success_response(None, message='Onboarding completed successfully')
-    except Exception as exc:
-        logger.error(
-            "Failed to complete onboarding for user_id=%s: %s",
-            user_id, exc
-        )
-        raise HTTPException(
-            status_code=500,
-            detail="A server error occurred while saving your onboarding status. Please try again."
-        )
+    logger.info('User %s and all related data deleted successfully', oid)
+    return success_response(None, message='User deleted successfully')
 
 
 # ---------------------------------------------------------------------------
-# Symptom endpoints
+# Symptom endpoints (Primary: MongoDB)
 # ---------------------------------------------------------------------------
 
 @router.post('/symptoms')
@@ -608,33 +469,41 @@ async def create_health_metrics(payload: HealthMetricsCreate, current_user: dict
     user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
     doc = {k: v for k, v in payload.model_dump().items() if v is not None}
-    if not doc:
-        raise HTTPException(status_code=400, detail='At least one metric value is required')
-    doc.update({'user_id': user_ref, 'recorded_at': now, 'created_at': now})
-    result = await db.health_metrics.insert_one(doc)
-    saved = await db.health_metrics.find_one({'_id': result.inserted_id})
-    return success_response(serialize_document(saved), message='Health metrics recorded')
+async def create_health_metrics(request: Request, payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
+    from app.main import limiter
+    with limiter.limit(API_RATE_LIMIT, key_func=lambda: str(current_user["_id"])):
+        user_ref = get_user_ref(current_user)
+        saved = await HealthService.create_health_metrics(user_ref, payload)
+        
+        await AuditService.log_action(str(current_user["_id"]), "log_health_metrics", payload=payload.model_dump())
+        return success_response(serialize_document(saved))
 
 
 @router.get('/health-metrics')
-async def list_health_metrics(current_user: dict = Depends(get_current_user)):
-    db = get_database()
-    cursor = db.health_metrics.find({'user_id': get_user_ref(current_user)}).sort('recorded_at', -1)
-    records = [serialize_document(d) async for d in cursor]
-    return success_response(records, message='Health metrics retrieved')
+async def list_health_metrics(
+    request: Request,
+    cursor: Optional[str] = Query(None),
+    limit: int = Query(20),
+    current_user: dict = Depends(get_current_user)
+):
+    from app.main import limiter
+    with limiter.limit(API_RATE_LIMIT, key_func=lambda: str(current_user["_id"])):
+        items, next_cursor, has_more = await HealthService.get_paginated_history(
+            'health_metrics', get_user_ref(current_user), cursor, limit
+        )
+        return success_response(items, meta={'next_cursor': next_cursor, 'has_more': has_more})
 
 
 # ---------------------------------------------------------------------------
-# Medical reports endpoints
+# Medical reports endpoints (Primary: MongoDB)
 # ---------------------------------------------------------------------------
 
 @router.post('/medical-reports/upload', status_code=201)
 async def upload_medical_report(
+    request: Request,
     file: UploadFile = File(...),
     current_user: dict = Depends(get_current_user),
 ):
-    """Upload a medical report (PDF, JPG, PNG) to GridFS."""
-    # Validate file type
     type_error = validate_file_type(file)
     if type_error:
         raise HTTPException(status_code=400, detail=type_error)

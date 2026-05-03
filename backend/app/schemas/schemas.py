@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field  # type: ignore[import]
 
@@ -14,6 +14,21 @@ REPORT_TYPES = ['health_summary', 'risk_review', 'care_plan']
 class TimestampedModel(MongoModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = Field(default=None)
+
+
+class OnboardingData(BaseModel):
+    """
+    Schema for initial user onboarding. 
+    Captures primary health indicators and lifestyle metadata.
+    """
+    age: Optional[int] = Field(default=None, ge=0, le=120)
+    gender: Optional[str] = Field(default=None, min_length=1)
+    weight_kg: Optional[float] = Field(default=None, ge=0, le=500)
+    height_cm: Optional[float] = Field(default=None, ge=0, le=300)
+    conditions: Optional[List[str]] = Field(default_factory=list)
+    lifestyle: Optional[str] = Field(default=None)
+    goals: Optional[List[str]] = Field(default_factory=list)
+    blood_group: Optional[str] = Field(default=None)
 
 
 class UserBase(MongoModel):

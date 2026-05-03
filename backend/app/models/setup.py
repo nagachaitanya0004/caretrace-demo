@@ -33,6 +33,8 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
         USER_COLLECTION: {
             'validator': USER_VALIDATOR,
             'indexes': [
+                {'fields': [('email', 'asc')], 'unique': True, 'name': 'idx_user_email'},
+                {'fields': [('user_id', 'asc')], 'unique': True, 'name': 'idx_user_id'},
                 {'fields': [('name', 'asc')], 'unique': False, 'name': 'idx_user_name'},
                 {'fields': [('age', 'asc')], 'unique': False, 'name': 'idx_user_age'},
                 {'fields': [('gender', 'asc')], 'unique': False, 'name': 'idx_user_gender'},

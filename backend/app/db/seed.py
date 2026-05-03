@@ -1,11 +1,7 @@
 from datetime import datetime, timedelta
 import uuid
 
-from sqlalchemy import select
-
 from app.db.db import get_database
-from app.db.postgres import get_session_maker
-from app.models.postgres_user import PostgresUser
 from app.core.security import get_password_hash
 from app.core.logger import logger
 from app.models.models import (
@@ -15,129 +11,72 @@ from app.models.models import (
     build_report_document,
 )
 
-
 async def ensure_demo_account() -> None:
+    """
+    Ensure a fresh demo account exists in MongoDB on every server restart.
+    PostgreSQL is not used for core demo data.
+    """
     db = get_database()
     email = "rahul@demo.com"
 
-    session_maker = get_session_maker()
-    if session_maker is None:
-        logger.error("Seed skipped — PostgreSQL not initialized")
-        return
-
-    # ── Step 0: Reset existing demo account ─────────────────────────
-    # Ensure demo account is safely wiped and fresh on every server restart
-    existing_mongo = await db.users.find_one({"email": email})
-    if existing_mongo:
-        mongo_user_id = existing_mongo["_id"]
-        pg_user_id_ref = existing_mongo.get("user_id")
+    # ── Step 0: Reset existing demo accounts ────────────────────────
+    # Collect all IDs associated with this email to ensure full cleanup
+    demo_users = await db.users.find({"email": email}).to_list(length=10)
+    if demo_users:
+        logger.info("Seed: Cleaning up %d existing demo account(s)", len(demo_users))
         
-        await db.users.delete_one({"_id": mongo_user_id})
+        user_oids = [u["_id"] for u in demo_users]
+        user_uuids = [u.get("user_id") for u in demo_users if u.get("user_id")]
         
-        refs = [mongo_user_id]
-        if pg_user_id_ref:
-            refs.append(pg_user_id_ref)
-            
+        # Primary identifiers for related data cleanup
+        refs = user_uuids + [str(oid) for oid in user_oids]
+        
+        # Cleanup core profile
+        await db.users.delete_many({"_id": {"$in": user_oids}})
+        
+        # Cleanup related collections
         for coll in [db.symptoms, db.analysis, db.alerts, db.reports, db.lab_results, db.medication_tracking]:
             await coll.delete_many({"user_id": {"$in": refs}})
             
-    pg_session = session_maker()
-    try:
-        pg_user_to_delete = (
-            await pg_session.execute(select(PostgresUser).where(PostgresUser.email == email))
-        ).scalars().first()
-        if pg_user_to_delete:
-            await pg_session.delete(pg_user_to_delete)
-            await pg_session.commit()
-    except Exception:
-        await pg_session.rollback()
-    finally:
-        await pg_session.close()
+        logger.info("Seed: Cleanup complete")
 
-    pg_user_id = str(uuid.uuid4())
+    user_uuid = str(uuid.uuid4())
     hashed_pw = get_password_hash("demo1234")
     now = datetime.utcnow()
 
-    # ── Step 1: Insert into PostgreSQL ──────────────────────────────
-    pg_session = session_maker()
-    try:
-        existing = (
-            await pg_session.execute(select(PostgresUser).where(PostgresUser.email == email))
-        ).scalars().first()
-
-        if not existing:
-            pg_user = PostgresUser(
-                id=pg_user_id,
-                email=email,
-                hashed_password=hashed_pw,
-                name="Rahul Sharma",
-                age=34,
-                gender="male",
-                height_cm=175,
-                weight_kg=72,
-                blood_group="O+",
-                bmi=23.5,
-                is_onboarded=True,
-            )
-            pg_session.add(pg_user)
-            await pg_session.flush()
-
-        await pg_session.commit()
-        logger.info("Seed: PostgreSQL demo user created (id=%s)", pg_user_id)
-    except Exception as exc:
-        await pg_session.rollback()
-        await pg_session.close()
-        logger.error("Seed: PostgreSQL insert failed — %r", exc)
-        return
-    finally:
-        await pg_session.close()
-
-    # ── Step 2: Insert into MongoDB ─────────────────────────────────
+    # ── Step 1: Insert into MongoDB ─────────────────────────────────
     mongo_doc = {
-        "user_id": pg_user_id,
+        "user_id": user_uuid,
         "name": "Rahul Sharma",
         "email": email,
         "hashed_password": hashed_pw,
         "age": 34,
         "gender": "male",
         "lifestyle": "sedentary",
-        "height_cm": 175,
-        "weight_kg": 72,
+        "height_cm": 175.0,
+        "weight_kg": 72.0,
         "blood_group": "O+",
         "bmi": 23.5,
         "is_onboarded": True,
         "meta": {},
-        "is_demo": True,
         "created_at": now,
         "updated_at": now,
     }
+    
     try:
         result = await db.users.insert_one(mongo_doc)
-        logger.info("Seed: MongoDB demo user created (_id=%s)", result.inserted_id)
+        logger.info("Seed: MongoDB demo user created (user_id=%s)", user_uuid)
     except Exception as exc:
-        logger.error("Seed: MongoDB insert failed — compensating PostgreSQL delete: %r", exc)
-        pg_session = session_maker()
-        try:
-            pg_user_to_delete = (
-                await pg_session.execute(select(PostgresUser).where(PostgresUser.id == pg_user_id))
-            ).scalars().first()
-            if pg_user_to_delete:
-                await pg_session.delete(pg_user_to_delete)
-                await pg_session.commit()
-        except Exception as cleanup_exc:
-            logger.warning("Seed: PostgreSQL compensation failed — %r", cleanup_exc)
-            await pg_session.rollback()
-        finally:
-            await pg_session.close()
+        logger.error("Seed: MongoDB insert failed: %r", exc)
         return
 
-    # Dual-DB applications track related records using the pg_user_id
-    user_ref = pg_user_id
+    # Use user_uuid as the reference for all related data
+    user_ref = user_uuid
 
-    # ── Step 3: Seed related demo data ──────────────────────────────
+    # ── Step 2: Seed related demo data ──────────────────────────────
     now_delta = now
     
-    # 1. Symptoms Timeline (15 days of progressive data)
+    # 1. Symptoms Timeline
     symptoms = []
     for day in range(15, -1, -1):
         date_mark = now_delta - timedelta(days=day)
@@ -156,7 +95,7 @@ async def ensure_demo_account() -> None:
             
     await db.symptoms.insert_many(symptoms)
 
-    # 2. AI Analysis (Evolving risk over time)
+    # 2. AI Analysis
     analyses = [
         build_analysis_document(user_ref, "low", "Baseline health is stable with minor fatigue.", "Maintain current sleep habits.", {"symptom_count": 5}),
         build_analysis_document(user_ref, "medium", "Increasing pattern of fatigue paired with mild ocular strain.", "Consider reducing screen time and taking frequent breaks.", {"symptom_count": 12}),
@@ -167,7 +106,7 @@ async def ensure_demo_account() -> None:
     analyses[2]["created_at"] = now_delta - timedelta(days=1)
     await db.analysis.insert_many(analyses)
 
-    # 3. Alerts System (Critical, warning, resolved)
+    # 3. Alerts System
     alerts = [
         build_alert_document(user_ref, "Hydration levels appear adequate. Baseline established.", "info", True),
         build_alert_document(user_ref, "Consistent elevated fatigue reported over 5 days. Monitor sleep patterns closely.", "warning", False),
@@ -178,7 +117,7 @@ async def ensure_demo_account() -> None:
     alerts[2]["created_at"] = now_delta - timedelta(days=2)
     await db.alerts.insert_many(alerts)
 
-    # 4. Reports (Structured milestones)
+    # 4. Reports
     reports = [
         build_report_document(user_ref, "Initial Onboarding Baseline: Patient reports sedentary lifestyle. Vitals within normal limits. Occasional fatigue noted."),
         build_report_document(user_ref, "Mid-Month Review: Emergence of digital eye strain indicators. Patient advised on 20-20-20 rule for screen time."),
@@ -189,7 +128,7 @@ async def ensure_demo_account() -> None:
     reports[2]["created_at"] = now_delta - timedelta(days=1)
     await db.reports.insert_many(reports)
 
-    # 5. Lab Results (Time-series variation)
+    # 5. Lab Results
     labs = [
         {
             "user_id": user_ref,
@@ -221,7 +160,7 @@ async def ensure_demo_account() -> None:
     ]
     await db.lab_results.insert_many(labs)
 
-    # 6. Medications (Active and historical)
+    # 6. Medications
     meds = [
         {
             "user_id": user_ref,
@@ -250,4 +189,4 @@ async def ensure_demo_account() -> None:
     ]
     await db.medication_tracking.insert_many(meds)
 
-    logger.info("Seed: Demo account fully initialised (pg_id=%s)", pg_user_id)
+    logger.info("Seed: Demo account fully initialised (user_id=%s)", user_ref)
