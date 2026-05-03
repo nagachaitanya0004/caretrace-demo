@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pymongo.errors import DuplicateKeyError
 import jwt
+from app.core.limiter import limiter
 
 from app.db.db import get_database
 from app.core.responses import success_response, serialize_document
@@ -46,21 +47,16 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
         raise credentials_exception
 
     db = get_database()
-    # Try finding by user_id (UUID) first, then fallback to ObjectId
+    # Standardized: Primary lookup via user_id (UUID string) only.
+    # No ObjectId fallback to eliminate latency and security surface.
     user = await db.users.find_one({"user_id": user_id})
     if not user:
-        try:
-            oid = ObjectId(user_id)
-            user = await db.users.find_one({"_id": oid})
-        except Exception:
-            raise credentials_exception
-
-    if user is None:
         raise credentials_exception
     return user
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/minute")
 async def signup(request: Request, payload: UserCreate):
     """
     Register a new user in MongoDB.
@@ -99,6 +95,9 @@ async def signup(request: Request, payload: UserCreate):
         result = await db.users.insert_one(mongo_doc)
         user = await db.users.find_one({"_id": result.inserted_id})
         
+        # Security Assertion: Verify user_uuid is stored correctly
+        assert user["user_id"] == user_uuid, "Database UUID mismatch"
+        
         # Audit Log (Secondary/Optional - Non-blocking)
         await AuditService.log_action(user_uuid, "user_signup", resource="users")
         
@@ -113,6 +112,7 @@ async def signup(request: Request, payload: UserCreate):
 
 
 @router.post("/login")
+@limiter.limit("20/minute")
 async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
     db = get_database()
     user = await find_user_by_email(db, form_data.username)
@@ -132,7 +132,11 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    user_id = user.get("user_id") or str(user["_id"])
+    user_id = user.get("user_id")
+    if not user_id:
+        # Fallback for legacy users if any, but new ones will always have user_id
+        user_id = str(user["_id"])
+    
     access_token = create_access_token(subject=user_id, email=user.get("email"))
     
     # Audit Log

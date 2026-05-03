@@ -1,7 +1,7 @@
 import { useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { AppContext } from '../AppContext';
 import Badge from '../components/Badge';
 import PageFrame from '../components/PageFrame';
@@ -22,22 +22,22 @@ function TimelineEntry({ item, t, isLast }) {
 
   return (
     <div className="relative pl-10 pb-8 last:pb-0 group">
-      {/* Connector Line */}
+      {/* Connector Line - FIXED: uses token */}
       {!isLast && (
-        <div className="absolute left-[5px] top-6 bottom-0 w-[2px] bg-[rgba(255,255,255,0.08)]" />
+        <div className="absolute left-[5px] top-6 bottom-0 w-[2px] bg-[var(--app-border)]" />
       )}
       
       {/* Dot */}
       <div className={`absolute left-0 top-2 rounded-full border-2 border-[var(--app-accent)] bg-[var(--app-surface)] z-10 transition-transform group-hover:scale-110 ${dotSize} ${dotGlow}`} />
       
-      {/* Horizontal Line Connector */}
-      <div className="absolute left-[8px] top-[14px] w-6 h-[1px] bg-[rgba(255,255,255,0.08)]" />
+      {/* Horizontal Line Connector - FIXED: uses token */}
+      <div className="absolute left-[8px] top-[14px] w-6 h-[1px] bg-[var(--app-border)]" />
 
-      {/* Entry Card */}
+      {/* Entry Card - FIXED: uses token border and shadow */}
       <motion.div
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
-        className="bg-[var(--app-surface)] border-[0.5px] border-[rgba(255,255,255,0.08)] rounded-[20px] p-5 [box-shadow:0_12px_48px_rgba(0,0,0,0.4)] hover:border-[rgba(255,255,255,0.16)] transition-all"
+        className="bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[20px] p-5 shadow-[var(--shadow-l2)] hover:border-[var(--app-border-hover)] transition-all"
       >
         <div className="flex items-center justify-between mb-4">
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)]">
@@ -62,7 +62,7 @@ function TimelineEntry({ item, t, isLast }) {
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="text-[10px] font-bold text-[var(--app-accent)] uppercase tracking-wider mt-2 hover:underline"
               >
-                {isExpanded ? 'Show less' : 'Show more'}
+                {isExpanded ? t('timeline.show_less') : t('timeline.show_more')}
               </button>
             )}
           </div>
@@ -75,15 +75,15 @@ function TimelineEntry({ item, t, isLast }) {
 function PatternCard({ pattern }) {
   return (
     <div className="relative pl-10 pb-8">
-      <div className="absolute left-[5px] top-0 bottom-0 w-[2px] bg-[rgba(255,255,255,0.08)]" />
+      <div className="absolute left-[5px] top-0 bottom-0 w-[2px] bg-[var(--app-border)]" />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="bg-[rgba(226,255,50,0.08)] border border-[rgba(226,255,50,0.2)] rounded-2xl p-5 relative overflow-hidden flex gap-4"
+        className="bg-[var(--app-accent-glow)] border border-[var(--app-accent-glow)] rounded-2xl p-5 relative overflow-hidden flex gap-4"
       >
         <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--app-accent)]" />
-        <div className="w-10 h-10 rounded-xl bg-[rgba(226,255,50,0.1)] flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-[var(--app-accent-glow)] flex items-center justify-center shrink-0">
           <svg className="w-6 h-6 text-[var(--app-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
@@ -102,7 +102,7 @@ function PatternCard({ pattern }) {
 function GapIndicator({ days }) {
   return (
     <div className="relative pl-10 pb-8 py-4">
-      <div className="absolute left-[5px] top-0 bottom-0 w-[2px] border-l-2 border-dashed border-[rgba(255,255,255,0.04)]" />
+      <div className="absolute left-[5px] top-0 bottom-0 w-[2px] border-l-2 border-dashed border-[var(--app-border-soft)]" />
       <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] italic pl-4">
         {days} days with no log
       </div>
@@ -112,8 +112,14 @@ function GapIndicator({ days }) {
 
 function Timeline() {
   const navigate = useNavigate();
+  const { symptoms = [], isLoading } = useContext(AppContext);
   const { t } = useTranslation();
-  const { symptoms = [] } = useContext(AppContext);
+  const shouldReduceMotion = useReducedMotion();
+
+  const motionFade = shouldReduceMotion
+    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
+    : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: 'easeOut' } };
+    
   const [filter, setFilter] = useState('all');
 
   const filteredSymptoms = useMemo(() => {
@@ -132,54 +138,63 @@ function Timeline() {
     return base;
   }, [symptoms, filter]);
 
-  const timelineData = useMemo(() => {
+  const timelineGroups = useMemo(() => {
     if (!filteredSymptoms.length) return [];
     
-    const groups = [];
-    let currentGroup = null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
 
-    filteredSymptoms.forEach((s, idx) => {
-      const date = new Date(s.date);
-      const dateStr = date.toLocaleDateString('en-CA');
+    const groups = {
+      today: [],
+      yesterday: [],
+      thisWeek: [],
+      older: []
+    };
+
+    filteredSymptoms.forEach(s => {
+      const d = new Date(s.date);
+      const dCopy = new Date(d);
+      dCopy.setHours(0, 0, 0, 0);
       
-      const today = new Date().toLocaleDateString('en-CA');
-      const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString('en-CA');
-      
-      let label = date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-      if (dateStr === today) label = 'Today';
-      else if (dateStr === yesterday) label = 'Yesterday';
-
-      if (!currentGroup || currentGroup.label !== label) {
-        // Check for gap before adding new group
-        if (currentGroup && filter === 'all') {
-          const lastDate = new Date(currentGroup.entries[currentGroup.entries.length - 1].date);
-          const gap = Math.floor((lastDate - date) / (1000 * 60 * 60 * 24));
-          if (gap >= 3) {
-            groups.push({ type: 'gap', days: gap });
-          }
-        }
-
-        currentGroup = { type: 'group', label, entries: [] };
-        groups.push(currentGroup);
-      }
-      currentGroup.entries.push(s);
-
-      // Simple Pattern Detection Logic
-      // 5+ consecutive logs of same symptom
-      if (idx > 4 && filter === 'all') {
-        const last5 = filteredSymptoms.slice(idx - 4, idx + 1);
-        const allSame = last5.every(item => item.symptom === s.symptom);
-        if (allSame) {
-          groups.push({ 
-            type: 'pattern', 
-            message: `${s.symptom.charAt(0).toUpperCase() + s.symptom.slice(1)} has appeared 5 days in a row.` 
-          });
-        }
-      }
+      if (dCopy.getTime() === today.getTime()) groups.today.push(s);
+      else if (dCopy.getTime() === yesterday.getTime()) groups.yesterday.push(s);
+      else if (dCopy.getTime() >= weekAgo.getTime()) groups.thisWeek.push(s);
+      else groups.older.push(s);
     });
 
-    return groups;
-  }, [filteredSymptoms, filter]);
+    const result = [];
+    if (groups.today.length) result.push({ type: 'header', label: t('timeline.today', 'Today'), entries: groups.today });
+    if (groups.yesterday.length) result.push({ type: 'header', label: t('timeline.yesterday', 'Yesterday'), entries: groups.yesterday });
+    if (groups.thisWeek.length) result.push({ type: 'header', label: t('timeline.this_week', 'This Week'), entries: groups.thisWeek });
+    if (groups.older.length) result.push({ type: 'header', label: t('timeline.older', 'Older'), entries: groups.older });
+
+    // Inject patterns and gaps between groups if needed (simplified)
+    const finalData = [];
+    result.forEach((group, gIdx) => {
+      finalData.push({ type: 'sticky-date', label: group.label });
+      group.entries.forEach((entry, eIdx) => {
+        finalData.push({ type: 'entry', data: entry });
+        
+        // Simple Pattern Detection (optional logic per item)
+        if (eIdx === group.entries.length - 1 && gIdx < result.length - 1) {
+          // Gap check between groups
+          const nextGroupFirst = result[gIdx+1].entries[0];
+          const gap = Math.floor((new Date(entry.date) - new Date(nextGroupFirst.date)) / (1000 * 60 * 60 * 24));
+          if (gap >= 3) {
+            finalData.push({ type: 'gap', days: gap });
+          }
+        }
+      });
+    });
+
+    return finalData;
+  }, [filteredSymptoms, t]);
 
   const filters = [
     { id: 'all', label: 'All' },
@@ -203,7 +218,7 @@ function Timeline() {
             className={`flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
               filter === f.id
                 ? 'bg-[var(--app-accent)] text-black shadow-[0_12px_32px_rgba(226,255,50,0.15)]'
-                : 'bg-[#080f1c] border border-[rgba(255,255,255,0.08)] text-[var(--app-text-disabled)] hover:text-[var(--app-text-muted)]'
+                : 'bg-[var(--app-surface)] border border-[var(--app-border)] text-[var(--app-text-disabled)] hover:text-[var(--app-text-muted)]'
             }`}
           >
             {f.label}
@@ -212,8 +227,8 @@ function Timeline() {
       </div>
 
       {symptoms.length === 0 ? (
-        <div className="text-center py-20 bg-[#080f1c] rounded-[32px] border border-[rgba(255,255,255,0.08)]">
-          <div className="w-16 h-16 bg-[rgba(226,255,50,0.05)] rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="text-center py-20 bg-[var(--app-surface)] rounded-[32px] border border-[var(--app-border)]">
+          <div className="w-16 h-16 bg-[var(--app-accent-glow)] rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-8 h-8 text-[var(--app-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -226,30 +241,22 @@ function Timeline() {
         </div>
       ) : (
         <div className="relative">
-          {timelineData.map((item, idx) => {
+          {timelineGroups.map((item, idx) => {
             if (item.type === 'gap') return <GapIndicator key={`gap-${idx}`} days={item.days} />;
             if (item.type === 'pattern') return <PatternCard key={`pattern-${idx}`} pattern={item} />;
+            if (item.type === 'sticky-date') return (
+              <div key={`date-${idx}`} className="sticky top-14 z-20 bg-[var(--app-bg)]/90 backdrop-blur-md py-3 px-1 mb-4">
+                <span className="text-[10px] font-bold text-[var(--app-text-disabled)] uppercase tracking-[0.3em]">{item.label}</span>
+              </div>
+            );
             
             return (
-              <div key={item.label} className="mb-4">
-                {/* Sticky Header */}
-                <div className="sticky top-[3.5rem] z-30 bg-[var(--app-bg)]/80 backdrop-blur-md py-4 mb-4">
-                  <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--app-accent)]">
-                    {item.label}
-                  </h3>
-                </div>
-                
-                <div className="space-y-0">
-                  {item.entries.map((entry, entryIdx) => (
-                    <TimelineEntry 
-                      key={entry.id} 
-                      item={entry} 
-                      t={t} 
-                      isLast={idx === timelineData.length - 1 && entryIdx === item.entries.length - 1} 
-                    />
-                  ))}
-                </div>
-              </div>
+              <TimelineEntry 
+                key={item.data.id} 
+                item={item.data} 
+                t={t} 
+                isLast={idx === timelineGroups.length - 1} 
+              />
             );
           })}
         </div>
@@ -264,6 +271,11 @@ function Timeline() {
           {t('timeline.get_analysis', 'Analyze patterns')}
         </Button>
       </div>
+      
+      <style dangerouslySetInnerHTML={{ __html: `
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
     </PageFrame>
   );
 }

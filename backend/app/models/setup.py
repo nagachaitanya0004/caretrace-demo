@@ -17,6 +17,8 @@ from .models import (
     MEDICAL_HISTORY_VALIDATOR,
     MEDICAL_REPORTS_COLLECTION,
     MEDICAL_REPORTS_VALIDATOR,
+    MEDICATIONS_COLLECTION,
+    MEDICATIONS_VALIDATOR,
     REPORT_COLLECTION,
     REPORT_VALIDATOR,
     SESSION_COLLECTION,
@@ -57,7 +59,7 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
         ALERT_COLLECTION: {
             'validator': ALERT_VALIDATOR,
             'indexes': [
-                {'fields': [('user_id', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_alert_user_created'},
+                {'fields': [('user_id', 'asc'), ('is_read', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_alert_user_read_created'},
                 {'fields': [('severity', 'asc')], 'unique': False, 'name': 'idx_alert_severity'},
             ],
         },
@@ -73,6 +75,7 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
             'indexes': [
                 {'fields': [('session_token', 'asc')], 'unique': True, 'name': 'idx_session_token'},
                 {'fields': [('user_id', 'asc'), ('expires_at', 'asc')], 'unique': False, 'name': 'idx_session_user_expires'},
+                {'fields': [('expires_at', 'asc')], 'unique': False, 'name': 'idx_session_ttl', 'expireAfterSeconds': 0},
             ],
         },
         MEDICAL_HISTORY_COLLECTION: {
@@ -103,6 +106,12 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
             'validator': MEDICAL_REPORTS_VALIDATOR,
             'indexes': [
                 {'fields': [('user_id', 'asc'), ('uploaded_at', 'desc')], 'unique': False, 'name': 'idx_medical_reports_user_uploaded'},
+            ],
+        },
+        MEDICATIONS_COLLECTION: {
+            'validator': MEDICATIONS_VALIDATOR,
+            'indexes': [
+                {'fields': [('user_id', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_medications_user_created'},
             ],
         },
     }

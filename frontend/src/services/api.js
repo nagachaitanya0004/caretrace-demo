@@ -369,6 +369,11 @@ export const api = {
 
   delete: (endpoint, options) => request(endpoint, { method: 'DELETE', ...options }),
 
+  getWithParams: (endpoint, params, options) => {
+    const query = params ? `?${new URLSearchParams(params).toString()}` : '';
+    return request(`${endpoint}${query}`, { method: 'GET', ...options });
+  },
+
   uploadFile: async (endpoint, formData, options = {}) => {
     const token = tokenManager.getToken();
     
@@ -434,13 +439,45 @@ export const api = {
   },
 };
 
+export const healthMetricsApi = {
+  getLatest: () => api.get('/api/health-metrics'),
+  create: (payload) => api.post('/api/health-metrics', payload),
+};
+
+export const medicationsApi = {
+  getAll: () => api.get('/api/medications'),
+  create: (payload) => api.post('/api/medications', payload),
+};
+
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
 export function unwrapApiPayload(res) {
-  if (res != null && typeof res === 'object' && 'data' in res && res.data !== undefined) {
-    return res.data;
+  if (res == null) return null;
+  if (Array.isArray(res)) return res;
+  
+  if (typeof res === 'object') {
+    // Priority 1: { data: { items: [...] } }
+    if (res.data && typeof res.data === 'object' && Array.isArray(res.data.items)) {
+      return res.data.items;
+    }
+    // Priority 2: { data: [...] }
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+    // Priority 3: { payload: [...] }
+    if (Array.isArray(res.payload)) {
+      return res.payload;
+    }
+    // Priority 4: { data: { ... } } (object payload)
+    if (res.data && typeof res.data === 'object') {
+      return res.data;
+    }
+  }
+
+  if (import.meta.env.DEV) {
+    console.warn('[API] Unexpected response shape:', res);
   }
   return res;
 }

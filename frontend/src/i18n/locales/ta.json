@@ -110,7 +110,8 @@
     },
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "Good evening, {{name}}",
+    "greeting_evening": "இனிய மாலை வணக்கம், {{name}}",
+    "streak": "{{count}} நாள் தொடர்ச்சி",
     "demo_meds": {
       "sample_badge": "Sample Data"
     }
@@ -167,7 +168,12 @@
     "date_label": "தேதி",
     "severity_label": "தீவிரம்: {{score}} ({{label}})",
     "severity_help": "1 = மிதமானது, 10 = தீவிரமானது",
-    "submit_btn": "அறிகுறியைச் சேர்",
+    "submit_btn": "இப்போது பதிவுசெய்",
+    "duplicate_title": "ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது",
+    "duplicate_body": "இன்று நீங்கள் இந்த அறிகுறியை ஏற்கனவே பதிவு செய்துள்ளீர்கள். மற்றொரு பதிவைச் சேர்க்க விரும்புகிறீர்களா?",
+    "duplicate_confirm": "ஆம், மீண்டும் பதிவு செய்",
+    "mild": "மிதமானது",
+    "severe": "தீவிரமானது",
     "recorded_title": "உங்கள் பதிவு செய்யப்பட்ட அறிகுறிகள்",
     "logged_on": "{{date}} அன்று பதிவு செய்யப்பட்டது",
     "duration_display": "காலம்: {{count}} நாள்(கள்)",
@@ -210,7 +216,13 @@
     },
     "severity_weight": "தீவிர எடை",
     "days_tracking": "{{count}} நாட்கள் கண்காணிப்பு",
-    "get_analysis": "AI பகுப்பாய்வு பெறுங்கள்"
+    "get_analysis": "போக்குகளை பகுப்பாய்வு செய்",
+    "show_more": "மேலும் காண்க",
+    "show_less": "குறைவாகக் காட்டு",
+    "today": "இன்று",
+    "yesterday": "நேற்று",
+    "this_week": "இந்த வாரம்",
+    "older": "பழையவை"
   },
   "history": {
     "title": "அறிகுறிகளின் வரலாறு",
@@ -267,7 +279,8 @@
       "body": "உங்கள் அறிகுறிகள் இயல்பான வரம்பிற்குள் உள்ளன. உங்கள் ஆரோக்கியத்தைத் தொடர்ந்து கண்காணியுங்கள்."
     },
     "footer_disclaimer": "இது மருத்துவ ஆலோசனை அல்ல. ஆரோக்கியம் தொடர்பான கவலைகளுக்கு எப்போதும் மருத்துவரை அணுகவும்.",
-    "view_recommendations": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைக் காண்க"
+    "view_recommendations": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைக் காண்க",
+    "mark_read": "படித்ததாகக் குறிக்கவும்"
   },
   "reports": {
     "title": "ஆய்வு நிலை ஆரோக்கிய அறிக்கைகள்",

@@ -17,9 +17,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
@@ -29,11 +28,9 @@ from app.db.postgres import init_postgres, close_postgres, postgres_manager
 from app.core.config import APP_NAME, APP_VERSION, CORS_ORIGINS, validate_environment
 from app.core.logger import logger
 from app.core.responses import success_response, error_response, http_error_response, validation_error_response
+from app.core.limiter import limiter
 from app.api.routes import router as api_router
 from app.api.auth import router as auth_router
-
-# ── Rate Limiter ──────────────────────────────────────────────────────────────
-limiter = Limiter(key_func=get_remote_address)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

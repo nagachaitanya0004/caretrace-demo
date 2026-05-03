@@ -110,7 +110,8 @@
     },
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "Good evening, {{name}}",
+    "greeting_evening": "శుభ సాయంత్రం, {{name}}",
+    "streak": "{{count}} రోజుల స్ట్రీక్",
     "demo_meds": {
       "sample_badge": "Sample Data"
     }
@@ -160,7 +161,12 @@
     "date_label": "తేదీ",
     "severity_label": "తీవ్రత: {{score}} ({{label}})",
     "severity_help": "1 = స్వల్పం, 10 = తీవ్రం",
-    "submit_btn": "లక్షణం జోడించు",
+    "submit_btn": "ఇప్పుడే నమోదు చేయండి",
+    "duplicate_title": "ఇప్పటికే నమోదు చేయబడింది",
+    "duplicate_body": "మీరు ఈ రోజు ఈ లక్షణాన్ని ఇప్పటికే నమోదు చేశారు. మీరు మరొక ఎంట్రీని జోడించాలనుకుంటున్నారా?",
+    "duplicate_confirm": "అవును, మళ్ళీ నమోదు చేయండి",
+    "mild": "స్వల్పం",
+    "severe": "తీవ్రం",
     "recorded_title": "మీరు నమోదు చేసిన లక్షణాలు",
     "logged_on": "{{date}}నాడు నమోదు చేయబడింది",
     "duration_display": "వ్యవధి: {{count}} రోజులు",
@@ -210,7 +216,13 @@
     },
     "severity_weight": "తీవ్రత బరువు",
     "days_tracking": "{{count}} రోజుల ట్రాకింగ్",
-    "get_analysis": "AI విశ్లేషణ పొందండి"
+    "get_analysis": "నమూనాలను విశ్లేషించండి",
+    "show_more": "మరిన్ని చూడండి",
+    "show_less": "తక్కువ చూపండి",
+    "today": "నేడు",
+    "yesterday": "నిన్న",
+    "this_week": "ఈ వారం",
+    "older": "పాతవి"
   },
   "history": {
     "title": "లక్షణాల చరిత్ర",
@@ -267,7 +279,8 @@
       "body": "మీ లక్షణాలు సాధారణ పరిధిలోనే ఉన్నాయి. మీ ఆరోగ్యాన్ని పర్యవేక్షించడం కొనసాగించండి."
     },
     "footer_disclaimer": "ఇది వైద్య సలహా కాదు. ఆరోగ్య సమస్యల కోసం ఎల్లప్పుడూ వైద్యులను సంప్రదించండి.",
-    "view_recommendations": "వ్యక్తిగత సిఫార్సులు చూడండి"
+    "view_recommendations": "వ్యక్తిగత సిఫార్సులు చూడండి",
+    "mark_read": "చదివినట్లుగా గుర్తు చేయండి"
   },
   "reports": {
     "title": "ఆరోగ్య విశ్లేషణ నివేదికలు",

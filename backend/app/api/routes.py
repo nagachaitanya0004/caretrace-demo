@@ -9,6 +9,8 @@ from pymongo.errors import DuplicateKeyError
 
 from app.api.auth import get_current_user
 from app.utils.user_identity import get_user_ref, normalize_gender
+from fastapi_cache.decorator import cache
+from fastapi_cache import FastAPICache
 
 from app.db.db import get_database, get_gridfs_bucket
 from app.core.responses import success_response, serialize_document
@@ -28,8 +30,22 @@ from app.schemas.schemas import (
 from app.services.mongo.user_service import UserService
 from app.services.mongo.health_service import HealthService
 from app.services.postgres.audit_service import AuditService
+from app.core.limiter import limiter
 
 router = APIRouter()
+
+def user_specific_key_builder(
+    func,
+    namespace: str = "",
+    *,
+    request: Request = None,
+    response: Any = None,
+    args: tuple = None,
+    kwargs: dict = None,
+):
+    user = kwargs.get("current_user")
+    user_id = user.get("user_id") if user else "anon"
+    return f"{namespace}:{func.__module__}:{func.__name__}:{user_id}"
 
 
 # ---------------------------------------------------------------------------
@@ -182,7 +198,9 @@ async def get_user_or_404(user_id: Any) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 @router.get('/users')
+@limiter.limit("100/minute")
 async def list_users(
+    request: Request,
     name: Optional[str] = Query(None),
     gender: Optional[str] = Query(None),
     current_user: dict = Depends(get_current_user),
@@ -199,7 +217,8 @@ async def list_users(
 
 
 @router.get('/users/me')
-async def get_user_me(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def get_user_me(request: Request, current_user: dict = Depends(get_current_user)):
     return success_response(serialize_document(current_user), message='User retrieved successfully')
 
 
@@ -208,7 +227,8 @@ _PG_USER_FIELDS = {'name', 'age', 'gender', 'height_cm', 'weight_kg', 'blood_gro
 
 
 @router.put('/users/me')
-async def update_user(payload: UserUpdate, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def update_user(request: Request, payload: UserUpdate, current_user: dict = Depends(get_current_user)):
     oid = current_user['_id']
     db = get_database()
 
@@ -237,7 +257,8 @@ async def update_user(payload: UserUpdate, current_user: dict = Depends(get_curr
 
 
 @router.delete('/users/me')
-async def delete_user(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def delete_user(request: Request, current_user: dict = Depends(get_current_user)):
     oid = current_user['_id']
     pg_user_id: str | None = current_user.get('user_id')
     user_ref = get_user_ref(current_user)
@@ -281,7 +302,8 @@ async def delete_user(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.post('/symptoms')
-async def create_symptom(payload: SymptomCreate, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def create_symptom(request: Request, payload: SymptomCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_ref = get_user_ref(current_user)
     payload_data = {k: v for k, v in payload.model_dump().items() if v is not None}
@@ -296,7 +318,8 @@ async def create_symptom(payload: SymptomCreate, current_user: dict = Depends(ge
 
 
 @router.get('/symptoms')
-async def list_symptoms(symptom: Optional[str] = Query(None), current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def list_symptoms(request: Request, symptom: Optional[str] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     if symptom:
@@ -311,7 +334,11 @@ async def list_symptoms(symptom: Optional[str] = Query(None), current_user: dict
 # ---------------------------------------------------------------------------
 
 @router.post('/analysis')
-async def create_analysis(payload: AnalysisCreate, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def create_analysis(request: Request, payload: AnalysisCreate, current_user: dict = Depends(get_current_user)):
+    # Invalidate cache for this user
+    user_id = current_user.get("user_id") or str(current_user["_id"])
+    await FastAPICache.clear(namespace="analysis", key=f"analysis:app.api.routes:list_analysis:{user_id}")
     db = get_database()
     user_ref = get_user_ref(current_user)
     symptom_cursor = db.symptoms.find({'user_id': user_ref}).sort('timestamp', -1).limit(20)
@@ -332,7 +359,9 @@ async def create_analysis(payload: AnalysisCreate, current_user: dict = Depends(
 
 
 @router.get('/analysis')
-async def list_analysis(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+@cache(expire=300, namespace="analysis", key_builder=user_specific_key_builder)
+async def list_analysis(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     cursor = db.analysis.find(query).sort('created_at', -1)
@@ -345,7 +374,8 @@ async def list_analysis(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.post('/alerts')
-async def create_alert(payload: AlertCreate, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def create_alert(request: Request, payload: AlertCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_ref = get_user_ref(current_user)
     alert_data = payload.model_dump()
@@ -357,7 +387,8 @@ async def create_alert(payload: AlertCreate, current_user: dict = Depends(get_cu
 
 
 @router.get('/alerts')
-async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def list_alerts(request: Request, unread_only: Optional[bool] = Query(None), current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     if unread_only is True:
@@ -367,12 +398,32 @@ async def list_alerts(unread_only: Optional[bool] = Query(None), current_user: d
     return success_response(alerts, message='Alerts retrieved successfully')
 
 
+@router.patch('/alerts/{alert_id}/read')
+@limiter.limit("100/minute")
+async def mark_alert_read(request: Request, alert_id: str, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_ref = get_user_ref(current_user)
+    try:
+        obj_id = ObjectId(alert_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid alert ID")
+
+    result = await db.alerts.update_one(
+        {'_id': obj_id, 'user_id': user_ref},
+        {'$set': {'is_read': True, 'updated_at': datetime.utcnow()}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    return success_response(None, message='Alert marked as read')
+
+
 # ---------------------------------------------------------------------------
 # Medical history endpoints
 # ---------------------------------------------------------------------------
 
 @router.put('/medical-history')
-async def upsert_medical_history(payload: MedicalHistoryUpsert, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def upsert_medical_history(request: Request, payload: MedicalHistoryUpsert, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
@@ -390,7 +441,8 @@ async def upsert_medical_history(payload: MedicalHistoryUpsert, current_user: di
 
 
 @router.get('/medical-history')
-async def get_medical_history(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def get_medical_history(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
     record = await db.medical_history.find_one({'user_id': get_user_ref(current_user)})
     return success_response(serialize_document(record) if record else None, message='Medical history retrieved')
@@ -401,7 +453,8 @@ async def get_medical_history(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.post('/family-history')
-async def save_family_history(payload: FamilyHistoryBatch, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def save_family_history(request: Request, payload: FamilyHistoryBatch, current_user: dict = Depends(get_current_user)):
     """Replace all family history entries for the user with the submitted batch."""
     db = get_database()
     user_ref = get_user_ref(current_user)
@@ -425,7 +478,8 @@ async def save_family_history(payload: FamilyHistoryBatch, current_user: dict = 
 
 
 @router.get('/family-history')
-async def get_family_history(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def get_family_history(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
     entries = [serialize_document(d) async for d in db.family_history.find({'user_id': get_user_ref(current_user)}).sort('created_at', 1)]
     return success_response(entries, message='Family history retrieved')
@@ -436,7 +490,8 @@ async def get_family_history(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.put('/lifestyle')
-async def upsert_lifestyle(payload: LifestyleDataUpsert, current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def upsert_lifestyle(request: Request, payload: LifestyleDataUpsert, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
@@ -453,7 +508,8 @@ async def upsert_lifestyle(payload: LifestyleDataUpsert, current_user: dict = De
 
 
 @router.get('/lifestyle')
-async def get_lifestyle(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def get_lifestyle(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
     record = await db.lifestyle_data.find_one({'user_id': get_user_ref(current_user)})
     return success_response(serialize_document(record) if record else None, message='Lifestyle data retrieved')
@@ -464,34 +520,26 @@ async def get_lifestyle(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.post('/health-metrics')
-async def create_health_metrics(payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
-    db = get_database()
-    user_ref = get_user_ref(current_user)
-    now = datetime.utcnow()
-    doc = {k: v for k, v in payload.model_dump().items() if v is not None}
+@limiter.limit("100/minute")
 async def create_health_metrics(request: Request, payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
-    from app.main import limiter
-    with limiter.limit(API_RATE_LIMIT, key_func=lambda: str(current_user["_id"])):
-        user_ref = get_user_ref(current_user)
-        saved = await HealthService.create_health_metrics(user_ref, payload)
-        
-        await AuditService.log_action(str(current_user["_id"]), "log_health_metrics", payload=payload.model_dump())
-        return success_response(serialize_document(saved))
+    user_ref = get_user_ref(current_user)
+    saved = await HealthService.create_health_metrics(user_ref, payload)
+    
+    # Audit Log to PostgreSQL (Non-blocking)
+    user_uuid = current_user.get("user_id") or str(current_user["_id"])
+    await AuditService.log_action(user_uuid, "log_health_metrics", resource="health_metrics", payload=payload.model_dump())
+    
+    return success_response(saved, message="Health metrics recorded successfully")
 
 
 @router.get('/health-metrics')
-async def list_health_metrics(
-    request: Request,
-    cursor: Optional[str] = Query(None),
-    limit: int = Query(20),
-    current_user: dict = Depends(get_current_user)
-):
-    from app.main import limiter
-    with limiter.limit(API_RATE_LIMIT, key_func=lambda: str(current_user["_id"])):
-        items, next_cursor, has_more = await HealthService.get_paginated_history(
-            'health_metrics', get_user_ref(current_user), cursor, limit
-        )
-        return success_response(items, meta={'next_cursor': next_cursor, 'has_more': has_more})
+@limiter.limit("100/minute")
+async def list_health_metrics(request: Request, current_user: dict = Depends(get_current_user)):
+    db = get_database()
+    user_ref = get_user_ref(current_user)
+    cursor = db.health_metrics.find({'user_id': user_ref}).sort('recorded_at', -1).limit(10)
+    items = [serialize_document(item) async for item in cursor]
+    return success_response(items, message="Health metrics retrieved successfully")
 
 
 # ---------------------------------------------------------------------------
@@ -570,7 +618,8 @@ async def upload_medical_report(
 
 
 @router.get('/medical-reports')
-async def list_medical_reports(current_user: dict = Depends(get_current_user)):
+@limiter.limit("100/minute")
+async def list_medical_reports(request: Request, current_user: dict = Depends(get_current_user)):
     """Retrieve all medical reports for the authenticated user."""
     db = get_database()
     cursor = db.medical_reports.find({'user_id': get_user_ref(current_user)}).sort('uploaded_at', -1)
@@ -711,43 +760,29 @@ async def list_lab_results(current_user: dict = Depends(get_current_user)):
 # ---------------------------------------------------------------------------
 
 @router.post('/medications')
-async def create_medication(payload: MedicationCreate, current_user: dict = Depends(get_current_user)):
-    """Add a medication entry for the authenticated user."""
+@limiter.limit("100/minute")
+async def create_medication(request: Request, payload: MedicationCreate, current_user: dict = Depends(get_current_user)):
     db = get_database()
     user_ref = get_user_ref(current_user)
-    now = datetime.utcnow()
     
     doc = {
         'user_id': user_ref,
-        'medication_name': payload.medication_name,
-        'created_at': now,
-        'updated_at': now,
+        'name': payload.medication_name,
+        'dose': payload.dosage or "Not specified",
+        'schedule': payload.frequency or "As needed",
+        'notes': payload.side_effects or "",
+        'created_at': datetime.utcnow(),
     }
     
-    if payload.dosage:
-        doc['dosage'] = payload.dosage
-    if payload.frequency:
-        doc['frequency'] = payload.frequency
-    if payload.start_date:
-        doc['start_date'] = payload.start_date
-    if payload.end_date:
-        doc['end_date'] = payload.end_date
-    if payload.adherence_rate is not None:
-        doc['adherence_rate'] = payload.adherence_rate
-    if payload.side_effects:
-        doc['side_effects'] = payload.side_effects
-    if payload.effectiveness_rating is not None:
-        doc['effectiveness_rating'] = payload.effectiveness_rating
-    
-    result = await db.medication_tracking.insert_one(doc)
-    saved = await db.medication_tracking.find_one({'_id': result.inserted_id})
+    result = await db.medications.insert_one(doc)
+    saved = await db.medications.find_one({'_id': result.inserted_id})
     return success_response(serialize_document(saved), message='Medication recorded successfully')
 
 
 @router.get('/medications')
-async def list_medications(current_user: dict = Depends(get_current_user)):
-    """Get all medications for the authenticated user."""
+@limiter.limit("100/minute")
+async def list_medications(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
-    cursor = db.medication_tracking.find({'user_id': get_user_ref(current_user)}).sort('created_at', -1)
+    cursor = db.medications.find({'user_id': get_user_ref(current_user)}).sort('created_at', -1)
     medications = [serialize_document(d) async for d in cursor]
     return success_response(medications, message='Medications retrieved successfully')

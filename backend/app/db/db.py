@@ -92,10 +92,14 @@ async def init_db() -> None:
             for index in cfg.get('indexes', []):
                 field_spec = normalize_index_fields(index['fields'])
                 logger.info('Creating index %s on %s', index['name'], collection_name)
+                
+                # Extract options (exclude name and fields)
+                options = {k: v for k, v in index.items() if k not in ['name', 'fields']}
+                
                 await database[collection_name].create_index(
                     field_spec,
                     name=index['name'],
-                    unique=index.get('unique', False),
+                    **options
                 )
 
         logger.info('MongoDB initialization complete')

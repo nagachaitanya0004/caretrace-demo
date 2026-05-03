@@ -139,7 +139,8 @@
     },
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "Good evening, {{name}}"
+    "greeting_evening": "Good evening, {{name}}",
+    "streak": "{{count}}-day streak"
   },
   "testimonials": {
     "title": "What Our Users Say",
@@ -193,12 +194,15 @@
     "date_label": "When did this start?",
     "severity_label": "Severity: {{score}} ({{label}})",
     "severity_help": "1 is mild, 10 is severe",
-    "submit_btn": "Save",
+    "submit_btn": "Log now",
     "step1_label": "Select Symptom",
     "step2_label": "Intensity",
     "step3_label": "Context (Optional)",
     "notes_placeholder": "What else changed today?",
     "logged_confirm": "Logged.",
+    "duplicate_title": "Already Logged",
+    "duplicate_body": "You already logged this symptom today. Would you like to add another entry?",
+    "duplicate_confirm": "Yes, log again",
     "mild": "Mild",
     "severe": "Severe",
     "recorded_title": "Your history",
@@ -243,7 +247,13 @@
     },
     "severity_weight": "Severity",
     "days_tracking": "Tracking for {{count}} days",
-    "get_analysis": "Run analysis"
+    "get_analysis": "Analyze patterns",
+    "show_more": "Show more",
+    "show_less": "Show less",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this_week": "This Week",
+    "older": "Older"
   },
   "history": {
     "title": "Your history",
@@ -300,7 +310,8 @@
       "body": "No active alerts right now."
     },
     "footer_disclaimer": "This is not medical advice. Always speak with a doctor.",
-    "view_recommendations": "View next steps"
+    "view_recommendations": "View next steps",
+    "mark_read": "Mark as read"
   },
   "reports": {
     "title": "Your reports",

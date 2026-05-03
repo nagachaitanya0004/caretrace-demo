@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, unwrapApiPayload } from './services/api';
 import { useAuth } from './AuthContext';
 import { DEMO_EMAIL, DEMO_MEDICATIONS } from './constants/demoAccount';
@@ -45,119 +46,87 @@ function normalizeSymptom(s) {
 
 export function AppProvider({ children }) {
   const { user, logout } = useAuth();
+  const queryClient = useQueryClient();
   const demoEmail = DEMO_EMAIL.toLowerCase();
 
-  const [userProfile, setUserProfile] = useState({});
-  const [symptoms, setSymptoms] = useState([]);
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadError, setLoadError] = useState(null);
-
   const isDemoUser = useMemo(() => {
-    const e = user?.email || userProfile?.email;
+    const e = user?.email;
     return typeof e === 'string' && e.toLowerCase() === demoEmail;
-  }, [user?.email, userProfile?.email, demoEmail]);
+  }, [user?.email, demoEmail]);
 
-  const applyDemoFallback = useCallback(() => {
-    const uid = user?.id;
-    if (!uid) return;
-    setUserProfile({ ...DEMO_FALLBACK_PROFILE, id: uid });
-    setSymptoms(
-      DEMO_FALLBACK_SYMPTOMS.map((s) => normalizeSymptom({ ...s, user_id: uid }))
-    );
-    setAlerts(
-      DEMO_FALLBACK_ALERTS.map((a) => ({ ...a, user_id: uid }))
-    );
-    setAnalysisResult(
-      normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: uid })
-    );
-    setLoadError(null);
-  }, [user?.id]);
+  // ── Queries ────────────────────────────────────────────────────────────────
 
-  const fetchAppData = useCallback(async () => {
-    if (!user?.id) return;
-    setIsLoading(true);
-    setLoadError(null);
-    const uid = user.id;
-    try {
-      const [userRes, symptomsRes, alertsRes] = await Promise.all([
-        api.get('/api/users/me'),
-        api.get('/api/symptoms'),
-        api.get('/api/alerts'),
-      ]);
+  const { data: userProfileRaw, isLoading: profileLoading } = useQuery({
+    queryKey: ['userProfile', user?.id],
+    queryFn: () => api.get('/api/users/me'),
+    enabled: !!user?.id,
+    select: (res) => unwrapApiPayload(res) || {},
+  });
 
-      let profile = unwrapApiPayload(userRes) || {};
-      let symList = unwrapApiPayload(symptomsRes);
-      if (!Array.isArray(symList)) symList = [];
-      symList = symList.map(normalizeSymptom);
-      let alertList = unwrapApiPayload(alertsRes);
-      if (!Array.isArray(alertList)) alertList = [];
+  const { data: symptomsRaw, isLoading: symptomsLoading } = useQuery({
+    queryKey: ['symptoms', user?.id],
+    queryFn: () => api.get('/api/symptoms'),
+    enabled: !!user?.id,
+    select: (res) => {
+      const list = unwrapApiPayload(res);
+      return Array.isArray(list) ? list.map(normalizeSymptom) : [];
+    },
+  });
 
-      const emailMatchesDemo =
-        typeof profile.email === 'string' && profile.email.toLowerCase() === demoEmail;
-      const treatAsDemo = isDemoUser || emailMatchesDemo;
+  const { data: alertsRaw, isLoading: alertsLoading } = useQuery({
+    queryKey: ['alerts', user?.id],
+    queryFn: () => api.get('/api/alerts'),
+    enabled: !!user?.id,
+    select: (res) => {
+      const list = unwrapApiPayload(res);
+      return Array.isArray(list) ? list : [];
+    },
+  });
 
-      if (treatAsDemo) {
-        if (!symList.length) {
-          symList = DEMO_FALLBACK_SYMPTOMS.map((s) =>
-            normalizeSymptom({ ...s, user_id: uid })
-          );
-        }
-        if (!alertList.length) {
-          alertList = DEMO_FALLBACK_ALERTS.map((a) => ({ ...a, user_id: uid }));
-        }
-        if (!profile?.email) {
-          profile = { ...DEMO_FALLBACK_PROFILE, id: uid };
-        }
-      }
+  const { data: analysisRaw, isLoading: analysisLoading } = useQuery({
+    queryKey: ['analysis', user?.id],
+    queryFn: () => api.get('/api/analysis'),
+    enabled: !!user?.id,
+    select: (res) => {
+      const list = unwrapApiPayload(res);
+      const data = Array.isArray(list) ? list[0] : list;
+      return normalizeAnalysisPayload(data);
+    },
+  });
 
-      setUserProfile(profile);
-      setSymptoms(symList);
-      setAlerts(alertList);
+  // ── Demo Logic ─────────────────────────────────────────────────────────────
 
-      try {
-        const anaRes = await api.get('/api/analysis');
-        const anaList = unwrapApiPayload(anaRes);
-        const list = Array.isArray(anaList) ? anaList : [];
-        let analysis = list.length ? normalizeAnalysisPayload(list[0]) : null;
-        if (treatAsDemo && !analysis) {
-          analysis = normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: uid });
-        }
-        setAnalysisResult(analysis);
-      } catch {
-        setAnalysisResult(
-          treatAsDemo ? normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: uid }) : null
-        );
-      }
-    } catch (err) {
-      console.error('Failed fetching context data', err);
-      if (err?.status === 401) {
-        if (logout) logout();
-      } else if (isDemoUser) {
-        applyDemoFallback();
-      } else {
-        setLoadError(err?.message || 'Failed to load data');
-      }
-    } finally {
-      setIsLoading(false);
+  const userProfile = useMemo(() => {
+    if (!isDemoUser) return userProfileRaw || {};
+    return { ...DEMO_FALLBACK_PROFILE, ...userProfileRaw, id: user?.id };
+  }, [isDemoUser, userProfileRaw, user?.id]);
+
+  const symptoms = useMemo(() => {
+    const apiSymptoms = symptomsRaw || [];
+    if (!isDemoUser) return apiSymptoms;
+    const fallback = DEMO_FALLBACK_SYMPTOMS.map(s => normalizeSymptom({ ...s, user_id: user?.id }));
+    return [...apiSymptoms, ...fallback];
+  }, [isDemoUser, symptomsRaw, user?.id]);
+
+  const alerts = useMemo(() => {
+    const apiAlerts = alertsRaw || [];
+    if (!isDemoUser) return apiAlerts;
+    const fallback = DEMO_FALLBACK_ALERTS.map(a => ({ ...a, user_id: user?.id }));
+    return [...apiAlerts, ...fallback];
+  }, [isDemoUser, alertsRaw, user?.id]);
+
+  const analysisResult = useMemo(() => {
+    if (!isDemoUser) return analysisRaw;
+    if (analysisRaw && analysisRaw.risk !== 'Pending') {
+      return analysisRaw;
     }
-  }, [user?.id, logout, isDemoUser, applyDemoFallback, demoEmail]);
+    return normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: user?.id });
+  }, [isDemoUser, analysisRaw, user?.id]);
 
-  useEffect(() => {
-    if (user?.id) {
-      fetchAppData();
-    } else {
-      setUserProfile({});
-      setSymptoms([]);
-      setAlerts([]);
-      setAnalysisResult(null);
-    }
-  }, [user?.id, fetchAppData]);
+  // ── Mutations ──────────────────────────────────────────────────────────────
 
-  const addSymptom = useCallback(
-    async (symptomParams) => {
-      if (!user?.id) return;
+  const addSymptomMutation = useMutation({
+    mutationFn: async (symptomParams) => {
       const { date, notes, symptom, duration, severity, frequency, duration_text } = symptomParams;
       const payload = {
         symptom,
@@ -174,30 +143,67 @@ export function AppProvider({ children }) {
       if (!payload.timestamp) {
         payload.timestamp = new Date().toISOString();
       }
-      // Store structured extras in context so they flow to all existing consumers
       const context = {};
       if (frequency) context.frequency = frequency;
       if (duration_text) context.duration_text = duration_text;
       if (Object.keys(context).length > 0) payload.context = context;
-      await api.post('/api/symptoms', payload);
-      await fetchAppData();
+      return api.post('/api/symptoms', payload);
     },
-    [user?.id, fetchAppData]
-  );
+    onMutate: async (newSymptom) => {
+      // Optimistic update
+      await queryClient.cancelQueries({ queryKey: ['symptoms', user?.id] });
+      const previousSymptoms = queryClient.getQueryData(['symptoms', user?.id]);
+      
+      const optimisticSymptom = normalizeSymptom({
+        ...newSymptom,
+        id: `temp-${Date.now()}`,
+        timestamp: newSymptom.date || new Date().toISOString(),
+        user_id: user?.id
+      });
 
-  const performAnalysis = useCallback(async () => {
-    if (!user?.id) return;
-    const res = await api.post('/api/analysis', {});
-    setAnalysisResult(normalizeAnalysisPayload(unwrapApiPayload(res)));
-    await fetchAppData();
-  }, [user?.id, fetchAppData]);
+      queryClient.setQueryData(['symptoms', user?.id], (old) => [optimisticSymptom, ...(old || [])]);
+      return { previousSymptoms };
+    },
+    onError: (err, newSymptom, context) => {
+      queryClient.setQueryData(['symptoms', user?.id], context.previousSymptoms);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['symptoms', user?.id] });
+    },
+  });
 
-  const hasAlert = useCallback(() => alerts.length > 0, [alerts]);
+  const performAnalysisMutation = useMutation({
+    mutationFn: () => api.post('/api/analysis', {}),
+    onSuccess: (res) => {
+      queryClient.setQueryData(['analysis', user?.id], normalizeAnalysisPayload(unwrapApiPayload(res)));
+      queryClient.invalidateQueries({ queryKey: ['analysis', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['alerts', user?.id] });
+    },
+  });
 
+  const markAlertReadMutation = useMutation({
+    mutationFn: (alertId) => api.patch(`/api/alerts/${alertId}/read`),
+    onMutate: async (alertId) => {
+      await queryClient.cancelQueries({ queryKey: ['alerts', user?.id] });
+      const previousAlerts = queryClient.getQueryData(['alerts', user?.id]);
+      
+      queryClient.setQueryData(['alerts', user?.id], (old) => 
+        (old || []).map(a => a.id === alertId ? { ...a, is_read: true } : a)
+      );
+      
+      return { previousAlerts };
+    },
+    onError: (err, alertId, context) => {
+      queryClient.setQueryData(['alerts', user?.id], context.previousAlerts);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts', user?.id] });
+    },
+  });
+
+  const isLoading = profileLoading || symptomsLoading || alertsLoading || analysisLoading;
   const riskLevel = analysisResult?.risk || 'Pending';
-
-  const EMPTY_MEDS = useMemo(() => [], []);
-  const demoMedications = isDemoUser ? DEMO_MEDICATIONS : EMPTY_MEDS;
+  const demoMedications = isDemoUser ? DEMO_MEDICATIONS : [];
 
   const value = useMemo(
     () => ({
@@ -206,15 +212,14 @@ export function AppProvider({ children }) {
       analysisResult,
       alerts,
       isLoading,
-      loadError,
       isDemoUser,
       demoMedications,
       riskLevel,
-      addSymptom,
-      performAnalysis,
-      hasAlert,
-      refreshData: fetchAppData,
-      clearLoadError: () => setLoadError(null),
+      addSymptom: addSymptomMutation.mutateAsync,
+      performAnalysis: performAnalysisMutation.mutateAsync,
+      markAlertRead: markAlertReadMutation.mutateAsync,
+      hasAlert: () => alerts.length > 0,
+      refreshData: () => queryClient.invalidateQueries({ queryKey: [user?.id] }),
     }),
     [
       userProfile,
@@ -222,14 +227,13 @@ export function AppProvider({ children }) {
       analysisResult,
       alerts,
       isLoading,
-      loadError,
       isDemoUser,
       demoMedications,
       riskLevel,
-      addSymptom,
-      performAnalysis,
-      hasAlert,
-      fetchAppData,
+      addSymptomMutation,
+      performAnalysisMutation,
+      queryClient,
+      user?.id
     ]
   );
 

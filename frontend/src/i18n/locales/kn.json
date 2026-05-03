@@ -110,7 +110,8 @@
     },
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "Good evening, {{name}}",
+    "greeting_evening": "ಶುಭ ಸಂಜೆ, {{name}}",
+    "streak": "{{count}} ದಿನದ ಸ್ಟ್ರೀಕ್",
     "demo_meds": {
       "sample_badge": "Sample Data"
     }
@@ -160,7 +161,12 @@
     "date_label": "ದಿನಾಂಕ",
     "severity_label": "ತೀವ್ರತೆ: {{score}} ({{label}})",
     "severity_help": "1 = ಲಘು, 10 = ತೀವ್ರ",
-    "submit_btn": "ಲಕ್ಷಣವನ್ನು ಸೇರಿಸಿ",
+    "submit_btn": "ಈಗಲೇ ದಾಖಲಿಸಿ",
+    "duplicate_title": "ಈಗಲೇ ದಾಖಲಿಸಲಾಗಿದೆ",
+    "duplicate_body": "ನೀವು ಇಂದು ಈ ಲಕ್ಷಣವನ್ನು ಈಗಾಗಲೇ ದಾಖಲಿಸಿದ್ದೀರಿ. ನೀವು ಇನ್ನೊಂದು ನಮೂದನ್ನು ಸೇರಿಸಲು ಬಯಸುವಿರಾ?",
+    "duplicate_confirm": "ಹೌದು, ಮತ್ತೆ ದಾಖಲಿಸಿ",
+    "mild": "ಲಘು",
+    "severe": "ತೀವ್ರ",
     "recorded_title": "ನಿಮ್ಮ ದಾಖಲಾದ ಲಕ್ಷಣಗಳು",
     "logged_on": "{{date}} ರಂದು ದಾಖಲಿಸಲಾಗಿದೆ",
     "duration_display": "ಅವಧಿ: {{count}} ದಿನ(ಗಳು)",
@@ -210,7 +216,13 @@
     },
     "severity_weight": "ತೀವ್ರತೆಯ ತೂಕ",
     "days_tracking": "{{count}} ದಿನಗಳ ಟ್ರ್ಯಾಕಿಂಗ್",
-    "get_analysis": "AI ವಿಶ್ಲೇಷಣೆ ಪಡೆಯಿರಿ"
+    "get_analysis": "ಮಾದರಿಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
+    "show_more": "ಇನ್ನಷ್ಟು ತೋರಿಸಿ",
+    "show_less": "ಕಡಿಮೆ ತೋರಿಸಿ",
+    "today": "ಇಂದು",
+    "yesterday": "ನಿನ್ನೆ",
+    "this_week": "ಈ ವಾರ",
+    "older": "ಹಳೆಯದು"
   },
   "history": {
     "title": "ಲಕ್ಷಣಗಳ ಇತಿಹಾಸ",
@@ -267,7 +279,8 @@
       "body": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿವೆ. ನಿಮ್ಮ ಆರೋಗ್ಯದ ಮೇಲ್ವಿಚಾರಣೆಯನ್ನು ಮುಂದುವರಿಸಿ."
     },
     "footer_disclaimer": "ಇದು ವೈದ್ಯಕೀಯ ಸಲಹೆಯಲ್ಲ. ಆರೋಗ್ಯದ ಕಾಳಜಿಗಾಗಿ ಯಾವಾಗಲೂ ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
-    "view_recommendations": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ನೋಡಿ"
+    "view_recommendations": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ನೋಡಿ",
+    "mark_read": "ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ"
   },
   "reports": {
     "title": "ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಆರೋಗ್ಯ ವರದಿಗಳು",

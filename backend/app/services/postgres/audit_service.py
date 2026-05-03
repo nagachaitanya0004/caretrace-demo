@@ -35,4 +35,19 @@ class AuditService:
                 session.add(log_entry)
                 await session.commit()
         except Exception as exc:
-            logger.warning(f"Failed to write audit log to PostgreSQL: {exc}")
+            logger.warning(f"PostgreSQL Audit Failed: {exc}. Falling back to MongoDB.")
+            try:
+                from app.db.db import get_database
+                db = get_database()
+                fallback_doc = {
+                    "user_id": user_id,
+                    "action": action,
+                    "resource": resource,
+                    "payload": payload,
+                    "timestamp": datetime.utcnow(),
+                    "source": "fallback"
+                }
+                await db.audit_fallback.insert_one(fallback_doc)
+                logger.info(f"Audit log saved to MongoDB fallback for user {user_id}")
+            except Exception as mongo_exc:
+                logger.error(f"CRITICAL: Both PostgreSQL and MongoDB audit fallback failed: {mongo_exc}")

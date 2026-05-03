@@ -11,7 +11,9 @@
  * ========================================================================== */
 
 import { createContext, useState, useEffect, useContext, useCallback, useMemo, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { api, unwrapApiPayload, tokenManager, observability, AUTH_EVENTS } from './services/api';
+import { DEMO_EMAIL, DEMO_PASSWORD } from './constants/demoAccount';
 
 export const AuthContext = createContext();
 
@@ -19,6 +21,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => tokenManager.getToken());
   const [user, setUser] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const queryClient = useQueryClient();
   
   // Prevent duplicate /auth/me calls
   const fetchUserRef = useRef(null);
@@ -195,7 +198,7 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
- // ============================================================================
+  // ============================================================================
   // LOGIN
   // ============================================================================
 
@@ -230,9 +233,7 @@ export function AuthProvider({ children }) {
   // SECURE DEMO LOGIN (RESTORED)
   // ============================================================================
   const loginDemo = useCallback(async (abortSignal) => {
-    const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'demo@caretrace.ai';
-    const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || 'caretrace_demo_2024';
-    await login(demoEmail, demoPassword, abortSignal);
+    await login(DEMO_EMAIL, DEMO_PASSWORD, abortSignal);
   }, [login]);
 
   // ============================================================================
@@ -258,7 +259,10 @@ export function AuthProvider({ children }) {
     setUser(null);
     isInitializedRef.current = false;
     fetchUserRef.current = null;
-  }, []);
+    
+    // Clear all queries on logout to prevent data leaking between sessions
+    queryClient.clear();
+  }, [queryClient]);
 
   // ============================================================================
   // UPDATE USER (Optimistic updates)

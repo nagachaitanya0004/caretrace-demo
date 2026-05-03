@@ -14,6 +14,7 @@ FAMILY_HISTORY_COLLECTION = 'family_history'
 LIFESTYLE_DATA_COLLECTION = 'lifestyle_data'
 HEALTH_METRICS_COLLECTION = 'health_metrics'
 MEDICAL_REPORTS_COLLECTION = 'medical_reports'
+MEDICATIONS_COLLECTION = 'medications'
 
 
 # MongoDB document validators for collection-level validation.
@@ -40,7 +41,7 @@ USER_VALIDATOR = {
             'bmi': {'bsonType': 'double', 'description': 'Body Mass Index, derived from height and weight'},
             'health_goal': {'bsonType': 'string', 'enum': ['symptom_check', 'chronic_management', 'preventive_care', 'general_consultation'], 'description': 'User health intent'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -58,7 +59,7 @@ MEDICAL_HISTORY_VALIDATOR = {
             'created_at':  {'bsonType': 'date'},
             'updated_at':  {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -74,7 +75,7 @@ FAMILY_HISTORY_VALIDATOR = {
             'created_at':     {'bsonType': 'date'},
             'updated_at':     {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -96,7 +97,7 @@ LIFESTYLE_DATA_VALIDATOR = {
             'created_at':           {'bsonType': 'date'},
             'updated_at':           {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -115,7 +116,7 @@ HEALTH_METRICS_VALIDATOR = {
             'recorded_at':        {'bsonType': 'date'},
             'created_at':         {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -134,7 +135,7 @@ STRUCTURED_SYMPTOMS_VALIDATOR = {
             'created_at':   {'bsonType': 'date'},
             'recorded_at':  {'bsonType': 'date',    'description': 'Timestamp when symptom was recorded'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -161,7 +162,7 @@ SYMPTOM_VALIDATOR = {
                 },
             },
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -179,7 +180,7 @@ ANALYSIS_VALIDATOR = {
             'model_version': {'bsonType': 'string'},
             'created_at': {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -197,7 +198,7 @@ ALERT_VALIDATOR = {
             'category': {'bsonType': 'string'},
             'source': {'bsonType': 'string'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -214,7 +215,7 @@ REPORT_VALIDATOR = {
             'metrics': {'bsonType': 'object'},
             'created_at': {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -231,7 +232,7 @@ SESSION_VALIDATOR = {
             'ip_address': {'bsonType': 'string'},
             'user_agent': {'bsonType': 'string'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
     }
 }
 
@@ -247,7 +248,24 @@ MEDICAL_REPORTS_VALIDATOR = {
             'file_type':      {'bsonType': 'string', 'enum': ['application/pdf', 'image/jpeg', 'image/png']},
             'uploaded_at':    {'bsonType': 'date'},
         },
-        'additionalProperties': False,
+        'additionalProperties': True,
+    }
+}
+
+MEDICATIONS_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['user_id', 'name', 'dose', 'schedule', 'created_at'],
+        'properties': {
+            '_id': {'bsonType': 'objectId'},
+            'user_id': {'bsonType': ['objectId', 'string']},
+            'name': {'bsonType': 'string'},
+            'dose': {'bsonType': 'string'},
+            'schedule': {'bsonType': 'string'},
+            'notes': {'bsonType': 'string'},
+            'created_at': {'bsonType': 'date'},
+        },
+        'additionalProperties': True,
     }
 }
 

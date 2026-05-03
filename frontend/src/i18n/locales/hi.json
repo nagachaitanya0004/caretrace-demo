@@ -122,7 +122,8 @@
     },
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "Good evening, {{name}}"
+    "greeting_evening": "शुभ संध्या, {{name}}",
+    "streak": "{{count}} दिन की निरंतरता"
   },
   "testimonials": {
     "title": "हमारे उपयोगकर्ता क्या कहते हैं",
@@ -176,7 +177,12 @@
     "date_label": "तारीख",
     "severity_label": "गंभीरता: {{score}} ({{label}})",
     "severity_help": "1 = हल्का, 10 = गंभीर",
-    "submit_btn": "लक्षण जोड़ें",
+    "submit_btn": "अभी दर्ज करें",
+    "duplicate_title": "पहले से दर्ज है",
+    "duplicate_body": "आपने आज यह लक्षण पहले ही दर्ज कर लिया है। क्या आप एक और प्रविष्टि जोड़ना चाहेंगे?",
+    "duplicate_confirm": "हाँ, फिर से दर्ज करें",
+    "mild": "हल्का",
+    "severe": "गंभीर",
     "recorded_title": "आपके दर्ज किए गए लक्षण",
     "logged_on": "{{date}} को दर्ज किया गया",
     "duration_display": "अवधि: {{count}} दिन",
@@ -219,7 +225,13 @@
     },
     "severity_weight": "गंभीरता भार",
     "days_tracking": "{{count}} दिनों का ट्रैकिंग",
-    "get_analysis": "AI विश्लेषण प्राप्त करें"
+    "get_analysis": "पैटर्न का विश्लेषण करें",
+    "show_more": "और देखें",
+    "show_less": "कम दिखाएं",
+    "today": "आज",
+    "yesterday": "कल",
+    "this_week": "इस सप्ताह",
+    "older": "पुराने"
   },
   "history": {
     "title": "लक्षणों का इतिहास",
@@ -276,7 +288,8 @@
       "body": "आपके लक्षण सामान्य सीमा के भीतर हैं। अपने स्वास्थ्य की निगरानी जारी रखें।"
     },
     "footer_disclaimer": "यह चिकित्सा सलाह नहीं है। स्वास्थ्य संबंधी चिंताओं के लिए हमेशा स्वास्थ्य देखभाल पेशेवरों से परामर्श लें।",
-    "view_recommendations": "व्यक्तिगत अनुशंसाएँ देखें"
+    "view_recommendations": "व्यक्तिगत अनुशंसाएँ देखें",
+    "mark_read": "पढ़ा हुआ मार्क करें"
   },
   "reports": {
     "title": "विश्लेषणात्मक स्वास्थ्य रिपोर्ट",

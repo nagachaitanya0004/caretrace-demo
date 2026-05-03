@@ -209,9 +209,25 @@ function DashboardInner() {
     return t(`dashboard.greeting_${period}`, { name, defaultValue: `Good ${period}, ${name}` });
   }, [userProfile, user, t]);
 
+  const streakDays = useMemo(() => {
+    if (!symptoms.length) return 0;
+    const dates = [...new Set(symptoms.map(s => new Date(s.date).toISOString().slice(0,10)))].sort().reverse();
+    let streak = 0;
+    let check = new Date();
+    for (const d of dates) {
+      const diff = Math.floor((check - new Date(d)) / 86400000);
+      if (diff > 1) break;
+      streak++;
+      check = new Date(d);
+    }
+    return streak;
+  }, [symptoms]);
+
   const dateString = new Date().toLocaleDateString(i18n.language, {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
   });
+
+  const fullSubtitle = `${dateString}${streakDays > 0 ? ` · ${t('dashboard.streak', { count: streakDays })}` : ''}`;
 
   const formatShortDate = useCallback(
     (date) => new Date(date).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' }),
@@ -241,10 +257,6 @@ function DashboardInner() {
       : '—',
   [symptoms]);
 
-  const longestRun = useMemo(() =>
-    symptoms.length ? Math.max(...symptoms.map((s) => Number(s.duration))) : 0,
-  [symptoms]);
-
   const yAxisWidth = useMemo(() =>
     Math.min(160, Math.max(80, frequencyData.length
       ? Math.max(...frequencyData.map((d) => d.name.length)) * 7 + 16
@@ -254,7 +266,6 @@ function DashboardInner() {
   const searchLabel = searchParams.get('q')?.trim() ?? '';
   const searchQuery = useDeferredValue(searchLabel.toLowerCase());
   const hasSearchQuery = searchLabel.length > 0;
-  const clearSearch = () => { const p = new URLSearchParams(searchParams); p.delete('q'); setSearchParams(p, { replace: true }); };
 
   const filteredChartData = useMemo(() =>
     chartData.filter((e) => matchesSearch(searchQuery, e.symptom, e.name, String(e.severity), String(e.duration))),
@@ -280,38 +291,10 @@ function DashboardInner() {
     return Math.round(score);
   }, [symptoms.length, avgSev]);
 
-  const currentStreak = useMemo(() => {
-    if (!symptoms.length) return 0;
-    const sorted = [...symptoms].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    let streak = 0;
-    // Use local date for "today"
-    let currDate = new Date();
-    let currStr = currDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
-    
-    // Check if they logged today or yesterday to continue a streak
-    // Most apps give a grace period if they haven't logged today YET, 
-    // but the requirement is "starts from today". 
-    // If they haven't logged today, but logged yesterday, streak should probably be > 0.
-    // However, I'll stick to the strict "logged today" start or "logged yesterday" continuity.
-    
-    const loggedToday = symptoms.some(s => new Date(s.date).toLocaleDateString('en-CA') === currStr);
-    if (!loggedToday) {
-      // Check yesterday
-      const yesterday = new Date(currDate.getTime() - 86400000).toLocaleDateString('en-CA');
-      const loggedYesterday = symptoms.some(s => new Date(s.date).toLocaleDateString('en-CA') === yesterday);
-      if (!loggedYesterday) return 0;
-      currStr = yesterday;
-    }
-
-    const dailyLogs = new Set(symptoms.map(s => new Date(s.date).toLocaleDateString('en-CA')));
-    
-    let checkDate = new Date(currStr);
-    while (dailyLogs.has(checkDate.toLocaleDateString('en-CA'))) {
-      streak++;
-      checkDate.setDate(checkDate.getDate() - 1);
-    }
-    
-    return streak;
+  const weekAgoSymptoms = useMemo(() => {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 7);
+    return symptoms.filter(s => new Date(s.date) < cutoff);
   }, [symptoms]);
 
   const statCards = useMemo(() => [
@@ -320,7 +303,7 @@ function DashboardInner() {
       label: t('dashboard.stats.health_score', 'Health Score'),
       value: healthScore,
       sub: healthScore >= 80 ? t('dashboard.stats.excellent', 'Optimal Range') : t('dashboard.stats.fair', 'Needs Tracking'),
-      keywords: ['health', 'score'],
+      keywords: [t('dashboard.stats.health_score', 'Health Score'), t('dashboard.stats.excellent'), t('dashboard.stats.fair')],
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
       isPositive: healthScore >= 80,
       trend: healthScore > 50 ? 12 : -4
@@ -332,16 +315,17 @@ function DashboardInner() {
       sub: t('dashboard.stats.all_time'),
       keywords: [t('dashboard.stats.logged'), t('dashboard.stats.all_time')],
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
-      isPositive: false
+      trend: symptoms.length - weekAgoSymptoms.length,
+      isPositive: symptoms.length >= weekAgoSymptoms.length
     },
     {
       id: 'current-streak',
       label: t('dashboard.stats.streak', 'Current Streak'),
-      value: `${currentStreak}d`,
+      value: `${streakDays}d`,
       sub: t('dashboard.stats.consecutive_logs', 'Consecutive days'),
-      keywords: ['streak', 'days'],
+      keywords: [t('dashboard.stats.streak', 'Current Streak'), t('dashboard.streak'), t('dashboard.stats.consecutive_logs')],
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
-      isPositive: true
+      isPositive: streakDays > 0
     },
     {
       id: 'active-alerts',
@@ -352,7 +336,7 @@ function DashboardInner() {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
       isPositive: alerts?.length === 0 && symptoms.length > 0
     },
-  ], [t, healthScore, symptoms.length, currentStreak, alerts, showAlert]);
+  ], [t, healthScore, symptoms.length, streakDays, alerts, showAlert, weekAgoSymptoms.length]);
 
   const visibleStatCards = useMemo(() =>
     statCards.filter((c) => matchesSearch(searchQuery, c.label, c.sub, c.keywords)),
@@ -362,30 +346,20 @@ function DashboardInner() {
     ? {}
     : { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { type: 'spring', stiffness: 120, damping: 14 } };
 
-  const actions = (
-    <div className="flex flex-wrap gap-3">
-      <Button intent="cta" size="md" onClick={() => navigate('/symptoms')}>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
-        {t('dashboard.log_symptom')}
-      </Button>
-      <Button intent="ghost" size="md" onClick={() => navigate('/analysis')}>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-        {t('dashboard.run_analysis')}
-      </Button>
-      <Button intent="ghost" size="md" onClick={() => navigate('/timeline')}>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-        {t('dashboard.view_timeline')}
-      </Button>
-    </div>
-  );
-
   return (
     <PageFrame 
       title={<span className="page-title">{greeting}</span>} 
-      subtitle={dateString} 
+      subtitle={fullSubtitle} 
       maxWidthClass="max-w-5xl"
     >
+      <div className="fixed bottom-6 right-6 md:hidden z-40">
+        <Button intent="cta" size="lg" onClick={() => navigate('/symptoms')} className="rounded-full w-14 h-14 p-0 shadow-[var(--shadow-l3)]">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
+        </Button>
+      </div>
+
       <QuickLogCTA />
+      
       {symptoms.length === 0 && !isLoading ? (
         <EmptyDashboardState />
       ) : (
@@ -491,7 +465,7 @@ function DashboardInner() {
                   <Button intent="primary" size="sm" onClick={() => navigate('/analysis')}>{t('dashboard.run_analysis')}</Button>
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col gap-3">
+                <div className="flex-1 flex flex-col gap-3" aria-live="polite">
                   <p className="text-sm text-[var(--app-text)] leading-relaxed max-w-prose bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] p-3 border border-[var(--app-border)]">
                     {analysisResult.reason}
                   </p>
@@ -600,7 +574,7 @@ function DashboardInner() {
                 <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.insights.title')}</p>
                 <h2 className="text-base font-semibold text-[var(--app-text)]">{t('dashboard.insights.personalized_insights')}</h2>
               </div>
-              <div className="space-y-3 flex-1">
+              <div className="space-y-3 flex-1" aria-live="polite">
                 {userProfile?.lifestyle && (
                   <div className="p-3 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border)]">
                     <p className="text-xs font-semibold text-[var(--app-text)] mb-0.5">{t('dashboard.insights.profile_title')}</p>
