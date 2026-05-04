@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import uuid
 from typing import Any, Optional, Union
 
 import bcrypt
@@ -29,7 +30,11 @@ def create_access_token(
     expire = datetime.utcnow() + (
         expires_delta if expires_delta else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-    to_encode: dict = {'exp': expire, 'sub': str(subject)}
+    to_encode: dict = {
+        'exp': expire,
+        'sub': str(subject),
+        'jti': str(uuid.uuid4())
+    }
     if email:
         to_encode['email'] = email
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

@@ -47,17 +47,24 @@ class TokenManager {
 
   getToken() {
     if (!this.token) {
-      this.token = localStorage.getItem(TOKEN_KEY);
+      this.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
     }
     return this.token;
   }
-
-  setToken(token) {
+ 
+  setToken(token, persist = true) {
     this.token = token;
     if (token) {
-      localStorage.setItem(TOKEN_KEY, token);
+      if (persist) {
+        localStorage.setItem(TOKEN_KEY, token);
+        sessionStorage.removeItem(TOKEN_KEY);
+      } else {
+        sessionStorage.setItem(TOKEN_KEY, token);
+        localStorage.removeItem(TOKEN_KEY);
+      }
     } else {
       localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
     }
     this.notifyListeners(token);
   }

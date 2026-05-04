@@ -202,12 +202,12 @@ export function AuthProvider({ children }) {
   // LOGIN
   // ============================================================================
 
-  const login = useCallback(async (email, password, abortSignal) => {
+  const login = useCallback(async (email, password, abortSignal, persist = true) => {
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
     formData.append('grant_type', 'password');
-
+ 
     try {
       const res = await api.post('/auth/login', formData, { 
         signal: abortSignal,
@@ -215,10 +215,10 @@ export function AuthProvider({ children }) {
       });
       const newToken = res.access_token;
       
-      // Set token synchronously
-      tokenManager.setToken(newToken);
+      // Set token synchronously with persistence flag
+      tokenManager.setToken(newToken, persist);
       setToken(newToken);
-
+ 
       // Fetch user immediately to prevent race conditions
       await fetchUser(abortSignal);
       
@@ -240,20 +240,30 @@ export function AuthProvider({ children }) {
   // SIGNUP
   // ============================================================================
 
-  const signup = useCallback(async (userData, abortSignal) => {
+  const signup = useCallback(async (userData, abortSignal, persist = true) => {
     await api.post('/auth/signup', userData, { 
       signal: abortSignal,
       skipRetry: true // <-- STOPS AGGRESSIVE RETRIES ON BAD REGISTRATION DATA
     });
-    await login(userData.email, userData.password, abortSignal);
+    await login(userData.email, userData.password, abortSignal, persist);
   }, [login]);
 
   // ============================================================================
   // LOGOUT (Pure SPA, no hard reload)
   // ============================================================================
 
-  const logout = useCallback((reason = 'user-initiated') => {
+  const logout = useCallback(async (reason = 'user-initiated') => {
     observability.onLogout(reason);
+    
+    // Call backend logout if token exists
+    if (token) {
+      try {
+        await api.post('/auth/logout');
+      } catch (err) {
+        console.warn('Backend logout failed or token already invalid:', err.message);
+      }
+    }
+ 
     tokenManager.clearToken();
     setToken(null);
     setUser(null);
@@ -262,7 +272,7 @@ export function AuthProvider({ children }) {
     
     // Clear all queries on logout to prevent data leaking between sessions
     queryClient.clear();
-  }, [queryClient]);
+  }, [token, queryClient]);
 
   // ============================================================================
   // UPDATE USER (Optimistic updates)

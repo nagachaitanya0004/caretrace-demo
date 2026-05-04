@@ -21,6 +21,19 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  if (token && !user) {
+    // Token exists but user profile not yet loaded/verified
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center bg-[var(--app-bg)]"
+        role="status"
+        aria-label="Verifying session"
+      >
+        <span className="w-12 h-12 rounded-full border-4 border-[var(--app-border)] border-t-[var(--app-accent)] animate-spin" />
+      </div>
+    );
+  }
+
   if (user?.is_onboarded === false && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }

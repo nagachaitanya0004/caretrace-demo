@@ -1,10 +1,11 @@
 import { createElement, memo, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useSpring } from 'framer-motion';
+import { AnimatePresence, motion, useSpring, useReducedMotion } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthContext';
 import { BrandLockup } from '../components/BrandLogo';
 import Button from '../components/Button';
+import TestimonialsSection from '../components/TestimonialsSection';
 import { DEMO_EMAIL, DEMO_PASSWORD } from '../constants/demoAccount';
 
 const APP_LANGUAGES = [
@@ -269,17 +270,18 @@ function SectionHeader({ eyebrow, title, description, align = 'center' }) {
 }
 
 function FeatureCard({ eyebrow, title, description, metric, iconPath, className, delay, isPrimary }) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <Panel
       as={motion.article}
       tone="surface"
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      whileInView={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-96px' }}
       transition={{ ...cardSpring, delay }}
       className={cx(
         'group flex h-full flex-col justify-between p-6 sm:p-8 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-[var(--landing-accent)]',
-        isPrimary && '[box-shadow:inset_0_0.5px_0_var(--color-surface-light),0_0_0_0.5px_var(--color-surface-border),0_24px_72px_rgba(0,0,0,0.52),0_0_0_1px_rgba(226,255,50,0.06)]',
+        isPrimary && '[box-shadow:inset_0_0.5px_0_var(--color-surface-light),0_0_0_0.5px_var(--color-surface-border),0_24px_72px_rgba(0,0,0,0.52),0_0_0_1px_var(--app-border-soft)]',
         className
       )}
     >
@@ -305,12 +307,13 @@ function FeatureCard({ eyebrow, title, description, metric, iconPath, className,
 }
 
 function WorkflowCard({ number, title, description, iconPath, delay }) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <Panel
       as={motion.article}
       tone="surface"
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      whileInView={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-96px' }}
       transition={{ ...cardSpring, delay }}
       className="flex h-full flex-col p-6 sm:p-8"
@@ -340,6 +343,7 @@ const DashboardMockup = memo(function DashboardMockup() {
   const series = useMemo(() => createOrganicSeries(), []);
   const [activePointIndex, setActivePointIndex] = useState(series.length - 1);
   const [isGraphActive, setIsGraphActive] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const crosshairX = useSpring(0, microSpring);
   const crosshairOpacity = useSpring(0, { type: 'spring', stiffness: 260, damping: 28, mass: 0.45 });
 
@@ -371,8 +375,8 @@ const DashboardMockup = memo(function DashboardMockup() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.98 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.98 }}
+      whileInView={shouldReduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={heroSpring}
       // GPU layer: promotes mockup to its own compositor layer
@@ -412,8 +416,8 @@ const DashboardMockup = memo(function DashboardMockup() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 16 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            initial={shouldReduceMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 16 }}
+            whileInView={shouldReduceMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true, amount: 0.45 }}
             transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.4 }}
             className={cx('px-4 py-4 text-right', elevatedToneClass, 'rounded-[24px]')}
@@ -477,8 +481,8 @@ const DashboardMockup = memo(function DashboardMockup() {
                   <stop offset="100%" stopColor="rgba(226,255,50,0)" />
                 </linearGradient>
                 <linearGradient id={strokeGradientId} x1="0" y1="0" x2={GRAPH_WIDTH} y2="0" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#E2FF32" />
-                  <stop offset="1" stopColor="#F7FFD0" />
+                  <stop stopColor="var(--landing-accent)" />
+                  <stop offset="1" stopColor="var(--app-accent-hover)" />
                 </linearGradient>
               </defs>
 
@@ -526,14 +530,14 @@ const DashboardMockup = memo(function DashboardMockup() {
                         transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                       />
                     )}
-                    <circle
-                      cx={point.x}
-                      cy={point.y}
-                      r={isActive ? '5.5' : '4.5'}
-                      fill="#000000"
-                      stroke={isActive ? '#F7FFD0' : '#E2FF32'}
-                      strokeWidth={isActive ? '2.5' : '2'}
-                    />
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={isActive ? '5.5' : '4.5'}
+                        fill="var(--color-base)"
+                        stroke={isActive ? 'var(--app-accent-hover)' : 'var(--landing-accent)'}
+                        strokeWidth={isActive ? '2.5' : '2'}
+                      />
                   </motion.g>
                 );
               })}
@@ -619,6 +623,7 @@ function Landing() {
   const location = useLocation();
   const { token, isLoadingAuth, login } = useAuth();
   const { t, i18n } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
   const [demoLoading, setDemoLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [heroPassed, setHeroPassed] = useState(false);
@@ -879,15 +884,15 @@ function Landing() {
           <div className="mx-auto w-full max-w-7xl px-6 sm:px-6 lg:px-8">
             <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(32rem,0.95fr)] lg:gap-20">
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
                 transition={heroSpring}
                 className="w-full max-w-[42rem] justify-self-start text-left min-w-0"
               >
                 {/* Trusted By badge + h1: True Flush alignment lock */}
                 <div className="flex flex-col items-start ml-0 pl-0 min-w-0 max-w-full">
                   <div className="inline-flex items-center gap-3 rounded-full bg-[var(--landing-accent)] px-4 py-3 text-[var(--color-text-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_rgba(226,255,50,0.2)]">
-                    <span className="h-2 w-2 rounded-full bg-[#000000]" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--brand-accent-on)]" />
                     <span className="text-[11px] font-semibold uppercase tracking-[0.15em] leading-relaxed text-[var(--color-text-on-accent)]">
                       AI-powered health intelligence
                     </span>
@@ -1093,8 +1098,8 @@ function Landing() {
                       key={pillar.titleKey}
                       as={motion.div}
                       tone="surface"
-                      initial={{ opacity: 0, y: 32 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+                      whileInView={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: '-96px' }}
                       transition={{ ...cardSpring, delay: index * 0.08 }}
                       className="rounded-[24px] p-6"
@@ -1143,8 +1148,8 @@ function Landing() {
 
         <div className={frameClass}>
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            whileInView={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={heroSpring}
             className="relative mx-auto max-w-[48rem] text-center"
@@ -1162,6 +1167,12 @@ function Landing() {
               No credit card required · Cancel anytime
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      <section className="relative z-10 py-16 sm:py-24 border-t border-[var(--color-hairline)]">
+        <div className={frameClass}>
+          <TestimonialsSection />
         </div>
       </section>
 
@@ -1241,7 +1252,41 @@ function Landing() {
           </div>
         </div>
       </footer>
+
+      <CookieBanner />
     </div>
+  );
+}
+
+function CookieBanner() {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !localStorage.getItem('caretrace_cookie_consent');
+  });
+  const { t } = useTranslation();
+
+  const handleAccept = () => {
+    localStorage.setItem('caretrace_cookie_consent', 'true');
+    setVisible(false);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="fixed bottom-6 left-6 right-6 z-[100] sm:left-auto sm:right-8 sm:max-w-md"
+    >
+      <Panel tone="elevated" className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between shadow-[var(--shadow-l3)]">
+        <p className="text-sm text-[var(--color-text-secondary)]">
+          {t('landing.cookie_notice', 'We use cookies for authentication and to improve your experience.')}
+        </p>
+        <Button intent="cta" size="sm" onClick={handleAccept} className="whitespace-nowrap">
+          {t('landing.cookie_accept', 'Got it')}
+        </Button>
+      </Panel>
+    </motion.div>
   );
 }
 

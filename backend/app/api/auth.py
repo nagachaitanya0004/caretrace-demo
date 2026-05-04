@@ -41,7 +41,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
+        jti: str = payload.get("jti")
         if user_id is None:
+            raise credentials_exception
+            
+        # Blocklist check
+        db = get_database()
+        if jti and await db.token_blocklist.find_one({"jti": jti}):
+            logger.warning("Attempted use of blocklisted token: jti=%s", jti)
             raise credentials_exception
     except jwt.PyJWTError:
         raise credentials_exception
@@ -179,3 +186,32 @@ async def legacy_complete_onboarding(current_user: dict = Depends(get_current_us
     user_oid = ObjectId(current_user["_id"])
     await UserService.complete_onboarding(user_oid)
     return success_response(None, message="Onboarding marked as complete")
+
+
+@router.post("/logout")
+async def logout(request: Request, token: str = Depends(oauth2_scheme)):
+    """
+    Log out the user by blocklisting the current JTI in MongoDB.
+    TTL index ensures the record is removed after token expiry.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+        
+        if jti and exp:
+            db = get_database()
+            # exp is a unix timestamp
+            expiry_date = datetime.fromtimestamp(exp)
+            await db.token_blocklist.update_one(
+                {"jti": jti},
+                {"$set": {"jti": jti, "expires_at": expiry_date}},
+                upsert=True
+            )
+            logger.info("Token blocklisted: jti=%s", jti)
+            
+        return success_response(None, message="Successfully logged out")
+    except Exception as exc:
+        logger.error("Logout blocklist failure: %s", exc)
+        # Still return success to the client as their local state will be cleared anyway
+        return success_response(None, message="Logged out")

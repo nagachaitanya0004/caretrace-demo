@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { AppContext } from '../AppContext';
 import PageFrame from '../components/PageFrame';
 import Button from '../components/Button';
-import FieldWrapper from '../components/FieldWrapper';
+import { FieldWrapper } from '../components/FieldWrapper';
 
 const COMMON_SYMPTOMS = [
   'headache', 'fatigue', 'nausea', 'pain', 'anxiety', 'shortness of breath', 'fever'

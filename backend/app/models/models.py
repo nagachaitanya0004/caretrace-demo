@@ -15,6 +15,7 @@ LIFESTYLE_DATA_COLLECTION = 'lifestyle_data'
 HEALTH_METRICS_COLLECTION = 'health_metrics'
 MEDICAL_REPORTS_COLLECTION = 'medical_reports'
 MEDICATIONS_COLLECTION = 'medications'
+TOKEN_BLOCKLIST_COLLECTION = 'token_blocklist'
 
 
 # MongoDB document validators for collection-level validation.
@@ -266,6 +267,19 @@ MEDICATIONS_VALIDATOR = {
             'created_at': {'bsonType': 'date'},
         },
         'additionalProperties': True,
+    }
+}
+
+TOKEN_BLOCKLIST_VALIDATOR = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['jti', 'expires_at'],
+        'properties': {
+            '_id': {'bsonType': 'objectId'},
+            'jti': {'bsonType': 'string', 'description': 'JWT ID to block'},
+            'expires_at': {'bsonType': 'date', 'description': 'When the token would have expired'},
+        },
+        'additionalProperties': False,
     }
 }
 

@@ -27,6 +27,8 @@ from .models import (
     SYMPTOM_VALIDATOR,
     USER_COLLECTION,
     USER_VALIDATOR,
+    TOKEN_BLOCKLIST_COLLECTION,
+    TOKEN_BLOCKLIST_VALIDATOR,
 )
 
 
@@ -112,6 +114,13 @@ def get_collection_configuration() -> Dict[str, Dict[str, Any]]:
             'validator': MEDICATIONS_VALIDATOR,
             'indexes': [
                 {'fields': [('user_id', 'asc'), ('created_at', 'desc')], 'unique': False, 'name': 'idx_medications_user_created'},
+            ],
+        },
+        TOKEN_BLOCKLIST_COLLECTION: {
+            'validator': TOKEN_BLOCKLIST_VALIDATOR,
+            'indexes': [
+                {'fields': [('jti', 'asc')], 'unique': True, 'name': 'idx_token_jti'},
+                {'fields': [('expires_at', 'asc')], 'unique': False, 'name': 'idx_token_ttl', 'expireAfterSeconds': 0},
             ],
         },
     }
