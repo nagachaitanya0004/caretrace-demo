@@ -62,7 +62,7 @@ function History() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge variant={getSeverityLabel(s.severity).toLowerCase()}>
-                          {s.severity}/10 ({getSeverityLabel(s.severity)})
+                          {new Intl.NumberFormat(i18n.language).format(s.severity)}/10 ({getSeverityLabel(s.severity)})
                         </Badge>
                       </td>
                     </tr>

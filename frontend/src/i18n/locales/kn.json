@@ -1,272 +1,23 @@
 {
-  "navbar": {
-    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
-    "symptoms": "ಲಕ್ಷಣಗಳು",
-    "timeline": "ಸಮಯರೇಖೆ",
-    "history": "ಇತಿಹಾಸ",
-    "analysis": "AI ವಿಶ್ಲೇಷಣೆ",
-    "alerts": "ಎಚ್ಚರಿಕೆಗಳು",
-    "reports": "ವರದಿಗಳು",
-    "recommendations": "ಸಲಹೆ",
-    "settings": "ಸೆಟ್ಟಿಂಗ್ಸ್",
-    "logout": "ಲಾಗ್ ಔಟ್",
-    "search": "ಹುಡುಕಿ...",
-    "active_session": "ಸಕ್ರಿಯ ಸೆಷನ್",
-    "overview": "ಅವಲೋಕನ",
-    "health_tracking": "ಆರೋಗ್ಯ ಟ್ರ್ಯಾಕಿಂಗ್",
-    "health_intelligence": "ಆರೋಗ್ಯ ಬುದ್ಧಿವಂತಿಕೆ",
-    "intelligence": "ಬುದ್ಧಿವಂತಿಕೆ",
-    "account": "ಖಾತೆ",
-    "language": "ಭಾಷೆ",
-    "log_symptoms": "ಲಕ್ಷಣಗಳನ್ನು ನಮೂದಿಸಿ",
-    "search_placeholder": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಹುಡುಕಿ...",
-    "search_anything": "ಏನನ್ನೂ ಹುಡುಕಿ...",
-    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
-    "notifications_new": "ಹೊಸತು",
-    "notifications_empty": "ಎಲ್ಲವೂ ಸರಿ ಇದೆ!",
-    "health_profile": "ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್"
-  },
-  "dashboard": {
-    "tagline": "ಬೇಗನೆ ಪತ್ತೆಹಚ್ಚುವುದು. ಉತ್ತಮ ನಿರ್ಧಾರಗಳು.",
-    "welcome": "ಮರಳಿ ಬಂದಿದ್ದಕ್ಕೆ ಸ್ವಾಗತ, {{name}}",
-    "hello": "ಹಲೋ, {{name}}",
-    "welcome_default": "ಸ್ವಾಗತ",
-    "loading": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
-    "tracked_count": "{{count}} ಲಕ್ಷಣಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ",
-    "today": "ಇಂದು",
-    "quick_actions": "ತ್ವರಿತ ಕ್ರಿಯೆಗಳು",
-    "log_symptom": "ಲಕ್ಷಣ ದಾಖಲಿಸಿ",
-    "run_analysis": "AI ವಿಶ್ಲೇಷಣೆ",
-    "view_timeline": "ಸಮಯರೇಖೆ",
-    "testimonials_btn": "ಅನಿಸಿಕೆಗಳು",
-    "alert_title": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆ ಸಕ್ರಿಯವಾಗಿದೆ",
-    "alert_body": "ಒಂದು ಅಥವಾ ಹೆಚ್ಚಿನ ಲಕ್ಷಣಗಳು ದೀರ್ಘಾವಧಿಯಿಂದ ಇವೆ. ವೈದ್ಯಕೀಯ ತಪಾಸಣೆ ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ.",
-    "alert_view": "ಎಚ್ಚರಿಕೆಗಳನ್ನು ನೋಡಿ",
-    "reminder_title": "ದೈನಂದಿನ ಟ್ರ್ಯಾಕಿಂಗ್ ಜ್ಞಾಪನೆ",
-    "reminder_body": "ನೀವು ಇಂದು ಯಾವುದೇ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿಲ್ಲ. ನಿಖರವಾದ ಫಲಿತಾಂಶಗಳಿಗಾಗಿ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನವೀಕರಿಸಿ.",
-    "reminder_log": "ಈಗಲೇ ದಾಖಲಿಸಿ",
-    "reminder_dismiss": "ನಿರ್ಲಕ್ಷಿಸಿ",
-    "search": {
-      "title": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಹುಡುಕಾಟ",
-      "results": "\"{{query}}\" ಗಾಗಿ ಫಲಿತಾಂಶಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ",
-      "clear": "ಹುಡುಕಾಟ ಅಳಿಸಿ",
-      "no_matches": "ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
-      "no_matches_sub": "ಲಕ್ಷಣದ ಹೆಸರುಗಳು, ಎಚ್ಚರಿಕೆಗಳು, ವಿಶ್ಲೇಷಣೆ ಅಥವಾ ವರದಿ ಪ್ರಮುಖ ಪದಗಳನ್ನು ಹುಡುಕಲು ಪ್ರಯತ್ನಿಸಿ."
-    },
-    "stats": {
-      "logged": "ದಾಖಲಾದ ಲಕ್ಷಣಗಳು",
-      "avg_sev": "ಸರಾಸರಿ ತೀವ್ರತೆ",
-      "longest": "ದೀರ್ಘ ಅವಧಿ",
-      "alerts": "ಸಕ್ರಿಯ ಎಚ್ಚರಿಕೆಗಳು",
-      "all_time": "ಎಲ್ಲಾ ದಾಖಲೆಗಳು",
-      "across_logs": "ಒಟ್ಟಾರೆ ಸರಾಸರಿ",
-      "single_run": "ಏಕ ಲಕ್ಷಣದ ಅವಧಿ",
-      "needs_attention": "ಗಮನದ ಅವಶ್ಯಕತೆಯಿದೆ",
-      "all_clear": "ಎಲ್ಲವೂ ಸರಿ ಇದೆ"
-    },
-    "risk": {
-      "title": "ಅಪಾಯದ ಮೌಲ್ಯಮಾಪನ",
-      "status": "ಆರೋಗ್ಯದ ಸ್ಥಿತಿ",
-      "high": "ಹೆಚ್ಚಿನ ಅಪಾಯ",
-      "medium": "ಮಧ್ಯಮ ಅಪಾಯ",
-      "low": "ಕಡಿಮೆ ಅಪಾಯ",
-      "not_assessed": "ಮೌಲ್ಯಮಾಪನ ಮಾಡಲಾಗಿಲ್ಲ",
-      "no_analysis": "ಇನ್ನೂ ವಿಶ್ಲೇಷಣೆ ನಡೆದಿಲ್ಲ",
-      "no_analysis_sub": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಒಳನೋಟಗಳನ್ನು ತಿಳಿಯಲು AI ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.",
-      "view_report": "ಪೂರ್ಣ ವರದಿ ನೋಡಿ",
-      "action_pending": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಲು AI ವಿಶ್ಲೇಷಣೆಯನ್ನು ಚಲಾಯಿಸಿ.",
-      "last_updated": "ಕೊನೆಯ ಅಪ್ಡೇಟ್"
-    },
-    "charts": {
-      "trend": "ಪ್ರವೃತ್ತಿ",
-      "severity_timeline": "ತೀವ್ರತೆಯ ಸಮಯರೇಖೆ",
-      "distribution": "ವಿತರಣೆ",
-      "symptom_frequency": "ಲಕ್ಷಣಗಳ ಆವರ್ತನ",
-      "view_timeline": "ಪೂರ್ಣ ಸಮಯದ ರೇಖೆಯನ್ನು ನೋಡಿ →",
-      "view_report": "PDF ವರದಿಯನ್ನು ರಚಿಸಿ →",
-      "data_points": "{{count}} ಡೇಟಾ ಪಾಯಿಂಟ್ಸ್",
-      "no_data": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳ ಡೇಟಾ ಇಲ್ಲ",
-      "no_data_sub": "ಚಾರ್ಟ್ ನೋಡಲು ನಿಮ್ಮ ಮೊದಲ ಲಕ್ಷಣವನ್ನು ದಾಖಲಿಸಿ",
-      "trend_aria": "Symptom severity over time",
-      "distribution_aria": "Symptom frequency distribution",
-      "data_points_label": "entries"
-    },
-    "insights": {
-      "title": "ಬುದ್ಧಿವಂತಿಕೆ",
-      "personalized_insights": "ವೈಯಕ್ತಿಕ ಒಳನೋಟಗಳು",
-      "generate_report": "PDF ವರದಿ ರಚಿಸಿ",
-      "profile_title": "ಪ್ರೊಫೈಲ್ ಆಧಾರಿತ ಮಾರ್ಗದರ್ಶನ",
-      "profile_body": "ನಿಮ್ಮ {{lifestyle}} ಪ್ರೊಫೈಲ್ ಆಧರಿಸಿ ಈ ಸಲಹೆಗಳನ್ನು ನೀಡಲಾಗಿದೆ.",
-      "profile_empty": "ವೈಯಕ್ತಿಕ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಲು ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ.",
-      "pattern_title": "ಟ್ರ್ಯಾಕಿಂಗ್ ಮಾದರಿ",
-      "pattern_body": "ನೀವು {{count}} ಲಕ್ಷಣಗಳನ್ನು {{avg}}/10 ಸರಾಸರಿ ತೀವ್ರತೆಯೊಂದಿಗೆ ದಾಖಲಿಸಿದ್ದೀರಿ.",
-      "empty": "No insights yet",
-      "empty_sub": "Log symptoms and complete your profile to see insights"
-    },
-    "error": {
-      "title": "Dashboard Error",
-      "subtitle": "Your data is safe. Please reload.",
-      "stats": "Statistics unavailable"
-    },
-    "greeting_morning": "Good morning, {{name}}",
-    "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "ಶುಭ ಸಂಜೆ, {{name}}",
-    "streak": "{{count}} ದಿನದ ಸ್ಟ್ರೀಕ್",
-    "demo_meds": {
-      "sample_badge": "Sample Data"
-    }
-  },
-  "testimonials": {
-    "title": "ನಮ್ಮ ಬಳಕೆದಾರರು ಏನು ಹೇಳುತ್ತಾರೆ",
-    "subtitle": "ಪೈಲಟ್ ಬಳಕೆದಾರರು ಮತ್ತು ಪರೀಕ್ಷಕರಿಂದ ನೈಜ ಪ್ರತಿಕ್ರಿಯೆ",
-    "roles": {
-      "pilot": "ಪೈಲಟ್ ಬಳಕೆದಾರ",
-      "caregiver": "ಆರೈಕೆದಾರ",
-      "tester": "ಬೀಟಾ ಟೆಸ್ಟರ್",
-      "physician": "ಸಾಮಾನು ವೈದ್ಯ"
-    },
-    "items": {
-      "ravi": {
-        "name": "ರವಿ ಕುಮಾರ್",
-        "text": "CareTrace AI ಜ್ಞಾಪನೆಗಳು ನನ್ನ ಔಷಧಿ ದಿನಚರಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಒತ್ತಡ ಮುಕ್ತಗೊಳಿಸಿವೆ. ನಾನು ಈಗ ಯಾವುದೇ ಡೋಸ್ ತಪ್ಪಿಸುವುದಿಲ್ಲ.",
-        "highlight": "ಸಂಪೂರ್ಣವಾಗಿ ಒತ್ತಡ ಮುಕ್ತಗೊಳಿಸಿವೆ"
-      },
-      "anitha": {
-        "name": "ಅನಿತಾ ರೆಡ್ಡಿ",
-        "text": "ನನ್ನ ತಂದೆಯ ಔಷಧಿಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುವುದು ಈಗ ಸುಲಭ. ಇದು ನಮ್ಮ ಆತಂಕವನ್ನು ಗಣನೀಯವಾಗಿ ಕಡಿಮೆ ಮಾಡಿದೆ.",
-        "highlight": "ಆತಂಕವನ್ನು ಗಣನೀಯವಾಗಿ ಕಡಿಮೆ ಮಾಡಿದೆ"
-      },
-      "suresh": {
-        "name": "ಸುರೇಶ್",
-        "text": "ಇಂಟರ್ಫೇಸ್ ಸ್ವಚ್ಛ ಮತ್ತು ಅರ್ಥಗರ್ಭಿತವಾಗಿದೆ. ದೈನಂದಿನ ಆರೋಗ್ಯ ನಿರ್ವಹಣೆಗೆ ತುಂಬಾ ಪ್ರಾಯೋಗಿಕವಾಗಿದೆ.",
-        "highlight": "ಸ್ವಚ್ಛ ಮತ್ತು ಅರ್ಥಗರ್ಭಿತವಾಗಿದೆ"
-      },
-      "priya": {
-        "name": "ಡಾ. ಪರಿಯ ಶರ್ಮಾ",
-        "text": "CareTrace AI ನಂತಹ ಪರಿಹಾರಗಳು ಔಷಧಿ ಅನುಸರಣೆ ಮತ್ತು ರೋಗಿಗಳ ಸುರಕ್ಷತೆಯನ್ನು ಸುಧಾರಿಸಬಹುದು.",
-        "highlight": "ರೋಗಿಗಳ ಸುರಕ್ಷತೆಯನ್ನು ಸುಧಾರಿಸಬಹುದು"
-      }
-    }
-  },
-  "symptoms": {
-    "title": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
-    "subtitle": "ನೀವು ಹೇಗೆ ಭಾವಿಸುತ್ತಿದ್ದೀರಿ ಎಂದು ನಮಗೆ ತಿಳಿಸಲು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿ.",
-    "add_title": "ಲಕ್ಷಣವನ್ನು ಸೇರಿಸಿ",
-    "voice_input": "ಧ್ವನಿ ಇನ್ಪುಟ್",
-    "listening": "ಕೇಳಿಸಿಕೊಳ್ಳುತ್ತಿದ್ದೇವೆ...",
-    "type_label": "ಲಕ್ಷಣದ ಪ್ರಕಾರ",
-    "type_placeholder": "ಲಕ್ಷಣವನ್ನು ಆರಿಸಿ",
-    "duration_label": "ಅವಧಿ (ದಿನಗಳು)",
-    "duration_placeholder": "ಅವಧಿ ದಾಖಲಿಸಿ",
-    "date_label": "ದಿನಾಂಕ",
-    "severity_label": "ತೀವ್ರತೆ: {{score}} ({{label}})",
-    "severity_help": "1 = ಲಘು, 10 = ತೀವ್ರ",
-    "submit_btn": "ಈಗಲೇ ದಾಖಲಿಸಿ",
-    "duplicate_title": "ಈಗಲೇ ದಾಖಲಿಸಲಾಗಿದೆ",
-    "duplicate_body": "ನೀವು ಇಂದು ಈ ಲಕ್ಷಣವನ್ನು ಈಗಾಗಲೇ ದಾಖಲಿಸಿದ್ದೀರಿ. ನೀವು ಇನ್ನೊಂದು ನಮೂದನ್ನು ಸೇರಿಸಲು ಬಯಸುವಿರಾ?",
-    "duplicate_confirm": "ಹೌದು, ಮತ್ತೆ ದಾಖಲಿಸಿ",
-    "mild": "ಲಘು",
-    "severe": "ತೀವ್ರ",
-    "recorded_title": "ನಿಮ್ಮ ದಾಖಲಾದ ಲಕ್ಷಣಗಳು",
-    "logged_on": "{{date}} ರಂದು ದಾಖಲಿಸಲಾಗಿದೆ",
-    "duration_display": "ಅವಧಿ: {{count}} ದಿನ(ಗಳು)",
-    "empty_state": "ಮುಂದುವರೆಯಲು ಕನಿಷ್ಠ ಒಂದು ಲಕ್ಷಣವನ್ನು ಸೇರಿಸಿ.",
-    "errors": {
-      "incomplete": "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ.",
-      "duration_min": "ಅವಧಿ ಕನಿಷ್ಠ 1 ದಿನ ಇರಬೇಕು.",
-      "failed": "ದಾಖಲಿಸಲು ವಿಫಲವಾಗಿದೆ."
-    },
-    "notifications": {
-      "voice_active": "ಮೈಕ್ರೊಫೋನ್ ಸಕ್ರಿಯವಾಗಿದೆ... ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ",
-      "voice_success": "ಧ್ವನಿ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರತಿಲೇಖನಗೊಂಡಿದೆ: 'ನನಗೆ 3 ದಿನಗಳಿಂದ ತೀವ್ರ ಜ್ವರ ಇತ್ತು'",
-      "log_success": "{{symptom}} ಯಶಸ್ವಿಯಾಗಿ ದಾಖಲಿಸಲಾಗಿದೆ!"
-    },
-    "options": {
-      "headache": "ತಲೆನೋವು",
-      "fever": "ಜ್ವರ",
-      "cough": "ಕೆಮ್ಮು",
-      "fatigue": "ಆಯಾಸ",
-      "nausea": "ವಾಕರಿಕೆ",
-      "dizziness": "ತಲೆಸುತ್ತು",
-      "chest pain": "ಎದೆ ನೋವು",
-      "shortness of breath": "ಉಸಿರಾಟದ ತೊಂದರೆ"
-    },
-    "health_goal_title": "ಇಂದು ನಿಮ್ಮ ಗುರಿ ಏನು?",
-    "health_goals": {
-      "symptom_check": "ಪ್ರಸ್ತುತ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ",
-      "chronic_management": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸ್ಥಿತಿಯನ್ನು ನಿರ್ವಹಿಸಿ",
-      "preventive_care": "ತಡೆಗಟ್ಟುವ ಆರೋಗ್ಯ ಪರಿಶೀಲನೆ",
-      "general_consultation": "ಸಾಮಾನ್ಯ ಸಮಾಲೋಚನೆ"
-    }
-  },
-  "timeline": {
-    "title": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಮಯರೇಖೆ",
-    "subtitle": "ಮಾದರಿಗಳು ಮತ್ತು ಪ್ರಗತಿಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಿಮ್ಮ ಲಕ್ಷಣದ ಇತಿಹಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ.",
-    "list_title": "ಲಕ್ಷಣಗಳ ಸಮಯರೇಖೆ",
-    "multiple_entries": "ಬಹಳಷ್ಟು ಲಕ್ಷಣಗಳು ಪತ್ತೆಯಾಗಿವೆ",
+  "alerts": {
+    "consult_reminder": "ಸರಿಯಾದ ಮೌಲ್ಯಮಾಪನಕ್ಕಾಗಿ ದಯವಿಟ್ಟು ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
     "empty": {
-      "title": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳು ದಾಖಲಾಗಿಲ್ಲ.",
-      "body": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಲು ಲಕ್ಷಣಗಳ ಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ."
+      "body": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿವೆ. ನಿಮ್ಮ ಆರೋಗ್ಯದ ಮೇಲ್ವಿಚಾರಣೆಯನ್ನು ಮುಂದುವರಿಸಿ.",
+      "title": "ಯಾವುದೇ ಎಚ್ಚರಿಕೆಗಳಿಲ್ಲ"
     },
-    "trends": {
-      "increasing": "ತೀವ್ರತೆ ಹೆಚ್ಚುತ್ತಿದೆ",
-      "decreasing": "ಚೇತರಿಸಿಕೊಳ್ಳುತ್ತಿದ್ದೀರಿ",
-      "increasing_title": "ತೀವ್ರತೆ ಹೆಚ್ಚಳ",
-      "decreasing_title": "ಚೇತರಿಕೆಯ ಹಾದಿ"
-    },
-    "severity_weight": "ತೀವ್ರತೆಯ ತೂಕ",
-    "days_tracking": "{{count}} ದಿನಗಳ ಟ್ರ್ಯಾಕಿಂಗ್",
-    "get_analysis": "ಮಾದರಿಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
-    "show_more": "ಇನ್ನಷ್ಟು ತೋರಿಸಿ",
-    "show_less": "ಕಡಿಮೆ ತೋರಿಸಿ",
-    "today": "ಇಂದು",
-    "yesterday": "ನಿನ್ನೆ",
-    "this_week": "ಈ ವಾರ",
-    "older": "ಹಳೆಯದು"
-  },
-  "history": {
-    "title": "ಲಕ್ಷಣಗಳ ಇತಿಹಾಸ",
-    "subtitle": "ನೀವು ದಾಖಲಿಸಿದ ಲಕ್ಷಣಗಳ ಪೂರ್ಣ ವಿವರಗಳು.",
-    "table": {
-      "date": "ದಾಖಲಾದ ದಿನಾಂಕ",
-      "symptom": "ಲಕ್ಷಣ",
-      "duration": "ಅವಧಿ",
-      "severity": "ತೀವ್ರತೆ"
-    },
-    "empty": {
-      "title": "ಯಾವುದೇ ಇತಿಹಾಸ ಕಂಡುಬಂದಿಲ್ಲ",
-      "body": "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿಲ್ಲ."
-    }
+    "footer_disclaimer": "ಇದು ವೈದ್ಯಕೀಯ ಸಲಹೆಯಲ್ಲ. ಆರೋಗ್ಯದ ಕಾಳಜಿಗಾಗಿ ಯಾವಾಗಲೂ ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+    "health_alert": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆ",
+    "mark_as_read": "ಓದಿದಂತೆ ಗುರುತಿಸು",
+    "mark_read": "ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ",
+    "subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸ್ಥಿತಿ ಮತ್ತು ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮಗಳ ಬಗ್ಗೆ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಿರಿ.",
+    "title": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಸೂಚನೆಗಳು",
+    "view_recommendations": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ನೋಡಿ"
   },
   "analysis": {
-    "title": "AI ಆರೋಗ್ಯ ವಿಶ್ಲೇಷಣೆ",
-    "subtitle": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳ ಮಾದರಿಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಆರೋಗ್ಯದ ಸ್ಥಿತಿಯನ್ನು ಅಂದಾಜಿಸುವ ವಿಶ್ಲೇಷಣೆ ವ್ಯವಸ್ಥೆ.",
-    "loading": {
-      "title": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸ್ಥಿತಿಯನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...",
-      "body": "ದಾಖಲಾದ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಬದಲಾವಣೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ..."
-    },
-    "report": {
-      "compiled": "ಬುದ್ಧಿವಂತಿಕೆ ವರದಿ ಸಿದ್ಧವಾಗಿದೆ",
-      "generated": "ದಿನಾಂಕ: {{date}}",
-      "risk_delta": "ಅಂದಾಜಿಸಲಾದ ಅಪಾಯದ ಮಟ್ಟ",
-      "reasoning": "ಮುಖ್ಯ ಕಾರಣ",
-      "context": "ವಿವರವಾದ ಮಾಹಿತಿ",
-      "persisted_msg": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಸಾಮಾನ್ಯ ಸಮಯಕ್ಕಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇವೆ.",
-      "clustering_msg": "ಒಂದೇ ಅವಧಿಯಲ್ಲಿ ಬಹಳಷ್ಟು ಲಕ್ಷಣಗಳು ಕಂಡುಬಂದಿವೆ.",
-      "action_plan": "ಕಾರ್ಯ ಯೋಜನೆ",
-      "view_alerts": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆಗಳನ್ನು ನೋಡಿ",
-      "view_full_report": "ಪೂರ್ಣ ವರದಿ ನೋಡಿ →"
-    },
     "disclaimer": "ಈ ವಿಶ್ಲೇಷಣೆಯು AI ಮೂಲಕ ತಯಾರಿಸಲ್ಪಟ್ಟಿದೆ. ಇದು ವೈದ್ಯರ ಸಲಹೆಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ. ಯಾವಾಗಲೂ ನೈಜ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
-    "ready": {
-      "title": "ವಿಶ್ಲೇಷಣೆಗೆ ವ್ಯವಸ್ಥೆ ಸಿದ್ಧವಾಗಿದೆ",
-      "body": "ಲಕ್ಷಣಗಳ ಸಮಯರೇಖೆಯಲ್ಲಿ ಬದಲಾವಣೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.",
-      "run_btn": "ಸಂಪೂರ್ಣ ಸ್ಕ್ಯಾನ್ ಪ್ರಾರಂಭಿಸಿ"
-    },
-    "notifications": {
-      "generating": "ಇಂಟೆಲಿಜೆನ್ಸ್ ವೆಕ್ಟರ್‌ಗಳನ್ನು ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
-      "success": "ವಿಶ್ಲೇಷಣೆ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ!",
-      "error": "ವಿಶ್ಲೇಷಣೆಯಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ"
+    "loading": {
+      "body": "ದಾಖಲಾದ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಬದಲಾವಣೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ...",
+      "title": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸ್ಥಿತಿಯನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..."
     },
     "loading_steps": [
       "ಲಕ್ಷಣಗಳ ಮಾದರಿಗಳನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
@@ -274,135 +25,488 @@
       "ಆರೋಗ್ಯ ಸಂಕೇತಗಳನ್ನು ಪರಸ್ಪರ ಸಂಬಂಧಿಸಲಾಗುತ್ತಿದೆ...",
       "ಅಪಾಯದ ಸಂಭವನೀಯತೆಯನ್ನು ಲೆಕ್ಕಹಾಕಲಾಗುತ್ತಿದೆ...",
       "ಶಿಫಾರಸುಗಳನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ..."
-    ]
-  },
-  "alerts": {
-    "title": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಸೂಚನೆಗಳು",
-    "subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸ್ಥಿತಿ ಮತ್ತು ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮಗಳ ಬಗ್ಗೆ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಿರಿ.",
-    "health_alert": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆ",
-    "consult_reminder": "ಸರಿಯಾದ ಮೌಲ್ಯಮಾಪನಕ್ಕಾಗಿ ದಯವಿಟ್ಟು ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
-    "empty": {
-      "title": "ಯಾವುದೇ ಎಚ್ಚರಿಕೆಗಳಿಲ್ಲ",
-      "body": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಸಾಮಾನ್ಯ ಮಿತಿಯಲ್ಲಿವೆ. ನಿಮ್ಮ ಆರೋಗ್ಯದ ಮೇಲ್ವಿಚಾರಣೆಯನ್ನು ಮುಂದುವರಿಸಿ."
-    },
-    "footer_disclaimer": "ಇದು ವೈದ್ಯಕೀಯ ಸಲಹೆಯಲ್ಲ. ಆರೋಗ್ಯದ ಕಾಳಜಿಗಾಗಿ ಯಾವಾಗಲೂ ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
-    "view_recommendations": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ನೋಡಿ",
-    "mark_read": "ಓದಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ"
-  },
-  "reports": {
-    "title": "ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಆರೋಗ್ಯ ವರದಿಗಳು",
-    "subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸಾರಾಂಶಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ವಿಶ್ಲೇಷಣಾತ್ಮಕ PDF ವರದಿಗಳನ್ನು ಪಡೆಯಿರಿ.",
-    "download_btn": "ವರದಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
-    "compiling": "PDF ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
-    "profile": {
-      "title": "ರೋಗಿಯ ವಿವರ",
-      "name": "ಹೆಸರು",
-      "age": "ವಯಸ್ಸು",
-      "gender": "ಲಿಂಗ",
-      "lifestyle": "ಜೀವನಶೈಲಿ"
-    },
-    "stats": {
-      "total_symptoms": "ಒಟ್ಟು ಲಕ್ಷಣಗಳು",
-      "avg_severity": "ಸಗಟು ತೀವ್ರತೆ",
-      "longest_run": "ಅತಿ ಹೆಚ್ಚು ಅವಧಿ",
-      "days": "{{count}} ದಿನಗಳು"
-    },
-    "charts": {
-      "severity_trend": "ತೀವ್ರತೆಯ ಮಾದರಿ",
-      "latest_updates": "ಇತ್ತೀಚಿನ ಅಪ್‌ಡೇಟ್‌ಗಳು",
-      "empty": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳು ದಾಖಲಾಗಿಲ್ಲ. ಟ್ರೆಂಡ್ ಚಾರ್ಟ್ ನೋಡಲು ನಮೂದುಗಳನ್ನು ಸೇರಿಸಿ."
-    },
+    ],
     "notifications": {
-      "booting": "PDF ಫೈಲ್ ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
-      "success": "ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ಸಿದ್ಧವಾಗಿದೆ!"
+      "error": "ವಿಶ್ಲೇಷಣೆಯಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ",
+      "generating": "ಇಂಟೆಲಿಜೆನ್ಸ್ ವೆಕ್ಟರ್‌ಗಳನ್ನು ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
+      "success": "ವಿಶ್ಲೇಷಣೆ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ!"
     },
-    "disclaimer": "ಈ ವರದಿಯು AI ಮೂಲಕ ತಯಾರಿಸಲ್ಪಟ್ಟಿದೆ ಮತ್ತು ಇದು ವೈದ್ಯಕೀಯ ನಿರ್ಧಾರವಲ್ಲ.",
-    "view": "View",
-    "download": "Download",
-    "delete": "Delete",
-    "select_file": "Upload Report",
-    "upload": "Upload",
-    "uploading": "Uploading…",
-    "empty": "No medical reports uploaded yet",
-    "upload_success": "Medical report uploaded successfully",
-    "upload_error": "Failed to upload file",
-    "delete_success": "Medical report deleted",
-    "delete_error": "Failed to delete report",
-    "error": {
-      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
-      "too_large": "File size must be under 10 MB"
+    "ready": {
+      "body": "ಲಕ್ಷಣಗಳ ಸಮಯರೇಖೆಯಲ್ಲಿ ಬದಲಾವಣೆಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.",
+      "run_btn": "ಸಂಪೂರ್ಣ ಸ್ಕ್ಯಾನ್ ಪ್ರಾರಂಭಿಸಿ",
+      "title": "ವಿಶ್ಲೇಷಣೆಗೆ ವ್ಯವಸ್ಥೆ ಸಿದ್ಧವಾಗಿದೆ"
     },
-    "delete_dialog": {
-      "title": "Delete Report",
-      "body": "Are you sure you want to delete",
-      "warning": "This cannot be undone."
-    }
+    "report": {
+      "action_plan": "ಕಾರ್ಯ ಯೋಜನೆ",
+      "clustering_msg": "ಒಂದೇ ಅವಧಿಯಲ್ಲಿ ಬಹಳಷ್ಟು ಲಕ್ಷಣಗಳು ಕಂಡುಬಂದಿವೆ.",
+      "compiled": "ಬುದ್ಧಿವಂತಿಕೆ ವರದಿ ಸಿದ್ಧವಾಗಿದೆ",
+      "context": "ವಿವರವಾದ ಮಾಹಿತಿ",
+      "generated": "ದಿನಾಂಕ: {{date}}",
+      "persisted_msg": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಸಾಮಾನ್ಯ ಸಮಯಕ್ಕಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇವೆ.",
+      "reasoning": "ಮುಖ್ಯ ಕಾರಣ",
+      "risk_delta": "ಅಂದಾಜಿಸಲಾದ ಅಪಾಯದ ಮಟ್ಟ",
+      "view_alerts": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆಗಳನ್ನು ನೋಡಿ",
+      "view_full_report": "ಪೂರ್ಣ ವರದಿ ನೋಡಿ →"
+    },
+    "subtitle": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳ ಮಾದರಿಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಆರೋಗ್ಯದ ಸ್ಥಿತಿಯನ್ನು ಅಂದಾಜಿಸುವ ವಿಶ್ಲೇಷಣೆ ವ್ಯವಸ್ಥೆ.",
+    "title": "AI ಆರೋಗ್ಯ ವಿಶ್ಲೇಷಣೆ"
+  },
+  "app": {
+    "tagline": "Clear insights for your daily health."
+  },
+  "auth": {
+    "age": "ವಯಸ್ಸು",
+    "already_mapped": "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ?",
+    "constructing": "ಸೈನ್ ಇನ್ ಆಗುತ್ತಿದೆ...",
+    "create_profile": "ಪ್ರೊಫೈಲ್ ರಚಿಸಿ",
+    "demo_failed": "ಸರ್ವರ್ ತಲುಪಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "demo_subtitle": "ಮಾದರಿ ಡೇಟಾತೊಂದಿಗೆ ಚಾರ್ಟ್‌ಗಳು, ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು AI ಒಳನೋಟಗಳನ್ನು ನೋಡಿ—ಸೆಟಪ್ ಅಗತ್ಯವಿಲ್ಲ.",
+    "demo_title": "ಮಾರ್ಗದರ್ಶಿತ ಪ್ರವಾಸ",
+    "email": "ಇಮೇಲ್ ವಿಳಾಸ",
+    "errors": {
+      "age_invalid": "Please enter a valid age.",
+      "email_registered": "ಈ ಇಮೇಲ್‌ನೊಂದಿಗೆ ಖಾತೆ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ಸೈನ್ ಇನ್ ಮಾಡಿ.",
+      "failed": "ದೃಢೀಕರಣ ವಿಫಲವಾಗಿದೆ. ಇನ್‌ಪುಟ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+      "password_short": "ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಿರಬೇಕು."
+    },
+    "fill_demo": "ಡೆಮೊ ಖಾತೆ ಬಳಸಿ",
+    "full_name": "ಪೂರ್ಣ ಹೆಸರು",
+    "gender": "ಲಿಂಗ",
+    "hide_password": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆಮಾಡು",
+    "lifestyle": "ಜೀವನಶೈಲಿ ಅಪಾಯದ ಸಂದರ್ಭ",
+    "login_btn": "ಸುರಕ್ಷಿತ ಲಾಗಿನ್",
+    "login_natively": "ನೇರವಾಗಿ ಲಾಗಿನ್ ಆಗಿ",
+    "login_subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಬುದ್ಧಿವಂತಿಕೆಯ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "login_title": "ಮರಳಿ ಬಂದಿದ್ದಕ್ಕೆ ಸ್ವಾಗತ",
+    "no_account": "ಖಾತೆ ಇಲ್ಲವೇ?",
+    "password": "ಪಾಸ್‌ವರ್ಡ್",
+    "show_password": "ಪಾಸ್‌ವರ್ಡ್ ತೋರಿಸು",
+    "signup_btn": "ಪ್ರೊಫೈಲ್ ನೋಂದಾಯಿಸಿ",
+    "signup_subtitle": "ಕೆಲವು ನಿಮಿಷಗಳಲ್ಲಿ ಪ್ರೊಫೈಲ್ ರಚಿಸಿ ಮತ್ತು ಲಕ್ಷಣ ಟ್ರ್ಯಾಕಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ.",
+    "signup_success": "Your account is ready.",
+    "signup_title": "CareTrace AI ಸೇರಿ",
+    "stay_signed_in": "ಸೈನ್ ಇನ್ ಆಗಿರಲಿ",
+    "try_demo_btn": "ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
+    "try_demo_subtitle": "ಮಾದರಿ ಲಕ್ಷಣಗಳು, ಅಪಾಯದ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳೊಂದಿಗೆ ಪೂರ್ಣ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ—ತ್ವರಿತ ಪ್ರವಾಸಕ್ಕೆ ಸೂಕ್ತ.",
+    "try_demo_title": "ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಉತ್ಪನ್ನವನ್ನು ನೋಡಿ"
+  },
+  "charts": {
+    "caption_bars": "How often you've logged each symptom.",
+    "caption_trend": "Higher numbers mean stronger symptoms. Use this to track your recovery.",
+    "x_symptom": "Symptom",
+    "x_time": "Date",
+    "y_count": "Times logged",
+    "y_severity": "Severity (1–10)"
   },
   "common": {
+    "cancel": "ರದ್ದು ಮಾಡಿ",
+    "close": "Close",
     "disclaimer": "ಹಕ್ಕುತ್ಯಾಗ",
     "disclaimer_label": "ವೈದ್ಯಕೀಯ ಹಕ್ಕು ನಿರಾಕರಣೆ",
-    "save": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
-    "saving": "ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...",
-    "cancel": "ರದ್ದು ಮಾಡಿ",
-    "language_choice": "ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯನ್ನು ಆರಿಸಿ.",
-    "not_available": "ಲಭ್ಯವಿಲ್ಲ",
-    "pending": "ಬಾಕಿ ಇದೆ",
     "gender": {
-      "male": "ಪುರುಷ",
       "female": "ಮಹಿಳೆ",
+      "male": "ಪುರುಷ",
       "other": "ಇತರೆ",
       "placeholder": "ನಿಮ್ಮ ಲಿಂಗವನ್ನು ಆರಿಸಿ"
     },
+    "language_choice": "ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯನ್ನು ಆರಿಸಿ.",
     "lifestyle": {
-      "sedentary": "ಜಡ ಜೀವನಶೈಲಿ (ಹೆಚ್ಚಾಗಿ ಕುಳಿತುಕೊಳ್ಳುವುದು)",
       "active": "ಸಕ್ರಿಯ (ನಿಯಮಿತ ವ್ಯಾಯಾಮ)",
-      "smoker": "ಧೂಮಪಾನಿ",
-      "placeholder": "ನಿಮ್ಮ ಜೀವನಶೈಲಿಯನ್ನು ಆರಿಸಿ"
-    },
-    "severity": {
-      "low": "ಕಡಿಮೆ",
-      "medium": "ಮಧ್ಯಮ",
-      "high": "ಹೆಚ್ಚು"
+      "placeholder": "ನಿಮ್ಮ ಜೀವನಶೈಲಿಯನ್ನು ಆರಿಸಿ",
+      "sedentary": "ಜಡ ಜೀವನಶೈಲಿ (ಹೆಚ್ಚಾಗಿ ಕುಳಿತುಕೊಳ್ಳುವುದು)",
+      "smoker": "ಧೂಮಪಾನಿ"
     },
     "next": "Next",
-    "skip": "Skip",
-    "retry": "Retry"
+    "not_available": "ಲಭ್ಯವಿಲ್ಲ",
+    "pending": "ಬಾಕಿ ಇದೆ",
+    "retry": "Retry",
+    "save": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+    "saving": "ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...",
+    "severity": {
+      "high": "ಹೆಚ್ಚು",
+      "low": "ಕಡಿಮೆ",
+      "medium": "ಮಧ್ಯಮ"
+    },
+    "skip": "Skip"
   },
-  "settings": {
-    "title": "ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    "subtitle": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಅಪ್ಲಿಕೇಶನ್ ಆದ್ಯತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ.",
-    "profile_section": "ಪ್ರೊಫೈಲ್ ಕಾನ್ಫಿಗರೇಶನ್",
-    "full_name": "ಪೂರ್ಣ ಹೆಸರು",
-    "age": "ವಯಸ್ಸು",
-    "preferences_section": "ಆದ್ಯತೆಗಳು",
-    "push_notifications": {
-      "title": "ಪುಶ್ ಅಧಿಸೂಚನೆಗಳು",
-      "body": "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ."
+  "dashboard": {
+    "alert_body": "ಒಂದು ಅಥವಾ ಹೆಚ್ಚಿನ ಲಕ್ಷಣಗಳು ದೀರ್ಘಾವಧಿಯಿಂದ ಇವೆ. ವೈದ್ಯಕೀಯ ತಪಾಸಣೆ ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ.",
+    "alert_title": "ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆ ಸಕ್ರಿಯವಾಗಿದೆ",
+    "alert_view": "ಎಚ್ಚರಿಕೆಗಳನ್ನು ನೋಡಿ",
+    "charts": {
+      "data_points": "{{count}} ಡೇಟಾ ಪಾಯಿಂಟ್ಸ್",
+      "data_points_label": "entries",
+      "distribution": "ವಿತರಣೆ",
+      "distribution_aria": "Symptom frequency distribution",
+      "no_data": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳ ಡೇಟಾ ಇಲ್ಲ",
+      "no_data_sub": "ಚಾರ್ಟ್ ನೋಡಲು ನಿಮ್ಮ ಮೊದಲ ಲಕ್ಷಣವನ್ನು ದಾಖಲಿಸಿ",
+      "no_freq_data": "No data yet.",
+      "no_freq_match": "No results found.",
+      "no_insight_match": "No results found.",
+      "no_insight_sub": "Try adjusting your search.",
+      "no_match": "No results found.",
+      "no_match_sub": "Try adjusting your search.",
+      "severity_timeline": "ತೀವ್ರತೆಯ ಸಮಯರೇಖೆ",
+      "symptom_frequency": "ಲಕ್ಷಣಗಳ ಆವರ್ತನ",
+      "trend": "ಪ್ರವೃತ್ತಿ",
+      "trend_aria": "Symptom severity over time",
+      "view_report": "PDF ವರದಿಯನ್ನು ರಚಿಸಿ →",
+      "view_timeline": "ಪೂರ್ಣ ಸಮಯದ ರೇಖೆಯನ್ನು ನೋಡಿ →"
     },
-    "emails": {
-      "title": "ಇಮೇಲ್ ಅಪ್‌ಡೇಟ್‌ಗಳು",
-      "body": "ವಾರದ ಸಾರಾಂಶ ಇಮೇಲ್‌ಗಳನ್ನು ಪಡೆಯಿರಿ."
+    "demo_meds": {
+      "label": "Demo",
+      "sample_badge": "Sample Data",
+      "title": "Sample medications"
     },
-    "about_section": "CareTrace AI ಬಗ್ಗೆ",
-    "about_body": "CareTrace AI ಎನ್ನುವುದು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಲು ಮತ್ತು ಸಮಯದೊಂದಿಗೆ ಮಾದರಿಗಳನ್ನು ಗಮನಿಸಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಟ್ರ್ಯಾಕಿಂಗ್ ವ್ಯವಸ್ಥೆಯಾಗಿದೆ.",
-    "notifications": {
-      "title": "ಪುಶ್ ಅಧಿಸೂಚನೆಗಳು",
-      "body": "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ.",
-      "profile_success": "ಪ್ರೊಫೈಲ್ ಕಾನ್ಫಿಗರೇಶನ್ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ",
-      "profile_error": "ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
-      "pref_updated": "ಆದ್ಯತೆ [{{name}}] ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ",
-      "lang_applied": "ಭಾಷಾ ಕಾನ್ಫಿಗರೇಶನ್ ಅನ್ವಯಿಸಲಾಗಿದೆ"
-    }
+    "error": {
+      "stats": "Statistics unavailable",
+      "subtitle": "Your data is safe. Please reload.",
+      "title": "Dashboard Error"
+    },
+    "greeting": {
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "morning": "Good morning"
+    },
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_default": "Good to see you",
+    "greeting_evening": "ಶುಭ ಸಂಜೆ, {{name}}",
+    "greeting_morning": "Good morning, {{name}}",
+    "hello": "ಹಲೋ, {{name}}",
+    "insights": {
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights",
+      "generate_report": "PDF ವರದಿ ರಚಿಸಿ",
+      "pattern_body": "ನೀವು {{count}} ಲಕ್ಷಣಗಳನ್ನು {{avg}}/10 ಸರಾಸರಿ ತೀವ್ರತೆಯೊಂದಿಗೆ ದಾಖಲಿಸಿದ್ದೀರಿ.",
+      "pattern_title": "ಟ್ರ್ಯಾಕಿಂಗ್ ಮಾದರಿ",
+      "personalized_insights": "ವೈಯಕ್ತಿಕ ಒಳನೋಟಗಳು",
+      "profile_body": "ನಿಮ್ಮ {{lifestyle}} ಪ್ರೊಫೈಲ್ ಆಧರಿಸಿ ಈ ಸಲಹೆಗಳನ್ನು ನೀಡಲಾಗಿದೆ.",
+      "profile_empty": "ವೈಯಕ್ತಿಕ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಲು ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ.",
+      "profile_title": "ಪ್ರೊಫೈಲ್ ಆಧಾರಿತ ಮಾರ್ಗದರ್ಶನ",
+      "title": "ಬುದ್ಧಿವಂತಿಕೆ"
+    },
+    "loading": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+    "log_symptom": "ಲಕ್ಷಣ ದಾಖಲಿಸಿ",
+    "quick_actions": "ತ್ವರಿತ ಕ್ರಿಯೆಗಳು",
+    "reminder_body": "ನೀವು ಇಂದು ಯಾವುದೇ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿಲ್ಲ. ನಿಖರವಾದ ಫಲಿತಾಂಶಗಳಿಗಾಗಿ ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನವೀಕರಿಸಿ.",
+    "reminder_dismiss": "ನಿರ್ಲಕ್ಷಿಸಿ",
+    "reminder_log": "ಈಗಲೇ ದಾಖಲಿಸಿ",
+    "reminder_title": "ದೈನಂದಿನ ಟ್ರ್ಯಾಕಿಂಗ್ ಜ್ಞಾಪನೆ",
+    "risk": {
+      "action_pending": "ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಲು AI ವಿಶ್ಲೇಷಣೆಯನ್ನು ಚಲಾಯಿಸಿ.",
+      "high": "ಹೆಚ್ಚಿನ ಅಪಾಯ",
+      "last_updated": "ಕೊನೆಯ ಅಪ್ಡೇಟ್",
+      "low": "ಕಡಿಮೆ ಅಪಾಯ",
+      "medium": "ಮಧ್ಯಮ ಅಪಾಯ",
+      "no_analysis": "ಇನ್ನೂ ವಿಶ್ಲೇಷಣೆ ನಡೆದಿಲ್ಲ",
+      "no_analysis_sub": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಒಳನೋಟಗಳನ್ನು ತಿಳಿಯಲು AI ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.",
+      "not_assessed": "ಮೌಲ್ಯಮಾಪನ ಮಾಡಲಾಗಿಲ್ಲ",
+      "status": "ಆರೋಗ್ಯದ ಸ್ಥಿತಿ",
+      "title": "ಅಪಾಯದ ಮೌಲ್ಯಮಾಪನ",
+      "view_report": "ಪೂರ್ಣ ವರದಿ ನೋಡಿ"
+    },
+    "run_analysis": "AI ವಿಶ್ಲೇಷಣೆ",
+    "search": {
+      "clear": "ಹುಡುಕಾಟ ಅಳಿಸಿ",
+      "no_matches": "ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+      "no_matches_sub": "ಲಕ್ಷಣದ ಹೆಸರುಗಳು, ಎಚ್ಚರಿಕೆಗಳು, ವಿಶ್ಲೇಷಣೆ ಅಥವಾ ವರದಿ ಪ್ರಮುಖ ಪದಗಳನ್ನು ಹುಡುಕಲು ಪ್ರಯತ್ನಿಸಿ.",
+      "results": "\"{{query}}\" ಗಾಗಿ ಫಲಿತಾಂಶಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ",
+      "title": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಹುಡುಕಾಟ"
+    },
+    "stats": {
+      "across_logs": "ಒಟ್ಟಾರೆ ಸರಾಸರಿ",
+      "alerts": "ಸಕ್ರಿಯ ಎಚ್ಚರಿಕೆಗಳು",
+      "all_clear": "ಎಲ್ಲವೂ ಸರಿ ಇದೆ",
+      "all_time": "ಎಲ್ಲಾ ದಾಖಲೆಗಳು",
+      "avg_sev": "ಸರಾಸರಿ ತೀವ್ರತೆ",
+      "logged": "ದಾಖಲಾದ ಲಕ್ಷಣಗಳು",
+      "longest": "ದೀರ್ಘ ಅವಧಿ",
+      "needs_attention": "ಗಮನದ ಅವಶ್ಯಕತೆಯಿದೆ",
+      "single_run": "ಏಕ ಲಕ್ಷಣದ ಅವಧಿ"
+    },
+    "streak": "{{count}}-ದಿನಗಳ ಸ್ಟ್ರೀಕ್",
+    "symptoms_count": "{{count}} ಲಕ್ಷಣ",
+    "symptoms_count_plural": "{{count}} ಲಕ್ಷಣಗಳು",
+    "tagline": "ಬೇಗನೆ ಪತ್ತೆಹಚ್ಚುವುದು. ಉತ್ತಮ ನಿರ್ಧಾರಗಳು.",
+    "testimonials_btn": "ಅನಿಸಿಕೆಗಳು",
+    "today": "ಇಂದು",
+    "tracked_count": "{{count}} ಲಕ್ಷಣಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ",
+    "view_timeline": "ಸಮಯರೇಖೆ",
+    "welcome": "ಮರಳಿ ಬಂದಿದ್ದಕ್ಕೆ ಸ್ವಾಗತ, {{name}}",
+    "welcome_default": "ಸ್ವಾಗತ"
+  },
+  "demo": {
+    "banner": "ನೀವು ಡೆಮೊ ಖಾತೆಯನ್ನು ಬಳಸುತ್ತಿದ್ದೀರಿ — ಡೇಟಾ ಪ್ರದರ್ಶನಕ್ಕೆ ಮಾತ್ರ."
+  },
+  "health_metrics": {
+    "add_entry": "ನಮೂದು ಸೇರಿಸಿ",
+    "blood_sugar": "ರಕ್ತದ ಸಕ್ಕರೆ (mg/dL)",
+    "diastolic_bp": "ಡಯಾಸ್ಟೊಲಿಕ್ ಬಿಪಿ (mmHg)",
+    "error_empty": "ದಯವಿಟ್ಟು ಕನಿಷ್ಟ ಒಂದು ಮೆಟ್ರಿಕ್ ಮೌಲ್ಯವನ್ನು ನಮೂದಿಸಿ",
+    "error_save": "ವೈಟಲ್ಸ್ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ",
+    "form_subtitle": "ನಿಮ್ಮ ಪ್ರಸ್ತುತ ವೈಟಲ್ ಸೈನ್ಸ್ ನಮೂದಿಸಿ",
+    "heart_rate": "ಹೃದಯ ಬಡಿತ (bpm)",
+    "not_provided": "ಲಭ್ಯವಿಲ್ಲ",
+    "oxygen_saturation": "ಆಮ್ಲಜನಕದ ಸන්තೃಪ್ತಿ (%)",
+    "success": "ವೈಟಲ್ಸ್ ದಾಖಲಿಸಲಾಗಿದೆ",
+    "systolic_bp": "ಸಿಸ್ಟೊಲಿಕ್ ಬಿಪಿ (mmHg)",
+    "title": "ಆರೋಗ್ಯ ಮೆಟ್ರಿಕ್ಸ್ (ವೈಟಲ್ಸ್)"
+  },
+  "history": {
+    "empty": {
+      "body": "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿಲ್ಲ.",
+      "title": "ಯಾವುದೇ ಇತಿಹಾಸ ಕಂಡುಬಂದಿಲ್ಲ"
+    },
+    "subtitle": "ನೀವು ದಾಖಲಿಸಿದ ಲಕ್ಷಣಗಳ ಪೂರ್ಣ ವಿವರಗಳು.",
+    "table": {
+      "date": "ದಾಖಲಾದ ದಿನಾಂಕ",
+      "duration": "ಅವಧಿ",
+      "severity": "ತೀವ್ರತೆ",
+      "symptom": "ಲಕ್ಷಣ"
+    },
+    "title": "ಲಕ್ಷಣಗಳ ಇತಿಹಾಸ"
+  },
+  "landing": {
+    "cta_copy": "CareTrace ನಡುವೆ ಇರುವ ಪ್ರತಿಯೊಂದಕ್ಕೂ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ.",
+    "cta_demo_btn": "ಸಂವಾದಾತ್ಮಕ ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
+    "cta_heading": "ನೇಮಕಾತಿಗಳ ನಡುವೆ ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ.",
+    "cta_login": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "cta_signup": "ಉಚಿತ ಖಾತೆ ರಚಿಸಿ",
+    "cta_try_demo": "ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
+    "feature_1_body": "Built for daily use, not paperwork.",
+    "feature_1_title": "Log in seconds",
+    "feature_2_body": "See how your health changes over time, rather than just today.",
+    "feature_2_title": "See your patterns",
+    "feature_3_body": "Export a clear timeline of your health for your next appointment.",
+    "feature_3_title": "Share with your doctor",
+    "feature_access_desc": "ಉತ್ಪನ್ನದ ವಾಸ್ತುಶಿಲ್ಪದಲ್ಲಿ ಬಹುಭಾಷಾ ಬೆಂಬಲವನ್ನು ಸಂಯೋಜಿಸಲಾಗಿದೆ ಆದ್ದರಿಂದ ಟೋನ್, ಸ್ಪಷ್ಟತೆ ಅಥವಾ ನಂಬಿಕೆಯನ್ನು ದುರ್ಬಲಗೊಳಿಸದೆ ಪ್ರವೇಶವು ಅಳೆಯಲ್ಪಡುತ್ತದೆ.",
+    "feature_access_eyebrow": "ಪ್ರವೇಶ",
+    "feature_access_metric": "ಐದು ಭಾಷೆಗಳ ವ್ಯವಸ್ಥೆ",
+    "feature_access_title": "ವಿನ್ಯಾಸದಿಂದಲೇ ಸ್ಥಳೀಕರಿಸಲಾಗಿದೆ, ಕೇವಲ ಅನುವಾದವಲ್ಲ.",
+    "feature_analysis": "AI ಅಪಾಯದ ವಿಶ್ಲೇಷಣೆ",
+    "feature_analysis_card_desc": "ಅಪಾಯದ ಸಾರಾಂಶಗಳು, ಮಾದರಿ ಪತ್ತೆ ಮತ್ತು ಸಂದರ್ಭೋಚಿತ ಪ್ರಾಂಪ್ಟ್‌ಗಳು ಯಂತ್ರ-ರಚಿತ ಗದ್ದಲದ ಬದಲಿಗೆ ಉದ್ದೇಶಪೂರ್ವಕ, ಸ್ಪಷ್ಟ ಮತ್ತು ಶಾಂತವಾಗಿರುತ್ತವೆ.",
+    "feature_analysis_card_metric": "ಓದಬಹುದಾದ ಬುದ್ಧಿಮತ್ತೆ",
+    "feature_analysis_card_title": "ಮಾನವರು ಓದಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ AI ಉತ್ಪನ್ನಗಳು.",
+    "feature_analysis_desc": "ಸುಧಾರಿತ ಮಾದರಿ ಗುರುತಿಸುವಿಕೆ ಕ್ರಮಾವಳಿಗಳು ನಿಮ್ಮ ಆರೋಗ್ಯ ಅಪಾಯಗಳನ್ನು ನಿರ್ಣಯಿಸಲು ನಿಮ್ಮ ಲಕ್ಷಣದ ಡೇಟಾವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತವೆ.",
+    "feature_analysis_eyebrow": "Analysis",
+    "feature_multilingual": "ಬಹುವಿಧದ ಭಾಷಾ ಬೆಂಬಲ",
+    "feature_multilingual_desc": "ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ, ತೆಲುಗು, ತಮಿಳು ಮತ್ತು ಕನ್ನಡ ಭಾಷೆಗಳಿಗೆ ಸಂಪೂರ್ಣ ಬೆಂಬಲ.",
+    "feature_timeline": "ದೃಶ್ಯ ಆರೋಗ್ಯ ಸಮಯರೇಖೆ",
+    "feature_timeline_card_desc": "ರೋಗಲಕ್ಷಣಗಳು, ವರದಿಗಳು ಮತ್ತು ಅನುಮಾನಿತ ಬದಲಾವಣೆಗಳು ಒಂದೇ ನಿರಂತರ ದೃಶ್ಯ ವ್ಯವಸ್ಥೆಯಲ್ಲಿ ವಾಸಿಸುತ್ತವೆ ಆದ್ದರಿಂದ ಬದಲಾವಣೆಯ ಕಥೆಯು ಕಾಲಾನಂತರದಲ್ಲಿ ಓದಬಲ್ಲ ರೀತಿಯಲ್ಲಿ ಉಳಿಯುತ್ತದೆ.",
+    "feature_timeline_card_metric": "ಏಕೀಕೃತ ಆರೋಗ್ಯ ನಿರೂಪಣೆ",
+    "feature_timeline_card_title": "ಕಾಗದದ ಕೆಲಸದಂತೆ ಅಲ್ಲದೆ, ಉತ್ಪನ್ನದಂತೆ ವರ್ತಿಸುವ ದೀರ್ಘಕಾಲೀನ ನೋಟ.",
+    "feature_timeline_desc": "ಸಮಯದೊಂದಿಗೆ ನಿಮ್ಮ ಆರೋಗ್ಯ ಮಾದರಿಗಳನ್ನು ದೃಶ್ಯೀಕರಿಸಲು ಸಂವಾದಾತ್ಮಕ ಚಾರ್ಟ್‌ಗಳು ಮತ್ತು ಸಮಯರೇಖೆಗಳು.",
+    "feature_timeline_eyebrow": "Timeline",
+    "feature_tracking": "ಸ್ಮಾರ್ಟ್ ಸಿಂಪ್ಟಮ್ ಟ್ರ್ಯಾಕಿಂಗ್",
+    "feature_tracking_card_desc": "ರಚನಾತ್ಮಕ ರೋಗಲಕ್ಷಣದ ಸೆರೆಹಿಡಿಯುವಿಕೆಯು ವ್ಯವಸ್ಥೆಯನ್ನು ಪ್ರವೇಶಿಸುವ ಮೊದಲೇ ಅಸ್ಪಷ್ಟತೆಯನ್ನು ಕಡಿಮೆ ಮಾಡುವ ಮೂಲಕ ಡೌನ್‌ಸ್ಟ್ರೀಮ್ ವಿಶ್ಲೇಷಣೆಯನ್ನು ಸ್ಥಿರವಾಗಿರಿಸುತ್ತದೆ.",
+    "feature_tracking_card_metric": "ಹೆಚ್ಚಿನ ಡೇಟಾ ನಿಷ್ಠೆ",
+    "feature_tracking_card_title": "ಶುದ್ಧ ಒಳಹರಿವು ವಿಶ್ವಾಸಾರ್ಹ ಸಂಕೇತಗಳನ್ನು ಉತ್ಪಾದಿಸುತ್ತದೆ.",
+    "feature_tracking_desc": "ಧ್ವನಿ ಇನ್‌ಪುಟ್, ತೀವ್ರತೆಯ ಸ್ಕೋರಿಂಗ್ ಮತ್ತು ಬುದ್ಧಿವಂತ ವರ್ಗೀಕರಣದೊಂದಿಗೆ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿ ಮತ್ತು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ.",
+    "feature_tracking_eyebrow": "Tracking",
+    "features_title": "CareTrace AI ಏಕೆ?",
+    "footer_about": "CareTrace ಬಗ್ಗೆ",
+    "footer_access": "ಪ್ರವೇಶ",
+    "footer_copyright": "ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.",
+    "footer_create_account": "ಖಾತೆ ರಚಿಸಿ",
+    "footer_features": "ವೈಶಿಷ್ಟ್ಯಗಳು",
+    "footer_get_started": "ಪ್ರಾರಂಭಿಸಿ",
+    "footer_mission": "ನೇಮಕಾತಿಗಳ ನಡುವೆ ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ. CareTrace ನಡುವೆ ಇರುವ ಪ್ರತಿಯೊಂದಕ್ಕೂ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ.",
+    "footer_product": "ಉತ್ಪನ್ನ",
+    "footer_security": "ಭದ್ರತೆ",
+    "footer_sign_in": "ಸೈನ್ ಇನ್",
+    "footer_tagline": "ನೇಮಕಾತಿಗಳ ನಡುವೆ 99% ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ. ದೀರ್ಘಕಾಲೀನ ಪಥಕ್ಕೆ ನಿಖರವಾದ ಟ್ರ್ಯಾಕಿಂಗ್.",
+    "footer_workflow": "ಕೆಲಸದ ಹರಿವು",
+    "hero_copy": "Clear insights for your long-term health.",
+    "hero_h1": "Stop guessing. Start tracking.",
+    "hero_headline": "ಅನುಮಾನ ಲಗಾನಾ ಬಂದ ಮಾಡಿ. ಟ್ರ್ಯಾಕಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ.",
+    "hero_subtitle": "ದೀರ್ಘಕಾಲೀನ ಪಥಕ್ಕೆ ವೈದ್ಯಕೀಯ ಸ್ಪಷ್ಟತೆ.",
+    "hero_title": "ನಿಮ್ಮ ಆರೋಗ್ಯ,",
+    "hero_title_highlight": "ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ",
+    "metric_bpm": "bpm",
+    "metric_hrs": "hrs",
+    "metric_resting_hr": "Resting HR",
+    "metric_sleep_recovery": "Sleep",
+    "mini_card_1_detail": "ಅಭ್ಯಾಸಕ್ಕಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ, ಕಾಗದದ ಕೆಲಸಕ್ಕಲ್ಲ.",
+    "mini_card_1_title": "12 ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಲಾಗ್ ಮಾಡಲಾಗಿದೆ",
+    "mini_card_2_detail": "ಈ ವ್ಯವಸ್ಥೆಯು ಇಂದಿನ ಓದುವಿಕೆಯನ್ನು ಮಾತ್ರವಲ್ಲದೆ, ವಾರಗಳಾದ್ಯಂತ ದಾಖಲೆಗಳನ್ನು ಸಂಪರ್ಕಿಸುತ್ತದೆ.",
+    "mini_card_2_title": "ನೀವು ತಪ್ಪಿಸಿಕೊಂಡಿರಬಹುದಾದ ಮಾದರಿಗಳು",
+    "mini_card_3_detail": "ನಿಮ್ಮ ಮುಂದಿನ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗೆ ರಚನಾತ್ಮಕ ದಾಖಲೆಯನ್ನು ತನ್ನಿ. 'ನನಗೆ ನೆನಪಿಲ್ಲ' ಎಂಬುದು ಇನ್ನು ಮುಂದೆ ಬೇಡ.",
+    "mini_card_3_title": "ವೈದ್ಯಕೀಯ ಟೈಮ್‌ಲೈನ್ ಅನ್ನು ರಫ್ತು ಮಾಡಿ",
+    "mockup_health_score": "Health score",
+    "mockup_name": "Sarah Jenkins",
+    "mockup_pattern_detected": "Pattern detected",
+    "mockup_profile": "Profile",
+    "mockup_score": "Score",
+    "month_apr": "Apr",
+    "month_feb": "Feb",
+    "month_jan": "Jan",
+    "month_jun": "Jun",
+    "month_mar": "Mar",
+    "month_may": "May",
+    "platform_desc": "ಬಲವಾದ ಉತ್ಪನ್ನ ವ್ಯವಸ್ಥೆಯು ಬಲವಾದ ಆರೈಕೆ ಅನುಭವಗಳನ್ನು ಸೃಷ್ಟಿಸುತ್ತದೆ: ಶುದ್ಧ ಒಳಹರಿವು, ಶಾಂತ ಶ್ರೇಣಿ, ಮತ್ತು ಮೊದಲ ನೋಟದಲ್ಲೇ ವಿಶ್ವಾಸಾರ್ಹವೆನಿಸುವ ಉತ್ಪನ್ನಗಳು.",
+    "platform_eyebrow": "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್",
+    "privacy_badge": "HIPAA ಅನುಸರಣೆ · ಅಂತ್ಯದಿಂದ ಅಂತ್ಯಕ್ಕೆ ಗೂಢಲಿಪೀಕರಿಸಲಾಗಿದೆ · ನಿಮ್ಮ ಡೇಟಾ ಗೌಪ್ಯವಾಗಿ ಉಳಿಯುತ್ತದೆ",
+    "security_cta_signup": "ಉಚಿತ ಖಾತೆ ರಚಿಸಿ",
+    "security_desc": "ವ್ಯವಸ್ಥೆಯು ಪ್ರೀಮಿಯಂ ಎಂದು ಭಾವಿಸುತ್ತದೆ ಏಕೆಂದರೆ ಅದು ಕಠಿಣತೆಯನ್ನು ತೆಗೆದುಹಾಕದೆ ಘರ್ಷಣೆಯನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ. ಪ್ರವೇಶವು ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿದೆ, ಹಂಚಿಕೆಯು ಸಂದರ್ಭೋಚಿತವಾಗಿದೆ, ಮತ್ತು ಪ್ರತಿಯೊಂದು ಪದರವು ಸಿಗ್ನಲ್ ಅನ್ನು ಅತಿಕ್ರಮಿಸುವ ಬದಲು ಅದನ್ನು ರಕ್ಷಿಸುತ್ತದೆ.",
+    "security_eyebrow": "ಭದ್ರತೆ",
+    "security_pillar1_desc": "ಸೂಕ್ಷ್ಮ ಸಂದರ್ಭವು ಎಲ್ಲಿಗೆ ಚಲಿಸುತ್ತದೆ ಮತ್ತು ಮುಂದೆ ಅದನ್ನು ಯಾರು ನೋಡುತ್ತಾರೆ ಎಂಬುದರ ನಿಯಂತ್ರಣವು ರೋಗಿಯ ಬಳಿಯೇ ಇರುತ್ತದೆ.",
+    "security_pillar1_title": "ಸಮ್ಮತಿಯಿಂದ-ಮುನ್ನಡೆಸುವ ಹಂಚಿಕೆ",
+    "security_pillar2_desc": "ಮೂಲಸೌಕರ್ಯವು ಭದ್ರತೆಯನ್ನು ಪ್ರತ್ಯೇಕ ಅನುಸರಣೆ ಪದರದ ಬದಲಿಗೆ ಸಂವಾದ ಮಾದರಿಯ ಭಾಗವಾಗಿ ಪರಿಗಣಿಸುತ್ತದೆ.",
+    "security_pillar2_title": "ರಕ್ಷಿತ ಸಾರಿಗೆ ಮತ್ತು ಸಂಗ್ರಹಣೆ",
+    "security_pillar3_desc": "ರಫ್ತುಗಳು, ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಸಾರಾಂಶಗಳು ಕ್ಲಿನಿಕಲ್ ವರ್ಕ್‌ಫ್ಲೋಗಳ ಒಳಗೆ ಮಾನವ ತೀರ್ಪಿಗೆ ಸಾಕಷ್ಟು ಸಂಕ್ಷಿಪ್ತವಾಗಿರುತ್ತವೆ.",
+    "security_pillar3_title": "ನೈಜ ವಿಮರ್ಶೆಗಾಗಿ ನಿರ್ಮಿಸಲಾದ ಔಟ್‌ಪುಟ್‌ಗಳು",
+    "security_title": "ಗೋಚರ ಸಂಯಮದೊಂದಿಗೆ ಖಾಸಗಿ ಆರೋಗ್ಯ ಬುದ್ಧಿಮತ್ತೆ.",
+    "trust_continuity_detail": "ಪ್ರತ್ಯೇಕ ಲಾಗ್‌ಗಳ ಬದಲಿಗೆ, ಸಿಸ್ಟಮ್ ಸಂದರ್ಭವನ್ನು ಸಂಗ್ರಹಿಸುತ್ತದೆ ಆದ್ದರಿಂದ ವೈದ್ಯರು ವೇಗ, ಮರುಕಳಿಸುವಿಕೆ ಮತ್ತು ದಿಕ್ಚ್ಯುತಿಯನ್ನು ಒಂದು ನೋಟದಲ್ಲಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಬಹುದು.",
+    "trust_continuity_eyebrow": "ನಿರಂತರತೆ",
+    "trust_continuity_title": "ಪ್ರತಿಯೊಂದು ರೋಗಲಕ್ಷಣವು ಜೀವಂತ ದಾಖಲೆಯ ಭಾಗವಾಗುತ್ತದೆ.",
+    "trust_privacy_detail": "ಗೂಢಲಿಪೀಕರಣ, ಸಮ್ಮತಿ ಗಡಿಗಳು ಮತ್ತು ನಿರ್ಬಂಧಿತ ಡೇಟಾ ಮೇಲ್ಮೈಗಳನ್ನು ಉತ್ಪನ್ನದ ಅನುಭವದ ಭಾಗವಾಗಿ ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ, ಕಾನೂನು ಅಡಿಟಿಪ್ಪಣಿಯಾಗಿ ಅಲ್ಲ.",
+    "trust_privacy_eyebrow": "ಗೌಪ್ಯತೆ",
+    "trust_privacy_title": "ಸೂಕ್ಷ್ಮ ಆರೋಗ್ಯ ಡೇಟಾ ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ರಕ್ಷಿತವಾಗಿರುತ್ತದೆ.",
+    "trust_signal_detail": "ಇಂಟರ್ಫೇಸ್ ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಶಾಂತವಾಗಿದೆ, ಇದು ವಿಚಲನಗಳು, ನಿರಂತರ ಲಕ್ಷಣಗಳು ಮತ್ತು ಚೇತರಿಕೆಯ ಕಮಾನುಗಳನ್ನು ತಕ್ಷಣವೇ ಮತ್ತು ನಿಸ್ಸಂದಿಗ್ಧವಾಗಿ ಅನುಭವಿಸುವಂತೆ ಮಾಡುತ್ತದೆ.",
+    "trust_signal_eyebrow": "ಸಿಗ್ನಲ್",
+    "trust_signal_title": "ದೃಶ್ಯ ಗೊಂದಲವಿಲ್ಲದೆ ಮಾದರಿಗಳು ಮೇಲ್ಮೈಗೆ ಬರುತ್ತವೆ.",
+    "trusted_by": "ಆರೋಗ್ಯ ರಕ್ಷಣೆ ವೃತ್ತಿಪರರು ಮತ್ತು ರೋಗಿಗಳಿಂದ ನಂಬಲ್ಪಟ್ಟಿದೆ",
+    "workflow_desc": "ಪ್ರತಿಯೊಂದು ಮೇಲ್ಮೈಯನ್ನು ನಿರಂತರತೆಯನ್ನು ಸ್ಪಷ್ಟಪಡಿಸಲು, ವ್ಯಾಖ್ಯಾನದ ಘರ್ಷಣೆಯನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಮತ್ತು ಡೇಟಾ ಸಂಕೀರ್ಣವಾದರೂ ಉತ್ಪನ್ನವನ್ನು ಶಾಂತವಾಗಿರಿಸಲು ಟ್ಯೂನ್ ಮಾಡಲಾಗಿದೆ.",
+    "workflow_eyebrow": "ಕೆಲಸದ ಹರಿವು",
+    "workflow_step1_desc": "ರೋಗಲಕ್ಷಣಗಳು, ತೀವ್ರತೆ ಮತ್ತು ದೈನಂದಿನ ಟಿಪ್ಪಣಿಗಳನ್ನು ಆರೈಕೆಗೆ ನಿಖರವಾದ ಮತ್ತು ಅಭ್ಯಾಸಕ್ಕೆ ಸುಲಭವಾದ ಹರಿವಿನಲ್ಲಿ ಲಾಗ್ ಮಾಡಿ.",
+    "workflow_step1_title": "ಸೂಕ್ಷ್ಮ ಬದಲಾವಣೆಯನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ",
+    "workflow_step2_desc": "ತಾತ್ಕಾಲಿಕ ವಿಶ್ಲೇಷಣೆಯು ವೈಯಕ್ತಿಕ ತಪಾಸಣೆಗಳನ್ನು ಸುಸಂಬದ್ಧ ನಿರೂಪಣೆಯಾಗಿ ಪರಿವರ್ತಿಸುತ್ತದೆ, ಪ್ರಗತಿ, ಸ್ಥಿರತೆ ಅಥವಾ ಚೇತರಿಕೆಯನ್ನು ಬಹಿರಂಗಪಡಿಸುತ್ತದೆ.",
+    "workflow_step2_title": "ಪಥವನ್ನು ರೂಪಿಸಿ",
+    "workflow_step3_desc": "ದಾಖಲೆಯನ್ನು ಪರಿಶೀಲಿಸಿ, ಮಾದರಿಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ ಮತ್ತು ಮುಂದಿನ ಪ್ರತಿಯೊಂದು ನಿರ್ಧಾರ ಅಥವಾ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗೆ ತೀಕ್ಷ್ಣವಾದ ಸಂದರ್ಭವನ್ನು ತನ್ನಿ.",
+    "workflow_step3_title": "ವೈದ್ಯಕೀಯ ಸ್ಪಷ್ಟತೆಯೊಂದಿಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸಿ",
+    "workflow_title": "ಸಿಗ್ನಲ್ ಅನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಗದ್ದಲವನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ."
+  },
+  "navbar": {
+    "account": "ಖಾತೆ",
+    "active_session": "ಸಕ್ರಿಯ ಸೆಷನ್",
+    "alerts": "ಎಚ್ಚರಿಕೆಗಳು",
+    "analysis": "AI ವಿಶ್ಲೇಷಣೆ",
+    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "health_intelligence": "ಆರೋಗ್ಯ ಬುದ್ಧಿವಂತಿಕೆ",
+    "health_profile": "ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್",
+    "health_tracking": "ಆರೋಗ್ಯ ಟ್ರ್ಯಾಕಿಂಗ್",
+    "history": "ಇತಿಹಾಸ",
+    "intelligence": "ಬುದ್ಧಿವಂತಿಕೆ",
+    "language": "ಭಾಷೆ",
+    "log_symptoms": "ಲಕ್ಷಣಗಳನ್ನು ನಮೂದಿಸಿ",
+    "logout": "ಲಾಗ್ ಔಟ್",
+    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
+    "notifications_empty": "ಎಲ್ಲವೂ ಸರಿ ಇದೆ!",
+    "notifications_new": "ಹೊಸತು",
+    "open_menu": "Open menu",
+    "overview": "ಅವಲೋಕನ",
+    "recommendations": "ಸಲಹೆ",
+    "reports": "ವರದಿಗಳು",
+    "search": "ಹುಡುಕಿ...",
+    "search_anything": "ಏನನ್ನೂ ಹುಡುಕಿ...",
+    "search_placeholder": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಹುಡುಕಿ...",
+    "settings": "ಸೆಟ್ಟಿಂಗ್ಸ್",
+    "symptoms": "ಲಕ್ಷಣಗಳು",
+    "timeline": "ಸಮಯರೇಖೆ"
+  },
+  "onboarding": {
+    "actions": {
+      "add_condition": "Add another condition",
+      "next": "ಮುಂದೆ",
+      "remove": "Remove",
+      "saving": "ಉಳಿಸಲಾಗುತ್ತಿದೆ...",
+      "skip": "ಬಿಟ್ಟುಬಿಡಿ"
+    },
+    "basic": {
+      "age": "Age",
+      "age_placeholder": "e.g. 28",
+      "blood_group": "Blood group",
+      "blood_group_select": "Choose an option",
+      "bmi_label": "Estimated BMI:",
+      "gender": "Gender",
+      "gender_select": "Choose an option",
+      "height": "Height (cm)",
+      "height_placeholder": "e.g. 170",
+      "lifestyle": "Current lifestyle",
+      "lifestyle_active": "Active",
+      "lifestyle_sedentary": "Sedentary",
+      "lifestyle_select": "Choose an option",
+      "lifestyle_smoker": "Smoker",
+      "weight": "Weight (kg)",
+      "weight_placeholder": "e.g. 65"
+    },
+    "family": {
+      "condition": "Condition",
+      "condition_select": "Choose an option",
+      "hint": "Add conditions that run in your family (optional).",
+      "relation": "Relation",
+      "relation_select": "Optional"
+    },
+    "lifestyle": {
+      "alcohol": "Alcohol",
+      "diet": "Diet type",
+      "diet_mixed": "Mixed",
+      "diet_nonveg": "Non-vegetarian",
+      "diet_select": "Choose an option",
+      "diet_veg": "Vegetarian",
+      "ex_none": "None",
+      "ex_regular": "Daily or almost daily",
+      "ex_select": "Choose an option",
+      "ex_weekly": "A few times a week",
+      "exercise": "Exercise frequency",
+      "quality_average": "Average",
+      "quality_good": "Good",
+      "quality_poor": "Poor",
+      "quality_select": "Choose an option",
+      "sleep": "Sleep duration (hours per night)",
+      "sleep_placeholder": "e.g. 7",
+      "sleep_quality": "Sleep quality",
+      "smoking": "Smoking",
+      "stress": "Stress level",
+      "stress_high": "High",
+      "stress_low": "Low",
+      "water": "Water intake (liters per day)",
+      "water_placeholder": "e.g. 2.5"
+    },
+    "medical": {
+      "allergies": "Allergies",
+      "allergies_placeholder": "e.g. Peanuts, Penicillin",
+      "conditions": "Existing conditions",
+      "conditions_placeholder": "e.g. Asthma, Hypertension",
+      "hint": "You can add multiple using commas.",
+      "medications": "Current medications",
+      "medications_placeholder": "e.g. Aspirin",
+      "surgeries": "Past surgeries",
+      "surgeries_placeholder": "e.g. Appendectomy"
+    },
+    "step_counter": "Step {{current}} of {{total}} · {{stepName}}",
+    "steps": {
+      "basic": "ಮೂಲ ಮಾಹಿತಿ",
+      "family": "ಕುಟುಂಬ ಇತಿಹಾಸ",
+      "lifestyle": "ಜೀವನಶೈಲಿ",
+      "medical": "ವೈದ್ಯಕೀಯ ಇತಿಹಾಸ",
+      "vitals": "ವೈಟಲ್ಸ್"
+    },
+    "subtitle": "This helps us personalize your health insights.",
+    "title": "CareTrace ಗೆ ಸುಸ್ವಾಗತ"
   },
   "recommendations": {
-    "title": "ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಶಿಫಾರಸುಗಳು",
-    "subtitle": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಮತ್ತು AI ವಿಶ್ಲೇಷಣೆಯ ಆಧಾರದ ಮೇಲೆ, ನಿಮ್ಮ ಆರೋಗ್ಯಕ್ಕಾಗಿ ಇಲ್ಲಿ ಸೂಕ್ತ ಶಿಫಾರಸುಗಳಿವೆ.",
-    "section_title": "ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮಗಳು",
+    "disclaimer": "This is not medical advice. Always consult a doctor for health concerns.",
     "empty": {
-      "title": "ಯಾವುದೇ ವಿಶ್ಲೇಷಣಾ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ.",
-      "body": "ದಯವಿಟ್ಟು ಮೊದಲು ಲಕ್ಷಣಗಳ ಮೌಲ್ಯಮಾಪನ ಮತ್ತು AI ವಿಶ್ಲೇಷಣೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ."
+      "body": "ದಯವಿಟ್ಟು ಮೊದಲು ಲಕ್ಷಣಗಳ ಮೌಲ್ಯಮಾಪನ ಮತ್ತು AI ವಿಶ್ಲೇಷಣೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ.",
+      "title": "ಯಾವುದೇ ವಿಶ್ಲೇಷಣಾ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ."
+    },
+    "personalized": {
+      "age_screening": "Given your age group, we recommend scheduling an annual cardiovascular screening and bone density test.",
+      "chronic_specialist": "Your recent symptoms may be related to your chronic condition ({{condition}}). Consider consulting your specialist for a targeted review.",
+      "sedentary_exercise": "Based on your sedentary lifestyle and risk profile, consider incorporating 15 minutes of light walking daily to improve circulation."
     },
     "risk_plans": {
+      "default": [
+        "ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಸೂಕ್ಷ್ಮವಾಗಿ ಗಮನಿಸಿ.",
+        "ಅಗತ್ಯವಿದ್ದಾಗ ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ."
+      ],
+      "high": [
+        "ವೃತ್ತಿಪರ ಮೌಲ್ಯಮಾಪನಕ್ಕಾಗಿ ಕೂಡಲೇ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+        "ಲಕ್ಷಣಗಳು ಉಲ್ಬಣಗೊಂಡರೆ ಕೂಡಲೇ ವೈದ್ಯಕೀಯ ಸಹಾಯ ಪಡೆಯಿರಿ.",
+        "ಎಲ್ಲಾ ವೈದ್ಯಕೀಯ ಸಲಹೆಗಳು ಮತ್ತು ಚಿಕಿತ್ಸಾ ಯೋಜನೆಗಳನ್ನು ಅನುಸರಿಸಿ.",
+        "ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಮತ್ತು ಚಿಕಿತ್ಸೆಗಳ ವಿವರವಾದ ದಾಖಲೆಯನ್ನು ಇರಿಸಿ."
+      ],
       "low": [
         "ಪ್ರತಿದಿನ ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಗಮನಿಸುವುದನ್ನು ಮುಂದುವರಿಸಿ.",
         "ಸಮತೋಲಿತ ಪೋಷಣೆಯೊಂದಿಗೆ ಆರೋಗ್ಯಕರ ಜೀವನಶೈಲಿಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
@@ -414,144 +518,215 @@
         "ಶಿಫಾರಸು ಮಾಡಿದಂತೆ ಹೆಚ್ಚುವರಿ ತಪಾಸಣೆಗಳನ್ನು ಪರಿಗಣಿಸಿ.",
         "ಲಕ್ಷಣಗಳನ್ನು ಸೂಕ್ಷ್ಮವಾಗಿ ಗಮನಿಸಿ ಮತ್ತು ಯಾವುದೇ ಬದಲಾವಣೆಗಳನ್ನು ಗುರುತಿಸಿ.",
         "1-2 ವಾರಗಳ ಒಳಗಾಗಿ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ."
-      ],
-      "high": [
-        "ವೃತ್ತಿಪರ ಮೌಲ್ಯಮಾಪನಕ್ಕಾಗಿ ಕೂಡಲೇ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
-        "ಲಕ್ಷಣಗಳು ಉಲ್ಬಣಗೊಂಡರೆ ಕೂಡಲೇ ವೈದ್ಯಕೀಯ ಸಹಾಯ ಪಡೆಯಿರಿ.",
-        "ಎಲ್ಲಾ ವೈದ್ಯಕೀಯ ಸಲಹೆಗಳು ಮತ್ತು ಚಿಕಿತ್ಸಾ ಯೋಜನೆಗಳನ್ನು ಅನುಸರಿಸಿ.",
-        "ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಮತ್ತು ಚಿಕಿತ್ಸೆಗಳ ವಿವರವಾದ ದಾಖಲೆಯನ್ನು ಇರಿಸಿ."
-      ],
-      "default": [
-        "ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಸೂಕ್ಷ್ಮವಾಗಿ ಗಮನಿಸಿ.",
-        "ಅಗತ್ಯವಿದ್ದಾಗ ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ."
       ]
-    }
+    },
+    "section_title": "ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮಗಳು",
+    "subtitle": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳು ಮತ್ತು AI ವಿಶ್ಲೇಷಣೆಯ ಆಧಾರದ ಮೇಲೆ, ನಿಮ್ಮ ಆರೋಗ್ಯಕ್ಕಾಗಿ ಇಲ್ಲಿ ಸೂಕ್ತ ಶಿಫಾರಸುಗಳಿವೆ.",
+    "title": "ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಶಿಫಾರಸುಗಳು"
   },
-  "demo": {
-    "banner": "ನೀವು ಡೆಮೊ ಖಾತೆಯನ್ನು ಬಳಸುತ್ತಿದ್ದೀರಿ — ಡೇಟಾ ಪ್ರದರ್ಶನಕ್ಕೆ ಮಾತ್ರ."
+  "reports": {
+    "allowed_types_error": "Only PDF, JPG, and PNG files are allowed.",
+    "charts": {
+      "empty": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳು ದಾಖಲಾಗಿಲ್ಲ. ಟ್ರೆಂಡ್ ಚಾರ್ಟ್ ನೋಡಲು ನಮೂದುಗಳನ್ನು ಸೇರಿಸಿ.",
+      "latest_updates": "ಇತ್ತೀಚಿನ ಅಪ್‌ಡೇಟ್‌ಗಳು",
+      "severity_trend": "ತೀವ್ರತೆಯ ಮಾದರಿ"
+    },
+    "compiling": "PDF ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
+    "delete": "Delete",
+    "delete_dialog": {
+      "body": "Are you sure you want to delete",
+      "title": "Delete Report",
+      "warning": "This cannot be undone."
+    },
+    "delete_error": "Failed to delete report",
+    "delete_failed": "Failed to delete report.",
+    "delete_success": "Medical report deleted",
+    "disclaimer": "ಈ ವರದಿಯು AI ಮೂಲಕ ತಯಾರಿಸಲ್ಪಟ್ಟಿದೆ ಮತ್ತು ಇದು ವೈದ್ಯಕೀಯ ನಿರ್ಧಾರವಲ್ಲ.",
+    "download": "Download",
+    "download_btn": "ವರದಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
+    "empty": "No medical reports uploaded yet",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "notifications": {
+      "booting": "PDF ಫೈಲ್ ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ...",
+      "success": "ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ಸಿದ್ಧವಾಗಿದೆ!"
+    },
+    "profile": {
+      "age": "ವಯಸ್ಸು",
+      "gender": "ಲಿಂಗ",
+      "lifestyle": "ಜೀವನಶೈಲಿ",
+      "name": "ಹೆಸರು",
+      "title": "ರೋಗಿಯ ವಿವರ"
+    },
+    "select_file": "Upload Report",
+    "size_error": "File size must be under 10MB.",
+    "stats": {
+      "avg_severity": "ಸಗಟು ತೀವ್ರತೆ",
+      "days": "{{count}} ದಿನಗಳು",
+      "longest_run": "ಅತಿ ಹೆಚ್ಚು ಅವಧಿ",
+      "total_symptoms": "ಒಟ್ಟು ಲಕ್ಷಣಗಳು"
+    },
+    "subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯದ ಸಾರಾಂಶಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ವಿಶ್ಲೇಷಣಾತ್ಮಕ PDF ವರದಿಗಳನ್ನು ಪಡೆಯಿರಿ.",
+    "title": "ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಆರೋಗ್ಯ ವರದಿಗಳು",
+    "upload": "Upload",
+    "upload_error": "Failed to upload file",
+    "upload_failed": "Failed to upload file.",
+    "upload_success": "Medical report uploaded successfully",
+    "uploading": "Uploading…",
+    "view": "View"
   },
-  "landing": {
-    "hero_title": "ನಿಮ್ಮ ಆರೋಗ್ಯ,",
-    "hero_title_highlight": "ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ",
-    "hero_headline": "ಅನುಮಾನ ಲಗಾನಾ ಬಂದ ಮಾಡಿ. ಟ್ರ್ಯಾಕಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ.",
-    "hero_subtitle": "ದೀರ್ಘಕಾಲೀನ ಪಥಕ್ಕೆ ವೈದ್ಯಕೀಯ ಸ್ಪಷ್ಟತೆ.",
-    "cta_login": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "cta_signup": "ಉಚಿತ ಖಾತೆ ರಚಿಸಿ",
-    "cta_try_demo": "ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
-    "mini_card_1_title": "12 ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಲಾಗ್ ಮಾಡಲಾಗಿದೆ",
-    "mini_card_1_detail": "ಅಭ್ಯಾಸಕ್ಕಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ, ಕಾಗದದ ಕೆಲಸಕ್ಕಲ್ಲ.",
-    "mini_card_2_title": "ನೀವು ತಪ್ಪಿಸಿಕೊಂಡಿರಬಹುದಾದ ಮಾದರಿಗಳು",
-    "mini_card_2_detail": "ಈ ವ್ಯವಸ್ಥೆಯು ಇಂದಿನ ಓದುವಿಕೆಯನ್ನು ಮಾತ್ರವಲ್ಲದೆ, ವಾರಗಳಾದ್ಯಂತ ದಾಖಲೆಗಳನ್ನು ಸಂಪರ್ಕಿಸುತ್ತದೆ.",
-    "mini_card_3_title": "ವೈದ್ಯಕೀಯ ಟೈಮ್‌ಲೈನ್ ಅನ್ನು ರಫ್ತು ಮಾಡಿ",
-    "mini_card_3_detail": "ನಿಮ್ಮ ಮುಂದಿನ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗೆ ರಚನಾತ್ಮಕ ದಾಖಲೆಯನ್ನು ತನ್ನಿ. 'ನನಗೆ ನೆನಪಿಲ್ಲ' ಎಂಬುದು ಇನ್ನು ಮುಂದೆ ಬೇಡ.",
-    "features_title": "CareTrace AI ಏಕೆ?",
-    "feature_tracking": "ಸ್ಮಾರ್ಟ್ ಸಿಂಪ್ಟಮ್ ಟ್ರ್ಯಾಕಿಂಗ್",
-    "feature_tracking_desc": "ಧ್ವನಿ ಇನ್‌ಪುಟ್, ತೀವ್ರತೆಯ ಸ್ಕೋರಿಂಗ್ ಮತ್ತು ಬುದ್ಧಿವಂತ ವರ್ಗೀಕರಣದೊಂದಿಗೆ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿ ಮತ್ತು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ.",
-    "feature_analysis": "AI ಅಪಾಯದ ವಿಶ್ಲೇಷಣೆ",
-    "feature_analysis_desc": "ಸುಧಾರಿತ ಮಾದರಿ ಗುರುತಿಸುವಿಕೆ ಕ್ರಮಾವಳಿಗಳು ನಿಮ್ಮ ಆರೋಗ್ಯ ಅಪಾಯಗಳನ್ನು ನಿರ್ಣಯಿಸಲು ನಿಮ್ಮ ಲಕ್ಷಣದ ಡೇಟಾವನ್ನು ವಿಶ್ಲೇಷಿಸುತ್ತವೆ.",
-    "feature_timeline": "ದೃಶ್ಯ ಆರೋಗ್ಯ ಸಮಯರೇಖೆ",
-    "feature_timeline_desc": "ಸಮಯದೊಂದಿಗೆ ನಿಮ್ಮ ಆರೋಗ್ಯ ಮಾದರಿಗಳನ್ನು ದೃಶ್ಯೀಕರಿಸಲು ಸಂವಾದಾತ್ಮಕ ಚಾರ್ಟ್‌ಗಳು ಮತ್ತು ಸಮಯರೇಖೆಗಳು.",
-    "feature_multilingual": "ಬಹುವಿಧದ ಭಾಷಾ ಬೆಂಬಲ",
-    "feature_multilingual_desc": "ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ, ತೆಲುಗು, ತಮಿಳು ಮತ್ತು ಕನ್ನಡ ಭಾಷೆಗಳಿಗೆ ಸಂಪೂರ್ಣ ಬೆಂಬಲ.",
-    "trusted_by": "ಆರೋಗ್ಯ ರಕ್ಷಣೆ ವೃತ್ತಿಪರರು ಮತ್ತು ರೋಗಿಗಳಿಂದ ನಂಬಲ್ಪಟ್ಟಿದೆ",
-    "privacy_badge": "HIPAA ಅನುಸರಣೆ · ಅಂತ್ಯದಿಂದ ಅಂತ್ಯಕ್ಕೆ ಗೂಢಲಿಪೀಕರಿಸಲಾಗಿದೆ · ನಿಮ್ಮ ಡೇಟಾ ಗೌಪ್ಯವಾಗಿ ಉಳಿಯುತ್ತದೆ",
-    "workflow_eyebrow": "ಕೆಲಸದ ಹರಿವು",
-    "workflow_title": "ಸಿಗ್ನಲ್ ಅನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ. ಗದ್ದಲವನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ.",
-    "workflow_desc": "ಪ್ರತಿಯೊಂದು ಮೇಲ್ಮೈಯನ್ನು ನಿರಂತರತೆಯನ್ನು ಸ್ಪಷ್ಟಪಡಿಸಲು, ವ್ಯಾಖ್ಯಾನದ ಘರ್ಷಣೆಯನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಮತ್ತು ಡೇಟಾ ಸಂಕೀರ್ಣವಾದರೂ ಉತ್ಪನ್ನವನ್ನು ಶಾಂತವಾಗಿರಿಸಲು ಟ್ಯೂನ್ ಮಾಡಲಾಗಿದೆ.",
-    "workflow_step1_title": "ಸೂಕ್ಷ್ಮ ಬದಲಾವಣೆಯನ್ನು ಸೆರೆಹಿಡಿಯಿರಿ",
-    "workflow_step1_desc": "ರೋಗಲಕ್ಷಣಗಳು, ತೀವ್ರತೆ ಮತ್ತು ದೈನಂದಿನ ಟಿಪ್ಪಣಿಗಳನ್ನು ಆರೈಕೆಗೆ ನಿಖರವಾದ ಮತ್ತು ಅಭ್ಯಾಸಕ್ಕೆ ಸುಲಭವಾದ ಹರಿವಿನಲ್ಲಿ ಲಾಗ್ ಮಾಡಿ.",
-    "workflow_step2_title": "ಪಥವನ್ನು ರೂಪಿಸಿ",
-    "workflow_step2_desc": "ತಾತ್ಕಾಲಿಕ ವಿಶ್ಲೇಷಣೆಯು ವೈಯಕ್ತಿಕ ತಪಾಸಣೆಗಳನ್ನು ಸುಸಂಬದ್ಧ ನಿರೂಪಣೆಯಾಗಿ ಪರಿವರ್ತಿಸುತ್ತದೆ, ಪ್ರಗತಿ, ಸ್ಥಿರತೆ ಅಥವಾ ಚೇತರಿಕೆಯನ್ನು ಬಹಿರಂಗಪಡಿಸುತ್ತದೆ.",
-    "workflow_step3_title": "ವೈದ್ಯಕೀಯ ಸ್ಪಷ್ಟತೆಯೊಂದಿಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸಿ",
-    "workflow_step3_desc": "ದಾಖಲೆಯನ್ನು ಪರಿಶೀಲಿಸಿ, ಮಾದರಿಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ ಮತ್ತು ಮುಂದಿನ ಪ್ರತಿಯೊಂದು ನಿರ್ಧಾರ ಅಥವಾ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗೆ ತೀಕ್ಷ್ಣವಾದ ಸಂದರ್ಭವನ್ನು ತನ್ನಿ.",
-    "trust_continuity_eyebrow": "ನಿರಂತರತೆ",
-    "trust_continuity_title": "ಪ್ರತಿಯೊಂದು ರೋಗಲಕ್ಷಣವು ಜೀವಂತ ದಾಖಲೆಯ ಭಾಗವಾಗುತ್ತದೆ.",
-    "trust_continuity_detail": "ಪ್ರತ್ಯೇಕ ಲಾಗ್‌ಗಳ ಬದಲಿಗೆ, ಸಿಸ್ಟಮ್ ಸಂದರ್ಭವನ್ನು ಸಂಗ್ರಹಿಸುತ್ತದೆ ಆದ್ದರಿಂದ ವೈದ್ಯರು ವೇಗ, ಮರುಕಳಿಸುವಿಕೆ ಮತ್ತು ದಿಕ್ಚ್ಯುತಿಯನ್ನು ಒಂದು ನೋಟದಲ್ಲಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಬಹುದು.",
-    "trust_signal_eyebrow": "ಸಿಗ್ನಲ್",
-    "trust_signal_title": "ದೃಶ್ಯ ಗೊಂದಲವಿಲ್ಲದೆ ಮಾದರಿಗಳು ಮೇಲ್ಮೈಗೆ ಬರುತ್ತವೆ.",
-    "trust_signal_detail": "ಇಂಟರ್ಫೇಸ್ ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಶಾಂತವಾಗಿದೆ, ಇದು ವಿಚಲನಗಳು, ನಿರಂತರ ಲಕ್ಷಣಗಳು ಮತ್ತು ಚೇತರಿಕೆಯ ಕಮಾನುಗಳನ್ನು ತಕ್ಷಣವೇ ಮತ್ತು ನಿಸ್ಸಂದಿಗ್ಧವಾಗಿ ಅನುಭವಿಸುವಂತೆ ಮಾಡುತ್ತದೆ.",
-    "trust_privacy_eyebrow": "ಗೌಪ್ಯತೆ",
-    "trust_privacy_title": "ಸೂಕ್ಷ್ಮ ಆರೋಗ್ಯ ಡೇಟಾ ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ರಕ್ಷಿತವಾಗಿರುತ್ತದೆ.",
-    "trust_privacy_detail": "ಗೂಢಲಿಪೀಕರಣ, ಸಮ್ಮತಿ ಗಡಿಗಳು ಮತ್ತು ನಿರ್ಬಂಧಿತ ಡೇಟಾ ಮೇಲ್ಮೈಗಳನ್ನು ಉತ್ಪನ್ನದ ಅನುಭವದ ಭಾಗವಾಗಿ ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ, ಕಾನೂನು ಅಡಿಟಿಪ್ಪಣಿಯಾಗಿ ಅಲ್ಲ.",
-    "platform_eyebrow": "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್",
-    "platform_desc": "ಬಲವಾದ ಉತ್ಪನ್ನ ವ್ಯವಸ್ಥೆಯು ಬಲವಾದ ಆರೈಕೆ ಅನುಭವಗಳನ್ನು ಸೃಷ್ಟಿಸುತ್ತದೆ: ಶುದ್ಧ ಒಳಹರಿವು, ಶಾಂತ ಶ್ರೇಣಿ, ಮತ್ತು ಮೊದಲ ನೋಟದಲ್ಲೇ ವಿಶ್ವಾಸಾರ್ಹವೆನಿಸುವ ಉತ್ಪನ್ನಗಳು.",
-    "feature_timeline_card_title": "ಕಾಗದದ ಕೆಲಸದಂತೆ ಅಲ್ಲದೆ, ಉತ್ಪನ್ನದಂತೆ ವರ್ತಿಸುವ ದೀರ್ಘಕಾಲೀನ ನೋಟ.",
-    "feature_timeline_card_desc": "ರೋಗಲಕ್ಷಣಗಳು, ವರದಿಗಳು ಮತ್ತು ಅನುಮಾನಿತ ಬದಲಾವಣೆಗಳು ಒಂದೇ ನಿರಂತರ ದೃಶ್ಯ ವ್ಯವಸ್ಥೆಯಲ್ಲಿ ವಾಸಿಸುತ್ತವೆ ಆದ್ದರಿಂದ ಬದಲಾವಣೆಯ ಕಥೆಯು ಕಾಲಾನಂತರದಲ್ಲಿ ಓದಬಲ್ಲ ರೀತಿಯಲ್ಲಿ ಉಳಿಯುತ್ತದೆ.",
-    "feature_timeline_card_metric": "ಏಕೀಕೃತ ಆರೋಗ್ಯ ನಿರೂಪಣೆ",
-    "feature_analysis_card_title": "ಮಾನವರು ಓದಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ AI ಉತ್ಪನ್ನಗಳು.",
-    "feature_analysis_card_desc": "ಅಪಾಯದ ಸಾರಾಂಶಗಳು, ಮಾದರಿ ಪತ್ತೆ ಮತ್ತು ಸಂದರ್ಭೋಚಿತ ಪ್ರಾಂಪ್ಟ್‌ಗಳು ಯಂತ್ರ-ರಚಿತ ಗದ್ದಲದ ಬದಲಿಗೆ ಉದ್ದೇಶಪೂರ್ವಕ, ಸ್ಪಷ್ಟ ಮತ್ತು ಶಾಂತವಾಗಿರುತ್ತವೆ.",
-    "feature_analysis_card_metric": "ಓದಬಹುದಾದ ಬುದ್ಧಿಮತ್ತೆ",
-    "feature_tracking_card_title": "ಶುದ್ಧ ಒಳಹರಿವು ವಿಶ್ವಾಸಾರ್ಹ ಸಂಕೇತಗಳನ್ನು ಉತ್ಪಾದಿಸುತ್ತದೆ.",
-    "feature_tracking_card_desc": "ರಚನಾತ್ಮಕ ರೋಗಲಕ್ಷಣದ ಸೆರೆಹಿಡಿಯುವಿಕೆಯು ವ್ಯವಸ್ಥೆಯನ್ನು ಪ್ರವೇಶಿಸುವ ಮೊದಲೇ ಅಸ್ಪಷ್ಟತೆಯನ್ನು ಕಡಿಮೆ ಮಾಡುವ ಮೂಲಕ ಡೌನ್‌ಸ್ಟ್ರೀಮ್ ವಿಶ್ಲೇಷಣೆಯನ್ನು ಸ್ಥಿರವಾಗಿರಿಸುತ್ತದೆ.",
-    "feature_tracking_card_metric": "ಹೆಚ್ಚಿನ ಡೇಟಾ ನಿಷ್ಠೆ",
-    "feature_access_eyebrow": "ಪ್ರವೇಶ",
-    "feature_access_title": "ವಿನ್ಯಾಸದಿಂದಲೇ ಸ್ಥಳೀಕರಿಸಲಾಗಿದೆ, ಕೇವಲ ಅನುವಾದವಲ್ಲ.",
-    "feature_access_desc": "ಉತ್ಪನ್ನದ ವಾಸ್ತುಶಿಲ್ಪದಲ್ಲಿ ಬಹುಭಾಷಾ ಬೆಂಬಲವನ್ನು ಸಂಯೋಜಿಸಲಾಗಿದೆ ಆದ್ದರಿಂದ ಟೋನ್, ಸ್ಪಷ್ಟತೆ ಅಥವಾ ನಂಬಿಕೆಯನ್ನು ದುರ್ಬಲಗೊಳಿಸದೆ ಪ್ರವೇಶವು ಅಳೆಯಲ್ಪಡುತ್ತದೆ.",
-    "feature_access_metric": "ಐದು ಭಾಷೆಗಳ ವ್ಯವಸ್ಥೆ",
-    "security_eyebrow": "ಭದ್ರತೆ",
-    "security_title": "ಗೋಚರ ಸಂಯಮದೊಂದಿಗೆ ಖಾಸಗಿ ಆರೋಗ್ಯ ಬುದ್ಧಿಮತ್ತೆ.",
-    "security_desc": "ವ್ಯವಸ್ಥೆಯು ಪ್ರೀಮಿಯಂ ಎಂದು ಭಾವಿಸುತ್ತದೆ ಏಕೆಂದರೆ ಅದು ಕಠಿಣತೆಯನ್ನು ತೆಗೆದುಹಾಕದೆ ಘರ್ಷಣೆಯನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ. ಪ್ರವೇಶವು ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿದೆ, ಹಂಚಿಕೆಯು ಸಂದರ್ಭೋಚಿತವಾಗಿದೆ, ಮತ್ತು ಪ್ರತಿಯೊಂದು ಪದರವು ಸಿಗ್ನಲ್ ಅನ್ನು ಅತಿಕ್ರಮಿಸುವ ಬದಲು ಅದನ್ನು ರಕ್ಷಿಸುತ್ತದೆ.",
-    "security_cta_signup": "ಉಚಿತ ಖಾತೆ ರಚಿಸಿ",
-    "security_pillar1_title": "ಸಮ್ಮತಿಯಿಂದ-ಮುನ್ನಡೆಸುವ ಹಂಚಿಕೆ",
-    "security_pillar1_desc": "ಸೂಕ್ಷ್ಮ ಸಂದರ್ಭವು ಎಲ್ಲಿಗೆ ಚಲಿಸುತ್ತದೆ ಮತ್ತು ಮುಂದೆ ಅದನ್ನು ಯಾರು ನೋಡುತ್ತಾರೆ ಎಂಬುದರ ನಿಯಂತ್ರಣವು ರೋಗಿಯ ಬಳಿಯೇ ಇರುತ್ತದೆ.",
-    "security_pillar2_title": "ರಕ್ಷಿತ ಸಾರಿಗೆ ಮತ್ತು ಸಂಗ್ರಹಣೆ",
-    "security_pillar2_desc": "ಮೂಲಸೌಕರ್ಯವು ಭದ್ರತೆಯನ್ನು ಪ್ರತ್ಯೇಕ ಅನುಸರಣೆ ಪದರದ ಬದಲಿಗೆ ಸಂವಾದ ಮಾದರಿಯ ಭಾಗವಾಗಿ ಪರಿಗಣಿಸುತ್ತದೆ.",
-    "security_pillar3_title": "ನೈಜ ವಿಮರ್ಶೆಗಾಗಿ ನಿರ್ಮಿಸಲಾದ ಔಟ್‌ಪುಟ್‌ಗಳು",
-    "security_pillar3_desc": "ರಫ್ತುಗಳು, ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಸಾರಾಂಶಗಳು ಕ್ಲಿನಿಕಲ್ ವರ್ಕ್‌ಫ್ಲೋಗಳ ಒಳಗೆ ಮಾನವ ತೀರ್ಪಿಗೆ ಸಾಕಷ್ಟು ಸಂಕ್ಷಿಪ್ತವಾಗಿರುತ್ತವೆ.",
-    "cta_heading": "ನೇಮಕಾತಿಗಳ ನಡುವೆ ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ.",
-    "cta_copy": "CareTrace ನಡುವೆ ಇರುವ ಪ್ರತಿಯೊಂದಕ್ಕೂ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ.",
-    "cta_demo_btn": "ಸಂವಾದಾತ್ಮಕ ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
-    "footer_tagline": "ನೇಮಕಾತಿಗಳ ನಡುವೆ 99% ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ. ದೀರ್ಘಕಾಲೀನ ಪಥಕ್ಕೆ ನಿಖರವಾದ ಟ್ರ್ಯಾಕಿಂಗ್.",
-    "footer_product": "ಉತ್ಪನ್ನ",
-    "footer_access": "ಪ್ರವೇಶ",
-    "footer_features": "ವೈಶಿಷ್ಟ್ಯಗಳು",
-    "footer_workflow": "ಕೆಲಸದ ಹರಿವು",
-    "footer_security": "ಭದ್ರತೆ",
-    "footer_create_account": "ಖಾತೆ ರಚಿಸಿ",
-    "footer_sign_in": "ಸೈನ್ ಇನ್",
-    "footer_about": "CareTrace ಬಗ್ಗೆ",
-    "footer_copyright": "ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.",
-    "footer_get_started": "ಪ್ರಾರಂಭಿಸಿ",
-    "footer_mission": "ನೇಮಕಾತಿಗಳ ನಡುವೆ ಆರೋಗ್ಯ ಸಂಭವಿಸುತ್ತದೆ. CareTrace ನಡುವೆ ಇರುವ ಪ್ರತಿಯೊಂದಕ್ಕೂ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ."
-  },
-  "auth": {
-    "login_title": "ಮರಳಿ ಬಂದಿದ್ದಕ್ಕೆ ಸ್ವಾಗತ",
-    "login_subtitle": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಬುದ್ಧಿವಂತಿಕೆಯ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ",
-    "signup_title": "CareTrace AI ಸೇರಿ",
-    "signup_subtitle": "ಕೆಲವು ನಿಮಿಷಗಳಲ್ಲಿ ಪ್ರೊಫೈಲ್ ರಚಿಸಿ ಮತ್ತು ಲಕ್ಷಣ ಟ್ರ್ಯಾಕಿಂಗ್ ಪ್ರಾರಂಭಿಸಿ.",
-    "email": "ಇಮೇಲ್ ವಿಳಾಸ",
-    "password": "ಪಾಸ್‌ವರ್ಡ್",
-    "full_name": "ಪೂರ್ಣ ಹೆಸರು",
+  "settings": {
+    "about_body": "CareTrace AI ಎನ್ನುವುದು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಲು ಮತ್ತು ಸಮಯದೊಂದಿಗೆ ಮಾದರಿಗಳನ್ನು ಗಮನಿಸಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಟ್ರ್ಯಾಕಿಂಗ್ ವ್ಯವಸ್ಥೆಯಾಗಿದೆ.",
+    "about_section": "CareTrace AI ಬಗ್ಗೆ",
     "age": "ವಯಸ್ಸು",
-    "gender": "ಲಿಂಗ",
-    "lifestyle": "ಜೀವನಶೈಲಿ ಅಪಾಯದ ಸಂದರ್ಭ",
-    "login_btn": "ಸುರಕ್ಷಿತ ಲಾಗಿನ್",
-    "signup_btn": "ಪ್ರೊಫೈಲ್ ನೋಂದಾಯಿಸಿ",
-    "already_mapped": "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ?",
-    "login_natively": "ನೇರವಾಗಿ ಲಾಗಿನ್ ಆಗಿ",
-    "no_account": "ಖಾತೆ ಇಲ್ಲವೇ?",
-    "create_profile": "ಪ್ರೊಫೈಲ್ ರಚಿಸಿ",
-    "demo_title": "ಮಾರ್ಗದರ್ಶಿತ ಪ್ರವಾಸ",
-    "demo_subtitle": "ಮಾದರಿ ಡೇಟಾತೊಂದಿಗೆ ಚಾರ್ಟ್‌ಗಳು, ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು AI ಒಳನೋಟಗಳನ್ನು ನೋಡಿ—ಸೆಟಪ್ ಅಗತ್ಯವಿಲ್ಲ.",
-    "fill_demo": "ಡೆಮೊ ಖಾತೆ ಬಳಸಿ",
-    "constructing": "ಸೈನ್ ಇನ್ ಆಗುತ್ತಿದೆ...",
-    "try_demo_title": "ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಉತ್ಪನ್ನವನ್ನು ನೋಡಿ",
-    "try_demo_subtitle": "ಮಾದರಿ ಲಕ್ಷಣಗಳು, ಅಪಾಯದ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳೊಂದಿಗೆ ಪೂರ್ಣ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ—ತ್ವರಿತ ಪ್ರವಾಸಕ್ಕೆ ಸೂಕ್ತ.",
-    "try_demo_btn": "ಡೆಮೊ ಪ್ರಯತ್ನಿಸಿ",
-    "demo_failed": "ಸರ್ವರ್ ತಲುಪಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    "errors": {
-      "password_short": "ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಿರಬೇಕು.",
-      "failed": "ದೃಢೀಕರಣ ವಿಫಲವಾಗಿದೆ. ಇನ್‌ಪುಟ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-      "email_registered": "ಈ ಇಮೇಲ್‌ನೊಂದಿಗೆ ಖಾತೆ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ಸೈನ್ ಇನ್ ಮಾಡಿ."
-    }
+    "confirm_delete_body": "This action is irreversible. Please type \"DELETE\" below to proceed.",
+    "confirm_delete_btn": "Delete Permanently",
+    "confirm_delete_title": "Delete your account?",
+    "confirm_type_label": "Type DELETE to confirm",
+    "danger_zone": "Dangerous Action Zone",
+    "delete_account": "ಖಾತೆಯನ್ನು ಅಳಿಸಿ",
+    "delete_account_btn": "Delete Account",
+    "delete_confirm_prompt": "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?",
+    "delete_warning": "Deleting your account is permanent and cannot be undone. All your health data, symptoms, and medical reports will be permanently purged.",
+    "emails": {
+      "body": "ವಾರದ ಸಾರಾಂಶ ಇಮೇಲ್‌ಗಳನ್ನು ಪಡೆಯಿರಿ.",
+      "title": "ಇಮೇಲ್ ಅಪ್‌ಡೇಟ್‌ಗಳು"
+    },
+    "full_name": "ಪೂರ್ಣ ಹೆಸರು",
+    "notifications": {
+      "body": "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ.",
+      "delete_success": "Account deleted successfully. Goodbye.",
+      "lang_applied": "ಭಾಷಾ ಕಾನ್ಫಿಗರೇಶನ್ ಅನ್ವಯಿಸಲಾಗಿದೆ",
+      "pref_updated": "ಆದ್ಯತೆ [{{name}}] ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ",
+      "profile_error": "ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
+      "profile_success": "ಪ್ರೊಫೈಲ್ ಕಾನ್ಫಿಗರೇಶನ್ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ",
+      "title": "ಪುಶ್ ಅಧಿಸೂಚನೆಗಳು"
+    },
+    "preferences_section": "ಆದ್ಯತೆಗಳು",
+    "profile_section": "ಪ್ರೊಫೈಲ್ ಕಾನ್ಫಿಗರೇಶನ್",
+    "push_notifications": {
+      "body": "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಪಡೆಯಿರಿ.",
+      "title": "ಪುಶ್ ಅಧಿಸೂಚನೆಗಳು"
+    },
+    "subtitle": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಅಪ್ಲಿಕೇಶನ್ ಆದ್ಯತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ.",
+    "theme_body": "Switch between light and dark modes.",
+    "title": "ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
   },
-  "health_metrics": {
-    "title": "ಆರೋಗ್ಯ ಮೆಟ್ರಿಕ್ಸ್ (ವೈಟಲ್ಸ್)",
-    "add_entry": "ನಮೂದು ಸೇರಿಸಿ",
-    "not_provided": "ಲಭ್ಯವಿಲ್ಲ",
-    "form_subtitle": "ನಿಮ್ಮ ಪ್ರಸ್ತುತ ವೈಟಲ್ ಸೈನ್ಸ್ ನಮೂದಿಸಿ",
-    "error_empty": "ದಯವಿಟ್ಟು ಕನಿಷ್ಟ ಒಂದು ಮೆಟ್ರಿಕ್ ಮೌಲ್ಯವನ್ನು ನಮೂದಿಸಿ",
-    "success": "ವೈಟಲ್ಸ್ ದಾಖಲಿಸಲಾಗಿದೆ",
-    "error_save": "ವೈಟಲ್ಸ್ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ"
+  "symptoms": {
+    "add_title": "ಲಕ್ಷಣವನ್ನು ಸೇರಿಸಿ",
+    "date_label": "ದಿನಾಂಕ",
+    "duplicate_body": "ನೀವು ಇಂದು ಈ ಲಕ್ಷಣವನ್ನು ಈಗಾಗಲೇ ದಾಖಲಿಸಿದ್ದೀರಿ. ನೀವು ಇನ್ನೊಂದು ನಮೂದನ್ನು ಸೇರಿಸಲು ಬಯಸುವಿರಾ?",
+    "duplicate_confirm": "ಹೌದು, ಮತ್ತೆ ದಾಖಲಿಸಿ",
+    "duplicate_title": "ಈಗಲೇ ದಾಖಲಿಸಲಾಗಿದೆ",
+    "duration_display": "ಅವಧಿ: {{count}} ದಿನ(ಗಳು)",
+    "duration_label": "ಅವಧಿ (ದಿನಗಳು)",
+    "duration_placeholder": "ಅವಧಿ ದಾಖಲಿಸಿ",
+    "empty_state": "ಮುಂದುವರೆಯಲು ಕನಿಷ್ಠ ಒಂದು ಲಕ್ಷಣವನ್ನು ಸೇರಿಸಿ.",
+    "errors": {
+      "duration_min": "ಅವಧಿ ಕನಿಷ್ಠ 1 ದಿನ ಇರಬೇಕು.",
+      "failed": "ದಾಖಲಿಸಲು ವಿಫಲವಾಗಿದೆ.",
+      "incomplete": "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ."
+    },
+    "health_goal_title": "ಇಂದು ನಿಮ್ಮ ಗುರಿ ಏನು?",
+    "health_goals": {
+      "chronic_management": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸ್ಥಿತಿಯನ್ನು ನಿರ್ವಹಿಸಿ",
+      "general_consultation": "ಸಾಮಾನ್ಯ ಸಮಾಲೋಚನೆ",
+      "preventive_care": "ತಡೆಗಟ್ಟುವ ಆರೋಗ್ಯ ಪರಿಶೀಲನೆ",
+      "symptom_check": "ಪ್ರಸ್ತುತ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ"
+    },
+    "listening": "ಕೇಳಿಸಿಕೊಳ್ಳುತ್ತಿದ್ದೇವೆ...",
+    "logged_confirm": "Logged.",
+    "logged_on": "{{date}} ರಂದು ದಾಖಲಿಸಲಾಗಿದೆ",
+    "mild": "ಲಘು",
+    "notes_placeholder": "What else changed today?",
+    "notifications": {
+      "log_success": "{{symptom}} ಯಶಸ್ವಿಯಾಗಿ ದಾಖಲಿಸಲಾಗಿದೆ!",
+      "voice_active": "ಮೈಕ್ರೊಫೋನ್ ಸಕ್ರಿಯವಾಗಿದೆ... ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ",
+      "voice_success": "ಧ್ವನಿ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರತಿಲೇಖನಗೊಂಡಿದೆ: 'ನನಗೆ 3 ದಿನಗಳಿಂದ ತೀವ್ರ ಜ್ವರ ಇತ್ತು'"
+    },
+    "options": {
+      "chest pain": "ಎದೆ ನೋವು",
+      "cough": "ಕೆಮ್ಮು",
+      "dizziness": "ತಲೆಸುತ್ತು",
+      "fatigue": "ಆಯಾಸ",
+      "fever": "ಜ್ವರ",
+      "headache": "ತಲೆನೋವು",
+      "nausea": "ವಾಕರಿಕೆ",
+      "shortness of breath": "ಉಸಿರಾಟದ ತೊಂದರೆ"
+    },
+    "recorded_title": "ನಿಮ್ಮ ದಾಖಲಾದ ಲಕ್ಷಣಗಳು",
+    "severe": "ತೀವ್ರ",
+    "severity_help": "1 = ಲಘು, 10 = ತೀವ್ರ",
+    "severity_label": "ತೀವ್ರತೆ: {{score}} ({{label}})",
+    "step1_label": "Select Symptom",
+    "step2_label": "Intensity",
+    "step3_label": "Context (Optional)",
+    "submit_btn": "ಈಗಲೇ ದಾಖಲಿಸಿ",
+    "subtitle": "ನೀವು ಹೇಗೆ ಭಾವಿಸುತ್ತಿದ್ದೀರಿ ಎಂದು ನಮಗೆ ತಿಳಿಸಲು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಿ.",
+    "title": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
+    "type_label": "ಲಕ್ಷಣದ ಪ್ರಕಾರ",
+    "type_placeholder": "ಲಕ್ಷಣವನ್ನು ಆರಿಸಿ",
+    "voice_input": "ಧ್ವನಿ ಇನ್ಪುಟ್"
+  },
+  "testimonials": {
+    "items": {
+      "anitha": {
+        "highlight": "ಆತಂಕವನ್ನು ಗಣನೀಯವಾಗಿ ಕಡಿಮೆ ಮಾಡಿದೆ",
+        "name": "ಅನಿತಾ ರೆಡ್ಡಿ",
+        "text": "ನನ್ನ ತಂದೆಯ ಔಷಧಿಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುವುದು ಈಗ ಸುಲಭ. ಇದು ನಮ್ಮ ಆತಂಕವನ್ನು ಗಣನೀಯವಾಗಿ ಕಡಿಮೆ ಮಾಡಿದೆ."
+      },
+      "priya": {
+        "highlight": "ರೋಗಿಗಳ ಸುರಕ್ಷತೆಯನ್ನು ಸುಧಾರಿಸಬಹುದು",
+        "name": "ಡಾ. ಪರಿಯ ಶರ್ಮಾ",
+        "text": "CareTrace AI ನಂತಹ ಪರಿಹಾರಗಳು ಔಷಧಿ ಅನುಸರಣೆ ಮತ್ತು ರೋಗಿಗಳ ಸುರಕ್ಷತೆಯನ್ನು ಸುಧಾರಿಸಬಹುದು."
+      },
+      "ravi": {
+        "highlight": "ಸಂಪೂರ್ಣವಾಗಿ ಒತ್ತಡ ಮುಕ್ತಗೊಳಿಸಿವೆ",
+        "name": "ರವಿ ಕುಮಾರ್",
+        "text": "CareTrace AI ಜ್ಞಾಪನೆಗಳು ನನ್ನ ಔಷಧಿ ದಿನಚರಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಒತ್ತಡ ಮುಕ್ತಗೊಳಿಸಿವೆ. ನಾನು ಈಗ ಯಾವುದೇ ಡೋಸ್ ತಪ್ಪಿಸುವುದಿಲ್ಲ."
+      },
+      "suresh": {
+        "highlight": "ಸ್ವಚ್ಛ ಮತ್ತು ಅರ್ಥಗರ್ಭಿತವಾಗಿದೆ",
+        "name": "ಸುರೇಶ್",
+        "text": "ಇಂಟರ್ಫೇಸ್ ಸ್ವಚ್ಛ ಮತ್ತು ಅರ್ಥಗರ್ಭಿತವಾಗಿದೆ. ದೈನಂದಿನ ಆರೋಗ್ಯ ನಿರ್ವಹಣೆಗೆ ತುಂಬಾ ಪ್ರಾಯೋಗಿಕವಾಗಿದೆ."
+      }
+    },
+    "roles": {
+      "caregiver": "ಆರೈಕೆದಾರ",
+      "physician": "ಸಾಮಾನು ವೈದ್ಯ",
+      "pilot": "ಪೈಲಟ್ ಬಳಕೆದಾರ",
+      "tester": "ಬೀಟಾ ಟೆಸ್ಟರ್"
+    },
+    "subtitle": "ಪೈಲಟ್ ಬಳಕೆದಾರರು ಮತ್ತು ಪರೀಕ್ಷಕರಿಂದ ನೈಜ ಪ್ರತಿಕ್ರಿಯೆ",
+    "title": "ನಮ್ಮ ಬಳಕೆದಾರರು ಏನು ಹೇಳುತ್ತಾರೆ"
+  },
+  "timeline": {
+    "days_tracking": "{{count}} ದಿನಗಳ ಟ್ರ್ಯಾಕಿಂಗ್",
+    "empty": {
+      "body": "ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ದಾಖಲಿಸಲು ಲಕ್ಷಣಗಳ ಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ.",
+      "title": "ಇನ್ನೂ ಯಾವುದೇ ಲಕ್ಷಣಗಳು ದಾಖಲಾಗಿಲ್ಲ."
+    },
+    "gap_days": "ದಾಖಲೆ ಇಲ್ಲದ {{count}} ದಿನ",
+    "gap_days_plural": "ದಾಖಲೆ ಇಲ್ಲದ {{count}} ದಿನಗಳು",
+    "get_analysis": "ಮಾದರಿಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
+    "list_title": "ಲಕ್ಷಣಗಳ ಸಮಯರೇಖೆ",
+    "multiple_entries": "ಬಹಳಷ್ಟು ಲಕ್ಷಣಗಳು ಪತ್ತೆಯಾಗಿವೆ",
+    "older": "ಹಳೆಯದು",
+    "severity_weight": "ತೀವ್ರತೆಯ ತೂಕ",
+    "show_less": "ಕಡಿಮೆ ತೋರಿಸು",
+    "show_more": "ಇನ್ನಷ್ಟು ತೋರಿಸು",
+    "subtitle": "ಮಾದರಿಗಳು ಮತ್ತು ಪ್ರಗತಿಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಿಮ್ಮ ಲಕ್ಷಣದ ಇತಿಹಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    "this_week": "ಈ ವಾರ",
+    "title": "ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಮಯರೇಖೆ",
+    "today": "ಇಂದು",
+    "trends": {
+      "decreasing": "ಚೇತರಿಸಿಕೊಳ್ಳುತ್ತಿದ್ದೀರಿ",
+      "decreasing_title": "ಚೇತರಿಕೆಯ ಹಾದಿ",
+      "increasing": "ತೀವ್ರತೆ ಹೆಚ್ಚುತ್ತಿದೆ",
+      "increasing_title": "ತೀವ್ರತೆ ಹೆಚ್ಚಳ"
+    },
+    "yesterday": "ನಿನ್ನೆ"
   }
 }

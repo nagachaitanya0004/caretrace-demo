@@ -8,10 +8,10 @@ import { ThemeProvider } from './ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
-// ── Eager: critical path (landing + auth shown immediately) ──────────────────
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+// ── Lazy: critical path ──────────────────────────────────────────────────────
+const Landing = lazy(() => import('./pages/Landing'));
+const Login   = lazy(() => import('./pages/Login'));
+const Signup  = lazy(() => import('./pages/Signup'));
 
 // ── Lazy: app routes — only loaded after authentication ──────────────────────
 // Each chunk is split at the route boundary, reducing initial JS parse time.

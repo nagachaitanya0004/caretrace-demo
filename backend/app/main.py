@@ -103,6 +103,14 @@ async def add_security_headers(request: Request, call_next):
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data: blob:; "
+        "connect-src 'self' https://*.onrender.com https://*.vercel.app; "
+        "frame-ancestors 'none';"
+    )
     return response
 
 @app.middleware('http')
@@ -122,10 +130,16 @@ async def custom_validation_exception_handler(request: Request, exc: RequestVali
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
+    # In production, integrate Sentry or similar:
+    try:
+        import sentry_sdk
+        sentry_sdk.capture_exception(exc)
+    except ImportError:
+        pass
     logger.exception('Unhandled exception: %s', exc)
     return JSONResponse(
         status_code=500,
-        content=error_response('Internal server error', code='INTERNAL_ERROR'),
+        content=error_response('Internal server error', error='INTERNAL_ERROR'),
     )
 
 @app.get('/health')

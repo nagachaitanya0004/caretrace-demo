@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,6 +43,8 @@
          Preconnect first, then load with display=optional so the
          browser never blocks paint waiting for fonts.
          ──────────────────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://care-trace-api.onrender.com" />
+    <link rel="dns-prefetch" href="https://care-trace-api.onrender.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -99,6 +101,9 @@
     </script>
   </head>
   <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-[var(--brand-accent)] focus:text-black focus:px-4 focus:py-2 focus:rounded-[var(--radius-lg)] focus:font-semibold">
+      Skip to main content
+    </a>
     <div id="root"></div>
 
     <!-- ── Noscript fallback ─────────────────────────────────────── -->

@@ -129,11 +129,11 @@ function Reports() {
         {/* Stat cards */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {[
-            { label: t('reports.stats.total_symptoms'), value: symptoms.length },
+            { label: t('reports.stats.total_symptoms'), value: t('dashboard.symptoms_count', { count: symptoms.length }) },
             {
               label: t('reports.stats.avg_severity'),
               value: symptoms.length > 0
-                ? (symptoms.reduce((sum, item) => sum + Number(item.severity), 0) / symptoms.length).toFixed(1)
+                ? new Intl.NumberFormat(i18n.language, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(symptoms.reduce((sum, item) => sum + Number(item.severity), 0) / symptoms.length)
                 : '—',
             },
             {

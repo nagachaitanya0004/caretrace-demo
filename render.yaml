@@ -2,27 +2,19 @@ services:
   - type: web
     name: caretrace-backend
     env: python
-    rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
-    autoDeploy: false
     envVars:
-      - key: ENV
-        value: production
-      - key: PYTHON_VERSION
-        value: 3.10.0
       - key: MONGO_URI
-        sync: false
-      - key: MONGO_DB
-        value: caretrace_ai
+        sync: false  # Set in Render dashboard
       - key: POSTGRES_URI
-        sync: false
+        sync: false  # Optional — set in Render dashboard if Supabase is configured
       - key: SECRET_KEY
         generateValue: true
-      - key: ALGORITHM
-        value: HS256
-      - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 10080
+      - key: ENV
+        value: production
       - key: CORS_ORIGINS
-        sync: false
+        sync: false  # Set to Vercel frontend URL
+      - key: DB_NAME
+        value: caretrace_ai

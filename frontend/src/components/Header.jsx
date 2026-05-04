@@ -81,6 +81,7 @@ function Header() {
                 onClick={() => setShowNotifications(!showNotifications)}
                 aria-haspopup="dialog"
                 aria-expanded={showNotifications}
+                aria-label={t('navbar.notifications', 'Notifications')}
                 className="bell-btn"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

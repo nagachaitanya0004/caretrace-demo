@@ -5,12 +5,12 @@ import Button from './Button';
 import Input from './Input';
 
 // Validation ranges matching backend Pydantic schema
-const FIELDS = [
-  { key: 'systolic_bp',       label: 'Systolic BP (mmHg)',    min: 50,  max: 300, isFloat: false, placeholder: 'e.g. 120' },
-  { key: 'diastolic_bp',      label: 'Diastolic BP (mmHg)',   min: 30,  max: 200, isFloat: false, placeholder: 'e.g. 80' },
-  { key: 'blood_sugar_mg_dl', label: 'Blood Sugar (mg/dL)',   min: 0,   max: null, isFloat: true, placeholder: 'e.g. 100' },
-  { key: 'heart_rate_bpm',    label: 'Heart Rate (bpm)',      min: 20,  max: 300, isFloat: false, placeholder: 'e.g. 72' },
-  { key: 'oxygen_saturation', label: 'Oxygen Saturation (%)', min: 50,  max: 100, isFloat: false, placeholder: 'e.g. 98' },
+const getFields = (t) => [
+  { key: 'systolic_bp',       label: t('health_metrics.systolic_bp'),    min: 50,  max: 300, isFloat: false, placeholder: 'e.g. 120' },
+  { key: 'diastolic_bp',      label: t('health_metrics.diastolic_bp'),   min: 30,  max: 200, isFloat: false, placeholder: 'e.g. 80' },
+  { key: 'blood_sugar_mg_dl', label: t('health_metrics.blood_sugar'),   min: 0,   max: null, isFloat: true, placeholder: 'e.g. 100' },
+  { key: 'heart_rate_bpm',    label: t('health_metrics.heart_rate'),      min: 20,  max: 300, isFloat: false, placeholder: 'e.g. 72' },
+  { key: 'oxygen_saturation', label: t('health_metrics.oxygen_saturation'), min: 50,  max: 100, isFloat: false, placeholder: 'e.g. 98' },
 ];
 
 const INITIAL_FORM = {
@@ -57,7 +57,8 @@ export default function VitalsStep({ onNext, disabled }) {
     let hasAnyFilled = false;
     let hasAnyError = false;
 
-    for (const fieldDef of FIELDS) {
+    const fields = getFields(t);
+    for (const fieldDef of fields) {
       const raw = form[fieldDef.key];
       if (raw !== '') {
         hasAnyFilled = true;
@@ -84,7 +85,8 @@ export default function VitalsStep({ onNext, disabled }) {
     setIsSubmitting(true);
     try {
       const payload = {};
-      for (const fieldDef of FIELDS) {
+      const fields = getFields(t);
+      for (const fieldDef of fields) {
         const raw = form[fieldDef.key];
         if (raw !== '') {
           payload[fieldDef.key] = fieldDef.isFloat
@@ -107,7 +109,7 @@ export default function VitalsStep({ onNext, disabled }) {
 
   return (
     <div className="space-y-1">
-      {FIELDS.map((fieldDef) => (
+      {getFields(t).map((fieldDef) => (
         <Input
           key={fieldDef.key}
           id={`vitals-${fieldDef.key}`}

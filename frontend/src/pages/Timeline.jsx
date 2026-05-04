@@ -1,15 +1,15 @@
 import { useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AppContext } from '../AppContext';
 import Badge from '../components/Badge';
 import PageFrame from '../components/PageFrame';
 import Button from '../components/Button';
 
-const springTransition = { type: 'spring', stiffness: 280, damping: 24 };
 
-function TimelineEntry({ item, t, isLast }) {
+
+function TimelineEntry({ item, t, isLast, i18n }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const severity = Number(item.severity);
   
@@ -44,7 +44,7 @@ function TimelineEntry({ item, t, isLast }) {
             {new Date(item.date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
           </span>
           <Badge variant={badgeVariant}>
-            {severity}/10
+            {new Intl.NumberFormat(i18n.language).format(severity)}/10
           </Badge>
         </div>
 
@@ -99,12 +99,12 @@ function PatternCard({ pattern }) {
   );
 }
 
-function GapIndicator({ days }) {
+function GapIndicator({ days, t }) {
   return (
     <div className="relative pl-10 pb-8 py-4">
       <div className="absolute left-[5px] top-0 bottom-0 w-[2px] border-l-2 border-dashed border-[var(--app-border-soft)]" />
       <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] italic pl-4">
-        {days} days with no log
+        {t('timeline.gap_days', { count: days })}
       </div>
     </div>
   );
@@ -112,13 +112,11 @@ function GapIndicator({ days }) {
 
 function Timeline() {
   const navigate = useNavigate();
-  const { symptoms = [], isLoading } = useContext(AppContext);
-  const { t } = useTranslation();
-  const shouldReduceMotion = useReducedMotion();
+  const { symptoms = [] } = useContext(AppContext);
+  const { t, i18n } = useTranslation();
 
-  const motionFade = shouldReduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
-    : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: 'easeOut' } };
+
+
     
   const [filter, setFilter] = useState('all');
 
@@ -242,7 +240,7 @@ function Timeline() {
       ) : (
         <div className="relative">
           {timelineGroups.map((item, idx) => {
-            if (item.type === 'gap') return <GapIndicator key={`gap-${idx}`} days={item.days} />;
+            if (item.type === 'gap') return <GapIndicator key={`gap-${idx}`} days={item.days} t={t} />;
             if (item.type === 'pattern') return <PatternCard key={`pattern-${idx}`} pattern={item} />;
             if (item.type === 'sticky-date') return (
               <div key={`date-${idx}`} className="sticky top-14 z-20 bg-[var(--app-bg)]/90 backdrop-blur-md py-3 px-1 mb-4">
@@ -255,6 +253,7 @@ function Timeline() {
                 key={item.data.id} 
                 item={item.data} 
                 t={t} 
+                i18n={i18n}
                 isLast={idx === timelineGroups.length - 1} 
               />
             );

@@ -29,7 +29,11 @@ export function NotificationProvider({ children }) {
       {/* Global Toast Render Panel Overlay */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none">
         {notifications.map(n => (
-          <div key={n.id} className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-start gap-3 transition-all transform slide-up ${
+          <div 
+            key={n.id} 
+            role="alert"
+            aria-live={n.type === 'error' ? 'assertive' : 'polite'}
+            className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-start gap-3 transition-all transform slide-up ${
             n.type === 'error' ? 'bg-rose-500/90 border-rose-400/50 text-white' : 
             n.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' : 
             n.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' : 
@@ -52,7 +56,11 @@ export function NotificationProvider({ children }) {
             <div className="flex-1">
               <p className="text-sm font-semibold leading-tight">{n.message}</p>
             </div>
-            <button onClick={() => removeNotification(n.id)} className="shrink-0 text-white/60 hover:text-white transition-colors">
+            <button 
+              onClick={() => removeNotification(n.id)} 
+              className="shrink-0 text-white/60 hover:text-white transition-colors"
+              aria-label="Dismiss notification"
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>

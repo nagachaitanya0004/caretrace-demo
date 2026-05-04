@@ -153,6 +153,33 @@ npm run install:backend  # Install backend dependencies
 3. **Update Backend CORS**
    After deployment, update backend's `CORS_ORIGINS` to include your Vercel URL.
 
+## 🚀 Production Startup Checklist
+
+Before going live, ensure the following steps are completed:
+
+### 1. Environment Variables (Backend - Render)
+- [ ] `MONGO_URI`: Must point to a production **MongoDB Atlas** cluster.
+- [ ] `SECRET_KEY`: Must be a unique 64-character hex string.
+- [ ] `CORS_ORIGINS`: Set to your production Vercel URL (e.g., `https://caretrace.vercel.app`).
+- [ ] `ENV`: Set to `production` (activates Atlas-only mode and security checks).
+- [ ] `POSTGRES_URI`: (Optional) Point to a **Supabase** instance for persistent audit logs.
+- [ ] `SENTRY_DSN`: (Optional) For production error monitoring.
+
+### 2. Environment Variables (Frontend - Vercel)
+- [ ] `VITE_API_URL`: Must point to your **Render** backend URL (without trailing slash).
+
+### 3. Deployment Sequence
+1. Deploy the **Backend** first.
+2. Verify the backend is up by visiting the `/health` and `/api/version` endpoints.
+3. Deploy the **Frontend** pointing to the confirmed backend URL.
+4. Log in with the Demo account (`rahul@demo.com` / `demo1234`) to verify DB connectivity.
+
+## 🏗️ Dual-Database Architecture
+
+CareTrace AI uses a resilient dual-database strategy for scalability and auditing:
+- **Primary (MongoDB Atlas)**: Stores all user profiles, health metrics, AI analyses, and medical reports (via GridFS). This is the source of truth for the application.
+- **Secondary (PostgreSQL/Supabase)**: Stores system audit logs. If PostgreSQL is unavailable, the system automatically falls back to MongoDB for audit storage, ensuring zero downtime for clinical features.
+
 ## Demo Account
 
 Try the platform with the demo account:

@@ -354,13 +354,13 @@ export default function HealthProfile() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Age</label>
-                <input type="number" min="1" max="120" className={fieldCls}
+                <label htmlFor="basic-age" className={labelCls}>Age</label>
+                <input id="basic-age" type="number" min="1" max="120" className={fieldCls}
                   value={basicForm.age} onChange={(e) => setBasicForm(p => ({ ...p, age: e.target.value }))} />
               </div>
               <div>
-                <label className={labelCls}>Gender</label>
-                <select className={fieldCls}
+                <label htmlFor="basic-gender" className={labelCls}>Gender</label>
+                <select id="basic-gender" className={fieldCls}
                   value={basicForm.gender} onChange={(e) => setBasicForm(p => ({ ...p, gender: e.target.value }))}>
                   <option value="">Select</option>
                   <option value="male">Male</option>
@@ -371,13 +371,13 @@ export default function HealthProfile() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Height (cm)</label>
-                <input type="number" min="1" step="0.1" className={fieldCls}
+                <label htmlFor="basic-height" className={labelCls}>Height (cm)</label>
+                <input id="basic-height" type="number" min="1" step="0.1" className={fieldCls}
                   value={basicForm.height_cm} onChange={(e) => setBasicForm(p => ({ ...p, height_cm: e.target.value }))} />
               </div>
               <div>
-                <label className={labelCls}>Weight (kg)</label>
-                <input type="number" min="1" step="0.1" className={fieldCls}
+                <label htmlFor="basic-weight" className={labelCls}>Weight (kg)</label>
+                <input id="basic-weight" type="number" min="1" step="0.1" className={fieldCls}
                   value={basicForm.weight_kg} onChange={(e) => setBasicForm(p => ({ ...p, weight_kg: e.target.value }))} />
               </div>
             </div>
@@ -388,16 +388,16 @@ export default function HealthProfile() {
             )}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Blood Group</label>
-                <select className={fieldCls}
+                <label htmlFor="basic-blood" className={labelCls}>Blood Group</label>
+                <select id="basic-blood" className={fieldCls}
                   value={basicForm.blood_group} onChange={(e) => setBasicForm(p => ({ ...p, blood_group: e.target.value }))}>
                   <option value="">Select</option>
                   {BLOOD_GROUPS.map((bg) => <option key={bg} value={bg}>{bg}</option>)}
                 </select>
               </div>
               <div>
-                <label className={labelCls}>Lifestyle</label>
-                <select className={fieldCls}
+                <label htmlFor="basic-lifestyle" className={labelCls}>Lifestyle</label>
+                <select id="basic-lifestyle" className={fieldCls}
                   value={basicForm.lifestyle} onChange={(e) => setBasicForm(p => ({ ...p, lifestyle: e.target.value }))}>
                   <option value="">Select</option>
                   <option value="active">Active</option>
@@ -443,8 +443,8 @@ export default function HealthProfile() {
               { key: 'surgeries',   label: 'Past Surgeries',       placeholder: 'e.g. Appendectomy' },
             ].map(({ key, label, placeholder }) => (
               <div key={key}>
-                <label className={labelCls}>{label}</label>
-                <input type="text" className={fieldCls} placeholder={placeholder}
+                <label htmlFor={`med-${key}`} className={labelCls}>{label}</label>
+                <input id={`med-${key}`} type="text" className={fieldCls} placeholder={placeholder}
                   value={medForm[key]}
                   onChange={(e) => setMedForm(p => ({ ...p, [key]: e.target.value }))} />
               </div>
@@ -556,13 +556,13 @@ export default function HealthProfile() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Sleep Duration (hrs)</label>
-                <input type="number" name="sleep_hours" min="0" max="24" step="0.5" className={fieldCls}
+                <label htmlFor="lifestyle-sleep" className={labelCls}>Sleep Duration (hrs)</label>
+                <input id="lifestyle-sleep" type="number" name="sleep_hours" min="0" max="24" step="0.5" className={fieldCls}
                   placeholder="e.g. 7" value={lifestyleForm.sleep_hours} onChange={handleLifestyleChange} />
               </div>
               <div>
-                <label className={labelCls}>Sleep Quality</label>
-                <select name="sleep_quality" className={fieldCls}
+                <label htmlFor="lifestyle-quality" className={labelCls}>Sleep Quality</label>
+                <select id="lifestyle-quality" name="sleep_quality" className={fieldCls}
                   value={lifestyleForm.sleep_quality} onChange={handleLifestyleChange}>
                   <option value="">Select</option>
                   <option value="good">Good</option>
@@ -594,17 +594,17 @@ export default function HealthProfile() {
               </div>
             </div>
             <div>
-              <label className={labelCls}>Water Intake (L/day)</label>
-              <input type="number" name="water_intake_liters" min="0" step="0.1" className={fieldCls}
+              <label htmlFor="lifestyle-water" className={labelCls}>Water Intake (L/day)</label>
+              <input id="lifestyle-water" type="number" name="water_intake_liters" min="0" step="0.1" className={fieldCls}
                 placeholder="e.g. 2.5" value={lifestyleForm.water_intake_liters} onChange={handleLifestyleChange} />
             </div>
             <div>
-              <label className={labelCls}>
+              <label htmlFor="lifestyle-stress" className={labelCls}>
                 Stress Level{' '}
                 <span className="font-semibold text-[var(--app-text)]">{lifestyleForm.stress_level}</span>
                 <span className="text-[var(--app-text-disabled)]">/10</span>
               </label>
-              <input type="range" name="stress_level" min="1" max="10" step="1"
+              <input id="lifestyle-stress" type="range" name="stress_level" min="1" max="10" step="1"
                 value={lifestyleForm.stress_level} onChange={handleLifestyleChange}
                 className="w-full" style={{ accentColor: 'var(--brand-accent)' }} />
               <div className="flex justify-between text-xs text-[var(--app-text-disabled)] mt-1">

@@ -1,8 +1,8 @@
-import { useState, useContext, useRef, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { useForm, Controller } from 'react-hook-form';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AppContext } from '../AppContext';
@@ -25,14 +25,14 @@ const symptomSchema = z.object({
 
 const springTransition = { type: 'spring', stiffness: 280, damping: 24 };
 
+
+
 function Symptoms() {
   const navigate = useNavigate();
   const { addSymptom, symptoms = [] } = useContext(AppContext);
-  const shouldReduceMotion = useReducedMotion();
 
-  const motionFade = shouldReduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
-    : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: 'easeOut' } };
+
+
   const { t } = useTranslation();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +41,7 @@ function Symptoms() {
   const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
   const [pendingData, setPendingData] = useState(null);
 
-  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(symptomSchema),
     defaultValues: {
       symptom: '',
@@ -53,8 +53,8 @@ function Symptoms() {
     }
   });
 
-  const selectedSymptom = watch('symptom');
-  const severity = watch('severity');
+  const selectedSymptom = useWatch({ control, name: 'symptom' });
+  const severity = useWatch({ control, name: 'severity' });
 
   const getSeverityColor = (val) => {
     if (val <= 3) return 'var(--app-success, #10b981)';
@@ -175,6 +175,7 @@ function Symptoms() {
                       min="1"
                       max="10"
                       step="1"
+                      aria-label={t('symptoms.form.severity_label', 'Symptom Severity')}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                       className="w-full h-2 bg-[var(--app-border)] rounded-full appearance-none cursor-pointer severity-slider"
                       style={{

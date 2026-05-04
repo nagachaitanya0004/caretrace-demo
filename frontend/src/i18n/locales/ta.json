@@ -1,272 +1,23 @@
 {
-  "navbar": {
-    "dashboard": "டாஷ்போர்டு",
-    "symptoms": "அறிகுறிகள்",
-    "timeline": "காலக்கோடு",
-    "history": "வரலாறு",
-    "analysis": "AI பகுப்பாய்வு",
-    "alerts": "எச்சரிக்கைகள்",
-    "reports": "அறிக்கைகள்",
-    "recommendations": "ஆலோசனை",
-    "settings": "அமைப்புகள்",
-    "logout": "வெளியேறு",
-    "search": "தேடுங்கள்...",
-    "active_session": "செயலில் உள்ள அமர்வு",
-    "overview": "மேலோட்டம்",
-    "health_tracking": "ஆரோக்கிய கண்காணிப்பு",
-    "health_intelligence": "ஆரோக்கிய நுண்ணறிவு",
-    "intelligence": "நுண்ணறிவு",
-    "account": "கணக்கு",
-    "language": "மொழி",
-    "log_symptoms": "அறிகுறிகளைப் பதிவு செய்யவும்",
-    "search_placeholder": "டாஷ்போர்டைத் தேடுங்கள்...",
-    "search_anything": "எதையும் தேடுங்கள்...",
-    "notifications": "அறிவிப்புகள்",
-    "notifications_new": "புதிய",
-    "notifications_empty": "எல்லாம் சரி!",
-    "health_profile": "ஆரோக்கிய சுயவிவரம்"
-  },
-  "dashboard": {
-    "tagline": "ஆரம்பகால கண்டறிதல். சிறந்த முடிவுகள்.",
-    "welcome": "மீண்டும் வருக, {{name}}",
-    "hello": "வணக்கம், {{name}}",
-    "welcome_default": "வரவேற்கிறோம்",
-    "loading": "உங்கள் ஆரோக்கிய தரவு ஏற்றப்படுகிறது...",
-    "tracked_count": "{{count}} அறிகுறிகள் கண்காணிக்கப்பட்டன",
-    "today": "இன்று",
-    "quick_actions": "விரைவான செயல்கள்",
-    "log_symptom": "அறிகுறியைப் பதிவுசெய்",
-    "run_analysis": "AI பகுப்பாய்வு",
-    "view_timeline": "காலக்கோடு",
-    "testimonials_btn": "அனுபவங்கள்",
-    "alert_title": "ஆரோக்கிய எச்சரிக்கை செயலில் உள்ளது",
-    "alert_body": "ஒன்று அல்லது அதற்கு மேற்பட்ட அறிகுறிகள் நீண்டகாலமாக உள்ளன. மருத்துவப் பரிசோதனை பரிந்துரைக்கப்படுகிறது.",
-    "alert_view": "எச்சரிக்கைகளைக் காண்க",
-    "reminder_title": "தினசரி கண்காணிப்பு நினைவூட்டல்",
-    "reminder_body": "நீங்கள் இன்று எந்த அறிகுறிகளையும் பதிவு செய்யவில்லை. துல்லியமான முடிவுகளுக்கு உங்கள் தரவை உடனுக்குடன் புதுப்பிக்கவும்.",
-    "reminder_log": "இப்போது பதிவுசெய்",
-    "reminder_dismiss": "தவிர்",
-    "search": {
-      "title": "டாஷ்போர்டு தேடல்",
-      "results": "\"{{query}}\" க்கான முடிவுகள் காட்டப்படுகின்றன",
-      "clear": "தேடலைத் தெளிவுபடுத்து",
-      "no_matches": "டாஷ்போர்டில் முடிவுகள் எதுவும் இல்லை",
-      "no_matches_sub": "அறிகுறி பெயர்கள், எச்சரிக்கைகள், பகுப்பாய்வு அல்லது அறிக்கை முக்கிய வார்த்தைகளைத் தேட முயற்சிக்கவும்."
-    },
-    "stats": {
-      "logged": "பதிவு செய்யப்பட்ட அறிகுறிகள்",
-      "avg_sev": "சராசரி தீவிரம்",
-      "longest": "நீண்ட காலம்",
-      "alerts": "செயலில் உள்ள எச்சரிக்கைகள்",
-      "all_time": "அனைத்து பதிவுகள்",
-      "across_logs": "சராசரியாக",
-      "single_run": "ஒற்றை அறிகுறி காலம்",
-      "needs_attention": "கவனம் தேவை",
-      "all_clear": "எல்லாம் நலம்"
-    },
-    "risk": {
-      "title": "ஆபத்து மதிப்பீடு",
-      "status": "ஆரோக்கிய நிலை",
-      "high": "அதிக ஆபத்து",
-      "medium": "மிதமான ஆபத்து",
-      "low": "குறைந்த ஆபத்து",
-      "not_assessed": "மதிப்பிடப்படவில்லை",
-      "no_analysis": "இன்னும் பகுப்பாய்வு இல்லை",
-      "no_analysis_sub": "உங்கள் ஆரோக்கிய நுண்ணறிவுகளைக் காண AI ஸ்கேன் செய்யவும்.",
-      "view_report": "முழு அறிக்கையையும் காண்க",
-      "action_pending": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைப் பெற AI பகுப்பாய்வை இயக்கவும்.",
-      "last_updated": "கடைசியாக புதுப்பிக்கப்பட்டது"
-    },
-    "charts": {
-      "trend": "போக்கு",
-      "severity_timeline": "தீவிரம் மற்றும் காலக்கோடு",
-      "distribution": "விநியோகம்",
-      "symptom_frequency": "அறிகுறி அதிர்வெண்",
-      "view_timeline": "முழு காலவரிசையைப் பார்க்க →",
-      "view_report": "PDF அறிக்கையை உருவாக்கு →",
-      "data_points": "{{count}} தரவு புள்ளிகள்",
-      "no_data": "இன்னும் அறிகுறிகள் தரவு இல்லை",
-      "no_data_sub": "விளக்கப்படத்தைப் பார்க்க உங்கள் முதல் அறிகுறியைப் பதிவு செய்யவும்",
-      "trend_aria": "Symptom severity over time",
-      "distribution_aria": "Symptom frequency distribution",
-      "data_points_label": "entries"
-    },
-    "insights": {
-      "title": "நுண்ணறிவு",
-      "personalized_insights": "தனிப்பயனாக்கப்பட்ட நுண்ணறிவு",
-      "generate_report": "PDF அறிக்கையை உருவாக்கு",
-      "profile_title": "சுயவிவரம் சார்ந்த வழிகாட்டுதல்",
-      "profile_body": "உங்கள் {{lifestyle}} சுயவிவரத்தின் அடிப்படையில் இந்த முடிவுகள் வழங்கப்படுகின்றன.",
-      "profile_empty": "தனிப்பயனாக்கப்பட்ட வழிகாட்டலைப் பெற அமைப்புகளில் உங்கள் ஆரோக்கிய சுயவிவரத்தைப் பூர்த்தி செய்யவும்.",
-      "pattern_title": "கண்காணிப்பு முறை",
-      "pattern_body": "நீங்கள் {{count}} அறிகுறிகளை {{avg}}/10 சராசரி தீவிரத்துடன் பதிவு செய்துள்ளீர்கள்.",
-      "empty": "No insights yet",
-      "empty_sub": "Log symptoms and complete your profile to see insights"
-    },
-    "error": {
-      "title": "Dashboard Error",
-      "subtitle": "Your data is safe. Please reload.",
-      "stats": "Statistics unavailable"
-    },
-    "greeting_morning": "Good morning, {{name}}",
-    "greeting_afternoon": "Good afternoon, {{name}}",
-    "greeting_evening": "இனிய மாலை வணக்கம், {{name}}",
-    "streak": "{{count}} நாள் தொடர்ச்சி",
-    "demo_meds": {
-      "sample_badge": "Sample Data"
-    }
-  },
-  "testimonials": {
-    "title": "எங்கள் பயனர்கள் என்ன சொல்கிறார்கள்",
-    "subtitle": "பைலட் பயனர்கள் மற்றும் சோதனையாளர்களிடமிருந்து உண்மையான கருத்து",
-    "roles": {
-      "pilot": "பைலட் பயனர்",
-      "caregiver": "பராமரிப்பாளர்",
-      "tester": "சோதனையாளர்",
-      "physician": "பொது மருத்துவர்"
-    },
-    "items": {
-      "ravi": {
-        "name": "ரவி குமார்",
-        "text": "CareTrace AI நினைவூட்டல்கள் எனது மருந்து வழக்கத்தை முற்றிலும் மன அழுத்தமில்லாததாக ஆக்கியது. நான் இப்போது ஒரு டோஸையும் தவறவிடுவதில்லை.",
-        "highlight": "முற்றிலும் மன அழுத்தமில்லாததாக"
-      },
-      "anitha": {
-        "name": "அனிதா ரெட்டி",
-        "text": "எனது தந்தையின் மருந்துகளைக் கண்காணிப்பது இப்போது எளிது. இது எங்கள் கவலையை கணிசமாகக் குறைத்தது.",
-        "highlight": "கவலையை கணிசமாகக் குறைத்தது"
-      },
-      "suresh": {
-        "name": "சுரேஷ்",
-        "text": "இடைமுகம் சுத்தமாகவும் உள்ளுணர்வுடனும் உள்ளது. தினசரி சுகாதார நிர்வாகத்திற்கு மிகவும் நடைமுறைக்குரியது.",
-        "highlight": "சுத்தமாகவும் உள்ளுணர்வுடனும்"
-      },
-      "priya": {
-        "name": "டாக்டர் பிரியா சர்மா",
-        "text": "CareTrace AI போன்ற தீர்வுகள் மருந்து பின்பற்றுதலையும் நோயாளி பாதுகாப்பையும் மேம்படுத்தும்.",
-        "highlight": "நோயாளி பாதுகாப்பையும் மேம்படுத்தும்"
-      }
-    }
-  },
-  "symptoms": {
-    "title": "உங்கள் அறிகுறிகளைக் கண்காணியுங்கள்",
-    "subtitle": "நீங்கள் எப்படி உணருகிறீர்கள் என்பதைப் புரிந்துகொள்ள உங்கள் அறிகுறிகளைப் பதிவுசெய்யவும்.",
-    "health_goal_title": "இன்று உங்கள் இலக்கு என்ன?",
-    "health_goals": {
-      "symptom_check": "தற்போதைய அறிகுறிகளைச் சரிபார்க்கவும்",
-      "chronic_management": "ஏற்கனவே உள்ள நிலையை நிர்வகிக்கவும்",
-      "preventive_care": "தடுப்பு ஆரோக்கிய பரிசோதனை",
-      "general_consultation": "பொது ஆலோசனை"
-    },
-    "add_title": "அறிகுறிகளைச் சேர்க்கவும்",
-    "voice_input": "குரல் உள்ளீடு",
-    "listening": "கேட்கிறது...",
-    "type_label": "அறிகுறி வகை",
-    "type_placeholder": "ஒரு அறிகுறியைத் தேர்ந்தெடுக்கவும்",
-    "duration_label": "காலம் (நாட்கள்)",
-    "duration_placeholder": "காலத்தை உள்ளிடவும்",
-    "date_label": "தேதி",
-    "severity_label": "தீவிரம்: {{score}} ({{label}})",
-    "severity_help": "1 = மிதமானது, 10 = தீவிரமானது",
-    "submit_btn": "இப்போது பதிவுசெய்",
-    "duplicate_title": "ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது",
-    "duplicate_body": "இன்று நீங்கள் இந்த அறிகுறியை ஏற்கனவே பதிவு செய்துள்ளீர்கள். மற்றொரு பதிவைச் சேர்க்க விரும்புகிறீர்களா?",
-    "duplicate_confirm": "ஆம், மீண்டும் பதிவு செய்",
-    "mild": "மிதமானது",
-    "severe": "தீவிரமானது",
-    "recorded_title": "உங்கள் பதிவு செய்யப்பட்ட அறிகுறிகள்",
-    "logged_on": "{{date}} அன்று பதிவு செய்யப்பட்டது",
-    "duration_display": "காலம்: {{count}} நாள்(கள்)",
-    "empty_state": "தொடர குறைந்தது ஒரு அறிகுறியைச் சேர்க்கவும்.",
-    "errors": {
-      "incomplete": "அனைத்து விவரங்களையும் பூர்த்தி செய்யவும்.",
-      "duration_min": "காலம் குறைந்தது 1 நாளாக இருக்க வேண்டும்.",
-      "failed": "பதிவு தோல்வியடைந்தது."
-    },
-    "notifications": {
-      "voice_active": "மைக்ரோஃபோன் செயலில் உள்ளது... தயவுசெய்து தெளிவாகப் பேசவும்",
-      "voice_success": "குரல் வெற்றிகரமாக மாற்றப்பட்டது: 'எனக்கு 3 நாட்களாக கடுமையான காய்ச்சல் இருந்தது'",
-      "log_success": "{{symptom}} வெற்றிகரமாக பதிவு செய்யப்பட்டது!"
-    },
-    "options": {
-      "headache": "தலைவலி",
-      "fever": "காய்ச்சல்",
-      "cough": "இருமல்",
-      "fatigue": "சோர்வு",
-      "nausea": "குமட்டல்",
-      "dizziness": "தலைசுற்றல்",
-      "chest pain": "நெஞ்சு வலி",
-      "shortness of breath": "மூச்சுத் திணறல்"
-    }
-  },
-  "timeline": {
-    "title": "உங்கள் ஆரோக்கிய காலக்கோடு",
-    "subtitle": "உங்கள் அறிகுறிகளின் வரலாற்றை ஆய்வு செய்து முன்னேற்றத்தைக் கண்காணியுங்கள்.",
-    "list_title": "அறிகுறி காலக்கோடு",
-    "multiple_entries": "பல பதிவுகள் கண்டறியப்பட்டுள்ளன",
+  "alerts": {
+    "consult_reminder": "சரியான மதிப்பீட்டிற்கு தயவுசெய்து மருத்துவரை அணுகவும்.",
     "empty": {
-      "title": "இன்னும் அறிகுறிகள் எதுவும் பதிவு செய்யப்படவில்லை.",
-      "body": "அறிகுறிகளைப் பதிவு செய்ய அறிகுறிகள் பக்கத்திற்குச் செல்லவும்."
+      "body": "உங்கள் அறிகுறிகள் இயல்பான வரம்பிற்குள் உள்ளன. உங்கள் ஆரோக்கியத்தைத் தொடர்ந்து கண்காணியுங்கள்.",
+      "title": "எச்சரிக்கைகள் இல்லை"
     },
-    "trends": {
-      "increasing": "தீவிரம் அதிகரிக்கிறது",
-      "decreasing": "குணமடைந்து வருகிறீர்கள்",
-      "increasing_title": "தீவிரம் அதிகரிப்பு",
-      "decreasing_title": "குணமடைதல் போக்கு"
-    },
-    "severity_weight": "தீவிர எடை",
-    "days_tracking": "{{count}} நாட்கள் கண்காணிப்பு",
-    "get_analysis": "போக்குகளை பகுப்பாய்வு செய்",
-    "show_more": "மேலும் காண்க",
-    "show_less": "குறைவாகக் காட்டு",
-    "today": "இன்று",
-    "yesterday": "நேற்று",
-    "this_week": "இந்த வாரம்",
-    "older": "பழையவை"
-  },
-  "history": {
-    "title": "அறிகுறிகளின் வரலாறு",
-    "subtitle": "நீங்கள் பதிவு செய்த அறிகுறிகளின் விரிவான காலவரிசைப் பதிவு.",
-    "table": {
-      "date": "பதிவு செய்யப்பட்ட தேதி",
-      "symptom": "அறிகுறி",
-      "duration": "காலம்",
-      "severity": "தீவிரம்"
-    },
-    "empty": {
-      "title": "வரலாறு எதுவும் இல்லை",
-      "body": "நீங்கள் இன்னும் எந்த அறிகுறிகளையும் பதிவு செய்யவில்லை."
-    }
+    "footer_disclaimer": "இது மருத்துவ ஆலோசனை அல்ல. ஆரோக்கியம் தொடர்பான கவலைகளுக்கு எப்போதும் மருத்துவரை அணுகவும்.",
+    "health_alert": "ஆரோக்கிய எச்சரிக்கை",
+    "mark_as_read": "படித்ததாகக் குறிக்கவும்",
+    "mark_read": "படித்ததாகக் குறிக்கவும்",
+    "subtitle": "உங்கள் ஆரோக்கிய நிலை மற்றும் பரிந்துரைக்கப்பட்ட செயல்களைப் பற்றி உடனுக்குடன் தெரிந்துகொள்ளுங்கள்.",
+    "title": "ஆரோக்கிய எச்சரிக்கைகள் மற்றும் அறிவிப்புகள்",
+    "view_recommendations": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைக் காண்க"
   },
   "analysis": {
-    "title": "AI ஆரோக்கிய பகுப்பாய்வு",
-    "subtitle": "உங்கள் அறிகுறிகளின் போக்குகளைக் கண்டறிந்து ஆரோக்கிய நிலையை அஞ்சலிக்கும் பகுப்பாய்வு அமைப்பு.",
-    "loading": {
-      "title": "உங்கள் ஆரோக்கிய நிலையை பகுப்பாய்வு செய்கிறோம்...",
-      "body": "பதிவு செய்யப்பட்ட அறிகுறிகளை ஆய்வு செய்து மாற்றங்களைக் கண்டறிகிறோம்..."
-    },
-    "report": {
-      "compiled": "நுண்ணறிவு அறிக்கை தொகுக்கப்பட்டது",
-      "generated": "தேதி: {{date}}",
-      "risk_delta": "கணக்கிடப்பட்ட ஆபத்து நிலை",
-      "reasoning": "முக்கிய காரணம்",
-      "context": "விரிவான தகவல்",
-      "persisted_msg": "உங்கள் அறிகுறிகள் வழக்கமான நேரத்தை விட நீடித்திருக்கின்றன.",
-      "clustering_msg": "ஒரே காலப்பகுதியில் பல அறிகுறிகள் கண்டறியப்பட்டுள்ளன.",
-      "action_plan": "செயல் திட்டம்",
-      "view_alerts": "ஆரோக்கிய எச்சரிக்கைகளைக் காண்க",
-      "view_full_report": "முழு அறிக்கையையும் காண்க →"
-    },
     "disclaimer": "இந்த பகுப்பாய்வு AI மூலம் உருவானது. இது மருத்துவரின் ஆலோசனைకు மாற்றல்ல. எப்போதும் மருத்துவரை அணுகவும்.",
-    "ready": {
-      "title": "பகுப்பாய்வுக்கு அமைப்பு தயாராக உள்ளது",
-      "body": "அறிகுறிகளின் காலக்கோட்டில் மாற்றங்களைக் கண்டறிய ஸ்கேன் செய்யுங்கள்.",
-      "run_btn": "முழுமையான ஸ்கேன் தொடங்கு"
-    },
-    "notifications": {
-      "generating": "நுண்ணறிவு வெக்டர்களை உருவாக்குகிறோம்...",
-      "success": "பகுப்பாய்வு வெற்றிகரமாக முடிந்தது!",
-      "error": "பகுப்பாய்வில் பிழை ஏற்பட்டது"
+    "loading": {
+      "body": "பதிவு செய்யப்பட்ட அறிகுறிகளை ஆய்வு செய்து மாற்றங்களைக் கண்டறிகிறோம்...",
+      "title": "உங்கள் ஆரோக்கிய நிலையை பகுப்பாய்வு செய்கிறோம்..."
     },
     "loading_steps": [
       "அறிகுறி வடிவங்களை ஸ்கேன் செய்கிறோம்...",
@@ -274,135 +25,488 @@
       "ஆரோக்கிய சமிக்ஞைகளை தொடர்புபடுத்துகிறோம்...",
       "ஆபத்து நிகழ்தకவைக் கணக்கிடுகிறோம்...",
       "பரிந்துரைகளை உருவாக்குகிறோம்..."
-    ]
-  },
-  "alerts": {
-    "title": "ஆரோக்கிய எச்சரிக்கைகள் மற்றும் அறிவிப்புகள்",
-    "subtitle": "உங்கள் ஆரோக்கிய நிலை மற்றும் பரிந்துரைக்கப்பட்ட செயல்களைப் பற்றி உடனுக்குடன் தெரிந்துகொள்ளுங்கள்.",
-    "health_alert": "ஆரோக்கிய எச்சரிக்கை",
-    "consult_reminder": "சரியான மதிப்பீட்டிற்கு தயவுசெய்து மருத்துவரை அணுகவும்.",
-    "empty": {
-      "title": "எச்சரிக்கைகள் இல்லை",
-      "body": "உங்கள் அறிகுறிகள் இயல்பான வரம்பிற்குள் உள்ளன. உங்கள் ஆரோக்கியத்தைத் தொடர்ந்து கண்காணியுங்கள்."
-    },
-    "footer_disclaimer": "இது மருத்துவ ஆலோசனை அல்ல. ஆரோக்கியம் தொடர்பான கவலைகளுக்கு எப்போதும் மருத்துவரை அணுகவும்.",
-    "view_recommendations": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைக் காண்க",
-    "mark_read": "படித்ததாகக் குறிக்கவும்"
-  },
-  "reports": {
-    "title": "ஆய்வு நிலை ஆரோக்கிய அறிக்கைகள்",
-    "subtitle": "உருவாக்கப்பட்ட ஆரோக்கிய சுருக்கங்களை ஆய்வு செய்து PDF அறிக்கைகளைப் பெறுங்கள்.",
-    "download_btn": "அறிக்கையைப் பதிவிறக்குக",
-    "compiling": "PDF தொகுக்கப்படுகிறது...",
-    "profile": {
-      "title": "நோயாளி விவரம்",
-      "name": "பெயர்",
-      "age": "வயது",
-      "gender": "பாலினம்",
-      "lifestyle": "வாழ்க்கை முறை"
-    },
-    "stats": {
-      "total_symptoms": "மொத்த அறிகுறிகள்",
-      "avg_severity": "சராசரி தீவிரம்",
-      "longest_run": "அதிகபட்ச காலம்",
-      "days": "{{count}} நாட்கள்"
-    },
-    "charts": {
-      "severity_trend": "தீவிரப் போக்கு",
-      "latest_updates": "சமீபத்திய புதுப்பிப்புகள்",
-      "empty": "இன்னும் அறிகுறிகள் எதுவும் பதிவு செய்யப்படவில்லை. போக்கு விளக்கப்படத்தைப் பார்க்க உள்ளீடுகளைச் சேர்க்கவும்."
-    },
+    ],
     "notifications": {
-      "booting": "PDF கோப்புத் தயார் செய்யப்படுகிறது...",
-      "success": "அறிக்கை வெற்றிகரமாக உருவாக்கப்பட்டது!"
+      "error": "பகுப்பாய்வில் பிழை ஏற்பட்டது",
+      "generating": "நுண்ணறிவு வெக்டர்களை உருவாக்குகிறோம்...",
+      "success": "பகுப்பாய்வு வெற்றிகரமாக முடிந்தது!"
     },
-    "disclaimer": "இந்த அறிக்கை AI மூலம் உருவாக்கப்பட்டது மற்றும் இது மருத்துவக் கணிப்பு அல்ல.",
-    "view": "View",
-    "download": "Download",
-    "delete": "Delete",
-    "select_file": "Upload Report",
-    "upload": "Upload",
-    "uploading": "Uploading…",
-    "empty": "No medical reports uploaded yet",
-    "upload_success": "Medical report uploaded successfully",
-    "upload_error": "Failed to upload file",
-    "delete_success": "Medical report deleted",
-    "delete_error": "Failed to delete report",
-    "error": {
-      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
-      "too_large": "File size must be under 10 MB"
+    "ready": {
+      "body": "அறிகுறிகளின் காலக்கோட்டில் மாற்றங்களைக் கண்டறிய ஸ்கேன் செய்யுங்கள்.",
+      "run_btn": "முழுமையான ஸ்கேன் தொடங்கு",
+      "title": "பகுப்பாய்வுக்கு அமைப்பு தயாராக உள்ளது"
     },
-    "delete_dialog": {
-      "title": "Delete Report",
-      "body": "Are you sure you want to delete",
-      "warning": "This cannot be undone."
-    }
+    "report": {
+      "action_plan": "செயல் திட்டம்",
+      "clustering_msg": "ஒரே காலப்பகுதியில் பல அறிகுறிகள் கண்டறியப்பட்டுள்ளன.",
+      "compiled": "நுண்ணறிவு அறிக்கை தொகுக்கப்பட்டது",
+      "context": "விரிவான தகவல்",
+      "generated": "தேதி: {{date}}",
+      "persisted_msg": "உங்கள் அறிகுறிகள் வழக்கமான நேரத்தை விட நீடித்திருக்கின்றன.",
+      "reasoning": "முக்கிய காரணம்",
+      "risk_delta": "கணக்கிடப்பட்ட ஆபத்து நிலை",
+      "view_alerts": "ஆரோக்கிய எச்சரிக்கைகளைக் காண்க",
+      "view_full_report": "முழு அறிக்கையையும் காண்க →"
+    },
+    "subtitle": "உங்கள் அறிகுறிகளின் போக்குகளைக் கண்டறிந்து ஆரோக்கிய நிலையை அஞ்சலிக்கும் பகுப்பாய்வு அமைப்பு.",
+    "title": "AI ஆரோக்கிய பகுப்பாய்வு"
+  },
+  "app": {
+    "tagline": "Clear insights for your daily health."
+  },
+  "auth": {
+    "age": "வயது",
+    "already_mapped": "ஏற்கனவே பதிவு செய்துள்ளீர்களா?",
+    "constructing": "உள்நுழைகிறது...",
+    "create_profile": "சுயவிவரத்தை உருவாக்கு",
+    "demo_failed": "சர்வரை அடைய முடியவில்லை. இணைப்பைச் சரிபார்க்கவும் அல்லது சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.",
+    "demo_subtitle": "மாதிரி தரவுடன் விளக்கப்படங்கள், எச்சரிக்கைகள் மற்றும் AI நுண்ணறிவுகளைக் காண்க—அமைப்பு தேவையில்லை.",
+    "demo_title": "வழிகாட்டப்பட்ட சுற்றுப்பயணம்",
+    "email": "மின்னஞ்சல் முகவரி",
+    "errors": {
+      "age_invalid": "Please enter a valid age.",
+      "email_registered": "இந்த மின்னஞ்சலுடன் ஏற்கனவே கணக்கு உள்ளது. உள்நுழையவும்.",
+      "failed": "அங்கீகாரம் தோல்வியடைந்தது. உள்ளீடுகளைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+      "password_short": "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்."
+    },
+    "fill_demo": "டெமோ கணக்கைப் பயன்படுத்தவும்",
+    "full_name": "முழு பெயர்",
+    "gender": "பாலினம்",
+    "hide_password": "கடவுச்சொல்லை மறை",
+    "lifestyle": "வாழ்க்கை முறை ஆபத்து சூழல்",
+    "login_btn": "பாதுகாப்பான உள்நுழைவு",
+    "login_natively": "நேரடியாக உள்நுழையவும்",
+    "login_subtitle": "உங்கள் ஆரோக்கிய நுண்ணறிவு டாஷ்போர்டில் உள்நுழையவும்",
+    "login_title": "மீண்டும் வருக",
+    "no_account": "கணக்கு இல்லையா?",
+    "password": "கடவுச்சொல்",
+    "show_password": "கடவுச்சொல்லைக் காட்டு",
+    "signup_btn": "சுயவிவரத்தைப் பதிவுசெய்க",
+    "signup_subtitle": "சில நிமிடங்களில் சுயவிவரத்தை உருவாக்கி அறிகுறி கண்காணிப்பைத் தொடங்குங்கள்.",
+    "signup_success": "Your account is ready.",
+    "signup_title": "CareTrace AI இல் இணையுங்கள்",
+    "stay_signed_in": "உள்நுழைந்தே இருங்கள்",
+    "try_demo_btn": "டெமோ முயற்சிக்கவும்",
+    "try_demo_subtitle": "மாதிரி அறிகுறிகள், ஆபத்து பகுப்பாய்வு மற்றும் எச்சரிக்கைகளுடன் முழு டாஷ்போர்டைத் திறக்கவும்—விரைவு சுற்றுப்பயணத்திற்கு ஏற்றது.",
+    "try_demo_title": "சில வினாடிகளில் தயாரிப்பைக் காண்க"
+  },
+  "charts": {
+    "caption_bars": "How often you've logged each symptom.",
+    "caption_trend": "Higher numbers mean stronger symptoms. Use this to track your recovery.",
+    "x_symptom": "Symptom",
+    "x_time": "Date",
+    "y_count": "Times logged",
+    "y_severity": "Severity (1–10)"
   },
   "common": {
+    "cancel": "ரத்து செய்க",
+    "close": "Close",
     "disclaimer": "பொறுப்புத் துறப்பு",
     "disclaimer_label": "மருத்துவ மறுப்பு",
-    "save": "மாற்றங்களைச் சேமி",
-    "saving": "செயலாக்கப்படுகிறது...",
-    "cancel": "ரத்து செய்க",
-    "language_choice": "உங்கள் விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
-    "not_available": "கிடைக்கவில்லை",
-    "pending": "நிலுவையில் உள்ளது",
     "gender": {
-      "male": "ஆண்",
       "female": "பெண்",
+      "male": "ஆண்",
       "other": "மற்றவை",
       "placeholder": "உங்கள் பாலினத்தைத் தேர்வுசெய்க"
     },
+    "language_choice": "உங்கள் விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
     "lifestyle": {
-      "sedentary": "உட்கார்ந்த நிலை (அதிகமாக உட்காருதல்)",
       "active": "சுறுசுறுப்பான (தவறாமல் உடற்பயிற்சி)",
-      "smoker": "புகைப்பிடிப்பவர்",
-      "placeholder": "உங்கள் வாழ்க்கை முறையைத் தேர்ந்தெடுக்கவும்"
-    },
-    "severity": {
-      "low": "குறைவு",
-      "medium": "நடுத்தரம்",
-      "high": "அதிகம்"
+      "placeholder": "உங்கள் வாழ்க்கை முறையைத் தேர்ந்தெடுக்கவும்",
+      "sedentary": "உட்கார்ந்த நிலை (அதிகமாக உட்காருதல்)",
+      "smoker": "புகைப்பிடிப்பவர்"
     },
     "next": "Next",
-    "skip": "Skip",
-    "retry": "Retry"
+    "not_available": "கிடைக்கவில்லை",
+    "pending": "நிலுவையில் உள்ளது",
+    "retry": "Retry",
+    "save": "மாற்றங்களைச் சேமி",
+    "saving": "செயலாக்கப்படுகிறது...",
+    "severity": {
+      "high": "அதிகம்",
+      "low": "குறைவு",
+      "medium": "நடுத்தரம்"
+    },
+    "skip": "Skip"
   },
-  "settings": {
-    "title": "பயன்பாட்டு அமைப்புகள்",
-    "subtitle": "உங்கள் சுயவிவரம் மற்றும் பயன்பாட்டு முன்னுரிமைகளை நிர்வகிக்கவும்.",
-    "profile_section": "சுயவிவர உள்ளமைவு",
-    "full_name": "முழு பெயர்",
-    "age": "வயது",
-    "preferences_section": "முன்னுரிமைகள்",
-    "push_notifications": {
-      "title": "புஷ் அறிவிப்புகள்",
-      "body": "உங்கள் சாதனத்தில் எச்சரிக்கைகளைப் பெறுங்கள்."
+  "dashboard": {
+    "alert_body": "ஒன்று அல்லது அதற்கு மேற்பட்ட அறிகுறிகள் நீண்டகாலமாக உள்ளன. மருத்துவப் பரிசோதனை பரிந்துரைக்கப்படுகிறது.",
+    "alert_title": "ஆரோக்கிய எச்சரிக்கை செயலில் உள்ளது",
+    "alert_view": "எச்சரிக்கைகளைக் காண்க",
+    "charts": {
+      "data_points": "{{count}} தரவு புள்ளிகள்",
+      "data_points_label": "entries",
+      "distribution": "விநியோகம்",
+      "distribution_aria": "Symptom frequency distribution",
+      "no_data": "இன்னும் அறிகுறிகள் தரவு இல்லை",
+      "no_data_sub": "விளக்கப்படத்தைப் பார்க்க உங்கள் முதல் அறிகுறியைப் பதிவு செய்யவும்",
+      "no_freq_data": "No data yet.",
+      "no_freq_match": "No results found.",
+      "no_insight_match": "No results found.",
+      "no_insight_sub": "Try adjusting your search.",
+      "no_match": "No results found.",
+      "no_match_sub": "Try adjusting your search.",
+      "severity_timeline": "தீவிரம் மற்றும் காலக்கோடு",
+      "symptom_frequency": "அறிகுறி அதிர்வெண்",
+      "trend": "போக்கு",
+      "trend_aria": "Symptom severity over time",
+      "view_report": "PDF அறிக்கையை உருவாக்கு →",
+      "view_timeline": "முழு காலவரிசையைப் பார்க்க →"
     },
-    "emails": {
-      "title": "மின்னஞ்சல் புதுப்பிப்புகள்",
-      "body": "வாராந்திர சுருக்க மின்னஞ்சல்களைப் பெறுங்கள்."
+    "demo_meds": {
+      "label": "Demo",
+      "sample_badge": "Sample Data",
+      "title": "Sample medications"
     },
-    "about_section": "CareTrace AI பற்றி",
-    "about_body": "CareTrace AI என்பது உங்கள் அறிகுறிகளைக் கண்காணிக்கவும் காலப்போக்கில் மாற்றங்களைக் கவனிப்பதற்கும் உருவாக்கப்பட்ட தனிப்பட்ட சுகாதார கண்காணிப்பு அமைப்பு.",
-    "notifications": {
-      "title": "புஷ் அறிவிப்புகள்",
-      "body": "உங்கள் சாதனத்தில் எச்சரிக்கைகளைப் பெறுங்கள்.",
-      "profile_success": "சுயவிவர உள்ளமைவு வெற்றிகரமாகச் சேமிக்கப்பட்டது",
-      "profile_error": "புதுப்பிப்பதில் தோல்வி",
-      "pref_updated": "முன்னுரிமை [{{name}}] புதுப்பிக்கப்பட்டது",
-      "lang_applied": "மொழி உள்ளமைவு பயன்படுத்தப்பட்டது"
-    }
+    "error": {
+      "stats": "Statistics unavailable",
+      "subtitle": "Your data is safe. Please reload.",
+      "title": "Dashboard Error"
+    },
+    "greeting": {
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "morning": "Good morning"
+    },
+    "greeting_afternoon": "Good afternoon, {{name}}",
+    "greeting_default": "Good to see you",
+    "greeting_evening": "இனிய மாலை வணக்கம், {{name}}",
+    "greeting_morning": "Good morning, {{name}}",
+    "hello": "வணக்கம், {{name}}",
+    "insights": {
+      "empty": "No insights yet",
+      "empty_sub": "Log symptoms and complete your profile to see insights",
+      "generate_report": "PDF அறிக்கையை உருவாக்கு",
+      "pattern_body": "நீங்கள் {{count}} அறிகுறிகளை {{avg}}/10 சராசரி தீவிரத்துடன் பதிவு செய்துள்ளீர்கள்.",
+      "pattern_title": "கண்காணிப்பு முறை",
+      "personalized_insights": "தனிப்பயனாக்கப்பட்ட நுண்ணறிவு",
+      "profile_body": "உங்கள் {{lifestyle}} சுயவிவரத்தின் அடிப்படையில் இந்த முடிவுகள் வழங்கப்படுகின்றன.",
+      "profile_empty": "தனிப்பயனாக்கப்பட்ட வழிகாட்டலைப் பெற அமைப்புகளில் உங்கள் ஆரோக்கிய சுயவிவரத்தைப் பூர்த்தி செய்யவும்.",
+      "profile_title": "சுயவிவரம் சார்ந்த வழிகாட்டுதல்",
+      "title": "நுண்ணறிவு"
+    },
+    "loading": "உங்கள் ஆரோக்கிய தரவு ஏற்றப்படுகிறது...",
+    "log_symptom": "அறிகுறியைப் பதிவுசெய்",
+    "quick_actions": "விரைவான செயல்கள்",
+    "reminder_body": "நீங்கள் இன்று எந்த அறிகுறிகளையும் பதிவு செய்யவில்லை. துல்லியமான முடிவுகளுக்கு உங்கள் தரவை உடனுக்குடன் புதுப்பிக்கவும்.",
+    "reminder_dismiss": "தவிர்",
+    "reminder_log": "இப்போது பதிவுசெய்",
+    "reminder_title": "தினசரி கண்காணிப்பு நினைவூட்டல்",
+    "risk": {
+      "action_pending": "தனிப்பயனாக்கப்பட்ட பரிந்துரைகளைப் பெற AI பகுப்பாய்வை இயக்கவும்.",
+      "high": "அதிக ஆபத்து",
+      "last_updated": "கடைசியாக புதுப்பிக்கப்பட்டது",
+      "low": "குறைந்த ஆபத்து",
+      "medium": "மிதமான ஆபத்து",
+      "no_analysis": "இன்னும் பகுப்பாய்வு இல்லை",
+      "no_analysis_sub": "உங்கள் ஆரோக்கிய நுண்ணறிவுகளைக் காண AI ஸ்கேன் செய்யவும்.",
+      "not_assessed": "மதிப்பிடப்படவில்லை",
+      "status": "ஆரோக்கிய நிலை",
+      "title": "ஆபத்து மதிப்பீடு",
+      "view_report": "முழு அறிக்கையையும் காண்க"
+    },
+    "run_analysis": "AI பகுப்பாய்வு",
+    "search": {
+      "clear": "தேடலைத் தெளிவுபடுத்து",
+      "no_matches": "டாஷ்போர்டில் முடிவுகள் எதுவும் இல்லை",
+      "no_matches_sub": "அறிகுறி பெயர்கள், எச்சரிக்கைகள், பகுப்பாய்வு அல்லது அறிக்கை முக்கிய வார்த்தைகளைத் தேட முயற்சிக்கவும்.",
+      "results": "\"{{query}}\" க்கான முடிவுகள் காட்டப்படுகின்றன",
+      "title": "டாஷ்போர்டு தேடல்"
+    },
+    "stats": {
+      "across_logs": "சராசரியாக",
+      "alerts": "செயலில் உள்ள எச்சரிக்கைகள்",
+      "all_clear": "எல்லாம் நலம்",
+      "all_time": "அனைத்து பதிவுகள்",
+      "avg_sev": "சராசரி தீவிரம்",
+      "logged": "பதிவு செய்யப்பட்ட அறிகுறிகள்",
+      "longest": "நீண்ட காலம்",
+      "needs_attention": "கவனம் தேவை",
+      "single_run": "ஒற்றை அறிகுறி காலம்"
+    },
+    "streak": "{{count}} நாள் தொடர்ச்சி",
+    "symptoms_count": "{{count}} அறிகுறி",
+    "symptoms_count_plural": "{{count}} அறிகுறிகள்",
+    "tagline": "ஆரம்பகால கண்டறிதல். சிறந்த முடிவுகள்.",
+    "testimonials_btn": "அனுபவங்கள்",
+    "today": "இன்று",
+    "tracked_count": "{{count}} அறிகுறிகள் கண்காணிக்கப்பட்டன",
+    "view_timeline": "காலக்கோடு",
+    "welcome": "மீண்டும் வருக, {{name}}",
+    "welcome_default": "வரவேற்கிறோம்"
+  },
+  "demo": {
+    "banner": "நீங்கள் டெமோ கணக்கைப் பயன்படுத்துகிறீர்கள் — தரவு விளக்கத்திற்கு மட்டுமே."
+  },
+  "health_metrics": {
+    "add_entry": "பதிவு சேர்க்கவும்",
+    "blood_sugar": "இரத்த சர்க்கரை (mg/dL)",
+    "diastolic_bp": "டயஸ்டாலிக் பிபி (mmHg)",
+    "error_empty": "Please enter at least one metric value",
+    "error_save": "Failed to save vitals",
+    "form_subtitle": "உங்கள் தற்போதைய வைட்டல் சைன்ஸ் உள்ளிடுக",
+    "heart_rate": "இதயத் துடிப்பு (bpm)",
+    "not_provided": "கிடைக்கவில்லை",
+    "oxygen_saturation": "ஆக்ஸிஜன் செறிவு (%)",
+    "success": "Vitals recorded",
+    "systolic_bp": "சிஸ்டாலிக் பிபி (mmHg)",
+    "title": "ஆரோக்கிய மெட்ரிக்ஸ் (வைட்டல்ஸ்)"
+  },
+  "history": {
+    "empty": {
+      "body": "நீங்கள் இன்னும் எந்த அறிகுறிகளையும் பதிவு செய்யவில்லை.",
+      "title": "வரலாறு எதுவும் இல்லை"
+    },
+    "subtitle": "நீங்கள் பதிவு செய்த அறிகுறிகளின் விரிவான காலவரிசைப் பதிவு.",
+    "table": {
+      "date": "பதிவு செய்யப்பட்ட தேதி",
+      "duration": "காலம்",
+      "severity": "தீவிரம்",
+      "symptom": "அறிகுறி"
+    },
+    "title": "அறிகுறிகளின் வரலாறு"
+  },
+  "landing": {
+    "cta_copy": "CareTrace இடையில் உள்ள எல்லாவற்றிற்கும் உள்ளது.",
+    "cta_demo_btn": "ஊடாடும் டெமோவை முயற்சிக்கவும்",
+    "cta_heading": "ஆரோக்கியம் சந்திப்புகளுக்கு இடையில் நடக்கிறது.",
+    "cta_login": "டாஷ்போர்டில் உள்நுழையவும்",
+    "cta_signup": "இலவச கணக்கை உருவாக்கவும்",
+    "cta_try_demo": "டெமோ முயற்சிக்கவும்",
+    "feature_1_body": "பழக்கத்திற்காக வடிவமைக்கப்பட்டது, ஆவணப்பணிக்காக அல்ல.",
+    "feature_1_title": "12 வினாடிகளில் உள்நுழைவு",
+    "feature_2_body": "அமைப்பு வாரங்கள் முழுவதும் உள்ள பரிசோதனைகளை இணைக்கிறது, இன்றைய அளவீட்டை மட்டுமல்ல.",
+    "feature_2_title": "நீங்கள் கவனிக்காமல் போன முறைகள்",
+    "feature_3_body": "உங்கள் அடுத்த சந்திப்பிற்கு ஒரு கட்டமைக்கப்பட்ட பதிவை கொண்டு வாருங்கள். இனி 'என்னால் நினைவில்லை' என்று சொல்ல வேண்டாம்.",
+    "feature_3_title": "மருத்துவ காலவரிசையை ஏற்றுமதி செய்யுங்கள்",
+    "feature_access_desc": "பல்லூடக ஆதரவு தயாரிப்பு கட்டமைப்பில் ஒருங்கிணைக்கப்பட்டுள்ளது, இதனால் அணுகல் தொனி, தெளிவு அல்லது நம்பிக்கையை நீர்த்துப்போகாமல் அளவிடுகிறது.",
+    "feature_access_eyebrow": "அணுகல்",
+    "feature_access_metric": "ஐந்து மொழி அமைப்பு",
+    "feature_access_title": "வடிவமைப்பால் உள்ளூர்மயமாக்கப்பட்டது, பிறகு மொழிபெயர்க்கப்படவில்லை.",
+    "feature_analysis": "AI ஆபத்து பகுப்பாய்வு",
+    "feature_analysis_card_desc": "ஆபத்து சுருக்கங்கள், முறை கண்டறிதல் மற்றும் சூழல் தூண்டுதல்கள் இயந்திரம் உருவாக்கிய சத்தமாக அல்ல, வேண்டுமென்றே, படிக்கக்கூடியதாக மற்றும் அமைதியாக உணர்கின்றன.",
+    "feature_analysis_card_metric": "படிக்கக்கூடிய நுண்ணறிவு",
+    "feature_analysis_card_title": "மனிதர்களால் படிக்கப்படுவதற்காக வடிவமைக்கப்பட்ட AI வெளியீடுகள்.",
+    "feature_analysis_desc": "மேம்பட்ட முறை அங்கீகார அல்காரிதம்கள் உங்கள் ஆரோக்கிய அபாயங்களை மதிப்பிட உங்கள் அறிகுறி தரவை பகுப்பாய்வு செய்கின்றன.",
+    "feature_analysis_eyebrow": "பகுப்பாய்வு",
+    "feature_multilingual": "பல்லூடக மொழி ஆதரவு",
+    "feature_multilingual_desc": "ஆங்கிலம், இந்தி, தெலுங்கு, தமிழ் மற்றும் கன்னட மொழிகளுக்கான முழு ஆதரவு.",
+    "feature_timeline": "காட்சி ஆரோக்கிய காலக்கோடு",
+    "feature_timeline_card_desc": "அறிகுறிகள், அறிக்கைகள் மற்றும் அனுமானிக்கப்பட்ட மாற்றங்கள் ஒரே தொடர்ச்சியான காட்சி அமைப்பில் வாழ்கின்றன, இதனால் மாற்றத்தின் கதை காலப்போக்கில் படிக்கக்கூடியதாக இருக்கும்.",
+    "feature_timeline_card_metric": "ஒருங்கிணைந்த ஆரோக்கிய கதை",
+    "feature_timeline_card_title": "காகிதப்பணியாக அல்ல, தயாரிப்பாக நடந்துகொள்ளும் நீண்டகால பார்வை.",
+    "feature_timeline_desc": "காலப்போக்கில் உங்கள் ஆரோக்கிய முறைகளைக் காட்சிப்படுத்த ஊடாடும் விளக்கப்படங்கள் மற்றும் காலக்கோடுகள்.",
+    "feature_timeline_eyebrow": "காலவரிசை",
+    "feature_tracking": "ஸ்மார்ட் அறிகுறி கண்காணிப்பு",
+    "feature_tracking_card_desc": "கட்டமைக்கப்பட்ட அறிகுறி பதிவு, தரவு அமைப்பிற்குள் நுழைவதற்கு முன்பே தெளிவின்மையை குறைப்பதன் மூலம் கீழ்நிலை பகுப்பாய்வை நிலையாக வைத்திருக்கிறது.",
+    "feature_tracking_card_metric": "அதிக தரவு நம்பகத்தன்மை",
+    "feature_tracking_card_title": "சுத்தமான உள்ளீடுகள் நம்பகமான சமிக்ஞைகளை உருவாக்குகின்றன.",
+    "feature_tracking_desc": "குரல் தட்டச்சு, தீவிர மதிப்பெண் மற்றும் நுண்ணறிவு வகைப்பாடு மூலம் அறிகுறிகளைப் பதிவுசெய்து கண்காணிக்கவும்.",
+    "feature_tracking_eyebrow": "கண்காணிப்பு",
+    "features_title": "ஏன் CareTrace AI?",
+    "footer_about": "CareTrace பற்றி",
+    "footer_access": "அணுகல்",
+    "footer_copyright": "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
+    "footer_create_account": "கணக்கை உருவாக்கவும்",
+    "footer_features": "அம்சங்கள்",
+    "footer_get_started": "தொடங்குங்கள்",
+    "footer_mission": "ஆரோக்கியம் சந்திப்புகளுக்கு இடையில் நடக்கிறது. CareTrace இடையில் உள்ள எல்லாவற்றிற்கும் உள்ளது.",
+    "footer_product": "தயாரிப்பு",
+    "footer_security": "பாதுகாப்பு",
+    "footer_sign_in": "உள்நுழையவும்",
+    "footer_tagline": "CareTrace சந்திப்புகளுக்கு இடையில் நடக்கும் 99% ஆரோக்கியத்திற்காக உள்ளது. நாள்பட்ட பாதைக்கான துல்லியமான கண்காணிப்பு.",
+    "footer_workflow": "பணிப்பாய்வு",
+    "hero_copy": "Clear insights for your long-term health.",
+    "hero_h1": "Stop guessing. Start tracking.",
+    "hero_headline": "யூகிப்பதை நிறுத்துங்கள். கண்காணிப்பைத் தொடங்குங்கள்.",
+    "hero_subtitle": "நாள்பட்ட பாதைக்கான மருத்துவ தெளிவு.",
+    "hero_title": "உங்கள் ஆரோக்கியம்,",
+    "hero_title_highlight": "நுண்ணறிவோடு கண்காணிக்கப்படுகிறது",
+    "metric_bpm": "துடிப்பு/நிமிடம்",
+    "metric_hrs": "மணி",
+    "metric_resting_hr": "ஓய்வு இதய துடிப்பு",
+    "metric_sleep_recovery": "தூக்க மீட்சி",
+    "mini_card_1_detail": "பழக்கத்திற்காக வடிவமைக்கப்பட்டுள்ளது, காகித வேலைகளுக்கு அல்ல.",
+    "mini_card_1_title": "12 வினாடிகளில் பதிவு செய்யப்பட்டது",
+    "mini_card_2_detail": "இந்த அமைப்பு இன்றைய வாசிப்பை மட்டும் அல்லாமல், வாரங்களான பதிவுகளையும் இணைக்கிறது.",
+    "mini_card_2_title": "நீங்கள் தவறவிட்டிருக்கக்கூடிய வடிவங்கள்",
+    "mini_card_3_detail": "உங்கள் அடுத்த சந்திப்பிற்கு ஒரு கட்டமைக்கப்பட்ட பதிவைக் கொண்டு வாருங்கள். 'எனக்கு நினைவில்லை' என்பது இனி வேண்டாம்.",
+    "mini_card_3_title": "மருத்துவ காலவரிசையை ஏற்றுமதி செய்க",
+    "mockup_health_score": "ஆரோக்கிய மதிப்பெண்",
+    "mockup_name": "சாரா ஜென்கின்ஸ்",
+    "mockup_pattern_detected": "முறை கண்டறியப்பட்டது",
+    "mockup_profile": "சுயவிவரம்",
+    "mockup_score": "மதிப்பெண்",
+    "month_apr": "ஏப்",
+    "month_feb": "பிப்",
+    "month_jan": "ஜன",
+    "month_jun": "ஜூன்",
+    "month_mar": "மார்",
+    "month_may": "மே",
+    "platform_desc": "வலுவான தயாரிப்பு அமைப்பு வலுவான பராமரிப்பு அனுபவங்களை உருவாக்குகிறது: சுத்தமான உள்ளீடுகள், அமைதியான படிநிலை மற்றும் முதல் பார்வையிலேயே நம்பகமாக உணரும் வெளியீடுகள்.",
+    "platform_eyebrow": "தளம்",
+    "privacy_badge": "HIPAA இணக்கம் · எண்ட்-டு-எண்ட் என்க்ரிப்ட் செய்யப்பட்டது · உங்கள் தரவு ரகசியமாக இருக்கும்",
+    "security_cta_signup": "இலவச கணக்கை உருவாக்கவும்",
+    "security_desc": "அமைப்பு உயர்தரமாக உணர்கிறது, ஏனெனில் இது கடுமையை நீக்காமல் உராய்வை நீக்குகிறது. அணுகல் வேண்டுமென்றே, பகிர்வு சூழல் சார்ந்தது, மற்றும் ஒவ்வொரு அடுக்கும் சமிக்ஞையை அதிகமாக்குவதற்கு பதிலாக பாதுகாக்கிறது.",
+    "security_eyebrow": "பாதுகாப்பு",
+    "security_pillar1_desc": "முக்கியமான சூழல் எங்கு நகர்கிறது மற்றும் அடுத்து யார் பார்க்கிறார்கள் என்பதை நோயாளி கட்டுப்படுத்துகிறார்.",
+    "security_pillar1_title": "சம்மத சார்ந்த பகிர்வு",
+    "security_pillar2_desc": "உள்கட்டமைப்பு பாதுகாப்பை தனி இணக்க அடுக்காக அல்ல, தொடர்பு மாதிரியின் ஒரு பகுதியாக கருதுகிறது.",
+    "security_pillar2_title": "பாதுகாக்கப்பட்ட போக்குவரத்து மற்றும் சேமிப்பு",
+    "security_pillar3_desc": "ஏற்றுமதிகள், எச்சரிக்கைகள் மற்றும் சுருக்கங்கள் மருத்துவ பணிப்பாய்வுகளுக்குள் மனித தீர்ப்பிற்கு போதுமான அளவு சுருக்கமாக இருக்கும்.",
+    "security_pillar3_title": "உண்மையான மதிப்பாய்விற்காக கட்டமைக்கப்பட்ட வெளியீடுகள்",
+    "security_title": "தெரியும் கட்டுப்பாட்டுடன் தனியார் ஆரோக்கிய நுண்ணறிவு.",
+    "trust_continuity_detail": "தனிமையான பதிவுகளுக்கு பதிலாக, அமைப்பு சூழலை திரட்டுகிறது, இதனால் மருத்துவர்கள் வேகம், மீண்டும் வருவது மற்றும் மாற்றங்களை ஒரே பார்வையில் புரிந்துகொள்ள முடியும்.",
+    "trust_continuity_eyebrow": "தொடர்ச்சி",
+    "trust_continuity_title": "ஒவ்வொரு அறிகுறியும் ஒரு உயிரோட்டமான பதிவின் பகுதியாகிறது.",
+    "trust_privacy_detail": "குறியாக்கம், சம்மத எல்லைகள் மற்றும் கட்டுப்படுத்தப்பட்ட தரவு மேற்பரப்புகள் சட்ட குறிப்பாக அல்ல, தயாரிப்பு அனுபவத்தின் ஒரு பகுதியாக கருதப்படுகின்றன.",
+    "trust_privacy_eyebrow": "தனியுரிமை",
+    "trust_privacy_title": "முக்கியமான ஆரோக்கிய தரவு இயல்பாகவே பாதுகாக்கப்படுகிறது.",
+    "trust_signal_detail": "இடைமுகம் வேண்டுமென்றே அமைதியாக உள்ளது, இது விலகல்கள், நீடித்த அறிகுறிகள் மற்றும் மீட்சி வளைவுகளை உடனடியாகவும் தெளிவாகவும் உணர வைக்கிறது.",
+    "trust_signal_eyebrow": "சமிக்ஞை",
+    "trust_signal_title": "காட்சி குழப்பமின்றி முறைகள் வெளிப்படுகின்றன.",
+    "trusted_by": "சுகாதார நிபுணர்கள் மற்றும் நோயாளிகளால் நம்பப்படுகிறது",
+    "workflow_desc": "ஒவ்வொரு மேற்பரப்பும் தொடர்ச்சியை தெளிவாக உணர வைக்கவும், விளக்க உராய்வை குறைக்கவும், தரவு மிகவும் சிக்கலாக வளரும்போதும் தயாரிப்பை உணர்வுரீதியாக அமைதியாக வைத்திருக்கவும் சரிசெய்யப்பட்டுள்ளது.",
+    "workflow_eyebrow": "பணிப்பாய்வு",
+    "workflow_step1_desc": "அறிகுறிகள், தீவிரம் மற்றும் தினசரி குறிப்புகளை பதிவு செய்யுங்கள், இது பராமரிப்பிற்கு போதுமான அளவு துல்லியமாகவும் பழக்கத்திற்கு போதுமான அளவு எளிதாகவும் உணர்கிறது.",
+    "workflow_step1_title": "நுட்பமான மாற்றத்தை பதிவு செய்யுங்கள்",
+    "workflow_step2_desc": "காலவரிசை பகுப்பாய்வு தனிப்பட்ட பரிசோதனைகளை ஒரு ஒத்திசைவான கதையாக மாற்றுகிறது, முன்னேற்றம், நிலைத்தன்மை அல்லது மீட்சியை வெளிப்படுத்துகிறது.",
+    "workflow_step2_title": "பாதையை மாதிரியாக்குங்கள்",
+    "workflow_step3_desc": "பதிவை மதிப்பாய்வு செய்யுங்கள், முறையை புரிந்துகொள்ளுங்கள், மற்றும் அடுத்த ஒவ்வொரு முடிவிலும் அல்லது சந்திப்பிலும் கூர்மையான சூழலை கொண்டு வாருங்கள்.",
+    "workflow_step3_title": "மருத்துவ தெளிவுடன் செயல்படுங்கள்",
+    "workflow_title": "சமிக்ஞையை பிடிக்கவும். சத்தத்தை புறக்கணிக்கவும்."
+  },
+  "navbar": {
+    "account": "கணக்கு",
+    "active_session": "செயலில் உள்ள அமர்வு",
+    "alerts": "எச்சரிக்கைகள்",
+    "analysis": "AI பகுப்பாய்வு",
+    "dashboard": "டாஷ்போர்டு",
+    "health_intelligence": "ஆரோக்கிய நுண்ணறிவு",
+    "health_profile": "ஆரோக்கிய சுயவிவரம்",
+    "health_tracking": "ஆரோக்கிய கண்காணிப்பு",
+    "history": "வரலாறு",
+    "intelligence": "நுண்ணறிவு",
+    "language": "மொழி",
+    "log_symptoms": "அறிகுறிகளைப் பதிவு செய்யவும்",
+    "logout": "வெளியேறு",
+    "notifications": "அறிவிப்புகள்",
+    "notifications_empty": "எல்லாம் சரி!",
+    "notifications_new": "புதிய",
+    "open_menu": "Open menu",
+    "overview": "மேலோட்டம்",
+    "recommendations": "ஆலோசனை",
+    "reports": "அறிக்கைகள்",
+    "search": "தேடுங்கள்...",
+    "search_anything": "எதையும் தேடுங்கள்...",
+    "search_placeholder": "டாஷ்போர்டைத் தேடுங்கள்...",
+    "settings": "அமைப்புகள்",
+    "symptoms": "அறிகுறிகள்",
+    "timeline": "காலக்கோடு"
+  },
+  "onboarding": {
+    "actions": {
+      "add_condition": "Add another condition",
+      "next": "அடுத்து",
+      "remove": "Remove",
+      "saving": "சேமிக்கப்படுகிறது...",
+      "skip": "தவிர்"
+    },
+    "basic": {
+      "age": "Age",
+      "age_placeholder": "e.g. 28",
+      "blood_group": "Blood group",
+      "blood_group_select": "Choose an option",
+      "bmi_label": "Estimated BMI:",
+      "gender": "Gender",
+      "gender_select": "Choose an option",
+      "height": "Height (cm)",
+      "height_placeholder": "e.g. 170",
+      "lifestyle": "Current lifestyle",
+      "lifestyle_active": "Active",
+      "lifestyle_sedentary": "Sedentary",
+      "lifestyle_select": "Choose an option",
+      "lifestyle_smoker": "Smoker",
+      "weight": "Weight (kg)",
+      "weight_placeholder": "e.g. 65"
+    },
+    "family": {
+      "condition": "Condition",
+      "condition_select": "Choose an option",
+      "hint": "Add conditions that run in your family (optional).",
+      "relation": "Relation",
+      "relation_select": "Optional"
+    },
+    "lifestyle": {
+      "alcohol": "Alcohol",
+      "diet": "Diet type",
+      "diet_mixed": "Mixed",
+      "diet_nonveg": "Non-vegetarian",
+      "diet_select": "Choose an option",
+      "diet_veg": "Vegetarian",
+      "ex_none": "None",
+      "ex_regular": "Daily or almost daily",
+      "ex_select": "Choose an option",
+      "ex_weekly": "A few times a week",
+      "exercise": "Exercise frequency",
+      "quality_average": "Average",
+      "quality_good": "Good",
+      "quality_poor": "Poor",
+      "quality_select": "Choose an option",
+      "sleep": "Sleep duration (hours per night)",
+      "sleep_placeholder": "e.g. 7",
+      "sleep_quality": "Sleep quality",
+      "smoking": "Smoking",
+      "stress": "Stress level",
+      "stress_high": "High",
+      "stress_low": "Low",
+      "water": "Water intake (liters per day)",
+      "water_placeholder": "e.g. 2.5"
+    },
+    "medical": {
+      "allergies": "Allergies",
+      "allergies_placeholder": "e.g. Peanuts, Penicillin",
+      "conditions": "Existing conditions",
+      "conditions_placeholder": "e.g. Asthma, Hypertension",
+      "hint": "You can add multiple using commas.",
+      "medications": "Current medications",
+      "medications_placeholder": "e.g. Aspirin",
+      "surgeries": "Past surgeries",
+      "surgeries_placeholder": "e.g. Appendectomy"
+    },
+    "step_counter": "Step {{current}} of {{total}} · {{stepName}}",
+    "steps": {
+      "basic": "அடிப்படை தகவல்",
+      "family": "குடும்ப வரலாறு",
+      "lifestyle": "வாழ்க்கை முறை",
+      "medical": "மருத்துவ வரலாறு",
+      "vitals": "வைட்டல்ஸ்"
+    },
+    "subtitle": "This helps us personalize your health insights.",
+    "title": "CareTrace-க்கு வரவேற்கிறோம்"
   },
   "recommendations": {
-    "title": "தனிப்பயனாக்கப்பட்ட ஆரோக்கிய பரிந்துரைகள்",
-    "subtitle": "உங்கள் அறிகுறிகள் மற்றும் AI ஆய்வின் அடிப்படையில், உங்கள் ஆரோக்கியத்திற்கான பரிந்துரைகள் இங்கே கொடுக்கப்பட்டுள்ளன.",
-    "section_title": "பரிந்துரைக்கப்படும் நடவடிக்கை படிகள்",
+    "disclaimer": "This is not medical advice. Always consult a doctor for health concerns.",
     "empty": {
-      "title": "ஆய்வுத் தரவு எதுவும் கிடைக்கவில்லை.",
-      "body": "தயவுசெய்து முதலில் அறிகுறி மதிப்பீடு மற்றும் AI ஆய்வை முடிக்கவும்."
+      "body": "தயவுசெய்து முதலில் அறிகுறி மதிப்பீடு மற்றும் AI ஆய்வை முடிக்கவும்.",
+      "title": "ஆய்வுத் தரவு எதுவும் கிடைக்கவில்லை."
+    },
+    "personalized": {
+      "age_screening": "Given your age group, we recommend scheduling an annual cardiovascular screening and bone density test.",
+      "chronic_specialist": "Your recent symptoms may be related to your chronic condition ({{condition}}). Consider consulting your specialist for a targeted review.",
+      "sedentary_exercise": "Based on your sedentary lifestyle and risk profile, consider incorporating 15 minutes of light walking daily to improve circulation."
     },
     "risk_plans": {
+      "default": [
+        "உங்கள் ஆரோக்கியத்தை உன்னிப்பாகக் கண்காணியுங்கள்.",
+        "தேவையான போது மருத்துவ நிபுணர்களை அணுகவும்."
+      ],
+      "high": [
+        "உடனடியாக மருத்துவரைச் சந்தித்து ஆலோசனை பெறுங்கள்.",
+        "அறிகுறிகள் மோசமடைந்தால் மருத்துவ உதவியை நாடுங்கள்.",
+        "அனைத்து மருத்துவ ஆலோசனைகளையும் சிகிச்சைத் திட்டங்களையும் பின்பற்றுங்கள்.",
+        "அறிகுறிகள் மற்றும் சிகிச்சைகள் குறித்த விரிவான பதிவுகளை வைத்திருங்கள்."
+      ],
       "low": [
         "தினமும் உங்கள் அறிகுறிகளைத் தொடர்ந்து கண்காணியுங்கள்.",
         "சீரான ஊட்டச்சத்துடன் கூடிய ஆரோக்கியமான வாழ்க்கை முறையைப் பராமரிக்கவும்.",
@@ -414,168 +518,215 @@
         "பரிந்துரைக்கப்படும் கூடுதல் சோதனைகளைக் கவனியுங்கள்.",
         "அறிகுறிகளை உன்னிப்பாகக் கவனித்து மாற்றங்களைப் பதிவு செய்யுங்கள்.",
         "1-2 வாரங்களுக்குள் மருத்துவரைச் சந்தித்து ஆலோசிக்கவும்."
-      ],
-      "high": [
-        "உடனடியாக மருத்துவரைச் சந்தித்து ஆலோசனை பெறுங்கள்.",
-        "அறிகுறிகள் மோசமடைந்தால் மருத்துவ உதவியை நாடுங்கள்.",
-        "அனைத்து மருத்துவ ஆலோசனைகளையும் சிகிச்சைத் திட்டங்களையும் பின்பற்றுங்கள்.",
-        "அறிகுறிகள் மற்றும் சிகிச்சைகள் குறித்த விரிவான பதிவுகளை வைத்திருங்கள்."
-      ],
-      "default": [
-        "உங்கள் ஆரோக்கியத்தை உன்னிப்பாகக் கண்காணியுங்கள்.",
-        "தேவையான போது மருத்துவ நிபுணர்களை அணுகவும்."
       ]
-    }
+    },
+    "section_title": "பரிந்துரைக்கப்படும் நடவடிக்கை படிகள்",
+    "subtitle": "உங்கள் அறிகுறிகள் மற்றும் AI ஆய்வின் அடிப்படையில், உங்கள் ஆரோக்கியத்திற்கான பரிந்துரைகள் இங்கே கொடுக்கப்பட்டுள்ளன.",
+    "title": "தனிப்பயனாக்கப்பட்ட ஆரோக்கிய பரிந்துரைகள்"
   },
-  "demo": {
-    "banner": "நீங்கள் டெமோ கணக்கைப் பயன்படுத்துகிறீர்கள் — தரவு விளக்கத்திற்கு மட்டுமே."
+  "reports": {
+    "allowed_types_error": "Only PDF, JPG, and PNG files are allowed.",
+    "charts": {
+      "empty": "இன்னும் அறிகுறிகள் எதுவும் பதிவு செய்யப்படவில்லை. போக்கு விளக்கப்படத்தைப் பார்க்க உள்ளீடுகளைச் சேர்க்கவும்.",
+      "latest_updates": "சமீபத்திய புதுப்பிப்புகள்",
+      "severity_trend": "தீவிரப் போக்கு"
+    },
+    "compiling": "PDF தொகுக்கப்படுகிறது...",
+    "delete": "Delete",
+    "delete_dialog": {
+      "body": "Are you sure you want to delete",
+      "title": "Delete Report",
+      "warning": "This cannot be undone."
+    },
+    "delete_error": "Failed to delete report",
+    "delete_failed": "Failed to delete report.",
+    "delete_success": "Medical report deleted",
+    "disclaimer": "இந்த அறிக்கை AI மூலம் உருவாக்கப்பட்டது மற்றும் இது மருத்துவக் கணிப்பு அல்ல.",
+    "download": "Download",
+    "download_btn": "அறிக்கையைப் பதிவிறக்குக",
+    "empty": "No medical reports uploaded yet",
+    "error": {
+      "invalid_type": "Only PDF, JPG, and PNG files are allowed",
+      "too_large": "File size must be under 10 MB"
+    },
+    "notifications": {
+      "booting": "PDF கோப்புத் தயார் செய்யப்படுகிறது...",
+      "success": "அறிக்கை வெற்றிகரமாக உருவாக்கப்பட்டது!"
+    },
+    "profile": {
+      "age": "வயது",
+      "gender": "பாலினம்",
+      "lifestyle": "வாழ்க்கை முறை",
+      "name": "பெயர்",
+      "title": "நோயாளி விவரம்"
+    },
+    "select_file": "Upload Report",
+    "size_error": "File size must be under 10MB.",
+    "stats": {
+      "avg_severity": "சராசரி தீவிரம்",
+      "days": "{{count}} நாட்கள்",
+      "longest_run": "அதிகபட்ச காலம்",
+      "total_symptoms": "மொத்த அறிகுறிகள்"
+    },
+    "subtitle": "உருவாக்கப்பட்ட ஆரோக்கிய சுருக்கங்களை ஆய்வு செய்து PDF அறிக்கைகளைப் பெறுங்கள்.",
+    "title": "ஆய்வு நிலை ஆரோக்கிய அறிக்கைகள்",
+    "upload": "Upload",
+    "upload_error": "Failed to upload file",
+    "upload_failed": "Failed to upload file.",
+    "upload_success": "Medical report uploaded successfully",
+    "uploading": "Uploading…",
+    "view": "View"
   },
-  "landing": {
-    "hero_title": "உங்கள் ஆரோக்கியம்,",
-    "hero_title_highlight": "நுண்ணறிவோடு கண்காணிக்கப்படுகிறது",
-    "hero_headline": "யூகிப்பதை நிறுத்துங்கள். கண்காணிப்பைத் தொடங்குங்கள்.",
-    "hero_subtitle": "நாள்பட்ட பாதைக்கான மருத்துவ தெளிவு.",
-    "cta_login": "டாஷ்போர்டில் உள்நுழையவும்",
-    "cta_signup": "இலவச கணக்கை உருவாக்கவும்",
-    "cta_try_demo": "டெமோ முயற்சிக்கவும்",
-    "feature_1_title": "12 வினாடிகளில் உள்நுழைவு",
-    "feature_1_body": "பழக்கத்திற்காக வடிவமைக்கப்பட்டது, ஆவணப்பணிக்காக அல்ல.",
-    "feature_2_title": "நீங்கள் கவனிக்காமல் போன முறைகள்",
-    "feature_2_body": "அமைப்பு வாரங்கள் முழுவதும் உள்ள பரிசோதனைகளை இணைக்கிறது, இன்றைய அளவீட்டை மட்டுமல்ல.",
-    "feature_3_title": "மருத்துவ காலவரிசையை ஏற்றுமதி செய்யுங்கள்",
-    "feature_3_body": "உங்கள் அடுத்த சந்திப்பிற்கு ஒரு கட்டமைக்கப்பட்ட பதிவை கொண்டு வாருங்கள். இனி 'என்னால் நினைவில்லை' என்று சொல்ல வேண்டாம்.",
-    "features_title": "ஏன் CareTrace AI?",
-    "feature_tracking": "ஸ்மார்ட் அறிகுறி கண்காணிப்பு",
-    "feature_tracking_desc": "குரல் தட்டச்சு, தீவிர மதிப்பெண் மற்றும் நுண்ணறிவு வகைப்பாடு மூலம் அறிகுறிகளைப் பதிவுசெய்து கண்காணிக்கவும்.",
-    "feature_analysis": "AI ஆபத்து பகுப்பாய்வு",
-    "feature_analysis_desc": "மேம்பட்ட முறை அங்கீகார அல்காரிதம்கள் உங்கள் ஆரோக்கிய அபாயங்களை மதிப்பிட உங்கள் அறிகுறி தரவை பகுப்பாய்வு செய்கின்றன.",
-    "feature_timeline": "காட்சி ஆரோக்கிய காலக்கோடு",
-    "feature_timeline_desc": "காலப்போக்கில் உங்கள் ஆரோக்கிய முறைகளைக் காட்சிப்படுத்த ஊடாடும் விளக்கப்படங்கள் மற்றும் காலக்கோடுகள்.",
-    "feature_multilingual": "பல்லூடக மொழி ஆதரவு",
-    "feature_multilingual_desc": "ஆங்கிலம், இந்தி, தெலுங்கு, தமிழ் மற்றும் கன்னட மொழிகளுக்கான முழு ஆதரவு.",
-    "trusted_by": "சுகாதார நிபுணர்கள் மற்றும் நோயாளிகளால் நம்பப்படுகிறது",
-    "privacy_badge": "HIPAA இணக்கம் · எண்ட்-டு-எண்ட் என்க்ரிப்ட் செய்யப்பட்டது · உங்கள் தரவு ரகசியமாக இருக்கும்",
-    "mockup_profile": "சுயவிவரம்",
-    "mockup_name": "சாரா ஜென்கின்ஸ்",
-    "mockup_health_score": "ஆரோக்கிய மதிப்பெண்",
-    "mockup_pattern_detected": "முறை கண்டறியப்பட்டது",
-    "mockup_score": "மதிப்பெண்",
-    "metric_resting_hr": "ஓய்வு இதய துடிப்பு",
-    "metric_bpm": "துடிப்பு/நிமிடம்",
-    "metric_sleep_recovery": "தூக்க மீட்சி",
-    "metric_hrs": "மணி",
-    "feature_timeline_eyebrow": "காலவரிசை",
-    "feature_analysis_eyebrow": "பகுப்பாய்வு",
-    "feature_tracking_eyebrow": "கண்காணிப்பு",
-    "feature_access_eyebrow": "அணுகல்",
-    "month_jan": "ஜன",
-    "month_feb": "பிப்",
-    "month_mar": "மார்",
-    "month_apr": "ஏப்",
-    "month_may": "மே",
-    "month_jun": "ஜூன்",
-    "trust_continuity_eyebrow": "தொடர்ச்சி",
-    "trust_continuity_title": "ஒவ்வொரு அறிகுறியும் ஒரு உயிரோட்டமான பதிவின் பகுதியாகிறது.",
-    "trust_continuity_detail": "தனிமையான பதிவுகளுக்கு பதிலாக, அமைப்பு சூழலை திரட்டுகிறது, இதனால் மருத்துவர்கள் வேகம், மீண்டும் வருவது மற்றும் மாற்றங்களை ஒரே பார்வையில் புரிந்துகொள்ள முடியும்.",
-    "trust_signal_eyebrow": "சமிக்ஞை",
-    "trust_signal_title": "காட்சி குழப்பமின்றி முறைகள் வெளிப்படுகின்றன.",
-    "trust_signal_detail": "இடைமுகம் வேண்டுமென்றே அமைதியாக உள்ளது, இது விலகல்கள், நீடித்த அறிகுறிகள் மற்றும் மீட்சி வளைவுகளை உடனடியாகவும் தெளிவாகவும் உணர வைக்கிறது.",
-    "trust_privacy_eyebrow": "தனியுரிமை",
-    "trust_privacy_title": "முக்கியமான ஆரோக்கிய தரவு இயல்பாகவே பாதுகாக்கப்படுகிறது.",
-    "trust_privacy_detail": "குறியாக்கம், சம்மத எல்லைகள் மற்றும் கட்டுப்படுத்தப்பட்ட தரவு மேற்பரப்புகள் சட்ட குறிப்பாக அல்ல, தயாரிப்பு அனுபவத்தின் ஒரு பகுதியாக கருதப்படுகின்றன.",
-    "workflow_eyebrow": "பணிப்பாய்வு",
-    "workflow_title": "சமிக்ஞையை பிடிக்கவும். சத்தத்தை புறக்கணிக்கவும்.",
-    "workflow_desc": "ஒவ்வொரு மேற்பரப்பும் தொடர்ச்சியை தெளிவாக உணர வைக்கவும், விளக்க உராய்வை குறைக்கவும், தரவு மிகவும் சிக்கலாக வளரும்போதும் தயாரிப்பை உணர்வுரீதியாக அமைதியாக வைத்திருக்கவும் சரிசெய்யப்பட்டுள்ளது.",
-    "workflow_step1_title": "நுட்பமான மாற்றத்தை பதிவு செய்யுங்கள்",
-    "workflow_step1_desc": "அறிகுறிகள், தீவிரம் மற்றும் தினசரி குறிப்புகளை பதிவு செய்யுங்கள், இது பராமரிப்பிற்கு போதுமான அளவு துல்லியமாகவும் பழக்கத்திற்கு போதுமான அளவு எளிதாகவும் உணர்கிறது.",
-    "workflow_step2_title": "பாதையை மாதிரியாக்குங்கள்",
-    "workflow_step2_desc": "காலவரிசை பகுப்பாய்வு தனிப்பட்ட பரிசோதனைகளை ஒரு ஒத்திசைவான கதையாக மாற்றுகிறது, முன்னேற்றம், நிலைத்தன்மை அல்லது மீட்சியை வெளிப்படுத்துகிறது.",
-    "workflow_step3_title": "மருத்துவ தெளிவுடன் செயல்படுங்கள்",
-    "workflow_step3_desc": "பதிவை மதிப்பாய்வு செய்யுங்கள், முறையை புரிந்துகொள்ளுங்கள், மற்றும் அடுத்த ஒவ்வொரு முடிவிலும் அல்லது சந்திப்பிலும் கூர்மையான சூழலை கொண்டு வாருங்கள்.",
-    "platform_eyebrow": "தளம்",
-    "platform_desc": "வலுவான தயாரிப்பு அமைப்பு வலுவான பராமரிப்பு அனுபவங்களை உருவாக்குகிறது: சுத்தமான உள்ளீடுகள், அமைதியான படிநிலை மற்றும் முதல் பார்வையிலேயே நம்பகமாக உணரும் வெளியீடுகள்.",
-    "mini_card_1_title": "12 வினாடிகளில் பதிவு செய்யப்பட்டது",
-    "mini_card_1_detail": "பழக்கத்திற்காக வடிவமைக்கப்பட்டுள்ளது, காகித வேலைகளுக்கு அல்ல.",
-    "mini_card_2_title": "நீங்கள் தவறவிட்டிருக்கக்கூடிய வடிவங்கள்",
-    "mini_card_2_detail": "இந்த அமைப்பு இன்றைய வாசிப்பை மட்டும் அல்லாமல், வாரங்களான பதிவுகளையும் இணைக்கிறது.",
-    "mini_card_3_title": "மருத்துவ காலவரிசையை ஏற்றுமதி செய்க",
-    "mini_card_3_detail": "உங்கள் அடுத்த சந்திப்பிற்கு ஒரு கட்டமைக்கப்பட்ட பதிவைக் கொண்டு வாருங்கள். 'எனக்கு நினைவில்லை' என்பது இனி வேண்டாம்.",
-    "feature_timeline_card_title": "காகிதப்பணியாக அல்ல, தயாரிப்பாக நடந்துகொள்ளும் நீண்டகால பார்வை.",
-    "feature_timeline_card_desc": "அறிகுறிகள், அறிக்கைகள் மற்றும் அனுமானிக்கப்பட்ட மாற்றங்கள் ஒரே தொடர்ச்சியான காட்சி அமைப்பில் வாழ்கின்றன, இதனால் மாற்றத்தின் கதை காலப்போக்கில் படிக்கக்கூடியதாக இருக்கும்.",
-    "feature_timeline_card_metric": "ஒருங்கிணைந்த ஆரோக்கிய கதை",
-    "feature_analysis_card_title": "மனிதர்களால் படிக்கப்படுவதற்காக வடிவமைக்கப்பட்ட AI வெளியீடுகள்.",
-    "feature_analysis_card_desc": "ஆபத்து சுருக்கங்கள், முறை கண்டறிதல் மற்றும் சூழல் தூண்டுதல்கள் இயந்திரம் உருவாக்கிய சத்தமாக அல்ல, வேண்டுமென்றே, படிக்கக்கூடியதாக மற்றும் அமைதியாக உணர்கின்றன.",
-    "feature_analysis_card_metric": "படிக்கக்கூடிய நுண்ணறிவு",
-    "feature_tracking_card_title": "சுத்தமான உள்ளீடுகள் நம்பகமான சமிக்ஞைகளை உருவாக்குகின்றன.",
-    "feature_tracking_card_desc": "கட்டமைக்கப்பட்ட அறிகுறி பதிவு, தரவு அமைப்பிற்குள் நுழைவதற்கு முன்பே தெளிவின்மையை குறைப்பதன் மூலம் கீழ்நிலை பகுப்பாய்வை நிலையாக வைத்திருக்கிறது.",
-    "feature_tracking_card_metric": "அதிக தரவு நம்பகத்தன்மை",
-    "feature_access_title": "வடிவமைப்பால் உள்ளூர்மயமாக்கப்பட்டது, பிறகு மொழிபெயர்க்கப்படவில்லை.",
-    "feature_access_desc": "பல்லூடக ஆதரவு தயாரிப்பு கட்டமைப்பில் ஒருங்கிணைக்கப்பட்டுள்ளது, இதனால் அணுகல் தொனி, தெளிவு அல்லது நம்பிக்கையை நீர்த்துப்போகாமல் அளவிடுகிறது.",
-    "feature_access_metric": "ஐந்து மொழி அமைப்பு",
-    "security_eyebrow": "பாதுகாப்பு",
-    "security_title": "தெரியும் கட்டுப்பாட்டுடன் தனியார் ஆரோக்கிய நுண்ணறிவு.",
-    "security_desc": "அமைப்பு உயர்தரமாக உணர்கிறது, ஏனெனில் இது கடுமையை நீக்காமல் உராய்வை நீக்குகிறது. அணுகல் வேண்டுமென்றே, பகிர்வு சூழல் சார்ந்தது, மற்றும் ஒவ்வொரு அடுக்கும் சமிக்ஞையை அதிகமாக்குவதற்கு பதிலாக பாதுகாக்கிறது.",
-    "security_cta_signup": "இலவச கணக்கை உருவாக்கவும்",
-    "security_pillar1_title": "சம்மத சார்ந்த பகிர்வு",
-    "security_pillar1_desc": "முக்கியமான சூழல் எங்கு நகர்கிறது மற்றும் அடுத்து யார் பார்க்கிறார்கள் என்பதை நோயாளி கட்டுப்படுத்துகிறார்.",
-    "security_pillar2_title": "பாதுகாக்கப்பட்ட போக்குவரத்து மற்றும் சேமிப்பு",
-    "security_pillar2_desc": "உள்கட்டமைப்பு பாதுகாப்பை தனி இணக்க அடுக்காக அல்ல, தொடர்பு மாதிரியின் ஒரு பகுதியாக கருதுகிறது.",
-    "security_pillar3_title": "உண்மையான மதிப்பாய்விற்காக கட்டமைக்கப்பட்ட வெளியீடுகள்",
-    "security_pillar3_desc": "ஏற்றுமதிகள், எச்சரிக்கைகள் மற்றும் சுருக்கங்கள் மருத்துவ பணிப்பாய்வுகளுக்குள் மனித தீர்ப்பிற்கு போதுமான அளவு சுருக்கமாக இருக்கும்.",
-    "cta_heading": "ஆரோக்கியம் சந்திப்புகளுக்கு இடையில் நடக்கிறது.",
-    "cta_copy": "CareTrace இடையில் உள்ள எல்லாவற்றிற்கும் உள்ளது.",
-    "cta_demo_btn": "ஊடாடும் டெமோவை முயற்சிக்கவும்",
-    "footer_mission": "ஆரோக்கியம் சந்திப்புகளுக்கு இடையில் நடக்கிறது. CareTrace இடையில் உள்ள எல்லாவற்றிற்கும் உள்ளது.",
-    "footer_tagline": "CareTrace சந்திப்புகளுக்கு இடையில் நடக்கும் 99% ஆரோக்கியத்திற்காக உள்ளது. நாள்பட்ட பாதைக்கான துல்லியமான கண்காணிப்பு.",
-    "footer_product": "தயாரிப்பு",
-    "footer_access": "அணுகல்",
-    "footer_features": "அம்சங்கள்",
-    "footer_workflow": "பணிப்பாய்வு",
-    "footer_security": "பாதுகாப்பு",
-    "footer_create_account": "கணக்கை உருவாக்கவும்",
-    "footer_sign_in": "உள்நுழையவும்",
-    "footer_about": "CareTrace பற்றி",
-    "footer_copyright": "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
-    "footer_get_started": "தொடங்குங்கள்"
-  },
-  "auth": {
-    "login_title": "மீண்டும் வருக",
-    "login_subtitle": "உங்கள் ஆரோக்கிய நுண்ணறிவு டாஷ்போர்டில் உள்நுழையவும்",
-    "signup_title": "CareTrace AI இல் இணையுங்கள்",
-    "signup_subtitle": "சில நிமிடங்களில் சுயவிவரத்தை உருவாக்கி அறிகுறி கண்காணிப்பைத் தொடங்குங்கள்.",
-    "email": "மின்னஞ்சல் முகவரி",
-    "password": "கடவுச்சொல்",
-    "full_name": "முழு பெயர்",
+  "settings": {
+    "about_body": "CareTrace AI என்பது உங்கள் அறிகுறிகளைக் கண்காணிக்கவும் காலப்போக்கில் மாற்றங்களைக் கவனிப்பதற்கும் உருவாக்கப்பட்ட தனிப்பட்ட சுகாதார கண்காணிப்பு அமைப்பு.",
+    "about_section": "CareTrace AI பற்றி",
     "age": "வயது",
-    "gender": "பாலினம்",
-    "lifestyle": "வாழ்க்கை முறை ஆபத்து சூழல்",
-    "login_btn": "பாதுகாப்பான உள்நுழைவு",
-    "signup_btn": "சுயவிவரத்தைப் பதிவுசெய்க",
-    "already_mapped": "ஏற்கனவே பதிவு செய்துள்ளீர்களா?",
-    "login_natively": "நேரடியாக உள்நுழையவும்",
-    "no_account": "கணக்கு இல்லையா?",
-    "create_profile": "சுயவிவரத்தை உருவாக்கு",
-    "demo_title": "வழிகாட்டப்பட்ட சுற்றுப்பயணம்",
-    "demo_subtitle": "மாதிரி தரவுடன் விளக்கப்படங்கள், எச்சரிக்கைகள் மற்றும் AI நுண்ணறிவுகளைக் காண்க—அமைப்பு தேவையில்லை.",
-    "fill_demo": "டெமோ கணக்கைப் பயன்படுத்தவும்",
-    "constructing": "உள்நுழைகிறது...",
-    "try_demo_title": "சில வினாடிகளில் தயாரிப்பைக் காண்க",
-    "try_demo_subtitle": "மாதிரி அறிகுறிகள், ஆபத்து பகுப்பாய்வு மற்றும் எச்சரிக்கைகளுடன் முழு டாஷ்போர்டைத் திறக்கவும்—விரைவு சுற்றுப்பயணத்திற்கு ஏற்றது.",
-    "try_demo_btn": "டெமோ முயற்சிக்கவும்",
-    "demo_failed": "சர்வரை அடைய முடியவில்லை. இணைப்பைச் சரிபார்க்கவும் அல்லது சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.",
-    "errors": {
-      "password_short": "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்.",
-      "failed": "அங்கீகாரம் தோல்வியடைந்தது. உள்ளீடுகளைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
-      "email_registered": "இந்த மின்னஞ்சலுடன் ஏற்கனவே கணக்கு உள்ளது. உள்நுழையவும்."
-    }
+    "confirm_delete_body": "This action is irreversible. Please type \"DELETE\" below to proceed.",
+    "confirm_delete_btn": "Delete Permanently",
+    "confirm_delete_title": "Delete your account?",
+    "confirm_type_label": "Type DELETE to confirm",
+    "danger_zone": "Dangerous Action Zone",
+    "delete_account": "கணக்கை நீக்கு",
+    "delete_account_btn": "Delete Account",
+    "delete_confirm_prompt": "உங்கள் கணக்கை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
+    "delete_warning": "Deleting your account is permanent and cannot be undone. All your health data, symptoms, and medical reports will be permanently purged.",
+    "emails": {
+      "body": "வாராந்திர சுருக்க மின்னஞ்சல்களைப் பெறுங்கள்.",
+      "title": "மின்னஞ்சல் புதுப்பிப்புகள்"
+    },
+    "full_name": "முழு பெயர்",
+    "notifications": {
+      "body": "உங்கள் சாதனத்தில் எச்சரிக்கைகளைப் பெறுங்கள்.",
+      "delete_success": "Account deleted successfully. Goodbye.",
+      "lang_applied": "மொழி உள்ளமைவு பயன்படுத்தப்பட்டது",
+      "pref_updated": "முன்னுரிமை [{{name}}] புதுப்பிக்கப்பட்டது",
+      "profile_error": "புதுப்பிப்பதில் தோல்வி",
+      "profile_success": "சுயவிவர உள்ளமைவு வெற்றிகரமாகச் சேமிக்கப்பட்டது",
+      "title": "புஷ் அறிவிப்புகள்"
+    },
+    "preferences_section": "முன்னுரிமைகள்",
+    "profile_section": "சுயவிவர உள்ளமைவு",
+    "push_notifications": {
+      "body": "உங்கள் சாதனத்தில் எச்சரிக்கைகளைப் பெறுங்கள்.",
+      "title": "புஷ் அறிவிப்புகள்"
+    },
+    "subtitle": "உங்கள் சுயவிவரம் மற்றும் பயன்பாட்டு முன்னுரிமைகளை நிர்வகிக்கவும்.",
+    "theme_body": "Switch between light and dark modes.",
+    "title": "பயன்பாட்டு அமைப்புகள்"
   },
-  "health_metrics": {
-    "title": "ஆரோக்கிய மெட்ரிக்ஸ் (வைட்டல்ஸ்)",
-    "add_entry": "பதிவு சேர்க்கவும்",
-    "not_provided": "கிடைக்கவில்லை",
-    "form_subtitle": "உங்கள் தற்போதைய வைட்டல் சைன்ஸ் உள்ளிடுக",
-    "error_empty": "Please enter at least one metric value",
-    "error_save": "Failed to save vitals",
-    "success": "Vitals recorded"
+  "symptoms": {
+    "add_title": "அறிகுறிகளைச் சேர்க்கவும்",
+    "date_label": "தேதி",
+    "duplicate_body": "இன்று நீங்கள் இந்த அறிகுறியை ஏற்கனவே பதிவு செய்துள்ளீர்கள். மற்றொரு பதிவைச் சேர்க்க விரும்புகிறீர்களா?",
+    "duplicate_confirm": "ஆம், மீண்டும் பதிவு செய்",
+    "duplicate_title": "ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது",
+    "duration_display": "காலம்: {{count}} நாள்(கள்)",
+    "duration_label": "காலம் (நாட்கள்)",
+    "duration_placeholder": "காலத்தை உள்ளிடவும்",
+    "empty_state": "தொடர குறைந்தது ஒரு அறிகுறியைச் சேர்க்கவும்.",
+    "errors": {
+      "duration_min": "காலம் குறைந்தது 1 நாளாக இருக்க வேண்டும்.",
+      "failed": "பதிவு தோல்வியடைந்தது.",
+      "incomplete": "அனைத்து விவரங்களையும் பூர்த்தி செய்யவும்."
+    },
+    "health_goal_title": "இன்று உங்கள் இலக்கு என்ன?",
+    "health_goals": {
+      "chronic_management": "ஏற்கனவே உள்ள நிலையை நிர்வகிக்கவும்",
+      "general_consultation": "பொது ஆலோசனை",
+      "preventive_care": "தடுப்பு ஆரோக்கிய பரிசோதனை",
+      "symptom_check": "தற்போதைய அறிகுறிகளைச் சரிபார்க்கவும்"
+    },
+    "listening": "கேட்கிறது...",
+    "logged_confirm": "Logged.",
+    "logged_on": "{{date}} அன்று பதிவு செய்யப்பட்டது",
+    "mild": "மிதமானது",
+    "notes_placeholder": "What else changed today?",
+    "notifications": {
+      "log_success": "{{symptom}} வெற்றிகரமாக பதிவு செய்யப்பட்டது!",
+      "voice_active": "மைக்ரோஃபோன் செயலில் உள்ளது... தயவுசெய்து தெளிவாகப் பேசவும்",
+      "voice_success": "குரல் வெற்றிகரமாக மாற்றப்பட்டது: 'எனக்கு 3 நாட்களாக கடுமையான காய்ச்சல் இருந்தது'"
+    },
+    "options": {
+      "chest pain": "நெஞ்சு வலி",
+      "cough": "இருமல்",
+      "dizziness": "தலைசுற்றல்",
+      "fatigue": "சோர்வு",
+      "fever": "காய்ச்சல்",
+      "headache": "தலைவலி",
+      "nausea": "குமட்டல்",
+      "shortness of breath": "மூச்சுத் திணறல்"
+    },
+    "recorded_title": "உங்கள் பதிவு செய்யப்பட்ட அறிகுறிகள்",
+    "severe": "தீவிரமானது",
+    "severity_help": "1 = மிதமானது, 10 = தீவிரமானது",
+    "severity_label": "தீவிரம்: {{score}} ({{label}})",
+    "step1_label": "Select Symptom",
+    "step2_label": "Intensity",
+    "step3_label": "Context (Optional)",
+    "submit_btn": "இப்போது பதிவுசெய்",
+    "subtitle": "நீங்கள் எப்படி உணருகிறீர்கள் என்பதைப் புரிந்துகொள்ள உங்கள் அறிகுறிகளைப் பதிவுசெய்யவும்.",
+    "title": "உங்கள் அறிகுறிகளைக் கண்காணியுங்கள்",
+    "type_label": "அறிகுறி வகை",
+    "type_placeholder": "ஒரு அறிகுறியைத் தேர்ந்தெடுக்கவும்",
+    "voice_input": "குரல் உள்ளீடு"
+  },
+  "testimonials": {
+    "items": {
+      "anitha": {
+        "highlight": "கவலையை கணிசமாகக் குறைத்தது",
+        "name": "அனிதா ரெட்டி",
+        "text": "எனது தந்தையின் மருந்துகளைக் கண்காணிப்பது இப்போது எளிது. இது எங்கள் கவலையை கணிசமாகக் குறைத்தது."
+      },
+      "priya": {
+        "highlight": "நோயாளி பாதுகாப்பையும் மேம்படுத்தும்",
+        "name": "டாக்டர் பிரியா சர்மா",
+        "text": "CareTrace AI போன்ற தீர்வுகள் மருந்து பின்பற்றுதலையும் நோயாளி பாதுகாப்பையும் மேம்படுத்தும்."
+      },
+      "ravi": {
+        "highlight": "முற்றிலும் மன அழுத்தமில்லாததாக",
+        "name": "ரவி குமார்",
+        "text": "CareTrace AI நினைவூட்டல்கள் எனது மருந்து வழக்கத்தை முற்றிலும் மன அழுத்தமில்லாததாக ஆக்கியது. நான் இப்போது ஒரு டோஸையும் தவறவிடுவதில்லை."
+      },
+      "suresh": {
+        "highlight": "சுத்தமாகவும் உள்ளுணர்வுடனும்",
+        "name": "சுரேஷ்",
+        "text": "இடைமுகம் சுத்தமாகவும் உள்ளுணர்வுடனும் உள்ளது. தினசரி சுகாதார நிர்வாகத்திற்கு மிகவும் நடைமுறைக்குரியது."
+      }
+    },
+    "roles": {
+      "caregiver": "பராமரிப்பாளர்",
+      "physician": "பொது மருத்துவர்",
+      "pilot": "பைலட் பயனர்",
+      "tester": "சோதனையாளர்"
+    },
+    "subtitle": "பைலட் பயனர்கள் மற்றும் சோதனையாளர்களிடமிருந்து உண்மையான கருத்து",
+    "title": "எங்கள் பயனர்கள் என்ன சொல்கிறார்கள்"
+  },
+  "timeline": {
+    "days_tracking": "{{count}} நாட்கள் கண்காணிப்பு",
+    "empty": {
+      "body": "அறிகுறிகளைப் பதிவு செய்ய அறிகுறிகள் பக்கத்திற்குச் செல்லவும்.",
+      "title": "இன்னும் அறிகுறிகள் எதுவும் பதிவு செய்யப்படவில்லை."
+    },
+    "gap_days": "பதிவு இல்லாத {{count}} நாள்",
+    "gap_days_plural": "பதிவு இல்லாத {{count}} நாட்கள்",
+    "get_analysis": "போக்குகளை பகுப்பாய்வு செய்",
+    "list_title": "அறிகுறி காலக்கோடு",
+    "multiple_entries": "பல பதிவுகள் கண்டறியப்பட்டுள்ளன",
+    "older": "பழையவை",
+    "severity_weight": "தீவிர எடை",
+    "show_less": "குறைவாகக் காண்பி",
+    "show_more": "மேலும் காண்பி",
+    "subtitle": "உங்கள் அறிகுறிகளின் வரலாற்றை ஆய்வு செய்து முன்னேற்றத்தைக் கண்காணியுங்கள்.",
+    "this_week": "இந்த வாரம்",
+    "title": "உங்கள் ஆரோக்கிய காலக்கோடு",
+    "today": "இன்று",
+    "trends": {
+      "decreasing": "குணமடைந்து வருகிறீர்கள்",
+      "decreasing_title": "குணமடைதல் போக்கு",
+      "increasing": "தீவிரம் அதிகரிக்கிறது",
+      "increasing_title": "தீவிரம் அதிகரிப்பு"
+    },
+    "yesterday": "நேற்று"
   }
 }

@@ -40,12 +40,25 @@ CORS_ORIGINS: list[str] = [
     if o.strip()
 ]
 
+SENTRY_DSN: str | None = os.getenv('SENTRY_DSN')
+
+if SENTRY_DSN and not _TESTING:
+    try:
+        import sentry_sdk
+        sentry_sdk.init(dsn=SENTRY_DSN, traces_sample_rate=0.1)
+    except ImportError:
+        pass
+
 def validate_environment() -> dict:
     """
     Validate all required environment variables at startup.
     MongoDB is REQUIRED. PostgreSQL is OPTIONAL.
     """
     # 1. Validate Primary Secrets
+    environment = os.getenv('ENV', 'development').lower()
+    if environment == 'production' and SECRET_KEY == 'test-secret-key-not-for-production':
+        raise RuntimeError("CRITICAL: Cannot use default test SECRET_KEY in production mode.")
+
     if not _TESTING:
         if len(SECRET_KEY) < 32:
             raise RuntimeError("SECRET_KEY must be at least 32 characters long.")

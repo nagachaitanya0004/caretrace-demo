@@ -73,7 +73,7 @@ const STAT_ROUTES = {
   'active-alerts': '/alerts',
 };
 
-function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend }) {
+function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend, i18n }) {
   const valueColor = isPositive ? 'text-[var(--app-accent)]' : 'text-[var(--app-text)]';
 
   return (
@@ -100,7 +100,7 @@ function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend })
           <div>
             <div className="flex items-baseline gap-2">
               <p className={`text-4xl font-semibold tracking-[-0.03em] tabular-nums leading-none mb-3 ${valueColor}`}>
-                {value}
+                {new Intl.NumberFormat(i18n.language).format(value)}
               </p>
               {trend !== undefined && (
                 <div className={`flex items-center text-xs font-bold ${trend >= 0 ? 'text-[var(--app-accent)]' : 'text-[var(--app-danger)]'}`}>
@@ -160,10 +160,10 @@ function EmptyDashboardState() {
         </svg>
       </div>
       <h2 className="text-3xl font-semibold tracking-tight text-[var(--app-text)] mb-3">
-        Your first log starts the record.
+        {t('dashboard.empty.title', 'Your first log starts the record.')}
       </h2>
       <p className="text-lg text-[var(--app-text-muted)] max-w-sm">
-        Tap the button below to begin.
+        {t('dashboard.empty.body', 'Tap the button below to begin.')}
       </p>
     </div>
   );
@@ -183,7 +183,7 @@ function DashboardInner() {
   const shouldReduceMotion = useReducedMotion();
   const rawId = useId();
   const gradientId = useMemo(() => `trend-${rawId.replace(/[^a-zA-Z0-9-]/g, '')}`, [rawId]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const {
     userProfile, symptoms = [], analysisResult, hasAlert, isLoading, alerts, demoMedications = [], refreshData,
@@ -227,7 +227,7 @@ function DashboardInner() {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
   });
 
-  const fullSubtitle = `${dateString}${streakDays > 0 ? ` · ${t('dashboard.streak', { count: streakDays })}` : ''}`;
+  const fullSubtitle = `${dateString}${streakDays > 0 ? ` · ${t('dashboard.streak', { count: new Intl.NumberFormat(i18n.language).format(streakDays) })}` : ''}`;
 
   const formatShortDate = useCallback(
     (date) => new Date(date).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' }),
@@ -312,7 +312,7 @@ function DashboardInner() {
       id: 'symptoms-logged',
       label: t('dashboard.stats.logged'),
       value: symptoms.length,
-      sub: t('dashboard.stats.all_time'),
+      sub: t('dashboard.symptoms_count', { count: symptoms.length }),
       keywords: [t('dashboard.stats.logged'), t('dashboard.stats.all_time')],
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
       trend: symptoms.length - weekAgoSymptoms.length,
@@ -321,7 +321,7 @@ function DashboardInner() {
     {
       id: 'current-streak',
       label: t('dashboard.stats.streak', 'Current Streak'),
-      value: `${streakDays}d`,
+      value: new Intl.NumberFormat(i18n.language).format(streakDays),
       sub: t('dashboard.stats.consecutive_logs', 'Consecutive days'),
       keywords: [t('dashboard.stats.streak', 'Current Streak'), t('dashboard.streak'), t('dashboard.stats.consecutive_logs')],
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
@@ -336,7 +336,7 @@ function DashboardInner() {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
       isPositive: alerts?.length === 0 && symptoms.length > 0
     },
-  ], [t, healthScore, symptoms.length, streakDays, alerts, showAlert, weekAgoSymptoms.length]);
+  ], [t, healthScore, symptoms.length, streakDays, alerts, showAlert, weekAgoSymptoms.length, i18n.language]);
 
   const visibleStatCards = useMemo(() =>
     statCards.filter((c) => matchesSearch(searchQuery, c.label, c.sub, c.keywords)),
@@ -406,7 +406,7 @@ function DashboardInner() {
         <ErrorBoundary title={t('dashboard.error.stats', 'Statistics unavailable')} onRetry={refreshData}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {visibleStatCards.map((card) => (
-              <StatCard key={card.id} isLoading={isLoading} {...card} />
+              <StatCard key={card.id} isLoading={isLoading} i18n={i18n} {...card} />
             ))}
           </div>
         </ErrorBoundary>
@@ -487,7 +487,7 @@ function DashboardInner() {
                   <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wide">{t('dashboard.charts.trend')}</p>
                   <h2 className="text-base font-semibold text-[var(--app-text)]">{t('dashboard.charts.severity_timeline')}</h2>
                 </div>
-                <span className="text-xs text-[var(--app-text-disabled)]">{(hasSearchQuery ? filteredChartData : chartData).length} {t('dashboard.charts.data_points_label', 'entries')}</span>
+                <span className="text-xs text-[var(--app-text-disabled)]">{t('dashboard.symptoms_count', { count: (hasSearchQuery ? filteredChartData : chartData).length })}</span>
               </div>
               {(hasSearchQuery ? filteredChartData : chartData).length > 0 ? (
                 <>
@@ -584,7 +584,7 @@ function DashboardInner() {
                 {symptoms.length > 0 && (
                   <div className="p-3 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border)]">
                     <p className="text-xs font-semibold text-[var(--app-text)] mb-0.5">{t('dashboard.insights.pattern_title')}</p>
-                    <p className="text-xs text-[var(--app-text-muted)] leading-relaxed">{t('dashboard.insights.pattern_body', { count: symptoms.length })}</p>
+                    <p className="text-xs text-[var(--app-text-muted)] leading-relaxed">{t('dashboard.insights.pattern_body', { count: t('dashboard.symptoms_count', { count: symptoms.length }) })}</p>
                   </div>
                 )}
                 {!userProfile?.lifestyle && symptoms.length === 0 && (

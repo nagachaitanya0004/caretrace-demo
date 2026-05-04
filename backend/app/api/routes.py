@@ -33,7 +33,21 @@ from app.services.mongo.health_service import HealthService
 from app.services.postgres.audit_service import AuditService
 from app.core.limiter import limiter
 
+from app.core.config import APP_NAME, APP_VERSION, CORS_ORIGINS
+from app.db.postgres import postgres_manager
+
 router = APIRouter()
+
+@router.get('/version')
+async def get_version():
+    return success_response({
+        'version': APP_VERSION,
+        'name': APP_NAME,
+        'databases': {
+            'mongo': 'active',
+            'postgres': 'active' if postgres_manager.is_active else 'inactive'
+        }
+    })
 
 def user_specific_key_builder(
     func,
@@ -360,6 +374,12 @@ async def create_symptom(request: Request, payload: SymptomCreate, current_user:
     db = get_database()
     user_ref = get_user_ref(current_user)
     payload_data = {k: v for k, v in payload.model_dump().items() if v is not None}
+    
+    # Sanitize notes: strip HTML tags
+    if "notes" in payload_data and payload_data["notes"]:
+        import re
+        payload_data["notes"] = re.sub(r'<[^>]+>', '', payload_data["notes"])
+        
     payload_data["user_id"] = user_ref
     now = datetime.utcnow()
     payload_data['created_at'] = now

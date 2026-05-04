@@ -140,7 +140,9 @@
     "greeting_morning": "Good morning, {{name}}",
     "greeting_afternoon": "Good afternoon, {{name}}",
     "greeting_evening": "Good evening, {{name}}",
-    "streak": "{{count}}-day streak"
+    "streak": "{{count}}-day streak",
+    "symptoms_count": "{{count}} symptom",
+    "symptoms_count_plural": "{{count}} symptoms"
   },
   "testimonials": {
     "title": "What Our Users Say",
@@ -253,7 +255,9 @@
     "today": "Today",
     "yesterday": "Yesterday",
     "this_week": "This Week",
-    "older": "Older"
+    "older": "Older",
+    "gap_days": "{{count}} day with no log",
+    "gap_days_plural": "{{count}} days with no log"
   },
   "history": {
     "title": "Your history",
@@ -318,7 +322,8 @@
     },
     "footer_disclaimer": "This is not medical advice. Always speak with a doctor.",
     "view_recommendations": "View next steps",
-    "mark_read": "Mark as read"
+    "mark_read": "Mark as read",
+    "mark_as_read": "Mark as read"
   },
   "reports": {
     "title": "Your reports",
@@ -438,7 +443,9 @@
     "confirm_delete_title": "Delete your account?",
     "confirm_delete_body": "This action is irreversible. Please type \"DELETE\" below to proceed.",
     "confirm_type_label": "Type DELETE to confirm",
-    "confirm_delete_btn": "Delete Permanently"
+    "confirm_delete_btn": "Delete Permanently",
+    "delete_account": "Delete Account",
+    "delete_confirm_prompt": "Are you sure you want to delete your account?"
   },
   "recommendations": {
     "title": "Next steps",
@@ -701,7 +708,10 @@
       "age_invalid": "Please enter a valid age.",
       "failed": "We couldn’t sign you in. Please check your details and try again.",
       "email_registered": "An account with this email already exists. Try signing in instead."
-    }
+    },
+    "show_password": "Show password",
+    "hide_password": "Hide password",
+    "stay_signed_in": "Stay signed in"
   },
   "health_metrics": {
     "title": "Health Metrics (Vitals)",
@@ -710,6 +720,11 @@
     "form_subtitle": "Enter your current vital signs",
     "error_empty": "Please enter at least one metric value",
     "success": "Vitals recorded",
-    "error_save": "Failed to save vitals"
+    "error_save": "Failed to save vitals",
+    "systolic_bp": "Systolic BP (mmHg)",
+    "diastolic_bp": "Diastolic BP (mmHg)",
+    "blood_sugar": "Blood Sugar (mg/dL)",
+    "heart_rate": "Heart Rate (bpm)",
+    "oxygen_saturation": "Oxygen Saturation (%)"
   }
 }

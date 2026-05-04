@@ -67,7 +67,7 @@ class SymptomBase(MongoModel):
     duration: int = Field(..., ge=0)
     severity: int = Field(..., ge=1, le=10)
     timestamp: datetime
-    notes: Optional[str] = None
+    notes: Optional[str] = Field(default=None, max_length=1000)
     context: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
