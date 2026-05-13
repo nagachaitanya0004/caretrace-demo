@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 function PageFrame({
   title,
   subtitle,
@@ -8,6 +10,8 @@ function PageFrame({
   maxWidthClass = 'max-w-6xl',
 }) {
   const centered = headAlign === 'center';
+  const { t } = useTranslation();
+
   return (
     <div className={`page-frame ${maxWidthClass} ${className}`} role="region" aria-label={title}>
       <header className={`page-header ${centered ? 'text-center' : ''}`}>

@@ -22,8 +22,13 @@ function Layout() {
     <div className="app-shell">
       <Header />
       {isDemoUser && (
-        <div role="status" className="demo-banner">
-          {t('demo.banner')}
+        <div role="status" className="flex items-center justify-center gap-3 px-4 py-2 bg-[var(--app-warning-bg)] border-b border-[var(--app-warning-border)]">
+          <svg className="h-4 w-4 shrink-0 text-[var(--app-warning)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-medium text-[var(--app-warning-text)]">
+            {t('demo.banner', 'You are using a demo account. Data is for demonstration only.')}
+          </span>
         </div>
       )}
       {!isDemoUser && user && user.is_onboarded === false && pathname !== '/onboarding' && (
