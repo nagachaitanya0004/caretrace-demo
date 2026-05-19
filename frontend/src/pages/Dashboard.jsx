@@ -10,6 +10,7 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
 import ErrorBoundary from '../components/ErrorBoundary';
+import { BrandMark } from '../components/BrandLogo';
 import { chartColors, cartesianGridProps, tooltipContentStyle } from '../utils/chartTheme';
 
 const SKEL_HEIGHTS = [45, 72, 38, 85, 55, 62, 40, 78, 50, 67, 43, 71];
@@ -348,9 +349,20 @@ function DashboardInner() {
 
   return (
     <PageFrame 
-      title={<span className="page-title">{greeting}</span>} 
+      title={(
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="hidden h-12 w-12 shrink-0 place-items-center rounded-[var(--radius-lg)] border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--shadow-l1)] sm:grid">
+            <BrandMark size={32} title="CareTrace AI" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--app-accent)]">CareTrace AI</span>
+            <span className="block truncate">{greeting}</span>
+          </span>
+        </span>
+      )}
       subtitle={fullSubtitle} 
       maxWidthClass="max-w-5xl"
+      ariaLabel={t('navbar.dashboard', 'Dashboard')}
     >
       <div className="fixed bottom-6 right-6 md:hidden z-40">
         <Button intent="cta" size="lg" onClick={() => navigate('/symptoms')} className="rounded-full w-14 h-14 p-0 shadow-[var(--shadow-l3)]">

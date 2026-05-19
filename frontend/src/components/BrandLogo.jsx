@@ -1,4 +1,10 @@
+import { useId } from 'react';
+
 export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' }) {
+  const generatedId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const gradientId = `caretrace-volt-${generatedId}`;
+  const titleId = title ? `${gradientId}-title` : undefined;
+
   return (
     <svg
       width={size}
@@ -6,24 +12,27 @@ export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' })
       viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`shrink-0 ${className}`}
-      role="img"
-      aria-label={title}
+      className={`block shrink-0 ${className}`}
+      role={title ? 'img' : undefined}
+      aria-labelledby={titleId}
+      aria-hidden={title ? undefined : true}
+      focusable="false"
     >
-      <title>{title}</title>
+      {title && <title id={titleId}>{title}</title>}
       <defs>
-        <linearGradient id="caretrace-volt" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#E8FF5F" />
-          <stop offset="100%" stopColor="#D3F41E" />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="var(--brand-accent, #E2FF32)" />
+          <stop offset="100%" stopColor="var(--app-accent-hover, #CDE92B)" />
         </linearGradient>
       </defs>
-      <rect width="40" height="40" rx="10" fill="url(#caretrace-volt)" />
+      <rect width="40" height="40" rx="10" fill={`url(#${gradientId})`} />
       <path
         d="M10 20h4l1.2-5 2.3 12 2.5-14 2.2 7H30"
-        stroke="#0a0a0a"
+        stroke="var(--brand-accent-on, #0a0a0a)"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
       />
     </svg>
   );
@@ -56,7 +65,7 @@ export function BrandLockup({
       <div className="min-w-0 flex flex-col justify-center leading-tight">
         <span className={`font-bold tracking-tight ${titleSize} ${nameClass}`}>
           CareTrace{' '}
-          <span className="font-semibold opacity-40">AI</span>
+          <span className="font-bold text-[var(--brand-accent)]">AI</span>
         </span>
         {showTagline && tagline && (
           <span className={`text-[10px] sm:text-xs font-medium uppercase tracking-widest mt-0.5 ${subClass}`}>

@@ -1,5 +1,3 @@
-import { useTranslation } from 'react-i18next';
-
 function PageFrame({
   title,
   subtitle,
@@ -8,12 +6,13 @@ function PageFrame({
   className = '',
   headAlign = 'start',
   maxWidthClass = 'max-w-6xl',
+  ariaLabel,
 }) {
   const centered = headAlign === 'center';
-  const { t } = useTranslation();
+  const regionLabel = ariaLabel || (typeof title === 'string' ? title : undefined);
 
   return (
-    <div className={`page-frame ${maxWidthClass} ${className}`} role="region" aria-label={title}>
+    <div className={`page-frame ${maxWidthClass} ${className}`} role="region" aria-label={regionLabel}>
       <header className={`page-header ${centered ? 'text-center' : ''}`}>
         <div className="flex flex-col gap-1.5">
           <div className={`flex flex-col gap-4 lg:flex-row lg:items-baseline ${centered ? 'lg:justify-center' : 'lg:justify-between'}`}>
