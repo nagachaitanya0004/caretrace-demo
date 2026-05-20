@@ -58,39 +58,41 @@ export function AppProvider({ children }) {
 
   const { data: userProfileRaw, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile', user?.id],
-    queryFn: () => api.get('/api/users/me'),
+    queryFn: async () => {
+      const res = await api.get('/api/users/me');
+      return unwrapApiPayload(res) || {};
+    },
     enabled: !!user?.id,
-    select: (res) => unwrapApiPayload(res) || {},
   });
 
   const { data: symptomsRaw, isLoading: symptomsLoading } = useQuery({
     queryKey: ['symptoms', user?.id],
-    queryFn: () => api.get('/api/symptoms'),
-    enabled: !!user?.id,
-    select: (res) => {
+    queryFn: async () => {
+      const res = await api.get('/api/symptoms');
       const list = unwrapApiPayload(res);
       return Array.isArray(list) ? list.map(normalizeSymptom) : [];
     },
+    enabled: !!user?.id,
   });
 
   const { data: alertsRaw, isLoading: alertsLoading } = useQuery({
     queryKey: ['alerts', user?.id],
-    queryFn: () => api.get('/api/alerts'),
-    enabled: !!user?.id,
-    select: (res) => {
+    queryFn: async () => {
+      const res = await api.get('/api/alerts');
       const list = unwrapApiPayload(res);
       return Array.isArray(list) ? list : [];
     },
+    enabled: !!user?.id,
   });
 
   const { data: analysesRaw, isLoading: analysisLoading } = useQuery({
     queryKey: ['analyses', user?.id],
-    queryFn: () => api.get('/api/analysis'),
-    enabled: !!user?.id,
-    select: (res) => {
+    queryFn: async () => {
+      const res = await api.get('/api/analysis');
       const list = unwrapApiPayload(res);
       return Array.isArray(list) ? list.map(normalizeAnalysisPayload) : [];
     },
+    enabled: !!user?.id,
   });
 
   // ── Demo Logic ─────────────────────────────────────────────────────────────

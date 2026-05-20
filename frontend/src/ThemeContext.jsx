@@ -11,11 +11,8 @@ const getInitialTheme = () => {
     if (storedTheme === 'dark' || storedTheme === 'light') {
       return storedTheme;
     }
-
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } catch {
-    return 'light';
-  }
+  } catch {}
+  return 'light';
 };
 
 export function ThemeProvider({ children }) {
@@ -39,7 +36,7 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme]);

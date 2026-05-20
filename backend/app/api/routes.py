@@ -4,7 +4,7 @@ from typing import Any, Optional
 from collections import Counter
 
 from bson import ObjectId
-from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File
+from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File, Request
 from fastapi.responses import StreamingResponse
 from pymongo.errors import DuplicateKeyError
 
@@ -180,29 +180,29 @@ def evaluate_risk(symptoms: list[dict[str, Any]]) -> tuple[str, str, str]:
             reason += " Trajectory indicates accelerating severity."
         action_plan = (
             f"• IMMEDIATE ACTION: Seek urgent medical assessment regarding your reports of {names_str}.\n"
-            f"• DATA CORRELATION: Peak severity reached {max_sev}/10. This mathematically aligns with acute distress models.\n"
-            "• EXPLANATION: CareTrace AI algorithms automatically escalate critical vital deviations to expedite triage and prevent health cascades."
+            f"• Peak severity reached {max_sev}/10. Please consult a healthcare provider immediately.\n"
+            "• Your symptoms indicate a condition that requires professional medical attention."
         )
         return 'high', reason, action_plan
 
     if risk_level == 'medium':
-        reason = f"Calculated Medium Risk. The system detected continuous, statistically persistent signals ({names_str}). Evaluation of {len(symptoms)} data points confirmed an extended duration metric or elevated threshold."
+        reason = f"Medium Risk detected. Continuous symptoms reported: {names_str}. Based on {len(symptoms)} data points showing extended duration or elevated severity."
         if chronic_flag:
             reason += " (Chronic patterns detected)"
         if trend_escalated:
             reason += " (Upward severity trend identified)"
         action_plan = (
-            f"• PRIMARY ACTION: Schedule a non-urgent clinical review within the next 7-14 days regarding {names_str}.\n"
-            f"• DATA CORRELATION: Trajectory indicates prolonged progression (up to {max_dur} days) or elevated density (Avg Severity: {avg_sev:.1f}/10).\n"
-            "• EXPLANATION: Chronic persistence of moderate symptoms frequently maps to underlying conditions requiring standard laboratory validation."
+            f"• PRIMARY ACTION: Schedule a clinical review within the next 7-14 days regarding {names_str}.\n"
+            f"• Your symptoms have persisted for up to {max_dur} days with average severity of {avg_sev:.1f}/10.\n"
+            "• Prolonged moderate symptoms may indicate an underlying condition requiring medical evaluation."
         )
         return 'medium', reason, action_plan
 
-    reason = f"Calculated Low Risk. The system mapped {len(symptoms)} recorded indicators ({names_str}) and determined they fall entirely within acceptable nominal limits."
+    reason = f"Low Risk. {len(symptoms)} symptoms recorded ({names_str}) are within normal ranges."
     action_plan = (
-        "• ONGOING ACTION: Continue active self-monitoring. Track any deviations in severity routinely.\n"
-        f"• DATA CORRELATION: Severity distribution (Peak: {max_sev}/10) and timelines (Max: {max_dur} days) remain in normal bounds.\n"
-        "• EXPLANATION: Heuristic mapping links these features to resolving or completely benign etiologies. No clinical intervention is recommended."
+        "• ONGOING ACTION: Continue monitoring your symptoms. Track any changes in severity.\n"
+        f"• Current severity (Peak: {max_sev}/10) and duration (Max: {max_dur} days) are within normal limits.\n"
+        "• These symptoms appear to be resolving or benign. No immediate medical intervention needed."
     )
     return 'low', reason, action_plan
 

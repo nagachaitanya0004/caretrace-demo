@@ -125,7 +125,7 @@ export default function FamilyHistoryStep({ onNext }) {
             onClick={() => remove(index)}
             disabled={fields.length === 1}
             aria-label={t('onboarding.actions.remove')}
-            className="rounded-lg p-2.5 text-[var(--app-text-disabled)] transition-colors hover:bg-rose-500/10 hover:text-rose-500 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
+            className="rounded-lg p-2.5 text-[var(--app-text-disabled)] transition-colors hover:bg-danger/10 hover:text-danger active:scale-95 disabled:pointer-events-none disabled:opacity-30"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -148,7 +148,7 @@ export default function FamilyHistoryStep({ onNext }) {
       <div className="mt-8 flex flex-col items-center gap-3.5 border-t border-[var(--app-border-soft)] pt-6">
         <button
           type="submit"
-          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-[0_0_20px_rgba(226,255,50,0.15)] transition-all duration-200 hover:shadow-[0_0_25px_rgba(226,255,50,0.25)] active:scale-[0.98]"
+          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-[0_0_20px_var(--app-accent-shadow)] transition-all duration-200 hover:shadow-[0_0_25px_var(--app-accent-shadow)] active:scale-[0.98]"
         >
           {t('onboarding.actions.next')}
         </button>

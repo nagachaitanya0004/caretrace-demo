@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 // Avatar color pairs — semantic, not brand colors
 const AVATAR_COLORS = [
   'bg-[var(--app-surface-soft)] text-[var(--app-text)]',
-  'bg-emerald-500/10 text-emerald-600',
+  'bg-success/10 text-success',
   'bg-[var(--app-accent)]/10 text-[var(--app-text)]',
-  'bg-sky-500/10 text-sky-600',
+  'bg-info/10 text-info',
 ];
 
 function StarRating({ rating, max = 5 }) {
@@ -15,7 +15,7 @@ function StarRating({ rating, max = 5 }) {
       {Array.from({ length: max }, (_, i) => (
         <svg
           key={i}
-          className={`w-3.5 h-3.5 ${i < rating ? 'text-amber-400' : 'text-[var(--app-border)]'} fill-current`}
+          className={`w-3.5 h-3.5 ${i < rating ? 'text-warning' : 'text-[var(--app-border)]'} fill-current`}
           viewBox="0 0 20 20"
           aria-hidden="true"
         >

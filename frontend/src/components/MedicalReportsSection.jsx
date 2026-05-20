@@ -21,9 +21,9 @@ function formatDate(iso) {
 function FileTypeIcon({ fileType }) {
   const isPdf = fileType === 'application/pdf';
   return (
-    // token gap: text-rose-500 used for PDF icon — no --app-danger-icon token defined
+    // token gap: text-danger used for PDF icon — no --app-danger-icon token defined
     <svg
-      className={`w-8 h-8 flex-shrink-0 ${isPdf ? 'text-rose-500' : 'text-[var(--app-accent)]'}`}
+      className={`w-8 h-8 flex-shrink-0 ${isPdf ? 'text-danger' : 'text-[var(--app-accent)]'}`}
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"

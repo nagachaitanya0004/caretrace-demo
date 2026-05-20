@@ -124,7 +124,7 @@ export default function HealthMetricsSection() {
       {/* Section header */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-lg font-semibold text-[var(--app-text)] flex items-center gap-2">
-          <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className="w-5 h-5 text-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
           {t('health_metrics.title', 'Health Metrics (Vitals)')}

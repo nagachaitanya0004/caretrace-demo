@@ -111,12 +111,13 @@ function Alerts() {
                         
                         {!isRead && (
                           <div className="mt-4 flex justify-end">
-                            <button
+                            <Button
+                              intent="ghost"
+                              size="sm"
                               onClick={() => handleMarkRead(alert.id)}
-                              className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors px-2 py-1"
                             >
                               {t('alerts.mark_read', 'Mark as read')}
-                            </button>
+                            </Button>
                           </div>
                         )}
                       </div>

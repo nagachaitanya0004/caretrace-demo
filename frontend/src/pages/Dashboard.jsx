@@ -57,7 +57,7 @@ function CustomTooltip({ active, payload, label, t }) {
   const val = payload[0].value;
   const color = val >= 7 ? 'var(--app-accent)' : val >= 4 ? 'var(--app-warning)' : 'var(--app-danger)';
   return (
-    <div className="rounded-[16px] border border-[rgba(255,255,255,0.08)] bg-[#080f1c] p-4 shadow-2xl backdrop-blur-xl">
+    <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-surface-elevated)] p-4 shadow-2xl backdrop-blur-xl">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)]">{label}</p>
       <p className="text-xl font-bold tracking-tight" style={{ color }}>
         {t('history.table.severity')}: {val}
@@ -75,14 +75,14 @@ const STAT_ROUTES = {
 };
 
 function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend, i18n }) {
-  const valueColor = isPositive ? 'text-[var(--app-accent)]' : 'text-[var(--app-text)]';
+  const valueColor = 'text-[var(--app-text)]';
 
   return (
     <Link
       to={STAT_ROUTES[id] ?? '/dashboard'}
       className="block group focus:outline-none"
     >
-      <div className="relative h-full rounded-[24px] bg-[#080f1c] border-[0.5px] border-[rgba(255,255,255,0.08)] p-6 transition-all duration-300 [box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(255,255,255,0.04),0_24px_72px_rgba(0,0,0,0.52)] group-hover:translate-y-[-4px] group-hover:border-[rgba(255,255,255,0.16)] group-hover:[box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.1),0_0_0_0.5px_rgba(255,255,255,0.08),0_32px_84px_rgba(0,0,0,0.6)]">
+      <div className="relative h-full rounded-[24px] bg-[var(--app-surface-elevated)] border-[0.5px] border-[var(--app-border)] p-6 transition-all duration-300 [box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(255,255,255,0.04),0_24px_72px_rgba(0,0,0,0.52)] group-hover:translate-y-[-4px] group-hover:border-[var(--app-border-hover)] group-hover:[box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.1),0_0_0_0.5px_rgba(255,255,255,0.08),0_32px_84px_rgba(0,0,0,0.6)]">
         <div className="flex items-center justify-between mb-8">
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] truncate">
             {label}
@@ -104,7 +104,7 @@ function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend, i
                 {new Intl.NumberFormat(i18n.language).format(value)}
               </p>
               {trend !== undefined && (
-                <div className={`flex items-center text-xs font-bold ${trend >= 0 ? 'text-[var(--app-accent)]' : 'text-[var(--app-danger)]'}`}>
+                <div className={`flex items-center text-xs font-bold ${trend >= 0 ? 'text-[var(--badge-success-text)]' : 'text-[var(--app-danger)]'}`}>
                   <svg className={`w-3 h-3 mr-0.5 ${trend < 0 ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 12 12">
                     <path d="M6 2l-4 4h8l-4-4z" />
                   </svg>
@@ -127,12 +127,12 @@ function QuickLogCTA() {
   const { t } = useTranslation();
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 pointer-events-none sm:bottom-8 sm:p-0 sm:flex sm:justify-center">
+    <div className="fixed bottom-0 left-0 right-0 z-40 p-4 pointer-events-none sm:bottom-8 sm:p-0 sm:flex sm:justify-center">
       <motion.button
         whileHover={{ y: -4, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => navigate('/symptoms')}
-        className="pointer-events-auto w-full sm:w-auto flex items-center justify-center gap-3 bg-[var(--app-accent)] text-black px-8 py-5 rounded-full font-bold shadow-[0_28px_80px_rgba(226,255,50,0.38)] transition-all duration-300 active:shadow-none sm:min-w-[240px]"
+        className="pointer-events-auto w-full sm:w-auto flex items-center justify-center gap-3 bg-[var(--app-accent)] text-[var(--brand-accent-on)] px-8 py-5 rounded-full font-bold shadow-[0_28px_80px_var(--app-accent-shadow)] transition-all duration-300 active:shadow-none sm:min-w-[240px]"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -149,9 +149,9 @@ function EmptyDashboardState() {
     <div className="flex flex-col items-center justify-center py-20 text-center px-6">
       <div className="mb-12 relative">
         <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 20H30L35 10L45 30L50 20H120" stroke="rgba(226,255,50,0.1)" strokeWidth="2" />
-          <circle cx="30" cy="20" r="3" fill="rgba(226,255,50,0.3)" />
-          <circle cx="50" cy="20" r="3" fill="rgba(226,255,50,0.5)" />
+          <path d="M0 20H30L35 10L45 30L50 20H120" stroke="var(--app-accent-shadow)" strokeWidth="2" />
+          <circle cx="30" cy="20" r="3" fill="var(--app-accent-shadow)" />
+          <circle cx="50" cy="20" r="3" fill="var(--app-accent-shadow)" />
           <motion.circle 
             cx="100" cy="20" r="4" 
             fill="var(--app-accent)"
@@ -355,12 +355,13 @@ function DashboardInner() {
             <BrandMark size={32} title="CareTrace AI" />
           </span>
           <span className="min-w-0">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--app-accent)]">CareTrace AI</span>
+            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--app-text-muted)]">CareTrace AI</span>
             <span className="block truncate">{greeting}</span>
           </span>
         </span>
       )}
       subtitle={fullSubtitle} 
+      className="pb-28"
       maxWidthClass="max-w-5xl"
       ariaLabel={t('navbar.dashboard', 'Dashboard')}
     >

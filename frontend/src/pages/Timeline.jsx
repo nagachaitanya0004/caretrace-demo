@@ -18,7 +18,7 @@ function TimelineEntry({ item, t, isLast, i18n }) {
     severity >= 4 ? 'warning' : 'success';
 
   const dotSize = severity >= 8 ? 'w-3.5 h-3.5' : 'w-2.5 h-2.5';
-  const dotGlow = severity >= 8 ? 'shadow-[0_0_12px_rgba(226,255,50,0.6)]' : '';
+  const dotGlow = severity >= 8 ? 'shadow-[0_0_12px_var(--app-accent-shadow)]' : '';
 
   return (
     <div className="relative pl-10 pb-8 last:pb-0 group">
@@ -60,7 +60,7 @@ function TimelineEntry({ item, t, isLast, i18n }) {
             {item.notes.length > 100 && (
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-[10px] font-bold text-[var(--app-accent)] uppercase tracking-wider mt-2 hover:underline"
+                className="text-[10px] font-bold text-[var(--badge-success-text)] uppercase tracking-wider mt-2 hover:underline"
               >
                 {isExpanded ? t('timeline.show_less') : t('timeline.show_more')}
               </button>
@@ -89,7 +89,7 @@ function PatternCard({ pattern }) {
           </svg>
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--app-accent)] mb-1">Pattern Detected</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--badge-success-text)] mb-1">Pattern Detected</p>
           <p className="text-sm font-medium text-[var(--app-text)] leading-relaxed">
             {pattern.message}
           </p>
@@ -205,6 +205,7 @@ function Timeline() {
     <PageFrame 
       title={t('timeline.title', 'Your Health Arc')} 
       subtitle={t('timeline.subtitle', 'A longitudinal view of your clinical data.')} 
+      className="pb-28"
       maxWidthClass="max-w-3xl"
     >
       {/* Filter Bar */}
@@ -215,7 +216,7 @@ function Timeline() {
             onClick={() => setFilter(f.id)}
             className={`flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
               filter === f.id
-                ? 'bg-[var(--app-accent)] text-black shadow-[0_12px_32px_rgba(226,255,50,0.15)]'
+                ? 'bg-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[0_12px_32px_var(--app-accent-shadow)]'
                 : 'bg-[var(--app-surface)] border border-[var(--app-border)] text-[var(--app-text-disabled)] hover:text-[var(--app-text-muted)]'
             }`}
           >
@@ -261,11 +262,11 @@ function Timeline() {
         </div>
       )}
 
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[50]">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40">
         <Button 
           intent="cta" 
           onClick={() => navigate('/analysis')}
-          className="shadow-[0_28px_80px_rgba(226,255,50,0.3)]"
+          className="shadow-[0_28px_80px_var(--app-accent-shadow)]"
         >
           {t('timeline.get_analysis', 'Analyze patterns')}
         </Button>

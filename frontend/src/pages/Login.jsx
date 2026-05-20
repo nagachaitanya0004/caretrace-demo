@@ -131,7 +131,7 @@ function Login() {
           <Button
             type="button"
             intent="secondary"
-            className="w-full mb-6 !bg-white hover:!bg-gray-50 text-gray-900 border-none font-medium flex items-center justify-center h-12 shadow-sm"
+            className="w-full mb-6 !bg-[var(--app-surface-elevated)] hover:!bg-[var(--app-surface-soft)] text-[var(--app-text)] border-none font-medium flex items-center justify-center h-12 shadow-sm"
             onClick={() => addNotification('Google Sign-In coming soon', 'info')}
           >
             <GoogleIcon />
@@ -174,7 +174,7 @@ function Login() {
                 </label>
                 <Link 
                   to="/forgot-password" 
-                  className="text-xs font-medium text-[var(--app-text-muted)] hover:text-white transition-colors duration-200"
+                  className="text-xs font-medium text-[var(--app-text-muted)] hover:text-[var(--app-text)] transition-colors duration-200"
                 >
                   Forgot password?
                 </Link>
@@ -221,7 +221,7 @@ function Login() {
               size="md"
               loading={isLoading}
               disabled={isLoading}
-              className="w-full shadow-[0_0_20px_rgba(226,255,50,0.15)] hover:shadow-[0_0_24px_rgba(226,255,50,0.25)] transition-shadow duration-300"
+              className="w-full shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               {!isLoading && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,7 +243,7 @@ function Login() {
 
           <hr className="border-[var(--app-border)] my-6" />
 
-          <div className="p-5 bg-white/[0.02] border border-white/[0.05] rounded-[var(--radius-xl)]">
+          <div className="p-5 bg-[var(--app-surface-soft)] border border-[var(--app-border)] rounded-[var(--radius-xl)]">
             <p className="font-semibold text-[var(--app-text)] text-sm mb-1">{t('auth.try_demo_title')}</p>
             <p className="text-[var(--app-text-muted)] text-xs mb-4 leading-relaxed">{t('auth.try_demo_subtitle')}</p>
             <Button
@@ -253,7 +253,7 @@ function Login() {
               onClick={handleTryDemo}
               loading={isLoading}
               disabled={isLoading}
-              className="w-full !bg-transparent border-white/10 hover:!bg-white/5 text-[var(--app-text)]"
+              className="w-full !bg-transparent border-[var(--app-border)] hover:!bg-[var(--app-surface-elevated)] text-[var(--app-text)]"
             >
               {!isLoading && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

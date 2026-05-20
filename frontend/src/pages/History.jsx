@@ -52,7 +52,7 @@ function History() {
                           {t(`symptoms.options.${s.symptom}`, { defaultValue: s.symptom })}
                         </span>
                         {s.context?.frequency && (
-                          <span className="ml-2 text-xs text-[var(--app-accent)] bg-[var(--app-accent)]/10 border border-[var(--app-accent)]/20 px-1.5 py-0.5 rounded-full capitalize">
+                          <span className="ml-2 text-xs text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border border-[var(--app-border)] px-1.5 py-0.5 rounded-full capitalize">
                             {s.context.frequency}
                           </span>
                         )}

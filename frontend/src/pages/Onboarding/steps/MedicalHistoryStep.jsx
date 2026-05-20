@@ -81,7 +81,7 @@ export default function MedicalHistoryStep({ onNext }) {
 
   const inputCls = (error) =>
     `input-premium w-full px-3.5 py-2.5 text-sm transition-all ${
-      error ? 'ring-2 ring-rose-500 border-transparent focus:ring-rose-500 bg-rose-500/5' : ''
+      error ? 'ring-2 ring-danger border-transparent focus:ring-danger bg-danger/5' : ''
     }`;
 
   return (
@@ -153,7 +153,7 @@ export default function MedicalHistoryStep({ onNext }) {
       <div className="mt-8 flex flex-col items-center gap-3.5 border-t border-[var(--app-border-soft)] pt-6">
         <button
           type="submit"
-          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-[0_0_20px_rgba(226,255,50,0.15)] transition-all duration-200 hover:shadow-[0_0_25px_rgba(226,255,50,0.25)] active:scale-[0.98]"
+          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-[0_0_20px_var(--app-accent-shadow)] transition-all duration-200 hover:shadow-[0_0_25px_var(--app-accent-shadow)] active:scale-[0.98]"
         >
           {t('onboarding.actions.next')}
         </button>

@@ -6,6 +6,8 @@ import { useAuth } from '../AuthContext';
 import { BrandLockup } from '../components/BrandLogo';
 import Button from '../components/Button';
 import TestimonialsSection from '../components/TestimonialsSection';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../ThemeContext';
 import { DEMO_EMAIL, DEMO_PASSWORD } from '../constants/demoAccount';
 
 const APP_LANGUAGES = [
@@ -166,19 +168,19 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const frameClass = 'mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8';
 const surfaceToneClass =
-  'bg-[var(--color-surface)] [box-shadow:inset_0_0.5px_0_var(--color-surface-light),0_0_0_0.5px_var(--color-surface-border),0_24px_72px_rgba(0,0,0,0.52)]';
+  'bg-[var(--app-surface)] border border-[var(--app-border)] shadow-[var(--shadow-l1)]';
 const elevatedToneClass =
-  'bg-[var(--color-elevated)] backdrop-blur-2xl [box-shadow:inset_0_1px_0_var(--color-elevated-light),0_0_0_1px_var(--color-elevated-border),0_36px_120px_rgba(0,0,0,0.68),0_0_52px_var(--color-accent-shadow)]';
+  'bg-[var(--app-surface-elevated)] backdrop-blur-md border border-[var(--app-border)] shadow-[var(--shadow-l3)]';
 const eyebrowClass =
-  'text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-tertiary)]';
+  'text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)]';
 const sectionTitleClass =
-  'text-4xl font-semibold tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-5xl';
+  'text-4xl font-semibold tracking-[-0.04em] text-[var(--app-text)] sm:text-5xl';
 const sectionCopyClass =
-  'max-w-[40rem] text-base leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-lg';
+  'max-w-[40rem] text-base leading-8 tracking-normal text-[var(--app-text-muted)] sm:text-lg';
 const cardTitleClass =
-  'text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]';
+  'text-2xl font-semibold tracking-[-0.02em] text-[var(--app-text)]';
 const bodyCopyClass =
-  'text-base leading-8 tracking-normal text-[var(--color-text-secondary)]';
+  'text-base leading-8 tracking-normal text-[var(--app-text-muted)]';
 function createOrganicSeries() {
   return GRAPH_BASE_POINTS.map((point, index) => {
     if (index === 0 || index === GRAPH_BASE_POINTS.length - 1) {
@@ -260,7 +262,7 @@ function SectionHeader({ eyebrow, title, description, align = 'center' }) {
   return (
     <div className={cx('flex flex-col gap-4', alignmentClass)}>
       <div className="flex items-center gap-3">
-        <span className="h-1.5 w-1.5 rounded-full bg-[var(--landing-accent)]" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-accent)]" />
         <span className={eyebrowClass}>{eyebrow}</span>
       </div>
       <h2 className={sectionTitleClass}>{title}</h2>
@@ -280,8 +282,8 @@ function FeatureCard({ eyebrow, title, description, metric, iconPath, className,
       viewport={{ once: true, margin: '-96px' }}
       transition={{ ...cardSpring, delay }}
       className={cx(
-        'group flex h-full flex-col justify-between p-6 sm:p-8 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-[var(--landing-accent)]',
-        isPrimary && '[box-shadow:inset_0_0.5px_0_var(--color-surface-light),0_0_0_0.5px_var(--color-surface-border),0_24px_72px_rgba(0,0,0,0.52),0_0_0_1px_var(--app-border-soft)]',
+        'group flex h-full flex-col justify-between p-6 sm:p-8 transition-all duration-300 border-l-2 border-l-transparent hover:border-l-[var(--brand-accent)]',
+        isPrimary && '[box-shadow:inset_0_0.5px_0_transparent,0_0_0_0.5px_var(--app-border),0_24px_72px_rgba(0,0,0,0.52),0_0_0_1px_var(--app-border-soft)]',
         className
       )}
     >
@@ -291,14 +293,14 @@ function FeatureCard({ eyebrow, title, description, metric, iconPath, className,
           <h3 className={cardTitleClass}>{title}</h3>
         </div>
         <div className={cx('flex h-14 w-14 items-center justify-center rounded-[16px]', elevatedToneClass)}>
-          <Icon path={iconPath} className="h-5 w-5 text-[var(--landing-accent)]" />
+          <Icon path={iconPath} className="h-5 w-5 text-[var(--brand-accent)]" />
         </div>
       </div>
 
       <div className="mt-8 space-y-8">
         <p className={bodyCopyClass}>{description}</p>
-        <div className="flex items-center gap-4 text-sm tracking-normal text-[var(--color-text-secondary)]">
-          <span className="h-px flex-1 bg-[var(--color-hairline)]" />
+        <div className="flex items-center gap-4 text-sm tracking-normal text-[var(--app-text-muted)]">
+          <span className="h-px flex-1 bg-[var(--app-border)]" />
           <span>{metric}</span>
         </div>
       </div>
@@ -319,16 +321,16 @@ function WorkflowCard({ number, title, description, iconPath, delay }) {
       className="flex h-full flex-col p-6 sm:p-8"
     >
       <div className="flex items-center justify-between">
-        <span className={cx(eyebrowClass, 'text-[var(--landing-accent)]')}>{number}</span>
+        <span className={cx(eyebrowClass, 'text-[var(--brand-accent)]')}>{number}</span>
         <div className={cx('flex h-14 w-14 items-center justify-center rounded-[16px]', elevatedToneClass)}>
-          <Icon path={iconPath} className="h-5 w-5 text-[var(--landing-accent)]" />
+          <Icon path={iconPath} className="h-5 w-5 text-[var(--brand-accent)]" />
         </div>
       </div>
 
-      <h3 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+      <h3 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-[var(--app-text)]">
         {title}
       </h3>
-      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--app-text-muted)]">
         {description}
       </p>
     </Panel>
@@ -387,7 +389,7 @@ const DashboardMockup = memo(function DashboardMockup() {
       <div
         aria-hidden="true"
         className="mockup-glow pointer-events-none absolute inset-x-[12%] top-12 h-48 rounded-full"
-        style={{ background: 'var(--color-accent-ambient)' }}
+        style={{ background: 'rgba(198,216,112,0.22)' }}
       />
 
       <Panel tone="elevated" className="overflow-hidden p-6 sm:p-8">
@@ -403,13 +405,13 @@ const DashboardMockup = memo(function DashboardMockup() {
         <div className="relative flex items-start justify-between gap-8">
           <div className="flex items-center gap-4">
             <div className={cx('flex h-12 w-12 items-center justify-center rounded-full', surfaceToneClass)}>
-              <span className="text-sm font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+              <span className="text-sm font-semibold tracking-[-0.02em] text-[var(--app-text)]">
                 SJ
               </span>
             </div>
             <div className="space-y-2">
               <p className={eyebrowClass}>{t('landing.mockup_profile')}</p>
-              <p className="text-sm font-medium tracking-normal text-[var(--color-text-primary)]">
+              <p className="text-sm font-medium tracking-normal text-[var(--app-text)]">
                 {t('landing.mockup_name')}
               </p>
             </div>
@@ -424,10 +426,10 @@ const DashboardMockup = memo(function DashboardMockup() {
           >
             <p className={eyebrowClass}>{t('landing.mockup_health_score')}</p>
             <div className="mt-4 flex items-baseline justify-end gap-2">
-              <span className="text-4xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)]">
+              <span className="text-4xl font-semibold tracking-[-0.03em] text-[var(--app-text)]">
                 94
               </span>
-              <span className="text-sm tracking-normal text-[var(--color-text-tertiary)]">/100</span>
+              <span className="text-sm tracking-normal text-[var(--app-text-disabled)]">/100</span>
             </div>
           </motion.div>
         </div>
@@ -444,13 +446,13 @@ const DashboardMockup = memo(function DashboardMockup() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%), radial-gradient(circle at 18% 0%, var(--color-accent-soft), transparent 30%)',
+                  'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%), radial-gradient(circle at 18% 0%, rgba(198,216,112,0.14), transparent 30%)',
               }}
             />
 
             <motion.div
               style={{ x: crosshairX, opacity: crosshairOpacity }}
-              className="pointer-events-none absolute inset-y-6 left-0 z-20 w-px bg-[var(--landing-accent)]"
+              className="pointer-events-none absolute inset-y-6 left-0 z-20 w-px bg-[var(--brand-accent)]"
             />
 
             <motion.div
@@ -461,8 +463,8 @@ const DashboardMockup = memo(function DashboardMockup() {
               className="absolute left-6 right-14 top-6 bottom-12 flex flex-col justify-between"
             >
               {GRAPH_GUIDES.map((guide) => (
-                <div key={guide} className="relative border-t border-dashed border-[var(--color-grid-soft)]">
-                  <span className="absolute -top-4 right-2 bg-[var(--color-surface)] px-2 text-[11px] font-medium tracking-[0.15em] text-[var(--color-text-tertiary)]">
+                <div key={guide} className="relative border-t border-dashed border-[var(--app-border)]">
+                  <span className="absolute -top-4 right-2 bg-[var(--app-surface)] px-2 text-[11px] font-medium tracking-[0.15em] text-[var(--app-text-disabled)]">
                     {guide}
                   </span>
                 </div>
@@ -477,11 +479,11 @@ const DashboardMockup = memo(function DashboardMockup() {
             >
               <defs>
                 <linearGradient id={areaGradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(226,255,50,0.28)" />
-                  <stop offset="100%" stopColor="rgba(226,255,50,0)" />
+                  <stop offset="0%" stopColor="var(--app-accent-shadow)" />
+                  <stop offset="100%" stopColor="var(--app-accent-shadow)" />
                 </linearGradient>
                 <linearGradient id={strokeGradientId} x1="0" y1="0" x2={GRAPH_WIDTH} y2="0" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="var(--landing-accent)" />
+                  <stop stopColor="var(--brand-accent)" />
                   <stop offset="1" stopColor="var(--app-accent-hover)" />
                 </linearGradient>
               </defs>
@@ -506,7 +508,7 @@ const DashboardMockup = memo(function DashboardMockup() {
                 strokeWidth="3.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="drop-shadow-[0_0_24px_rgba(226,255,50,0.34)]"
+                className="drop-shadow-[0_0_24px_var(--app-accent-shadow)]"
               />
 
               {series.map((point, index) => {
@@ -525,7 +527,7 @@ const DashboardMockup = memo(function DashboardMockup() {
                         cx={point.x}
                         cy={point.y}
                         r="9"
-                        fill="rgba(226,255,50,0.16)"
+                        fill="var(--app-accent-shadow)"
                         animate={{ scale: isGraphActive ? 1.08 : 1 }}
                         transition={{ type: 'spring', stiffness: 260, damping: 18 }}
                       />
@@ -534,8 +536,8 @@ const DashboardMockup = memo(function DashboardMockup() {
                         cx={point.x}
                         cy={point.y}
                         r={isActive ? '5.5' : '4.5'}
-                        fill="var(--color-base)"
-                        stroke={isActive ? 'var(--app-accent-hover)' : 'var(--landing-accent)'}
+                        fill="var(--app-bg)"
+                        stroke={isActive ? 'var(--app-accent-hover)' : 'var(--brand-accent)'}
                         strokeWidth={isActive ? '2.5' : '2'}
                       />
                   </motion.g>
@@ -564,17 +566,17 @@ const DashboardMockup = memo(function DashboardMockup() {
                 )}
                 style={{ boxShadow: 'var(--app-shadow-medium)' }}
               >
-                <span className="h-3 w-3 rounded-full bg-[var(--landing-accent)] shadow-[0_0_28px_rgba(226,255,50,0.72)]" />
+                <span className="h-3 w-3 rounded-full bg-[var(--brand-accent)] shadow-[0_0_28px_var(--app-accent-shadow)]" />
                 <div className="flex items-center gap-4">
                   <div>
                     <p className={eyebrowClass}>{t('landing.mockup_pattern_detected')}</p>
-                    <p className="mt-2 text-sm font-medium tracking-normal text-[var(--color-text-primary)]">
+                    <p className="mt-2 text-sm font-medium tracking-normal text-[var(--app-text)]">
                       {t(tooltipPoint.labelKey)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className={eyebrowClass}>{t('landing.mockup_score')}</p>
-                    <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+                    <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[var(--app-text)]">
                       {tooltipPoint.value}
                     </p>
                   </div>
@@ -594,18 +596,18 @@ const DashboardMockup = memo(function DashboardMockup() {
               transition={{ type: 'spring', stiffness: 220, damping: 20, delay: 1 + (index * 0.08) }}
               className={cx('rounded-[24px] p-4 sm:p-6', surfaceToneClass)}
             >
-              <div className="flex items-center gap-4 text-[var(--color-text-tertiary)]">
+              <div className="flex items-center gap-4 text-[var(--app-text-disabled)]">
                 <div className={cx('flex h-10 w-10 items-center justify-center rounded-[16px]', elevatedToneClass)}>
-                  <Icon path={metric.iconPath} className="h-4 w-4 text-[var(--landing-accent)]" />
+                  <Icon path={metric.iconPath} className="h-4 w-4 text-[var(--brand-accent)]" />
                 </div>
                 <span className={eyebrowClass}>{t(metric.labelKey)}</span>
               </div>
 
               <div className="mt-6 flex items-baseline gap-2">
-                <span className="text-3xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)]">
+                <span className="text-3xl font-semibold tracking-[-0.03em] text-[var(--app-text)]">
                   {metric.value}
                 </span>
-                <span className="text-sm tracking-normal text-[var(--color-text-tertiary)]">
+                <span className="text-sm tracking-normal text-[var(--app-text-disabled)]">
                   {t(metric.unitKey)}
                 </span>
               </div>
@@ -621,6 +623,7 @@ const DashboardMockup = memo(function DashboardMockup() {
 function Landing() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme } = useTheme();
   const { token, isLoadingAuth, login } = useAuth();
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
@@ -716,7 +719,7 @@ function Landing() {
 
   return (
     <div
-      className="landing-shell landing-cinematic relative overflow-x-hidden bg-[var(--app-bg)] text-[var(--color-text-primary)] selection:bg-[var(--color-accent-soft)] selection:text-[var(--color-text-primary)]"
+      className="landing-shell relative overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)] selection:bg-[rgba(198,216,112,0.14)] selection:text-[var(--app-text)]"
     >
       <div
         aria-hidden="true"
@@ -739,36 +742,41 @@ function Landing() {
             as={motion.div}
             tone="elevated"
             animate={{
-              backgroundColor: scrolled ? 'rgba(20,20,20,0.95)' : 'rgba(20,20,20,0.82)',
+              backgroundColor: scrolled ? 'var(--app-surface)' : 'transparent',
             }}
             transition={microSpring}
             className="relative flex min-h-[72px] items-center justify-between overflow-visible rounded-[32px] px-4"
           >
-            {/* Logo — always visible */}
-            <Link
-              to="/"
-              className="relative z-10 rounded-[20px] transition-transform duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <BrandLockup variant="dark" />
-            </Link>
+            <nav aria-label="Main navigation" className="contents">
+              {/* Logo — always visible */}
+              <Link
+                to="/"
+                className="relative z-10 rounded-[20px] transition-transform duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              >
+                <BrandLockup variant={theme === 'dark' ? 'dark' : 'light'} />
+              </Link>
 
             {/* Right cluster: mobile utility group (icon + globe) anchored right; desktop adds text link + CTA */}
             <div className="relative z-10 flex items-center gap-3">
 
-              {/* Mobile utility group: user icon + language globe */}
+              {/* Mobile utility group: user icon + language globe + theme */}
+                
               <div className="flex items-center gap-4">
 
                 {/* Stealth login icon — mobile only, 44×44 tap target, secondary color */}
                 <Link
                   to="/login"
                   aria-label={t('landing.cta_login')}
-                  className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-secondary)] transition-colors duration-200 active:text-[var(--color-text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--app-text-muted)] transition-colors duration-200 active:text-[var(--app-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   <Icon
                     path="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     className="h-5 w-5"
                   />
                 </Link>
+
+                {/* Theme toggle */}
+                <ThemeToggle />
 
                 {/* Language switcher */}
                 <div className="relative">
@@ -781,16 +789,16 @@ function Landing() {
                   transition={microSpring}
                   onClick={() => setLangMenuOpen((open) => !open)}
                   className={cx(
-                    'inline-flex min-h-[3.5rem] items-center gap-2 sm:gap-3 rounded-full px-3 sm:px-4 py-2.5 text-sm font-medium tracking-normal leading-snug text-[var(--color-text-secondary)] transition-colors duration-200 hover:text-[var(--color-text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
+                    'inline-flex min-h-[3.5rem] items-center gap-2 sm:gap-3 rounded-full px-3 sm:px-4 py-2.5 text-sm font-medium tracking-normal leading-snug text-[var(--app-text-muted)] transition-colors duration-200 hover:text-[var(--app-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
                     surfaceToneClass,
                   )}
                 >
                   <Icon
                     path="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    className="h-4 w-4 shrink-0 text-[var(--landing-accent)]"
+                    className="h-4 w-4 shrink-0 text-[var(--brand-accent)]"
                   />
                   <span className="hidden sm:inline leading-snug">{activeLanguageCode.toUpperCase()}</span>
-                  <Icon path="M19 9l-7 7-7-7" className="hidden sm:block h-3.5 w-3.5 text-[var(--color-text-tertiary)]" />
+                  <Icon path="M19 9l-7 7-7-7" className="hidden sm:block h-3.5 w-3.5 text-[var(--app-text-disabled)]" />
                 </motion.button>
 
                 <AnimatePresence>
@@ -808,7 +816,7 @@ function Landing() {
                         transition={microSpring}
                         role="menu"
                         className="absolute left-1/2 top-[calc(100%+16px)] z-50 w-48 -translate-x-1/2 overflow-hidden rounded-[24px] p-2 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(255,255,255,0.08),0_24px_72px_rgba(0,0,0,0.72)]"
-                        style={{ backgroundColor: 'var(--color-elevated)' }}
+                        style={{ backgroundColor: 'var(--app-surface-elevated)' }}
                       >
                         {APP_LANGUAGES.map((language) => {
                           const isActive = activeLanguageCode === language.code;
@@ -825,19 +833,19 @@ function Landing() {
                               className={cx(
                                 'flex min-h-[3.5rem] w-full items-center justify-between rounded-[16px] px-4 py-2.5 text-left text-sm tracking-normal leading-snug transition-colors duration-200',
                                 isActive
-                                  ? 'text-[var(--color-text-primary)]'
-                                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]',
+                                  ? 'text-[var(--app-text)]'
+                                  : 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]',
                               )}
-                              style={isActive ? { backgroundColor: 'var(--color-surface)' } : undefined}
+                              style={isActive ? { backgroundColor: 'var(--app-surface)' } : undefined}
                             >
                               <span className="font-medium tracking-normal leading-snug">
                                 {language.native}
-                                <span className="ml-2 text-[var(--color-text-tertiary)]">
+                                <span className="ml-2 text-[var(--app-text-disabled)]">
                                   ({language.label})
                                 </span>
                               </span>
                               {isActive && (
-                                <Icon path="M5 13l4 4L19 7" className="h-4 w-4 text-[var(--landing-accent)]" />
+                                <Icon path="M5 13l4 4L19 7" className="h-4 w-4 text-[var(--brand-accent)]" />
                               )}
                             </motion.button>
                           );
@@ -853,7 +861,7 @@ function Landing() {
               {/* Login text link — desktop only */}
               <Link
                 to="/login"
-                className="hidden lg:inline-flex min-h-12 items-center rounded-full px-4 text-sm font-medium tracking-normal text-[var(--color-text-secondary)] transition-[color,transform] duration-200 hover:-translate-y-0.5 hover:text-[var(--color-text-primary)]"
+                className="hidden lg:inline-flex min-h-12 items-center rounded-full px-4 text-sm font-medium tracking-normal text-[var(--app-text-muted)] transition-[color,transform] duration-200 hover:-translate-y-0.5 hover:text-[var(--app-text)]"
               >
                 {t('landing.cta_login')}
               </Link>
@@ -869,11 +877,12 @@ function Landing() {
                 </Button>
               </motion.div>
             </div>
+            </nav>
 
             <motion.div
               animate={{ opacity: scrolled ? 1 : 0 }}
               transition={microSpring}
-              className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-[var(--color-hairline)]"
+              className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-[var(--app-border)]"
             />
           </Panel>
         </div>
@@ -891,20 +900,20 @@ function Landing() {
               >
                 {/* Trusted By badge + h1: True Flush alignment lock */}
                 <div className="flex flex-col items-start ml-0 pl-0 min-w-0 max-w-full">
-                  <div className="inline-flex items-center gap-3 rounded-full bg-[var(--landing-accent)] px-4 py-3 text-[var(--color-text-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_rgba(226,255,50,0.2)]">
+                  <div className="inline-flex items-center gap-3 rounded-full bg-[var(--brand-accent)] px-4 py-3 text-[var(--brand-accent-on)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_18px_48px_var(--app-accent-shadow)]">
                     <span className="h-2 w-2 rounded-full bg-[var(--brand-accent-on)]" />
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.15em] leading-relaxed text-[var(--color-text-on-accent)]">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.15em] leading-relaxed text-[var(--brand-accent-on)]">
                       AI-powered health intelligence
                     </span>
                   </div>
 
-                  <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] antialiased text-[var(--color-text-primary)] sm:text-6xl sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[1.02] break-words hyphens-auto text-balance max-w-full">
+                  <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] antialiased text-[var(--app-text)] sm:text-6xl sm:leading-[1.05] lg:text-[5.5rem] lg:leading-[1.02] break-words hyphens-auto text-balance max-w-full">
                     Doctors see you once a month.<br />
                     CareTrace watches every day.
                   </h1>
                 </div>
 
-                <p className="mt-4 sm:mt-8 max-w-[40rem] text-lg leading-[1.6] tracking-normal text-[var(--color-text-secondary)] sm:text-xl sm:leading-[1.6]">
+                <p className="mt-4 sm:mt-8 max-w-[40rem] text-lg leading-[1.6] tracking-normal text-[var(--app-text-muted)] sm:text-xl sm:leading-[1.6]">
                   Log symptoms in 12 seconds. See the pattern your doctor would have missed.
                 </p>
 
@@ -923,7 +932,7 @@ function Landing() {
                     className="w-full min-h-[3.5rem] sm:w-auto sm:min-w-[12rem]"
                   >
                     {demoLoading ? (
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-text-tertiary)] border-t-[var(--color-text-primary)]" />
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--app-text-disabled)] border-t-[var(--app-text)]" />
                     ) : null}
                     <span className="leading-snug">{t('landing.cta_try_demo')}</span>
                   </Button>
@@ -951,7 +960,7 @@ function Landing() {
                       className="rounded-[24px] p-6"
                     >
                       <p className={eyebrowClass}>{item.title}</p>
-                      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+                      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--app-text-muted)]">
                         {item.detail}
                       </p>
                     </Panel>
@@ -981,15 +990,15 @@ function Landing() {
                   className="p-6 sm:p-8"
                 >
                   <div className={cx('flex h-14 w-14 items-center justify-center rounded-[16px]', elevatedToneClass)}>
-                    <Icon path={signal.iconPath} className="h-5 w-5 text-[var(--landing-accent)]" />
+                    <Icon path={signal.iconPath} className="h-5 w-5 text-[var(--brand-accent)]" />
                   </div>
-                  <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--color-text-tertiary)]">
+                  <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--app-text-disabled)]">
                     {t(signal.eyebrowKey)}
                   </p>
-                  <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+                  <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[var(--app-text)]">
                     {t(signal.titleKey)}
                   </h2>
-                  <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+                  <p className="mt-8 text-base leading-8 tracking-normal text-[var(--app-text-muted)]">
                     {t(signal.detailKey)}
                   </p>
                 </Panel>
@@ -1053,16 +1062,16 @@ function Landing() {
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute right-[-8rem] top-[-6rem] h-64 w-64 rounded-full blur-[132px]"
-                style={{ background: 'var(--color-accent-ambient)' }}
+                style={{ background: 'rgba(198,216,112,0.22)' }}
               />
 
               <div className="relative grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,0.9fr)] lg:items-end">
                 <div>
                   <span className={eyebrowClass}>{t('landing.security_eyebrow')}</span>
-                  <h2 className="mt-4 max-w-[14ch] text-4xl font-semibold leading-[0.96] tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-5xl">
+                  <h2 className="mt-4 max-w-[14ch] text-4xl font-semibold leading-[0.96] tracking-[-0.04em] text-[var(--app-text)] sm:text-5xl">
                     {t('landing.security_title')}
                   </h2>
-                  <p className="mt-8 max-w-[40rem] text-base leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-lg">
+                  <p className="mt-8 max-w-[40rem] text-base leading-8 tracking-normal text-[var(--app-text-muted)] sm:text-lg">
                     Your data moves only when you say so.
                   </p>
 
@@ -1077,16 +1086,16 @@ function Landing() {
                       className="w-full sm:w-auto sm:min-w-[12rem]"
                     >
                       {demoLoading ? (
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-text-tertiary)] border-t-[var(--color-text-primary)]" />
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--app-text-disabled)] border-t-[var(--app-text)]" />
                       ) : null}
                       {t('landing.cta_try_demo')}
                     </Button>
                   </div>
 
-                  <div className="mt-8 inline-flex flex-wrap items-center gap-4 rounded-full px-4 py-4 text-sm tracking-normal text-[var(--color-text-secondary)]">
+                  <div className="mt-8 inline-flex flex-wrap items-center gap-4 rounded-full px-4 py-4 text-sm tracking-normal text-[var(--app-text-muted)]">
                     <Icon
                       path="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4zm0 6v4m0 4h.01"
-                      className="h-4 w-4 text-[var(--landing-accent)]"
+                      className="h-4 w-4 text-[var(--brand-accent)]"
                     />
                     <span>{t('landing.privacy_badge')}</span>
                   </div>
@@ -1105,10 +1114,10 @@ function Landing() {
                       className="rounded-[24px] p-6"
                     >
                       <p className={eyebrowClass}>{`0${index + 1}`}</p>
-                      <h3 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[var(--color-text-primary)]">
+                      <h3 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[var(--app-text)]">
                         {t(pillar.titleKey)}
                       </h3>
-                      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+                      <p className="mt-6 text-base leading-8 tracking-normal text-[var(--app-text-muted)]">
                         {t(pillar.descriptionKey)}
                       </p>
                     </Panel>
@@ -1127,7 +1136,7 @@ function Landing() {
            ──────────────────────────────────────────────────────────────────── */}
       <section
         className="relative z-10 overflow-hidden py-32 sm:py-40"
-        style={{ backgroundColor: 'var(--color-base)' }}
+        style={{ backgroundColor: 'var(--app-bg)' }}
         aria-labelledby="cta-heading"
       >
         {/* Volt glow — high-diffused, centered */}
@@ -1135,7 +1144,7 @@ function Landing() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-[-8rem] h-[36rem]"
           style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226,255,50,0.18), transparent 70%)',
+            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, var(--app-accent-shadow), transparent 70%)',
             filter: 'blur(48px)',
           }}
         />
@@ -1143,7 +1152,7 @@ function Landing() {
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-          style={{ background: 'linear-gradient(to bottom, transparent, var(--color-base))' }}
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--app-bg))' }}
         />
 
         <div className={frameClass}>
@@ -1156,21 +1165,21 @@ function Landing() {
           >
             <h2
               id="cta-heading"
-              className="text-4xl font-semibold leading-[1.06] tracking-[-0.05em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl"
+              className="text-4xl font-semibold leading-[1.06] tracking-[-0.05em] text-[var(--app-text)] sm:text-5xl lg:text-6xl"
             >
               Your body has been keeping records. Now you can read them.
             </h2>
-            <p className="mt-6 text-lg leading-8 tracking-normal text-[var(--color-text-secondary)] sm:text-xl">
+            <p className="mt-6 text-lg leading-8 tracking-normal text-[var(--app-text-muted)] sm:text-xl">
               Join patients and clinicians who stopped guessing.
             </p>
-            <div className="mt-10 text-sm tracking-normal text-[var(--color-text-tertiary)]">
+            <div className="mt-10 text-sm tracking-normal text-[var(--app-text-disabled)]">
               No credit card required · Cancel anytime
             </div>
           </motion.div>
         </div>
       </section>
 
-      <section className="relative z-10 py-16 sm:py-24 border-t border-[var(--color-hairline)]">
+      <section className="relative z-10 py-16 sm:py-24 border-t border-[var(--app-border)]">
         <div className={frameClass}>
           <TestimonialsSection />
         </div>
@@ -1180,17 +1189,17 @@ function Landing() {
       <section className="relative z-10 py-24 sm:py-32">
         <div className={frameClass}>
           <div className="flex flex-col items-center text-center gap-6">
-            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-[var(--color-text-primary)] sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-[var(--app-text)] sm:text-4xl">
               Health changes happen between appointments.
             </h2>
-            <p className="text-lg text-[var(--color-text-secondary)] sm:text-xl">
+            <p className="text-lg text-[var(--app-text-muted)] sm:text-xl">
               CareTrace exists for everything in between.
             </p>
           </div>
         </div>
       </section>
 
-      <footer id="about" className="relative z-10 border-t border-[var(--color-hairline)] py-16 sm:py-24">
+      <footer id="about" className="relative z-10 border-t border-[var(--app-border)] py-16 sm:py-24">
         <div className={frameClass}>
           <div className="grid gap-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
             <div className="max-w-[40rem]">
@@ -1198,9 +1207,9 @@ function Landing() {
                 to="/"
                 className="inline-flex rounded-[20px] transition-transform duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
-                <BrandLockup variant="dark" />
+                <BrandLockup variant={theme === 'dark' ? 'dark' : 'light'} />
               </Link>
-              <p className="mt-8 text-base leading-8 tracking-normal text-[var(--color-text-secondary)]">
+              <p className="mt-8 text-base leading-8 tracking-normal text-[var(--app-text-muted)]">
                 Daily symptom logging turned into a clinical record. Earlier detection. More confident action.
               </p>
             </div>
@@ -1214,7 +1223,7 @@ function Landing() {
                       <li key={link.labelKey}>
                         <Link
                           to={link.to}
-                          className="text-sm tracking-normal text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-text-primary)]"
+                          className="text-sm tracking-normal text-[var(--app-text-muted)] transition-colors duration-150 hover:text-[var(--app-text)]"
                         >
                           {t(link.labelKey)}
                         </Link>
@@ -1226,25 +1235,25 @@ function Landing() {
             </div>
           </div>
 
-          <div className="mt-16 relative flex flex-col gap-4 border-t border-[var(--color-hairline)] pt-8 text-sm tracking-normal text-[var(--color-text-tertiary)] sm:flex-row sm:items-center sm:justify-between">
-            <span className="absolute top-[-1px] left-1/2 -translate-x-1/2 w-[120px] h-px bg-[var(--landing-accent)] opacity-40" />
+          <div className="mt-16 relative flex flex-col gap-4 border-t border-[var(--app-border)] pt-8 text-sm tracking-normal text-[var(--app-text-disabled)] sm:flex-row sm:items-center sm:justify-between">
+            <span className="absolute top-[-1px] left-1/2 -translate-x-1/2 w-[120px] h-px bg-[var(--brand-accent)] opacity-40" />
             <p>&copy; {new Date().getFullYear()} CareTrace AI. {t('landing.footer_copyright')}</p>
             <div className="flex flex-wrap items-center gap-6">
               <Link
                 to="/#security"
-                className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
+                className="transition-colors duration-150 hover:text-[var(--app-text)]"
               >
                 {t('landing.footer_security')}
               </Link>
               <Link
                 to="/login"
-                className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
+                className="transition-colors duration-150 hover:text-[var(--app-text)]"
               >
                 {t('landing.footer_sign_in')}
               </Link>
               <Link
                 to="/signup"
-                className="transition-colors duration-150 hover:text-[var(--color-text-primary)]"
+                className="transition-colors duration-150 hover:text-[var(--app-text)]"
               >
                 {t('landing.footer_get_started')}
               </Link>
@@ -1279,7 +1288,7 @@ function CookieBanner() {
       className="fixed bottom-6 left-6 right-6 z-[100] sm:left-auto sm:right-8 sm:max-w-md"
     >
       <Panel tone="elevated" className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between shadow-[var(--shadow-l3)]">
-        <p className="text-sm text-[var(--color-text-secondary)]">
+        <p className="text-sm text-[var(--app-text-muted)]">
           {t('landing.cookie_notice', 'We use cookies for authentication and to improve your experience.')}
         </p>
         <Button intent="cta" size="sm" onClick={handleAccept} className="whitespace-nowrap">

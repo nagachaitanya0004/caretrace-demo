@@ -149,7 +149,7 @@ function Signup() {
           <Button
             type="button"
             intent="secondary"
-            className="w-full mb-6 !bg-white hover:!bg-gray-50 text-gray-900 border-none font-medium flex items-center justify-center h-12 shadow-sm"
+            className="w-full mb-6 !bg-[var(--app-surface-elevated)] hover:!bg-[var(--app-surface-soft)] text-[var(--app-text)] border-none font-medium flex items-center justify-center h-12 shadow-sm"
             onClick={() => addNotification('Google Sign-In coming soon', 'info')}
           >
             <GoogleIcon />
@@ -166,7 +166,7 @@ function Signup() {
           </div>
 
           {error && (
-            <div role="alert" className="mb-6 p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-sm rounded-[var(--radius-xl)] flex items-center gap-2 fade-in">
+            <div role="alert" className="mb-6 p-3.5 bg-danger/10 border border-danger/20 text-danger text-sm rounded-[var(--radius-xl)] flex items-center gap-2 fade-in">
               <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
@@ -261,10 +261,10 @@ function Signup() {
                       key={level}
                       className={`flex-1 rounded-full transition-colors duration-300 ${
                         passwordStrength >= level
-                          ? passwordStrength === 1 ? 'bg-rose-500'
-                          : passwordStrength === 2 ? 'bg-amber-400'
-                          : passwordStrength === 3 ? 'bg-emerald-400'
-                          : 'bg-emerald-500'
+                          ? passwordStrength === 1 ? 'bg-danger'
+                          : passwordStrength === 2 ? 'bg-warning'
+                          : passwordStrength === 3 ? 'bg-success'
+                          : 'bg-success'
                           : 'bg-[var(--app-border-soft)]'
                       }`}
                     />
@@ -273,14 +273,14 @@ function Signup() {
                 <div className="flex justify-between items-center text-xs">
                   <span className={`font-medium transition-colors duration-300 ${
                     passwordStrength === 0 ? 'text-transparent select-none' : 
-                    passwordStrength < 3 ? 'text-amber-500' : 'text-emerald-500'
+                    passwordStrength < 3 ? 'text-warning' : 'text-success'
                   }`}>
                     {passwordStrength === 0 ? 'Strength' :
                      passwordStrength === 1 ? 'Weak' :
                      passwordStrength === 2 ? 'Fair' :
                      passwordStrength === 3 ? 'Good' : 'Strong'}
                   </span>
-                  <span className={`transition-colors duration-300 ${password.length >= 8 ? 'text-emerald-500' : 'text-[var(--app-text-muted)]'}`}>
+                  <span className={`transition-colors duration-300 ${password.length >= 8 ? 'text-success' : 'text-[var(--app-text-muted)]'}`}>
                     {password.length >= 8 ? '✓ 8+ characters' : 'Must be 8+ characters'}
                   </span>
                 </div>
@@ -292,7 +292,7 @@ function Signup() {
               size="lg"
               loading={isSignupLoading}
               disabled={isAnyLoading}
-              className="w-full mt-2 font-semibold shadow-[0_0_20px_rgba(226,255,50,0.15)] hover:shadow-[0_0_25px_rgba(226,255,50,0.25)] transition-all"
+              className="w-full mt-2 font-semibold shadow-md hover:shadow-[0_0_25px_var(--app-accent-shadow)] transition-all"
             >
               {!isSignupLoading && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,7 +325,7 @@ function Signup() {
 
           <hr className="border-[var(--app-border)] my-6" />
 
-          <div className="p-5 bg-white/[0.02] border border-white/[0.05] rounded-[var(--radius-xl)]">
+          <div className="p-5 bg-[var(--app-surface-soft)] border border-[var(--app-border)] rounded-[var(--radius-xl)]">
             <p className="font-semibold text-[var(--app-text)] text-sm mb-1">{t('auth.try_demo_title')}</p>
             <p className="text-[var(--app-text-muted)] text-xs mb-4 leading-relaxed">{t('auth.try_demo_subtitle')}</p>
             <Button
@@ -335,7 +335,7 @@ function Signup() {
               onClick={handleTryDemo}
               loading={isDemoLoading}
               disabled={isAnyLoading}
-              className="w-full !bg-transparent border-white/10 hover:!bg-white/5 text-[var(--app-text)]"
+              className="w-full !bg-transparent border-[var(--app-border)] hover:!bg-[var(--app-surface-elevated)] text-[var(--app-text)]"
             >
               {!isDemoLoading && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

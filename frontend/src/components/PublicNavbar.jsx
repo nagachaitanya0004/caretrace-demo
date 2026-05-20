@@ -4,9 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BrandLockup } from './BrandLogo';
 import Button from './Button';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useTheme } from '../ThemeContext';
+import ThemeToggle from './ThemeToggle';
 
 function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false, omitAuthAction }) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const light = variant === 'light';
 
@@ -20,10 +23,12 @@ function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false,
         to="/"
         className="flex items-center min-w-0 rounded-[var(--radius-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] focus-visible:ring-offset-2"
       >
-        <BrandLockup variant={light ? 'light' : 'dark'} size="xl" />
+        <BrandLockup variant={theme === 'dark' ? 'dark' : 'light'} size="xl" />
       </Link>
 
       <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <ThemeToggle />
+        
         <LanguageSwitcher variant={variant} />
 
         {!hideNavAuth && (
@@ -33,7 +38,7 @@ function PublicNavbar({ variant = 'dark', embedded = false, hideNavAuth = false,
                 type="button"
                 onClick={() => navigate('/login')}
                 className={`text-xs sm:text-sm font-semibold transition-opacity whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] rounded ${
-                  light ? 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]' : 'text-white/80 hover:text-white'
+                  light ? 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]' : 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]'
                 }`}
               >
                 {t('landing.cta_login')}

@@ -1,9 +1,14 @@
 import { useId } from 'react';
 
-export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' }) {
+export function BrandMark({ size = 36, className = '', title = 'CareTrace AI', variant = 'dark' }) {
   const generatedId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const gradientId = `caretrace-volt-${generatedId}`;
   const titleId = title ? `${gradientId}-title` : undefined;
+
+  // Light mode uses sage green gradient, dark mode uses volt yellow
+  const gradientStart = variant === 'light' ? '#C6D870' : 'var(--brand-accent, #E2FF32)';
+  const gradientEnd = variant === 'light' ? '#a8bc52' : 'var(--app-accent-hover, #CDE92B)';
+  const strokeColor = variant === 'light' ? '#2d3800' : 'var(--brand-accent-on, #0a0a0a)';
 
   return (
     <svg
@@ -21,14 +26,14 @@ export function BrandMark({ size = 36, className = '', title = 'CareTrace AI' })
       {title && <title id={titleId}>{title}</title>}
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="var(--brand-accent, #E2FF32)" />
-          <stop offset="100%" stopColor="var(--app-accent-hover, #CDE92B)" />
+          <stop offset="0%" stopColor={gradientStart} />
+          <stop offset="100%" stopColor={gradientEnd} />
         </linearGradient>
       </defs>
       <rect width="40" height="40" rx="10" fill={`url(#${gradientId})`} />
       <path
         d="M10 20h4l1.2-5 2.3 12 2.5-14 2.2 7H30"
-        stroke="var(--brand-accent-on, #0a0a0a)"
+        stroke={strokeColor}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -49,6 +54,7 @@ export function BrandLockup({
   const sizes = { sm: 28, md: 34, lg: 40, xl: 44 };
   const px = sizes[size] || sizes.md;
   const nameClass = variant === 'light' ? 'text-[var(--app-text)]' : 'text-[var(--color-text-primary,var(--app-text))]';
+  const suffixClass = variant === 'light' ? 'text-[#6b8220]' : 'text-[var(--brand-accent)]';
   const subClass  = variant === 'light' ? 'text-[var(--app-text-muted)]' : 'text-[var(--color-text-secondary,var(--app-text-muted))]';
   const titleSize =
     size === 'xl'
@@ -61,11 +67,11 @@ export function BrandLockup({
     <div
       className={`flex min-w-0 ${stacked ? 'flex-col items-center text-center gap-3' : 'items-center gap-2.5'} ${className}`}
     >
-      <BrandMark size={px} />
+      <BrandMark size={px} variant={variant} />
       <div className="min-w-0 flex flex-col justify-center leading-tight">
         <span className={`font-bold tracking-tight ${titleSize} ${nameClass}`}>
           CareTrace{' '}
-          <span className="font-bold text-[var(--brand-accent)]">AI</span>
+          <span className={`font-bold ${suffixClass}`}>AI</span>
         </span>
         {showTagline && tagline && (
           <span className={`text-[10px] sm:text-xs font-medium uppercase tracking-widest mt-0.5 ${subClass}`}>

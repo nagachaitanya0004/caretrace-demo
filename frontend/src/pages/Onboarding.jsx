@@ -13,6 +13,7 @@ import MedicalHistoryStep from './Onboarding/steps/MedicalHistoryStep';
 import FamilyHistoryStep from './Onboarding/steps/FamilyHistoryStep';
 import LifestyleStep from './Onboarding/steps/LifestyleStep';
 import VitalsStep from '../components/VitalsStep';
+import PublicNavbar from '../components/PublicNavbar';
 
 const TOTAL_STEPS = 5;
 const STEP_KEYS = ['basic', 'medical', 'family', 'lifestyle', 'vitals'];
@@ -304,7 +305,10 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 max-w-7xl mx-auto w-full">
+        <PublicNavbar embedded hideNavAuth />
+      </div>
       <div className="card-premium relative mx-auto w-full max-w-xl p-8 transition-opacity duration-300 slide-up sm:p-10">
         <CloudSyncIcon onRetry={handleRetry} />
 
@@ -315,7 +319,7 @@ export default function Onboarding() {
                 key={STEP_KEYS[index]}
                 className={`h-1.5 flex-1 rounded-full transition-all duration-500 ease-out ${
                   index < step
-                    ? 'bg-[var(--app-accent)] shadow-[0_0_10px_rgba(226,255,50,0.5)]'
+                    ? 'bg-[var(--app-accent)] shadow-[0_0_10px_var(--app-accent-shadow)]'
                     : 'bg-[var(--app-border-soft)]'
                 }`}
               />

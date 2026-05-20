@@ -256,7 +256,7 @@ function Settings() {
                   onClick={handleDeleteAccount}
                   disabled={deleteConfirm !== 'DELETE' || isDeleting}
                   loading={isDeleting}
-                  className="flex-1 bg-rose-500 hover:bg-rose-600 text-white border-transparent"
+                  className="flex-1 bg-danger hover:bg-danger text-white border-transparent"
                 >
                   {t('settings.confirm_delete_btn', 'Delete Permanently')}
                 </Button>

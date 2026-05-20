@@ -44,7 +44,7 @@ const INTENT = {
     'hover:bg-[var(--app-surface-elevated)] hover:text-[var(--app-text)]',
 
   // Danger: destructive actions only
-  danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-[var(--shadow-l1)]',
+  danger: 'bg-danger text-white hover:bg-danger shadow-[var(--shadow-l1)]',
 };
 
 // ─── Glow classes — hover shadows live in CSS, not JS ────────────────────────

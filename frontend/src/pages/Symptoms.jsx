@@ -131,8 +131,8 @@ function Symptoms() {
                   aria-pressed={selectedSymptom === s}
                   className={`flex-shrink-0 min-h-[44px] px-6 rounded-full text-sm font-semibold transition-all duration-200 border-2 ${
                     selectedSymptom === s
-                      ? 'bg-[#080f1c] border-[var(--app-accent)] text-[var(--app-accent)] shadow-[0_0_20px_rgba(226,255,50,0.15)]'
-                      : 'bg-[#080f1c] border-[var(--app-border)] text-[var(--app-text-muted)] hover:border-[rgba(255,255,255,0.16)]'
+                      ? 'bg-[var(--app-accent)] border-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[var(--shadow-l1)]'
+                      : 'bg-[var(--app-surface-elevated)] border-[var(--app-border)] text-[var(--app-text-muted)] hover:border-[var(--app-border-hover)]'
                   }`}
                 >
                   {t(`symptoms.options.${s}`, s.charAt(0).toUpperCase() + s.slice(1))}
@@ -216,7 +216,7 @@ function Symptoms() {
                       {...field}
                       placeholder={t('symptoms.notes_placeholder', 'What else changed today?')}
                       rows={3}
-                      className="w-full bg-[#080f1c] border border-[var(--app-border)] rounded-2xl p-4 text-sm text-[var(--app-text)] placeholder:text-[var(--app-text-disabled)] focus:outline-none focus:border-[var(--app-accent)] transition-colors resize-none"
+                      className="w-full bg-[var(--app-surface-elevated)] border border-[var(--app-border)] rounded-2xl p-4 text-sm text-[var(--app-text)] placeholder:text-[var(--app-text-disabled)] focus:outline-none focus:border-[var(--app-accent)] transition-colors resize-none"
                     />
                   )}
                 />
@@ -237,8 +237,8 @@ function Symptoms() {
                 !selectedSymptom 
                   ? 'bg-[var(--app-surface)] text-[var(--app-text-disabled)]' 
                   : isSuccess 
-                    ? 'bg-[var(--app-accent)] text-black'
-                    : 'bg-[var(--app-accent)] text-black shadow-[0_28px_80px_rgba(226,255,50,0.25)]'
+                    ? 'bg-[var(--app-accent)] text-[var(--brand-accent-on)]'
+                    : 'bg-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[0_28px_80px_var(--app-accent-shadow)]'
               }`}
             >
               <AnimatePresence mode="wait">
@@ -306,8 +306,8 @@ function Symptoms() {
             className="fixed inset-0 z-[400] bg-[var(--app-bg)] flex flex-col items-center justify-center text-center"
           >
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mb-8">
-              <div className="w-24 h-24 rounded-full bg-[var(--app-accent)] flex items-center justify-center shadow-[0_0_60px_rgba(226,255,50,0.3)]">
-                <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-24 h-24 rounded-full bg-[var(--app-accent)] flex items-center justify-center shadow-[0_0_60px_var(--app-accent-shadow)]">
+                <svg className="w-12 h-12 text-[var(--brand-accent-on)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </div>

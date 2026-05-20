@@ -34,10 +34,10 @@ export function NotificationProvider({ children }) {
             role="alert"
             aria-live={n.type === 'error' ? 'assertive' : 'polite'}
             className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-start gap-3 transition-all transform slide-up ${
-            n.type === 'error' ? 'bg-rose-500/90 border-rose-400/50 text-white' : 
-            n.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' : 
-            n.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' : 
-            'bg-zinc-800/90 border-zinc-400/50 text-white'
+            n.type === 'error' ? 'bg-danger/90 border-danger/50 text-white' : 
+            n.type === 'success' ? 'bg-success/90 border-success/50 text-white' : 
+            n.type === 'warning' ? 'bg-warning/90 border-warning/50 text-white' : 
+            'bg-[var(--app-surface-elevated)]/90 border-[var(--app-border)]/50 text-[var(--app-text)]'
           }`}>
             <div className="shrink-0 mt-0.5">
               {n.type === 'error' && (
@@ -58,7 +58,7 @@ export function NotificationProvider({ children }) {
             </div>
             <button 
               onClick={() => removeNotification(n.id)} 
-              className="shrink-0 text-white/60 hover:text-white transition-colors"
+              className={`shrink-0 transition-colors ${n.type === 'info' ? 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]' : 'text-white/60 hover:text-white'}`}
               aria-label="Dismiss notification"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>

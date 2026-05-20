@@ -458,7 +458,7 @@ export default function HealthProfile() {
         <SectionHeader
           title="Family Health History"
           icon={
-            <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           }
@@ -508,7 +508,7 @@ export default function HealthProfile() {
                 <button
                   onClick={() => removeFamRow(i)}
                   disabled={famRows.length === 1}
-                  className="px-2 py-2 text-[var(--app-text-muted)] hover:text-rose-500 border border-[var(--app-border)] rounded-[var(--radius-md)] text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="px-2 py-2 text-[var(--app-text-muted)] hover:text-danger border border-[var(--app-border)] rounded-[var(--radius-md)] text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   title="Remove"
                 >
                   ✕
@@ -530,7 +530,7 @@ export default function HealthProfile() {
         <SectionHeader
           title="Lifestyle & Habits"
           icon={
-            <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           }
