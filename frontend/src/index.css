@@ -7,7 +7,7 @@
   --color-primary-200: #eaefc3;
   --color-primary-300: #dde49f;
   --color-primary-400: #d1dc7b;
-  --color-primary-500: #C6D870;
+  --color-primary-500: #8AA624;
   --color-primary-600: #9bad4f;
   --color-primary-700: #768636;
   --color-primary-800: #576326;
@@ -54,7 +54,7 @@
   --surface-base:    #FFFFFF;
   --surface-1:       #FFFFFF;
   --surface-2:       #FAFAF9;
-  --brand-accent:    #C6D870;
+  --brand-accent:    #8AA624;
   --brand-accent-on: #2D3A1A; /* Darker green-tinted text for better contrast on accent */
 
   /* Elevation Scale — soft, premium SaaS shadows */
@@ -69,10 +69,10 @@
   --radius-xl: 24px;
 
   /* Focus ring — standardized */
-  --focus-ring: 0 0 0 3px rgba(198, 216, 112, 0.5);
+  --focus-ring: 0 0 0 3px rgba(138, 166, 36, 0.5);
 
   /* ── App aliases (point to unified tokens) ──────────── */
-  --app-bg: #FAFAF9; /* Warm off-white with subtle sage tint for main backgrounds */
+  --app-bg: #DBE4C9; /* Soft light sage background */
   --app-surface: var(--surface-base); /* Clean white for main surfaces */
   --app-surface-elevated: var(--surface-1);
   --app-surface-soft: #F5F5F3; /* Soft warm off-white for secondary backgrounds */
@@ -85,16 +85,16 @@
   
   --app-border: #E7E5E4; /* Warm subtle border */
   --app-border-soft: rgba(231, 229, 228, 0.6);
-  --app-border-hover: #C6D870;
+  --app-border-hover: #8AA624;
   
   --app-accent: var(--brand-accent);
   --app-accent-hover: #d1df88; /* Slightly lighter on hover */
-  --app-accent-glow: rgba(198, 216, 112, 0.25);
-  --app-ring: rgba(198, 216, 112, 0.5);
+  --app-accent-glow: rgba(138, 166, 36, 0.25);
+  --app-ring: rgba(138, 166, 36, 0.5);
   --app-accent-text: #2D3A1A;
-  --app-accent-soft: rgba(198, 216, 112, 0.15);
-  --app-accent-ambient: rgba(198, 216, 112, 0.2);
-  --app-accent-shadow: rgba(198, 216, 112, 0.3);
+  --app-accent-soft: rgba(138, 166, 36, 0.15);
+  --app-accent-ambient: rgba(138, 166, 36, 0.2);
+  --app-accent-shadow: rgba(138, 166, 36, 0.3);
   
   --app-input-bg: #FFFFFF;
   --app-input-border: #E7E5E4;
@@ -160,10 +160,10 @@
   color-scheme: dark;
 
   /* ── Unified Token Tier (dark) ──────────────────────── */
-  --surface-base: #03070f; /* updated to specific base dark color */
-  --surface-1:    #080f1c; /* updated to specific surface dark color */
-  --surface-2:    #0c1525; /* updated to specific elevated dark color */
-  --brand-accent:    #C6D870; /* unified brand accent */ /* dark mode: Volt Yellow */
+  --surface-base: #09090b; /* updated to specific base dark color */
+  --surface-1:    #18181b; /* updated to specific surface dark color */
+  --surface-2:    #27272a; /* updated to specific elevated dark color */
+  --brand-accent:    #8AA624; /* unified brand accent */ /* dark mode: Volt Yellow */
   --brand-accent-on: #0a0a0a;
 
   /* Elevation Scale (dark) */
@@ -189,17 +189,17 @@
   --app-bg: var(--surface-base); /* updated to point to specific base dark color */
   --app-surface: var(--surface-1); /* updated to point to specific surface dark color */
   --app-surface-elevated: var(--surface-2); /* updated to point to specific elevated dark color */
-  --app-surface-soft: #162030; /* shifted to match depth profile */
-  --app-surface-floating: rgba(8, 15, 28, 0.97);
+  --app-surface-soft: #27272a; /* shifted to match depth profile */
+  --app-surface-floating: rgba(24, 24, 27, 0.97);
   --app-text: #FFFFFF;
   --app-text-muted: #A3A3A3;
   --app-text-tertiary: #6b7280; /* added tertiary text level */
   --app-text-disabled: #374151; /* shifted disabled level down */
-  --app-border: #1e293b;
+  --app-border: #27272a;
   --app-border-soft: rgba(255, 255, 255, 0.08);
-  --app-border-hover: #2d4268;
-  --app-input-bg: #03070f;
-  --app-input-border: #1e293b;
+  --app-border-hover: #3f3f46;
+  --app-input-bg: #09090b;
+  --app-input-border: #27272a;
   --app-danger: #f87171;
   --app-danger-bg: rgba(251, 113, 133, 0.12);
   --app-danger-border: rgba(251, 113, 133, 0.28);
@@ -226,23 +226,23 @@
   --badge-accent-text: #FFFFFF;
   --app-accent: var(--brand-accent);
   --app-accent-hover: #D1E37A;
-  --app-accent-glow: rgba(198, 216, 112, 0.3);
-  --app-ring: rgba(198, 216, 112, 0.3);
+  --app-accent-glow: rgba(138, 166, 36, 0.3);
+  --app-ring: rgba(138, 166, 36, 0.3);
   --app-shadow-small:  var(--shadow-l1);
   --app-shadow-medium: var(--shadow-l2);
   --app-shadow-large:  var(--shadow-l3);
   --app-shadow-glow:
-    0 0 0 1px rgba(198, 216, 112, 0.15), /* updated from cyan/white to volt-yellow per Issue 9 */
+    0 0 0 1px rgba(138, 166, 36, 0.15), /* updated from cyan/white to volt-yellow per Issue 9 */
     0 8px 32px rgba(0, 0, 0, 0.7),
-    0 0 24px rgba(198, 216, 112, 0.08); /* updated accent bleed */
+    0 0 24px rgba(138, 166, 36, 0.08); /* updated accent bleed */
   --app-chart-primary: var(--brand-accent);
-  --app-chart-primary-muted: rgba(198, 216, 112, 0.15);
+  --app-chart-primary-muted: rgba(138, 166, 36, 0.15);
   --app-chart-secondary: #63b3ed;
   --app-chart-grid: rgba(255, 255, 255, 0.08);
   --app-chart-axis: #A3A3A3;
-  --app-chart-tooltip-bg: #080f1c;
-  --app-chart-tooltip-border: #1e293b;
-  --app-chart-dot: #0c1525;
+  --app-chart-tooltip-bg: #18181b;
+  --app-chart-tooltip-border: #27272a;
+  --app-chart-dot: #27272a;
   --dark-bg: var(--app-bg);
   --dark-surface: var(--app-surface);
   --dark-surface-floating: var(--app-surface-floating);
@@ -284,23 +284,23 @@ body {
 
 /* ─── Landing Cinematic Theme ──────────────────────────── */
 .landing-cinematic {
-  --brand-accent:    #C6D870; /* unified brand accent */
+  --brand-accent:    #8AA624; /* unified brand accent */
   --brand-accent-on:      #000000;
-  --app-bg:               #03070f; /* unified base color */
-  --app-surface:          #080f1c; /* unified surface color */
-  --app-surface-elevated: #0c1525; /* unified elevated color */
-  --app-surface-soft:     #162030;
+  --app-bg:               #09090b; /* unified base color */
+  --app-surface:          #18181b; /* unified surface color */
+  --app-surface-elevated: #27272a; /* unified elevated color */
+  --app-surface-soft:     #27272a;
   --app-text:             #FFFFFF;
   --app-text-muted:       #a1a1aa;
   --app-text-disabled:    #52525b;
   --app-border:           rgba(255,255,255,0.08);
   --app-border-hover:     rgba(255,255,255,0.16);
-  --app-input-bg:         #03070f;
+  --app-input-bg:         #09090b;
   --app-input-border:     rgba(255,255,255,0.12);
   --app-accent:           #E2FF32;
-  --app-ring:             rgba(198, 216, 112,0.22);
+  --app-ring:             rgba(138, 166, 36,0.22);
   /* Landing-specific semantic tokens */
-  --color-base:           #03070f;
+  --color-base:           #09090b;
   --color-surface:        #0a0a0a;
   --color-elevated:       #141414;
   --color-text-primary:   #FFFFFF;
@@ -330,7 +330,7 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.22),
     0 0 0 1px rgba(255,255,255,0.12),
     0 36px 120px rgba(0,0,0,0.68),
-    0 0 52px rgba(198, 216, 112,0.28);
+    0 0 52px rgba(138, 166, 36,0.28);
 }
 
 /* ─── Global Transitions Scoped ───────────────────── */
@@ -386,7 +386,7 @@ input[type='range'] {
 @media (max-width: 640px) {
   .hero-glow {
     background:
-      radial-gradient(circle at 16% 14%, rgba(198, 216, 112,0.14), transparent 28%),
+      radial-gradient(circle at 16% 14%, rgba(138, 166, 36,0.14), transparent 28%),
       radial-gradient(circle at 84% 18%, rgba(255,255,255,0.05), transparent 24%),
       linear-gradient(180deg, rgba(255,255,255,0.01) 0%, transparent 26%);
     filter: blur(32px);
@@ -444,8 +444,8 @@ input[type='range'] {
 }
 
 @keyframes borderGlow {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(198, 216, 112, 0.15); }
-  50%      { box-shadow: 0 0 0 1px rgba(198, 216, 112, 0.40), 0 0 24px rgba(198, 216, 112, 0.10); }
+  0%, 100% { box-shadow: 0 0 0 1px rgba(138, 166, 36, 0.15); }
+  50%      { box-shadow: 0 0 0 1px rgba(138, 166, 36, 0.40), 0 0 24px rgba(138, 166, 36, 0.10); }
 }
 
 /* ─── Dark-mode enter animations ───────────── */
@@ -487,8 +487,8 @@ input[type='range'] {
   50% {
     box-shadow:
       0 12px 48px rgba(0,0,0,0.82),
-      0 0 0 1px rgba(198, 216, 112,0.1), /* corrected cyan stops to volt-yellow per Issue 5 */
-      0 0 40px rgba(198, 216, 112,0.05);
+      0 0 0 1px rgba(138, 166, 36,0.1), /* corrected cyan stops to volt-yellow per Issue 5 */
+      0 0 40px rgba(138, 166, 36,0.05);
   }
 }
 
@@ -533,7 +533,7 @@ input[type='range'] {
   box-shadow:
     0 2px 4px rgba(15, 23, 42, 0.04),
     0 12px 40px -8px rgba(15, 23, 42, 0.08),
-    0 0 0 1px rgba(198, 216, 112, 0.14);
+    0 0 0 1px rgba(138, 166, 36, 0.14);
 }
 
 .glass-card {
@@ -544,8 +544,8 @@ input[type='range'] {
 }
 
 .glass-card-dark {
-  background: #080f1c; /* updated to surface-1 */
-  border: 1px solid #1e293b;
+  background: #18181b; /* updated to surface-1 */
+  border: 1px solid #27272a;
   border-radius: 16px;
   color: white;
 }
@@ -584,11 +584,11 @@ input[type='range'] {
 [data-theme="dark"] .card-premium:hover {
   border-color: var(--app-border-hover);
   box-shadow:
-    0 0 0 1px rgba(198, 216, 112, 0.1), /* updated cyan stop to volt-yellow per Issue 8 */
+    0 0 0 1px rgba(138, 166, 36, 0.1), /* updated cyan stop to volt-yellow per Issue 8 */
     0 16px 48px rgba(0, 0, 0, 0.75),
     0 4px 16px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 0 28px rgba(198, 216, 112, 0.06);
+    0 0 28px rgba(138, 166, 36, 0.06);
   transform: translateY(-3px);
 }
 [data-theme="dark"] .glass-card,
@@ -619,8 +619,8 @@ input[type='range'] {
   box-shadow: 0 0 0 3px var(--app-ring);
 }
 [data-theme="dark"] .theme-toggle {
-  background: #080f1c;
-  border-color: rgba(198, 216, 112, 0.14);
+  background: #18181b;
+  border-color: rgba(138, 166, 36, 0.14);
   color: #e8eeff;
   box-shadow:
     0 2px 10px rgba(0, 0, 0, 0.6),
@@ -628,46 +628,46 @@ input[type='range'] {
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 [data-theme="dark"] .theme-toggle:hover {
-  background: #0c1525;
-  border-color: rgba(198, 216, 112, 0.28);
+  background: #27272a;
+  border-color: rgba(138, 166, 36, 0.28);
   box-shadow:
     0 6px 20px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(198, 216, 112, 0.1),
-    0 0 18px rgba(198, 216, 112, 0.05);
+    0 0 0 1px rgba(138, 166, 36, 0.1),
+    0 0 18px rgba(138, 166, 36, 0.05);
   transform: translateY(-1px);
 }
 [data-theme="dark"] .gradient-hero {
   background:
-    radial-gradient(ellipse at 70% 0%, rgba(198, 216, 112, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 0%, rgba(138, 166, 36, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 0% 100%, rgba(129, 140, 248, 0.07) 0%, transparent 50%),
-    linear-gradient(160deg, #03070f 0%, #080f1c 50%, #0c1525 100%);
+    linear-gradient(160deg, #09090b 0%, #18181b 50%, #27272a 100%);
 }
 [data-theme="dark"] .gradient-ocean {
-  background: linear-gradient(145deg, #03070f 0%, #081830 48%, #0a2240 100%);
+  background: linear-gradient(145deg, #09090b 0%, #18181b 48%, #27272a 100%);
 }
 [data-theme="dark"] .gradient-premium {
-  background: linear-gradient(180deg, #080f1c 0%, #0c1525 100%);
+  background: linear-gradient(180deg, #18181b 0%, #27272a 100%);
 }
 
 /* Color overrides for dark mode gradients — ensuring no legacy cyan remains per Issue 4 */
 [data-theme="dark"] .from-teal-50 {
-  --tw-gradient-from: rgba(198, 216, 112, 0.1) var(--tw-gradient-from-position);
-  --tw-gradient-to: rgba(198, 216, 112, 0) var(--tw-gradient-to-position);
+  --tw-gradient-from: rgba(138, 166, 36, 0.1) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(138, 166, 36, 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 [data-theme="dark"] .from-teal-50\/40 {
-  --tw-gradient-from: rgba(198, 216, 112, 0.07) var(--tw-gradient-from-position);
-  --tw-gradient-to: rgba(198, 216, 112, 0) var(--tw-gradient-to-position);
+  --tw-gradient-from: rgba(138, 166, 36, 0.07) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(138, 166, 36, 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 [data-theme="dark"] .to-cyan-50 {
-  --tw-gradient-to: rgba(198, 216, 112, 0.08) var(--tw-gradient-to-position); /* corrected from sky-300 to volt-yellow */
+  --tw-gradient-to: rgba(138, 166, 36, 0.08) var(--tw-gradient-to-position); /* corrected from sky-300 to volt-yellow */
 }
 
 /* Layout root background overrides */
 [data-theme="dark"] .bg-\[\#f8fafc\],
 [data-theme="dark"] .bg-\[\#070d1a\] {
-  background-color: #03070f;
+  background-color: #09090b;
 }
 
 [data-theme="dark"] .bg-white { background-color: var(--app-surface); }
@@ -689,7 +689,7 @@ input[type='range'] {
 [data-theme="dark"] .bg-teal-50\/40,
 [data-theme="dark"] .bg-teal-100,
 [data-theme="dark"] .bg-teal-200 {
-  background-color: rgba(198, 216, 112, 0.08); /* corrected legacy teal to volt-yellow */
+  background-color: rgba(138, 166, 36, 0.08); /* corrected legacy teal to volt-yellow */
 }
 
 [data-theme="dark"] .border-slate-200,
@@ -700,7 +700,7 @@ input[type='range'] {
 }
 [data-theme="dark"] .border-teal-100\/50,
 [data-theme="dark"] .border-teal-200 {
-  border-color: rgba(198, 216, 112, 0.2); /* corrected legacy teal to volt-yellow */
+  border-color: rgba(138, 166, 36, 0.2); /* corrected legacy teal to volt-yellow */
 }
 
 [data-theme="dark"] .text-slate-900,
@@ -728,7 +728,7 @@ input[type='range'] {
   background-color: rgba(255, 255, 255, 0.065);
 }
 [data-theme="dark"] .hover\:bg-teal-50:hover {
-  background-color: rgba(198, 216, 112, 0.08); /* corrected legacy teal to volt-yellow */
+  background-color: rgba(138, 166, 36, 0.08); /* corrected legacy teal to volt-yellow */
 }
 
 [data-theme="dark"] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']),
@@ -743,14 +743,14 @@ input[type='range'] {
 /* ─── Dark Mode Body Enhancement ─────────────────── */
 [data-theme="dark"] body {
   background-image:
-    radial-gradient(ellipse at 15% 0%, rgba(198, 216, 112, 0.04) 0%, transparent 45%), /* corrected legacy cyan to volt-yellow per Issue 4 */
+    radial-gradient(ellipse at 15% 0%, rgba(138, 166, 36, 0.04) 0%, transparent 45%), /* corrected legacy cyan to volt-yellow per Issue 4 */
     radial-gradient(ellipse at 85% 100%, rgba(129, 140, 248, 0.04) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, rgba(3, 7, 15, 0.6) 0%, transparent 70%); /* base color unified */
+    radial-gradient(ellipse at 50% 50%, rgba(9, 9, 11, 0.6) 0%, transparent 70%); /* base color unified */
   background-attachment: fixed;
 }
 
 [data-theme="dark"] .skeleton {
-  background: linear-gradient(90deg, #080f1c 25%, #162030 50%, #080f1c 75%);
+  background: linear-gradient(90deg, #18181b 25%, #27272a 50%, #18181b 75%);
   background-size: 200% auto;
   animation: shimmer 1.8s linear infinite;
 }
@@ -758,11 +758,11 @@ input[type='range'] {
 /* ─── Dark Mode Accent Button Glow ───────────────────── */
 [data-theme="dark"] .bg-teal-600,
 [data-theme="dark"] .bg-teal-500 {
-  box-shadow: 0 4px 14px rgba(198, 216, 112, 0.22), 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(138, 166, 36, 0.22), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 [data-theme="dark"] .bg-teal-600:hover,
 [data-theme="dark"] .bg-teal-500:hover {
-  box-shadow: 0 6px 22px rgba(198, 216, 112, 0.3), 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 22px rgba(138, 166, 36, 0.3), 0 2px 8px rgba(0, 0, 0, 0.5);
   transform: translateY(-1px);
 }
 
@@ -807,9 +807,9 @@ input[type='range'] {
 
 /* Light mode sidebar active state - better contrast */
 :root .sidebar-link--active {
-  background: rgba(198, 216, 112, 0.15);
+  background: rgba(138, 166, 36, 0.15);
   color: #576326;
-  border-color: rgba(198, 216, 112, 0.35);
+  border-color: rgba(138, 166, 36, 0.35);
 }
 
 /* Light mode nav brand suffix */
@@ -838,9 +838,9 @@ input[type='range'] {
 
 /* ─── Nav Drawer — Light Mode ─────────────────────────── */
 :root .nav-drawer-item--active {
-  background: rgba(198, 216, 112, 0.10);
+  background: rgba(138, 166, 36, 0.10);
   color: #6b8220;
-  border: 1px solid rgba(198, 216, 112, 0.22);
+  border: 1px solid rgba(138, 166, 36, 0.22);
 }
 :root .nav-drawer-item--active .nav-drawer-item-icon {
   color: #6b8220;
@@ -851,14 +851,14 @@ input[type='range'] {
 
 /* ─── Nav Drawer — Dark Mode ─────────────────────────── */
 [data-theme="dark"] .nav-drawer {
-  background: #080f1c; /* surface-1 */
+  background: #18181b; /* surface-1 */
   border-right: 1px solid rgba(30, 41, 59, 0.95);
 }
 
 [data-theme="dark"] .nav-drawer-item--active {
-  background: rgba(198, 216, 112, 0.07); /* corrected legacy cyan to volt-yellow per Issue 7 */
+  background: rgba(138, 166, 36, 0.07); /* corrected legacy cyan to volt-yellow per Issue 7 */
   color: #E2FF32; /* corrected legacy cyan to volt-yellow per Issue 7 */
-  border: 1px solid rgba(198, 216, 112, 0.18); /* corrected legacy cyan to volt-yellow per Issue 7 */
+  border: 1px solid rgba(138, 166, 36, 0.18); /* corrected legacy cyan to volt-yellow per Issue 7 */
 }
 [data-theme="dark"] .nav-drawer-item--active .nav-drawer-item-icon { 
   color: #E2FF32; /* corrected legacy cyan to volt-yellow per Issue 7 */

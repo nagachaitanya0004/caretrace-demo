@@ -5,10 +5,10 @@ export function BrandMark({ size = 36, className = '', title = 'CareTrace AI', v
   const gradientId = `caretrace-volt-${generatedId}`;
   const titleId = title ? `${gradientId}-title` : undefined;
 
-  // Light mode uses sage green gradient, dark mode uses volt yellow
-  const gradientStart = variant === 'light' ? '#C6D870' : 'var(--brand-accent, #E2FF32)';
-  const gradientEnd = variant === 'light' ? '#a8bc52' : 'var(--app-accent-hover, #CDE92B)';
-  const strokeColor = variant === 'light' ? '#2d3800' : 'var(--brand-accent-on, #0a0a0a)';
+  // Light mode uses sage green gradient, dark mode uses brand accent
+  const gradientStart = variant === 'light' ? '#8AA624' : 'var(--brand-accent, #8AA624)';
+  const gradientEnd = variant === 'light' ? '#768e1b' : 'var(--app-accent-hover, #768e1b)';
+  const strokeColor = variant === 'light' ? '#181f02' : 'var(--brand-accent-on, #0a0a0a)';
 
   return (
     <svg

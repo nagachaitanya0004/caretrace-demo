@@ -389,7 +389,7 @@ const DashboardMockup = memo(function DashboardMockup() {
       <div
         aria-hidden="true"
         className="mockup-glow pointer-events-none absolute inset-x-[12%] top-12 h-48 rounded-full"
-        style={{ background: 'rgba(198,216,112,0.22)' }}
+        style={{ background: 'rgba(138,166,36,0.22)' }}
       />
 
       <Panel tone="elevated" className="overflow-hidden p-6 sm:p-8">
@@ -446,7 +446,7 @@ const DashboardMockup = memo(function DashboardMockup() {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%), radial-gradient(circle at 18% 0%, rgba(198,216,112,0.14), transparent 30%)',
+                  'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%), radial-gradient(circle at 18% 0%, rgba(138,166,36,0.14), transparent 30%)',
               }}
             />
 
@@ -719,7 +719,7 @@ function Landing() {
 
   return (
     <div
-      className="landing-shell relative overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)] selection:bg-[rgba(198,216,112,0.14)] selection:text-[var(--app-text)]"
+      className="landing-shell relative overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)] selection:bg-[rgba(138,166,36,0.14)] selection:text-[var(--app-text)]"
     >
       <div
         aria-hidden="true"
@@ -1062,7 +1062,7 @@ function Landing() {
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute right-[-8rem] top-[-6rem] h-64 w-64 rounded-full blur-[132px]"
-                style={{ background: 'rgba(198,216,112,0.22)' }}
+                style={{ background: 'rgba(138,166,36,0.22)' }}
               />
 
               <div className="relative grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,0.9fr)] lg:items-end">
