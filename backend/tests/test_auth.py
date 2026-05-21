@@ -5,11 +5,25 @@ from unittest.mock import patch, AsyncMock, MagicMock
 
 @pytest.fixture
 def mock_db_layer():
-    # We patch the functions where they are USED
     mock_db = MagicMock()
     mock_db.users = MagicMock()
-    mock_db.users.find_one = AsyncMock(return_value=None)
-    mock_db.users.insert_one = AsyncMock(return_value=MagicMock(inserted_id="mock_id"))
+    
+    stored_user = {}
+    
+    async def mock_insert_one(doc, *args, **kwargs):
+        stored_user.clear()
+        stored_user.update(doc)
+        stored_user["_id"] = "mock_id"
+        return MagicMock(inserted_id="mock_id")
+        
+    async def mock_find_one(query, *args, **kwargs):
+        if query and "email" in query:
+            return mock_db.users.find_one.return_value
+        return stored_user if stored_user else mock_db.users.find_one.return_value
+        
+    mock_db.users.find_one = AsyncMock(side_effect=mock_find_one)
+    mock_db.users.find_one.return_value = None
+    mock_db.users.insert_one = AsyncMock(side_effect=mock_insert_one)
     
     with patch("app.api.auth.get_database", return_value=mock_db):
         with patch("app.db.seed.ensure_demo_account", AsyncMock()):
@@ -25,7 +39,7 @@ async def test_signup_success(mock_db_layer):
             "email": "test@example.com",
             "password": "password123"
         })
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json()["success"] is True
 
 @pytest.mark.asyncio

@@ -131,20 +131,17 @@ function Login() {
           <Button
             type="button"
             intent="secondary"
-            className="w-full mb-6 !bg-[var(--app-surface-elevated)] hover:!bg-[var(--app-surface-soft)] text-[var(--app-text)] border-none font-medium flex items-center justify-center h-12 shadow-sm"
+            className="w-full mb-6 !bg-[var(--app-surface-elevated)] hover:!bg-[var(--app-surface-soft)] text-[var(--app-text)] font-medium flex items-center justify-center h-12"
             onClick={() => addNotification('Google Sign-In coming soon', 'info')}
           >
             <GoogleIcon />
             Continue with Google
           </Button>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className="w-full border-t border-[var(--app-border)]"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-[var(--app-surface)] px-2 text-[var(--app-text-muted)]">Or continue with email</span>
-            </div>
+          <div className="flex items-center mb-6">
+            <div className="flex-grow border-t border-[var(--app-border)]"></div>
+            <span className="mx-4 text-xs font-medium uppercase tracking-wider text-[var(--app-text-muted)]">Or continue with email</span>
+            <div className="flex-grow border-t border-[var(--app-border)]"></div>
           </div>
 
           {error && (
@@ -221,7 +218,7 @@ function Login() {
               size="md"
               loading={isLoading}
               disabled={isLoading}
-              className="w-full shadow-md hover:shadow-lg transition-shadow duration-300"
+              className="w-full transition-all duration-300"
             >
               {!isLoading && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

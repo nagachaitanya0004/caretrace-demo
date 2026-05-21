@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional
+from app.db.db import get_database
 from app.db.postgres import get_pg_session
 from app.models.postgres_models import AuditLog
 from app.core.logger import logger
@@ -37,7 +38,6 @@ class AuditService:
         except Exception as exc:
             logger.warning(f"PostgreSQL Audit Failed: {exc}. Falling back to MongoDB.")
             try:
-                from app.db.db import get_database
                 db = get_database()
                 fallback_doc = {
                     "user_id": user_id,

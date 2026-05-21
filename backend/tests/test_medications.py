@@ -27,16 +27,18 @@ def _make_mock_db(records: list[dict] | None = None) -> MagicMock:
     db = MagicMock()
     insert_result = MagicMock()
     insert_result.inserted_id = ObjectId()
-    db.medication_tracking.insert_one = AsyncMock(return_value=insert_result)
-    db.medication_tracking.find_one = AsyncMock(return_value=records[0] if records else None)
+    db.medications.insert_one = AsyncMock(return_value=insert_result)
+    db.medications.find_one = AsyncMock(return_value=records[0] if records else None)
 
     async def _aiter(self):
         for r in records:
             yield r
 
     cursor = MagicMock()
+    cursor.sort.return_value = cursor
+    cursor.limit.return_value = cursor
     cursor.__aiter__ = _aiter
-    db.medication_tracking.find.return_value.sort.return_value = cursor
+    db.medications.find.return_value = cursor
 
     return db
 
@@ -53,8 +55,8 @@ def test_create_medication_minimal():
     }
 
     mock_db = _make_mock_db()
-    mock_db.medication_tracking.find_one = AsyncMock(return_value=saved_doc)
-    mock_db.medication_tracking.insert_one.return_value.inserted_id = saved_doc["_id"]
+    mock_db.medications.find_one = AsyncMock(return_value=saved_doc)
+    mock_db.medications.insert_one.return_value.inserted_id = saved_doc["_id"]
 
     app.dependency_overrides[get_current_user] = lambda: user
     with patch("app.api.routes.get_database", return_value=mock_db):
@@ -89,8 +91,8 @@ def test_create_medication_complete():
     }
 
     mock_db = _make_mock_db()
-    mock_db.medication_tracking.find_one = AsyncMock(return_value=saved_doc)
-    mock_db.medication_tracking.insert_one.return_value.inserted_id = saved_doc["_id"]
+    mock_db.medications.find_one = AsyncMock(return_value=saved_doc)
+    mock_db.medications.insert_one.return_value.inserted_id = saved_doc["_id"]
 
     app.dependency_overrides[get_current_user] = lambda: user
     with patch("app.api.routes.get_database", return_value=mock_db):

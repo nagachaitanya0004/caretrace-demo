@@ -25,18 +25,18 @@ const INTENT = {
   // CTA: Volt background, black text — the single most important action per screen
   cta:
     'bg-[var(--brand-accent)] text-[var(--brand-accent-on)] ' +
-    'hover:opacity-90 shadow-[var(--shadow-l1)]',
+    'hover:brightness-105 active:brightness-95',
 
   // Primary: high-contrast app action (dark bg, light text)
   primary:
     'bg-[var(--app-text)] text-[var(--app-bg)] ' +
-    'hover:opacity-90 shadow-[var(--shadow-l1)]',
+    'hover:brightness-110 active:brightness-95',
 
-  // Secondary: glass surface with white text — used on the cinematic landing
+  // Secondary: glass surface with text — light mode uses soft border/shadow, dark mode uses cinematic glow
   secondary:
     'bg-[var(--color-surface,var(--app-surface))] text-[var(--color-text-primary,var(--app-text))] ' +
-    'backdrop-blur-2xl ' +
-    '[box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_0_0_1px_rgba(255,255,255,0.08),0_24px_64px_rgba(0,0,0,0.46)]',
+    'backdrop-blur-2xl border border-[var(--app-border-soft)] ' +
+    'dark:border-none dark:[box-shadow:inset_0_1px_0_rgba(255,255,255,0.16),0_0_0_1px_rgba(255,255,255,0.08),0_24px_64px_rgba(0,0,0,0.46)]',
 
   // Ghost: no border, subtle hover — nav links, tertiary actions
   ghost:
@@ -44,7 +44,7 @@ const INTENT = {
     'hover:bg-[var(--app-surface-elevated)] hover:text-[var(--app-text)]',
 
   // Danger: destructive actions only
-  danger: 'bg-danger text-white hover:bg-danger shadow-[var(--shadow-l1)]',
+  danger: 'bg-danger text-white hover:bg-danger',
 };
 
 // ─── Glow classes — hover shadows live in CSS, not JS ────────────────────────

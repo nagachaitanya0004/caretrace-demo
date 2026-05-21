@@ -223,7 +223,7 @@ function Settings() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-[var(--app-surface)] rounded-[var(--radius-2xl)] p-6 shadow-2xl border border-[var(--app-border)]"
+              className="relative w-full max-w-md bg-[var(--app-surface)] rounded-[var(--radius-2xl)] p-6 shadow-[var(--shadow-l3)] border border-[var(--app-border)]"
             >
               <h3 className="text-xl font-bold text-[var(--app-text)] mb-2">
                 {t('settings.confirm_delete_title', 'Delete your account?')}

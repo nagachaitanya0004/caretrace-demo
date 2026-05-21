@@ -432,7 +432,6 @@ async def create_analysis(request: Request, payload: AnalysisCreate, current_use
 
 
 @router.get('/analysis')
-@limiter.limit("100/minute")
 @cache(expire=300, namespace="analysis", key_builder=user_specific_key_builder)
 async def list_analysis(request: Request, current_user: dict = Depends(get_current_user)):
     db = get_database()
@@ -595,6 +594,8 @@ async def get_lifestyle(request: Request, current_user: dict = Depends(get_curre
 @router.post('/health-metrics')
 @limiter.limit("100/minute")
 async def create_health_metrics(request: Request, payload: HealthMetricsCreate, current_user: dict = Depends(get_current_user)):
+    if all(v is None for v in [payload.systolic_bp, payload.diastolic_bp, payload.blood_sugar_mg_dl, payload.heart_rate_bpm, payload.oxygen_saturation]):
+        raise HTTPException(status_code=400, detail="At least one health metric field must be provided")
     user_ref = get_user_ref(current_user)
     saved = await HealthService.create_health_metrics(user_ref, payload)
     

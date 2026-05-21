@@ -19,7 +19,7 @@ async def test_lifespan_postgres_failure_non_blocking(caplog):
     app = FastAPI()
     # Patch all initialization functions where they are used in app.main
     with patch("app.main.init_db", AsyncMock()):
-        with patch("app.main.ensure_demo_account", AsyncMock()):
+        with patch("app.db.seed.ensure_demo_account", AsyncMock()):
             with patch("app.main.init_postgres", AsyncMock(side_effect=Exception("PG Down"))):
                 with patch("app.main.validate_environment", return_value={"ENV": "development"}):
                     async with lifespan(app):

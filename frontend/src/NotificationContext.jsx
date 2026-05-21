@@ -33,7 +33,7 @@ export function NotificationProvider({ children }) {
             key={n.id} 
             role="alert"
             aria-live={n.type === 'error' ? 'assertive' : 'polite'}
-            className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-start gap-3 transition-all transform slide-up ${
+            className={`pointer-events-auto p-4 rounded-2xl shadow-[var(--shadow-l3)] backdrop-blur-md border flex items-start gap-3 transition-all transform slide-up ${
             n.type === 'error' ? 'bg-danger/90 border-danger/50 text-white' : 
             n.type === 'success' ? 'bg-success/90 border-success/50 text-white' : 
             n.type === 'warning' ? 'bg-warning/90 border-warning/50 text-white' : 

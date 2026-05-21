@@ -15,7 +15,7 @@ export function getUserFriendlyError(err, t) {
   if (status >= 500) return t('auth.errors.server', 'Internal server error. Our team has been notified.');
 
   // Network level interruptions
-  if (message.includes('network') || message.includes('fetch')) {
+  if (message.includes('network') || message.includes('fetch') || message.includes('unable to reach')) {
     return t('auth.errors.network', 'Network error. Please check your connection.');
   }
 

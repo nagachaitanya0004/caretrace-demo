@@ -206,7 +206,7 @@ export default function LifestyleStep({ onNext }) {
       <div className="mt-8 flex flex-col items-center gap-3.5 border-t border-[var(--app-border-soft)] pt-6">
         <button
           type="submit"
-          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-[0_0_20px_var(--app-accent-shadow)] transition-all duration-200 hover:shadow-[0_0_25px_var(--app-accent-shadow)] active:scale-[0.98]"
+          className="btn-glow-cta w-full rounded-[var(--radius-md)] bg-[var(--app-accent)] px-4 py-3.5 text-sm font-semibold text-[var(--brand-accent-on,#000)] transition-all duration-200 active:scale-[0.98]"
         >
           {t('onboarding.actions.next')}
         </button>

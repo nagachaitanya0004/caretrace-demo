@@ -57,7 +57,7 @@ function CustomTooltip({ active, payload, label, t }) {
   const val = payload[0].value;
   const color = val >= 7 ? 'var(--app-accent)' : val >= 4 ? 'var(--app-warning)' : 'var(--app-danger)';
   return (
-    <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-surface-elevated)] p-4 shadow-2xl backdrop-blur-xl">
+    <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-surface-elevated)] p-4 shadow-[var(--shadow-l3)] backdrop-blur-xl">
       <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)]">{label}</p>
       <p className="text-xl font-bold tracking-tight" style={{ color }}>
         {t('history.table.severity')}: {val}
@@ -82,7 +82,7 @@ function StatCard({ id, label, value, sub, icon, isLoading, isPositive, trend, i
       to={STAT_ROUTES[id] ?? '/dashboard'}
       className="block group focus:outline-none"
     >
-      <div className="relative h-full rounded-[24px] bg-[var(--app-surface-elevated)] border-[0.5px] border-[var(--app-border)] p-6 transition-all duration-300 [box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(255,255,255,0.04),0_24px_72px_rgba(0,0,0,0.52)] group-hover:translate-y-[-4px] group-hover:border-[var(--app-border-hover)] group-hover:[box-shadow:inset_0_0.5px_0_rgba(255,255,255,0.1),0_0_0_0.5px_rgba(255,255,255,0.08),0_32px_84px_rgba(0,0,0,0.6)]">
+      <div className="relative h-full rounded-[24px] bg-[var(--app-surface-elevated)] border border-[var(--app-border)] p-6 transition-all duration-300 shadow-[var(--shadow-l2)] group-hover:-translate-y-1 group-hover:border-[var(--app-border-hover)] group-hover:shadow-[var(--shadow-l3)]">
         <div className="flex items-center justify-between mb-8">
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] truncate">
             {label}

@@ -80,8 +80,10 @@ def _make_mock_db(records: list[dict] | None = None) -> MagicMock:
             yield r
 
     cursor = MagicMock()
+    cursor.sort.return_value = cursor
+    cursor.limit.return_value = cursor
     cursor.__aiter__ = _aiter
-    db.health_metrics.find.return_value.sort.return_value = cursor
+    db.health_metrics.find.return_value = cursor
 
     return db
 
@@ -96,7 +98,8 @@ def test_post_empty_body_returns_400():
     mock_db = _make_mock_db()
 
     app.dependency_overrides[get_current_user] = lambda: user
-    with patch("app.api.routes.get_database", return_value=mock_db):
+    with patch("app.api.routes.get_database", return_value=mock_db), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db):
         client = TestClient(app)
         response = client.post("/api/health-metrics", json={})
 
@@ -123,7 +126,8 @@ def test_post_valid_single_field_returns_200_with_timestamps():
     mock_db.health_metrics.insert_one.return_value.inserted_id = saved_doc["_id"]
 
     app.dependency_overrides[get_current_user] = lambda: user
-    with patch("app.api.routes.get_database", return_value=mock_db):
+    with patch("app.api.routes.get_database", return_value=mock_db), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db):
         client = TestClient(app)
         response = client.post("/api/health-metrics", json={"systolic_bp": 120})
 
@@ -145,7 +149,8 @@ def test_get_no_records_returns_empty_list():
     mock_db = _make_mock_db(records=[])
 
     app.dependency_overrides[get_current_user] = lambda: user
-    with patch("app.api.routes.get_database", return_value=mock_db):
+    with patch("app.api.routes.get_database", return_value=mock_db), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db):
         client = TestClient(app)
         response = client.get("/api/health-metrics")
 
@@ -175,7 +180,8 @@ def test_two_users_get_only_their_own_records():
     mock_db_a_post.health_metrics.insert_one.return_value.inserted_id = record_a["_id"]
 
     app.dependency_overrides[get_current_user] = lambda: user_a
-    with patch("app.api.routes.get_database", return_value=mock_db_a_post):
+    with patch("app.api.routes.get_database", return_value=mock_db_a_post), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db_a_post):
         client = TestClient(app)
         r = client.post("/api/health-metrics", json={"systolic_bp": 120})
     assert r.status_code == 200
@@ -186,7 +192,8 @@ def test_two_users_get_only_their_own_records():
     mock_db_b_post.health_metrics.insert_one.return_value.inserted_id = record_b["_id"]
 
     app.dependency_overrides[get_current_user] = lambda: user_b
-    with patch("app.api.routes.get_database", return_value=mock_db_b_post):
+    with patch("app.api.routes.get_database", return_value=mock_db_b_post), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db_b_post):
         client = TestClient(app)
         r = client.post("/api/health-metrics", json={"heart_rate_bpm": 72})
     assert r.status_code == 200
@@ -195,7 +202,8 @@ def test_two_users_get_only_their_own_records():
     mock_db_a_get = _make_mock_db(records=[record_a])
 
     app.dependency_overrides[get_current_user] = lambda: user_a
-    with patch("app.api.routes.get_database", return_value=mock_db_a_get):
+    with patch("app.api.routes.get_database", return_value=mock_db_a_get), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db_a_get):
         client = TestClient(app)
         resp_a = client.get("/api/health-metrics")
 
@@ -210,7 +218,8 @@ def test_two_users_get_only_their_own_records():
     mock_db_b_get = _make_mock_db(records=[record_b])
 
     app.dependency_overrides[get_current_user] = lambda: user_b
-    with patch("app.api.routes.get_database", return_value=mock_db_b_get):
+    with patch("app.api.routes.get_database", return_value=mock_db_b_get), \
+         patch("app.services.mongo.health_service.get_database", return_value=mock_db_b_get):
         client = TestClient(app)
         resp_b = client.get("/api/health-metrics")
 
