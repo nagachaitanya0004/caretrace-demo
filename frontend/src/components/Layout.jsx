@@ -22,7 +22,7 @@ function Layout() {
     <div className="app-shell">
       <Header />
       {isDemoUser && (
-        <div role="status" className="flex items-center justify-center gap-3 px-4 py-2 bg-[var(--app-warning-bg)] border-b border-[var(--app-warning-border)]">
+        <div role="status" className="flex items-center justify-center gap-3 px-4 py-2 bg-[var(--app-warning-bg)] border-b border-[var(--app-warning-border)] shrink-0">
           <svg className="h-4 w-4 shrink-0 text-[var(--app-warning)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -32,7 +32,7 @@ function Layout() {
         </div>
       )}
       {!isDemoUser && user && user.is_onboarded === false && pathname !== '/onboarding' && (
-        <div role="status" className="flex items-center justify-center gap-4 bg-[var(--brand-accent)] px-4 py-2 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-md fade-in">
+        <div role="status" className="flex items-center justify-center gap-4 bg-[var(--brand-accent)] px-4 py-2 text-sm font-semibold text-[var(--brand-accent-on,#000)] shadow-md fade-in shrink-0">
           <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -49,7 +49,7 @@ function Layout() {
         </div>
       )}
       {loadError && (
-        <div role="alert" className="error-banner">
+        <div role="alert" className="error-banner shrink-0">
           <span>{loadError}</span>
           <button
             type="button"
@@ -62,8 +62,8 @@ function Layout() {
       )}
       <div className="flex flex-1 overflow-hidden min-h-0">
         <Sidebar />
-        <main id="main-content" ref={mainRef} className="page-content pr-0 lg:pr-20">
-          <div key={pathname} className="page-outlet-animate min-h-full">
+        <main id="main-content" ref={mainRef} className="page-content">
+          <div key={pathname} className="page-outlet-animate">
             <Outlet />
           </div>
         </main>

@@ -286,6 +286,8 @@
 /* ─── Base ─────────────────────────────────────────── */
 html {
   background-color: var(--app-bg);
+  height: 100%;
+  overflow: hidden;
 }
 
 *,
@@ -298,18 +300,20 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--app-bg);
   color: var(--app-text);
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   margin: 0;
 }
 
 #root {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  overflow: hidden;
 }
 
 .landing-shell {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
@@ -1018,7 +1022,7 @@ input[type='range'] {
 /* ─── Structural layout ─── */
 /* ─── Page Frame ─── */
 .page-frame {
-  @apply w-full px-4 sm:px-6 md:px-8 py-6 mx-auto space-y-6;
+  @apply w-full px-4 sm:px-6 md:px-8 pt-6 pb-12 mx-auto space-y-6;
 }
 
 .page-header {
@@ -1039,7 +1043,8 @@ input[type='range'] {
 
 /* ─── App Shell ─── */
 .app-shell {
-  @apply flex flex-col h-screen bg-[var(--app-bg)] overflow-hidden;
+  @apply flex flex-col bg-[var(--app-bg)] overflow-hidden;
+  height: 100dvh;
 }
 
 .site-header {
@@ -1059,7 +1064,7 @@ input[type='range'] {
 }
 
 .page-content {
-  @apply flex-1 overflow-y-auto min-h-0 bg-[var(--app-bg)];
+  @apply flex-1 overflow-y-auto min-h-0 bg-[var(--app-bg)] pb-6;
 }
 
 /* ─── Sidebar Classes ─── */

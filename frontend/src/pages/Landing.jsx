@@ -632,6 +632,7 @@ function Landing() {
   const [heroPassed, setHeroPassed] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const heroRef = useRef(null);
+  const shellRef = useRef(null);
 
   const activeLanguageCode = (i18n.resolvedLanguage || i18n.language || 'en').split('-')[0];
 
@@ -642,13 +643,15 @@ function Landing() {
   }, [token, isLoadingAuth, navigate]);
 
   useEffect(() => {
-    const handleWindowScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const shell = shellRef.current;
+    if (!shell) return;
+    const handleShellScroll = () => {
+      setScrolled(shell.scrollTop > 20);
     };
 
-    handleWindowScroll();
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleWindowScroll);
+    handleShellScroll();
+    shell.addEventListener('scroll', handleShellScroll, { passive: true });
+    return () => shell.removeEventListener('scroll', handleShellScroll);
   }, []);
 
   // Track when the hero section leaves the viewport so the nav CTA can fade in
@@ -719,6 +722,7 @@ function Landing() {
 
   return (
     <div
+      ref={shellRef}
       className="landing-shell relative overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)] selection:bg-[rgba(138,166,36,0.14)] selection:text-[var(--app-text)]"
     >
       <div

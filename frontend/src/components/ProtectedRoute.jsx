@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
   if (isLoadingAuth) {
     return (
       <div
-        className="min-h-screen flex items-center justify-center bg-[var(--app-bg)]"
+        className="h-full flex items-center justify-center bg-[var(--app-bg)]"
         role="status"
         aria-label="Loading"
       >
@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children }) {
     // Token exists but user profile not yet loaded/verified
     return (
       <div
-        className="min-h-screen flex items-center justify-center bg-[var(--app-bg)]"
+        className="h-full flex items-center justify-center bg-[var(--app-bg)]"
         role="status"
         aria-label="Verifying session"
       >

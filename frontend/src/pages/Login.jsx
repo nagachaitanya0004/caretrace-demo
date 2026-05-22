@@ -116,7 +116,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--app-bg)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="h-full bg-[var(--app-bg)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
       <div className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 max-w-7xl mx-auto w-full">
         <PublicNavbar variant="light" embedded hideNavAuth />
       </div>

@@ -21,35 +21,36 @@ function formatDate(iso) {
 function FileTypeIcon({ fileType }) {
   const isPdf = fileType === 'application/pdf';
   return (
-    // token gap: text-danger used for PDF icon — no --app-danger-icon token defined
-    <svg
-      className={`w-8 h-8 flex-shrink-0 ${isPdf ? 'text-danger' : 'text-[var(--app-accent)]'}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-    </svg>
+    <div className={`flex items-center justify-center w-10 h-10 rounded-xl shrink-0 ${isPdf ? 'bg-[var(--app-danger-bg)] text-[var(--app-danger)]' : 'bg-[var(--app-surface-soft)] text-[var(--brand-accent)]'}`}>
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75}
+          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+      </svg>
+    </div>
   );
 }
 
 function ReportCard({ report, onView, onDownload, onDelete }) {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-between p-3 border border-[var(--app-border)] rounded-[var(--radius-lg)] bg-[var(--app-surface)] hover:bg-[var(--app-surface-soft)] transition-colors duration-150">
+    <div className="flex items-center justify-between px-4 py-3 border border-[var(--app-border-soft)] rounded-xl bg-[var(--app-surface)] hover:bg-[var(--app-surface-soft)] hover:border-[var(--app-border)] transition-all duration-150 group">
       <div className="flex items-center gap-3 min-w-0">
         <FileTypeIcon fileType={report.file_type} />
         <div className="min-w-0">
           <p className="font-medium text-[var(--app-text)] text-sm truncate">{report.file_name}</p>
-          <p className="text-xs text-[var(--app-text-disabled)]">{formatDate(report.uploaded_at)}</p>
+          <p className="text-[10px] font-medium text-[var(--app-text-disabled)] uppercase tracking-wide">{formatDate(report.uploaded_at)}</p>
         </div>
       </div>
-      <div className="flex gap-2 flex-shrink-0 ml-3">
-        <Button intent="ghost" size="sm" onClick={onView}>{t('reports.view', 'View')}</Button>
-        <Button intent="ghost" size="sm" onClick={onDownload}>{t('reports.download', 'Download')}</Button>
-        <Button intent="danger" size="sm" onClick={onDelete}>{t('reports.delete', 'Delete')}</Button>
+      <div className="flex gap-1.5 shrink-0 ml-3 opacity-70 group-hover:opacity-100 transition-opacity duration-150">
+        <Button intent="ghost" size="sm" onClick={onView} className="!px-2.5">{t('reports.view', 'View')}</Button>
+        <Button intent="ghost" size="sm" onClick={onDownload} className="!px-2.5">{t('reports.download', 'Download')}</Button>
+        <Button intent="ghost" size="sm" onClick={onDelete} className="!px-2.5 text-[var(--app-danger)] hover:!bg-[var(--app-danger-bg)]">{t('reports.delete', 'Delete')}</Button>
       </div>
     </div>
   );
@@ -137,18 +138,22 @@ export default function MedicalReportsSection() {
   return (
     <Card elevation={1}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-[var(--app-text)] flex items-center gap-2">
-          <svg className="w-5 h-5 text-[var(--app-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          {t('reports.title', 'Medical Reports')}
-        </h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[var(--app-surface-soft)] text-[var(--brand-accent)] transition-colors duration-200">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h2 className="text-base font-semibold text-[var(--app-text)] tracking-[-0.01em]">
+            {t('reports.title', 'Medical Reports')}
+          </h2>
+        </div>
       </div>
 
-      {/* Upload section */}
-      <div className="mb-6 flex flex-wrap items-center gap-3">
+      {/* Upload area */}
+      <div className="mb-6">
         <input
           ref={fileInputRef}
           type="file"
@@ -157,35 +162,49 @@ export default function MedicalReportsSection() {
           onChange={handleFileSelect}
           aria-label={t('reports.select_file', 'Upload Report')}
         />
-        <Button intent="secondary" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-          </svg>
-          {t('reports.select_file', 'Upload Report')}
-        </Button>
-
-        {selectedFile && (
-          <>
-            <span className="text-sm text-[var(--app-text-muted)] truncate max-w-xs">{selectedFile.name}</span>
+        {!selectedFile ? (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="w-full flex flex-col items-center gap-2 py-6 border-2 border-dashed border-[var(--app-border)] rounded-xl text-[var(--app-text-muted)] hover:border-[var(--brand-accent)] hover:text-[var(--app-text)] hover:bg-[var(--app-surface-soft)] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span className="text-sm font-medium">Click to upload a medical report</span>
+            <span className="text-[10px] text-[var(--app-text-disabled)]">PDF, JPG, PNG • Max 10 MB</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-3 px-4 py-3 border border-[var(--app-border)] rounded-xl bg-[var(--app-surface-soft)] animate-[fadeIn_0.15s_ease-out]">
+            <svg className="w-5 h-5 shrink-0 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            <span className="text-sm text-[var(--app-text)] font-medium truncate flex-1">{selectedFile.name}</span>
             <Button intent="primary" size="sm" onClick={handleUpload} loading={uploading}>
               {uploading ? t('reports.uploading', 'Uploading\u2026') : t('reports.upload', 'Upload')}
             </Button>
             <Button intent="ghost" size="sm" onClick={() => setSelectedFile(null)} disabled={uploading}>
               {t('common.cancel', 'Cancel')}
             </Button>
-          </>
+          </div>
         )}
       </div>
 
       {/* Reports list */}
       {loading ? (
-        <div className="flex items-center justify-center py-8" role="status" aria-label="Loading reports">
-          <span className="w-8 h-8 rounded-full border-4 border-[var(--app-border)] border-t-[var(--app-text)] animate-spin" />
+        <div className="flex items-center justify-center py-10" role="status" aria-label="Loading reports">
+          <div className="w-8 h-8 border-[3px] border-[var(--app-border)] border-t-[var(--brand-accent)] rounded-full animate-spin" />
         </div>
       ) : reports.length === 0 ? (
-        <p className="text-[var(--app-text-disabled)] italic text-sm">{t('reports.empty', 'No medical reports uploaded yet')}</p>
+        <div className="flex flex-col items-center justify-center py-6 gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--app-surface-soft)] flex items-center justify-center text-[var(--app-text-disabled)]">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p className="text-sm text-[var(--app-text-disabled)] text-center">{t('reports.empty', 'No medical reports uploaded yet')}</p>
+        </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {reports.map((report) => (
             <ReportCard
               key={report.id}
@@ -198,7 +217,7 @@ export default function MedicalReportsSection() {
         </div>
       )}
 
-      {/* Delete confirmation dialog — accessible modal */}
+      {/* Delete confirmation dialog */}
       {confirmDelete && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--app-bg)]/70 backdrop-blur-sm"
@@ -206,7 +225,7 @@ export default function MedicalReportsSection() {
           aria-modal="true"
           aria-labelledby="delete-dialog-title"
         >
-          <div className="bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] shadow-[var(--shadow-l3)] p-6 max-w-sm w-full mx-4">
+          <div className="bg-[var(--app-surface)] border border-[var(--app-border)] rounded-2xl shadow-[var(--shadow-l3)] p-6 max-w-sm w-full mx-4 animate-[fadeIn_0.15s_ease-out]">
             <h3 id="delete-dialog-title" className="text-base font-semibold text-[var(--app-text)] mb-2">
               {t('reports.delete_dialog.title', 'Delete Report')}
             </h3>

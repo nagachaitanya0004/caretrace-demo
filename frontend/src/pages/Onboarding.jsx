@@ -293,7 +293,7 @@ export default function Onboarding() {
 
   if (isFinishing) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex h-full flex-col items-center justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 overflow-y-auto">
         <div className="flex flex-col items-center justify-center space-y-6 fade-in">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--app-border-soft)] border-t-[var(--app-accent)]" />
           <p className="animate-pulse text-sm font-medium text-[var(--app-text-muted)]">
@@ -305,7 +305,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="flex h-full flex-col justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
       <div className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 max-w-7xl mx-auto w-full">
         <PublicNavbar embedded hideNavAuth />
       </div>
