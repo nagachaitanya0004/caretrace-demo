@@ -1213,3 +1213,37 @@ input[type='range'] {
     transform: none;
   }
 }
+
+/* ─── Trillion Dollar UI View Transition (Theme Toggle) ─── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* When switching TO dark mode, we want the dark theme to scale up from the click */
+[data-theme="dark"]::view-transition-old(root) {
+  z-index: 1;
+}
+[data-theme="dark"]::view-transition-new(root) {
+  z-index: 9999;
+  animation: theme-clip-reveal 0.8s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+}
+
+/* When switching TO light mode, we want the light theme to scale up from the click */
+:root:not([data-theme="dark"])::view-transition-old(root) {
+  z-index: 1;
+}
+:root:not([data-theme="dark"])::view-transition-new(root) {
+  z-index: 9999;
+  animation: theme-clip-reveal 0.8s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+}
+
+@keyframes theme-clip-reveal {
+  from {
+    clip-path: circle(0px at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--theme-reveal-r, 100%) at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+}
