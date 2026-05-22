@@ -111,7 +111,7 @@ function Symptoms() {
       headAlign="center" 
       maxWidthClass="max-w-2xl"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="pb-32 pt-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="py-8">
         {/* Step 1: Symptom Selector */}
         <section className="mb-12">
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--app-text-disabled)] mb-6 text-center">
@@ -119,7 +119,7 @@ function Symptoms() {
           </h3>
           
           <FieldWrapper error={errors.symptom?.message}>
-            <div className="flex overflow-x-auto gap-3 pb-4 no-scrollbar -mx-6 px-6">
+            <div className="flex flex-wrap justify-center gap-3">
               {COMMON_SYMPTOMS.map((s) => (
                 <button
                   key={s}
@@ -129,10 +129,10 @@ function Symptoms() {
                     if (window.navigator.vibrate) window.navigator.vibrate(10);
                   }}
                   aria-pressed={selectedSymptom === s}
-                  className={`flex-shrink-0 min-h-[44px] px-6 rounded-full text-sm font-semibold transition-all duration-200 border-2 ${
+                  className={`min-h-[44px] px-6 rounded-full text-sm font-semibold transition-all duration-200 border-2 outline-none ${
                     selectedSymptom === s
-                      ? 'bg-[var(--app-accent)] border-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[var(--shadow-l1)]'
-                      : 'bg-[var(--app-surface-elevated)] border-[var(--app-border)] text-[var(--app-text-muted)] hover:border-[var(--app-border-hover)]'
+                      ? 'bg-[var(--app-accent)] border-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-md ring-2 ring-offset-2 ring-offset-[var(--app-bg)] ring-[var(--app-accent)] scale-[1.02]'
+                      : 'bg-[var(--app-surface-elevated)] border-[var(--app-border)] text-[var(--app-text-muted)] hover:bg-[var(--app-surface-soft)] hover:border-[var(--app-border-hover)] focus:ring-2 focus:ring-[var(--app-border-hover)] focus:ring-offset-2 focus:ring-offset-[var(--app-bg)]'
                   }`}
                 >
                   {t(`symptoms.options.${s}`, s.charAt(0).toUpperCase() + s.slice(1))}
@@ -226,37 +226,42 @@ function Symptoms() {
         </AnimatePresence>
 
         {/* Submit Button */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 z-[60] bg-gradient-to-t from-[var(--app-bg)] via-[var(--app-bg)] to-transparent pointer-events-none">
-          <div className="max-w-2xl mx-auto pointer-events-auto" style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}>
-            <motion.button
-              type="submit"
-              disabled={!selectedSymptom || isSubmitting}
-              whileHover={selectedSymptom && !isSubmitting ? { y: -2, scale: 1.01 } : {}}
-              whileTap={selectedSymptom && !isSubmitting ? { scale: 0.96 } : {}}
-              className={`relative w-full h-16 rounded-full font-bold text-lg overflow-hidden transition-all duration-300 ${
-                !selectedSymptom 
-                  ? 'bg-[var(--app-surface)] text-[var(--app-text-disabled)]' 
-                  : isSuccess 
-                    ? 'bg-[var(--app-accent)] text-[var(--brand-accent-on)]'
-                    : 'bg-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[0_28px_80px_var(--app-accent-shadow)]'
-              }`}
+        <AnimatePresence>
+          {selectedSymptom && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...springTransition, delay: 0.2 }}
+              className="mt-12 max-w-sm mx-auto"
             >
-              <AnimatePresence mode="wait">
-                {isSuccess ? (
-                  <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex justify-center">
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </motion.div>
-                ) : (
-                  <motion.span key="text">
-                    {isSubmitting ? t('auth.constructing', 'Loading...') : t('symptoms.submit_btn', 'Log now')}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
-        </div>
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                whileHover={!isSubmitting ? { y: -2, scale: 1.02 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.96 } : {}}
+                className={`relative w-full h-16 rounded-full font-bold text-lg overflow-hidden transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[var(--app-ring)] focus:ring-offset-2 focus:ring-offset-[var(--app-bg)] ${
+                  isSuccess 
+                    ? 'bg-[var(--app-success)] text-[var(--app-success-text)]'
+                    : 'bg-[var(--app-accent)] text-[var(--brand-accent-on)] shadow-[0_16px_40px_var(--app-accent-shadow)] hover:shadow-[0_24px_50px_var(--app-accent-shadow)]'
+                }`}
+              >
+                <AnimatePresence mode="wait">
+                  {isSuccess ? (
+                    <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex justify-center">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </motion.div>
+                  ) : (
+                    <motion.span key="text">
+                      {isSubmitting ? t('auth.constructing', 'Loading...') : t('symptoms.submit_btn', 'Log now')}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </form>
 
       {/* Duplicate Warning Dialog */}

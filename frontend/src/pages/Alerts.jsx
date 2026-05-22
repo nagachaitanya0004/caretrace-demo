@@ -86,7 +86,7 @@ function Alerts() {
                 >
                   <Card
                     elevation={isRead ? 0 : 1}
-                    className={`relative overflow-hidden border-l-4 transition-all duration-300 ${config.border} ${isRead ? 'bg-[var(--app-surface-soft)]' : ''}`}
+                    className={`relative overflow-hidden border-l-4 transition-all duration-300 ${config.border}`}
                   >
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-10 h-10 rounded-[var(--radius-lg)] border border-transparent flex items-center justify-center ${config.bg} ${config.text}`}>
