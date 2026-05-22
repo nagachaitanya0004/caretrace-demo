@@ -159,7 +159,7 @@ function DemographicsTile({ label, value, suffix = '', icon, isEmpty, children }
   const display = children || (isEmpty ? null : `${value}${suffix}`);
   return (
     <div className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] transition-all duration-150 hover:border-[var(--app-border)] hover:bg-[var(--app-surface-elevated)] group">
-      <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white dark:bg-zinc-800 text-[var(--app-text-muted)] group-hover:text-[var(--brand-accent)] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-colors duration-150">
+      <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[var(--app-input-bg)] text-[var(--app-text-muted)] group-hover:text-[var(--brand-accent)] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-colors duration-150">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
@@ -462,23 +462,11 @@ export default function HealthProfile() {
             <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[var(--app-accent-soft)] to-transparent pointer-events-none" />
 
             <div className="relative flex flex-col items-center text-center pb-6 border-b border-[var(--app-border-soft)]">
-              {/* Avatar container with status indicator */}
-              <div className="relative mb-3.5 group">
-                {/* Outer decorative ring */}
-                <div className="absolute inset-0 rounded-full border border-[var(--brand-accent)]/20 scale-[1.08] transition-all duration-300 group-hover:scale-[1.14] group-hover:border-[var(--brand-accent)]/30" />
-                <div className="absolute inset-0 rounded-full border border-dashed border-[var(--brand-accent)]/10 scale-[1.14] animate-[spin_60s_linear_infinite]" />
-                
-                {/* Main Avatar */}
-                <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-green-100 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/30 text-[var(--brand-accent-on)] dark:text-green-200 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-2xl font-bold shadow-md shrink-0 transition-transform duration-200 group-hover:scale-[1.02]">
+              {/* Clean, clinical Avatar container */}
+              <div className="relative mb-3.5">
+                <div className="w-20 h-20 rounded-full bg-[var(--app-surface-soft)] text-[var(--brand-accent)] border border-[var(--app-border)] flex items-center justify-center text-2xl font-bold shadow-[var(--shadow-l1)]">
                   {userInitials}
                 </div>
-                
-                {/* Pulse Glow green indicator dot */}
-                <span className="absolute bottom-1 right-1 flex h-4 w-4 rounded-full bg-white dark:bg-zinc-900 p-0.5 shadow-sm">
-                  <span className="relative flex h-full w-full rounded-full bg-emerald-500">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-                  </span>
-                </span>
               </div>
 
               {/* Name & Email */}
@@ -622,9 +610,9 @@ export default function HealthProfile() {
                     label: 'Existing Conditions', 
                     items: medHist?.conditions, 
                     emptyText: 'No existing conditions recorded',
-                    chipStyle: 'bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300 border-indigo-100 dark:border-indigo-900/30 hover:bg-indigo-100/50',
+                    chipStyle: 'bg-[var(--app-surface-soft)] text-[var(--app-text)] border-[var(--app-border-soft)] hover:border-zinc-300 dark:hover:border-zinc-700',
                     icon: (
-                      <svg className="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                       </svg>
                     )
@@ -633,9 +621,9 @@ export default function HealthProfile() {
                     label: 'Current Medications', 
                     items: medHist?.medications, 
                     emptyText: 'No medications listed',
-                    chipStyle: 'bg-emerald-50/70 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900/30 hover:bg-emerald-100/50',
+                    chipStyle: 'bg-[var(--app-surface-soft)] text-[var(--app-text)] border-[var(--app-border-soft)] hover:border-zinc-300 dark:hover:border-zinc-700',
                     icon: (
-                      <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                       </svg>
                     )
@@ -644,9 +632,9 @@ export default function HealthProfile() {
                     label: 'Allergies', 
                     items: medHist?.allergies, 
                     emptyText: 'No known allergies',
-                    chipStyle: 'bg-amber-50/70 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300 border-amber-100 dark:border-amber-900/30 hover:bg-amber-100/50',
+                    chipStyle: 'bg-[var(--app-danger-bg)] text-[var(--app-danger-text)] border-[var(--app-danger-border)] hover:border-rose-400',
                     icon: (
-                      <svg className="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-[var(--app-danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     )
@@ -655,18 +643,18 @@ export default function HealthProfile() {
                     label: 'Past Surgeries', 
                     items: medHist?.surgeries, 
                     emptyText: 'No surgeries recorded',
-                    chipStyle: 'bg-rose-50/70 text-rose-700 dark:bg-rose-950/30 dark:text-rose-300 border-rose-100 dark:border-rose-900/30 hover:bg-rose-100/50',
+                    chipStyle: 'bg-[var(--app-surface-soft)] text-[var(--app-text)] border-[var(--app-border-soft)] hover:border-zinc-300 dark:hover:border-zinc-700',
                     icon: (
-                      <svg className="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 11-4.243 4.243 3 3 0 014.243-4.243zm0-5.758a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243z" />
                       </svg>
                     )
                   },
                 ].map(({ label, items, emptyText, chipStyle, icon }) => (
-                  <div key={label} className="border-b border-[var(--app-border-soft)] last:border-0 pb-5 last:pb-0">
-                    <div className="flex items-center gap-2 mb-2.5">
+                  <div key={label} className="border-b border-[var(--app-border-soft)] last:border-0 pb-4 last:pb-0">
+                    <div className="flex items-center gap-2 mb-2">
                       {icon}
-                      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--app-text-muted)]">
+                      <span className="text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--app-text-muted)]">
                         {label}
                       </span>
                     </div>
@@ -675,14 +663,14 @@ export default function HealthProfile() {
                         {items.map((item, i) => (
                           <span
                             key={`${item}-${i}`}
-                            className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors duration-150 ${chipStyle}`}
+                            className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all duration-150 ${chipStyle}`}
                           >
                             {item}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-[var(--app-text-disabled)] italic ml-5.5">{emptyText}</p>
+                      <p className="text-xs text-[var(--app-text-disabled)] italic ml-5.5">{emptyText}</p>
                     )}
                   </div>
                 ))}
@@ -807,26 +795,7 @@ export default function HealthProfile() {
                   <DemographicsTile label="Diet Type" value={lifestyle?.diet_type} icon={icons.diet} isEmpty={val(lifestyle?.diet_type) == null} />
                   <DemographicsTile label="Exercise" value={lifestyle?.exercise_frequency} icon={icons.activity} isEmpty={val(lifestyle?.exercise_frequency) == null} />
                   <DemographicsTile label="Water Intake" value={lifestyle?.water_intake_liters} suffix=" L/day" icon={icons.water} isEmpty={val(lifestyle?.water_intake_liters) == null} />
-                </div>
-
-                {/* Stress level bar */}
-                <div className="p-4 rounded-2xl bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)]">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--app-text-disabled)] mb-2.5 block">
-                    Stress Index
-                  </span>
-                  {stressLevel != null ? (
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 h-2.5 bg-zinc-200 dark:bg-zinc-800/80 rounded-full overflow-hidden border border-zinc-300/30">
-                        <div
-                          className="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500"
-                          style={{ width: `${stressPercent}%` }}
-                        />
-                      </div>
-                      <span className="text-sm font-extrabold text-[var(--app-text)] tabular-nums w-12 text-right">{stressLevel}/10</span>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-[var(--app-text-disabled)] italic">—</p>
-                  )}
+                  <DemographicsTile label="Stress Level" value={lifestyle?.stress_level ? `${lifestyle.stress_level}/10` : null} icon={icons.bolt} isEmpty={val(lifestyle?.stress_level) == null} />
                 </div>
 
                 {/* Smoking/Alcohol status cards */}
@@ -836,16 +805,16 @@ export default function HealthProfile() {
                       label: 'Smoking Status', 
                       value: lifestyle?.smoking, 
                       icon: icons.smoking,
-                      activeColor: 'text-rose-700 bg-rose-50/70 border-rose-200/60 dark:text-rose-300 dark:bg-rose-950/20 dark:border-rose-900/30 hover:bg-rose-100/50',
-                      inactiveColor: 'text-emerald-700 bg-emerald-50/70 border-emerald-200/60 dark:text-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-900/30 hover:bg-emerald-100/50',
+                      activeColor: 'text-[var(--app-text)] bg-[var(--app-surface-soft)] border-[var(--app-border)] hover:bg-[var(--app-surface-elevated)]',
+                      inactiveColor: 'text-[var(--app-text)] bg-[var(--app-surface-soft)] border-[var(--app-border-soft)] hover:bg-[var(--app-surface-elevated)]',
                       emptyColor: 'bg-[var(--app-surface-soft)] border-[var(--app-border-soft)] text-[var(--app-text-disabled)]'
                     },
                     { 
                       label: 'Alcohol Consumption', 
                       value: lifestyle?.alcohol, 
                       icon: icons.alcohol,
-                      activeColor: 'text-rose-700 bg-rose-50/70 border-rose-200/60 dark:text-rose-300 dark:bg-rose-950/20 dark:border-rose-900/30 hover:bg-rose-100/50',
-                      inactiveColor: 'text-emerald-700 bg-emerald-50/70 border-emerald-200/60 dark:text-emerald-300 dark:bg-emerald-950/20 dark:border-emerald-900/30 hover:bg-emerald-100/50',
+                      activeColor: 'text-[var(--app-text)] bg-[var(--app-surface-soft)] border-[var(--app-border)] hover:bg-[var(--app-surface-elevated)]',
+                      inactiveColor: 'text-[var(--app-text)] bg-[var(--app-surface-soft)] border-[var(--app-border-soft)] hover:bg-[var(--app-surface-elevated)]',
                       emptyColor: 'bg-[var(--app-surface-soft)] border-[var(--app-border-soft)] text-[var(--app-text-disabled)]'
                     },
                   ].map(({ label, value: v, icon, activeColor, inactiveColor, emptyColor }) => {
@@ -853,7 +822,7 @@ export default function HealthProfile() {
                     const text = v == null ? 'Not provided' : v ? 'Yes / Active' : 'No / None';
                     return (
                       <div key={label} className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border transition-all duration-150 ${statusClass}`}>
-                        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white dark:bg-zinc-800 shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0">
+                        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[var(--app-input-bg)] text-[var(--app-text-muted)] shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0">
                           {icon}
                         </div>
                         <div className="min-w-0">

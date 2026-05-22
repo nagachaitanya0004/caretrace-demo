@@ -93,10 +93,29 @@ export default function LifestyleStep({ onNext }) {
 
   const onSubmit = (data) => {
     updateLifeForm(data);
+
+    // Compute the user's general lifestyle classification
+    const isSmoking = Boolean(data.smoking);
+    const exercise = data.exercise_frequency || '';
+    let computedLifestyle = 'sedentary';
+    if (isSmoking) {
+      computedLifestyle = 'smoker';
+    } else if (exercise === 'weekly' || exercise === 'regular') {
+      computedLifestyle = 'active';
+    }
+
+    // Sync state locally to basic info form store
+    const currentBasic = useOnboardingStore.getState().formData.basic || {};
+    useOnboardingStore.getState().updateBasicForm({
+      ...currentBasic,
+      lifestyle: computedLifestyle,
+    });
+
     onNext();
 
     const payload = buildPayload(data);
     void syncSection('lifestyle', '/api/lifestyle', payload, 'put');
+    void syncSection('basic', '/api/users/me', { lifestyle: computedLifestyle }, 'put');
   };
 
   const inputCls = (error) =>

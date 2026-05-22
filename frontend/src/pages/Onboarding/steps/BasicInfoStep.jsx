@@ -32,7 +32,6 @@ const basicInfoSchema = z.object({
   height_cm: optionalNumberString('Height', { min: 30, max: 260 }),
   weight_kg: optionalNumberString('Weight', { min: 1, max: 500 }),
   blood_group: z.enum(['', ...BLOOD_GROUPS]).optional(),
-  lifestyle: z.enum(['', 'active', 'sedentary', 'smoker']).optional(),
 });
 
 const SelectChevron = () => (
@@ -58,7 +57,6 @@ function buildPayload(data) {
   if (data.height_cm) payload.height_cm = Number(data.height_cm);
   if (data.weight_kg) payload.weight_kg = Number(data.weight_kg);
   if (data.blood_group) payload.blood_group = data.blood_group;
-  if (data.lifestyle) payload.lifestyle = data.lifestyle;
   return payload;
 }
 
@@ -84,7 +82,6 @@ export default function BasicInfoStep({ onNext }) {
       height_cm: valueOrEmpty(basicForm.height_cm),
       weight_kg: valueOrEmpty(basicForm.weight_kg),
       blood_group: valueOrEmpty(basicForm.blood_group),
-      lifestyle: valueOrEmpty(basicForm.lifestyle),
     },
     mode: 'onTouched',
   });
@@ -193,18 +190,6 @@ export default function BasicInfoStep({ onNext }) {
                   {bloodGroup}
                 </option>
               ))}
-            </select>
-            <SelectChevron />
-          </div>
-        </FieldWrapper>
-
-        <FieldWrapper id="lifestyle" label={t('onboarding.basic.lifestyle')} error={errors.lifestyle?.message}>
-          <div className="relative">
-            <select id="lifestyle" {...register('lifestyle')} className={selectCls(errors.lifestyle)}>
-              <option value="">{t('onboarding.basic.lifestyle_select')}</option>
-              <option value="active">{t('onboarding.basic.lifestyle_active')}</option>
-              <option value="sedentary">{t('onboarding.basic.lifestyle_sedentary')}</option>
-              <option value="smoker">{t('onboarding.basic.lifestyle_smoker')}</option>
             </select>
             <SelectChevron />
           </div>
