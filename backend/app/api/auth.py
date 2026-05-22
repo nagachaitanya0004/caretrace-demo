@@ -97,6 +97,8 @@ async def signup(request: Request, payload: UserCreate):
         "is_onboarded": False,
         "meta": {}
     }
+    # Filter out None values to comply with MongoDB validator types
+    mongo_doc = {k: v for k, v in mongo_doc.items() if v is not None}
 
     try:
         result = await db.users.insert_one(mongo_doc)

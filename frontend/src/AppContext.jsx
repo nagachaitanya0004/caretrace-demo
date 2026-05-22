@@ -2,13 +2,7 @@ import { createContext, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, unwrapApiPayload } from './services/api';
 import { useAuth } from './AuthContext';
-import { DEMO_EMAIL, DEMO_MEDICATIONS } from './constants/demoAccount';
-import {
-  DEMO_FALLBACK_PROFILE,
-  DEMO_FALLBACK_SYMPTOMS,
-  DEMO_FALLBACK_ALERTS,
-  DEMO_FALLBACK_ANALYSIS,
-} from './constants/demoFallbackData';
+import { DEMO_EMAIL } from './constants/demoAccount';
 
 const AppContext = createContext();
 
@@ -97,34 +91,16 @@ export function AppProvider({ children }) {
 
   // ── Demo Logic ─────────────────────────────────────────────────────────────
 
-  const userProfile = useMemo(() => {
-    if (!isDemoUser) return userProfileRaw || {};
-    return { ...DEMO_FALLBACK_PROFILE, ...userProfileRaw, id: user?.id };
-  }, [isDemoUser, userProfileRaw, user?.id]);
+  const userProfile = useMemo(() => userProfileRaw || {}, [userProfileRaw]);
 
-  const symptoms = useMemo(() => {
-    const apiSymptoms = symptomsRaw || [];
-    if (!isDemoUser) return apiSymptoms;
-    const fallback = DEMO_FALLBACK_SYMPTOMS.map(s => normalizeSymptom({ ...s, user_id: user?.id }));
-    return [...apiSymptoms, ...fallback];
-  }, [isDemoUser, symptomsRaw, user?.id]);
+  const symptoms = useMemo(() => symptomsRaw || [], [symptomsRaw]);
 
-  const alerts = useMemo(() => {
-    const apiAlerts = alertsRaw || [];
-    if (!isDemoUser) return apiAlerts;
-    const fallback = DEMO_FALLBACK_ALERTS.map(a => ({ ...a, user_id: user?.id }));
-    return [...apiAlerts, ...fallback];
-  }, [isDemoUser, alertsRaw, user?.id]);
+  const alerts = useMemo(() => alertsRaw || [], [alertsRaw]);
 
   const analysisResult = useMemo(() => {
     const list = analysesRaw || [];
-    const latest = list[0];
-    if (!isDemoUser) return latest;
-    if (latest && latest.risk !== 'Pending') {
-      return latest;
-    }
-    return normalizeAnalysisPayload({ ...DEMO_FALLBACK_ANALYSIS, user_id: user?.id });
-  }, [isDemoUser, analysesRaw, user?.id]);
+    return list[0] ?? null;
+  }, [analysesRaw]);
 
   const analysisHistory = useMemo(() => {
     return analysesRaw || [];
@@ -219,7 +195,7 @@ export function AppProvider({ children }) {
       alerts,
       isLoading,
       isDemoUser,
-      demoMedications: isDemoUser ? DEMO_MEDICATIONS : [],
+      demoMedications: [],
       riskLevel,
       addSymptom: addSymptomMutation.mutateAsync,
       performAnalysis: performAnalysisMutation.mutateAsync,

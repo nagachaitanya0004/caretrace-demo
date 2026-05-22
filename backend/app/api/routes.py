@@ -343,7 +343,7 @@ async def delete_user(request: Request, current_user: dict = Depends(get_current
         
     for coll_name in [
         'symptoms', 'analysis', 'alerts', 'reports', 'lab_results', 
-        'medication_tracking', 'medical_history', 'family_history', 
+        'medications', 'medical_history', 'family_history', 
         'lifestyle_data', 'health_metrics'
     ]:
         await db[coll_name].delete_many({'user_id': {'$in': refs}})
@@ -433,7 +433,7 @@ async def create_analysis(request: Request, payload: AnalysisCreate, current_use
 
 @router.get('/analysis')
 @cache(expire=300, namespace="analysis", key_builder=user_specific_key_builder)
-async def list_analysis(request: Request, current_user: dict = Depends(get_current_user)):
+async def list_analysis(current_user: dict = Depends(get_current_user)):
     db = get_database()
     query: dict[str, Any] = {'user_id': get_user_ref(current_user)}
     cursor = db.analysis.find(query).sort('created_at', -1)

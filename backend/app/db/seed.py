@@ -1,8 +1,5 @@
 from datetime import datetime, timedelta
-import uuid
-
 from app.db.db import get_database
-from app.core.security import get_password_hash
 from app.core.logger import logger
 from app.models.models import (
     build_symptom_document,
@@ -11,52 +8,58 @@ from app.models.models import (
     build_report_document,
 )
 
+# Fixed demo account identifiers — must match the DB dump
+DEMO_USER_UUID = "5668c898-bef9-46ad-9812-282e1ebf226d"
+DEMO_HASHED_PASSWORD = "$2b$12$sqBAkKMqn9VdEhfgG6Rz6e4Cve.Jnq4AXbiPdXG.9Ncj6Y4uLxjoi"
+
 async def ensure_demo_account() -> None:
     """
-    Ensure a fresh demo account exists in MongoDB on every server restart.
-    PostgreSQL is not used for core demo data.
+    Ensure the demo account exists in MongoDB.
+    If the demo user already exists with the correct user_id, skip re-seeding
+    to preserve existing data. Only seeds from scratch if the user is missing.
     """
     db = get_database()
     email = "rahul@demo.com"
 
-    # ── Step 0: Reset existing demo accounts ────────────────────────
-    # Collect all IDs associated with this email to ensure full cleanup
-    demo_users = await db.users.find({"email": email}).to_list(length=10)
-    if demo_users:
-        logger.info("Seed: Cleaning up %d existing demo account(s)", len(demo_users))
-        
-        user_oids = [u["_id"] for u in demo_users]
-        user_uuids = [u.get("user_id") for u in demo_users if u.get("user_id")]
-        
-        # Primary identifiers for related data cleanup
-        refs = user_uuids + [str(oid) for oid in user_oids]
-        
-        # Cleanup core profile
-        await db.users.delete_many({"_id": {"$in": user_oids}})
-        
-        # Cleanup related collections
-        for coll in [db.symptoms, db.analysis, db.alerts, db.reports, db.lab_results, db.medication_tracking]:
-            await coll.delete_many({"user_id": {"$in": refs}})
-            
-        logger.info("Seed: Cleanup complete")
+    # ── Check if demo user already exists with correct user_id ──────
+    existing = await db.users.find_one({"email": email, "user_id": DEMO_USER_UUID})
+    if existing:
+        if existing.get("hashed_password") != DEMO_HASHED_PASSWORD:
+            logger.info("Seed: Demo account exists but password hash is outdated/incorrect — updating")
+            await db.users.update_one({"_id": existing["_id"]}, {"$set": {"hashed_password": DEMO_HASHED_PASSWORD}})
+        logger.info("Seed: Demo account already exists (user_id=%s) — skipping re-seed", DEMO_USER_UUID)
+        return
 
-    user_uuid = str(uuid.uuid4())
-    hashed_pw = get_password_hash("demo1234")
+    # ── Clean up any stale demo accounts with wrong user_id ─────────
+    stale_users = await db.users.find({"email": email}).to_list(length=10)
+    stale_oids = [u["_id"] for u in stale_users]
+    stale_uuids = [u.get("user_id") for u in stale_users if u.get("user_id")]
+    refs = stale_uuids + [str(oid) for oid in stale_oids] + [DEMO_USER_UUID]
+
+    if stale_oids:
+        logger.info("Seed: Removing %d stale demo account(s)", len(stale_oids))
+        await db.users.delete_many({"_id": {"$in": stale_oids}})
+        
+    for coll in [db.symptoms, db.analysis, db.alerts, db.reports, db.lab_results, db.medications, db.health_metrics, db.medical_history, db.lifestyle_data, db.family_history]:
+        await coll.delete_many({"user_id": {"$in": refs}})
+
+    user_uuid = DEMO_USER_UUID
+    hashed_pw = DEMO_HASHED_PASSWORD
     now = datetime.utcnow()
 
     # ── Step 1: Insert into MongoDB ─────────────────────────────────
     mongo_doc = {
         "user_id": user_uuid,
-        "name": "Rahul Sharma",
+        "name": "Rahul",
         "email": email,
         "hashed_password": hashed_pw,
-        "age": 34,
+        "age": 33,
         "gender": "male",
         "lifestyle": "sedentary",
         "height_cm": 175.0,
         "weight_kg": 72.0,
         "blood_group": "O+",
-        "bmi": 23.5,
+        "bmi": 23.51,
         "is_onboarded": True,
         "meta": {},
         "created_at": now,
@@ -164,29 +167,68 @@ async def ensure_demo_account() -> None:
     meds = [
         {
             "user_id": user_ref,
-            "medication_name": "Vitamin D3",
-            "dosage": "2000 IU",
-            "frequency": "Daily",
-            "adherence": "High",
+            "name": "Vitamin D3",
+            "dose": "2000 IU",
+            "schedule": "Daily",
             "created_at": now_delta - timedelta(days=15),
         },
         {
             "user_id": user_ref,
-            "medication_name": "Ibuprofen",
-            "dosage": "400 mg",
-            "frequency": "As needed for head tension",
-            "adherence": "Medium",
+            "name": "Ibuprofen",
+            "dose": "400 mg",
+            "schedule": "As needed for head tension",
             "created_at": now_delta - timedelta(days=5),
         },
         {
             "user_id": user_ref,
-            "medication_name": "Artificial Tears",
-            "dosage": "1 drop per eye",
-            "frequency": "Twice daily",
-            "adherence": "Low",
+            "name": "Artificial Tears",
+            "dose": "1 drop per eye",
+            "schedule": "Twice daily",
             "created_at": now_delta - timedelta(days=2),
         }
     ]
-    await db.medication_tracking.insert_many(meds)
+    await db.medications.insert_many(meds)
+
+    # 7. Health Metrics
+    health_metrics = []
+    for day in range(14, -1, -1):
+        date_mark = now - timedelta(days=day)
+        health_metrics.append({
+            "user_id": user_ref,
+            "systolic_bp": 118 + (day % 5),
+            "diastolic_bp": 76 + (day % 4),
+            "heart_rate_bpm": 72 + (day % 6),
+            "blood_sugar_mg_dl": 95.0 + (day % 8),
+            "oxygen_saturation": 98 - (day % 2),
+            "recorded_at": date_mark,
+            "created_at": date_mark,
+        })
+    await db.health_metrics.insert_many(health_metrics)
+
+    # 8. Medical History
+    await db.medical_history.insert_one({
+        "user_id": user_ref,
+        "conditions": ["Mild hypertension", "Vitamin D deficiency"],
+        "medications": ["Vitamin D3 2000 IU"],
+        "allergies": ["Dust"],
+        "surgeries": [],
+        "created_at": now,
+        "updated_at": now,
+    })
+
+    # 9. Lifestyle Data
+    await db.lifestyle_data.insert_one({
+        "user_id": user_ref,
+        "sleep_hours": 6.5,
+        "sleep_quality": "average",
+        "diet_type": "mixed",
+        "exercise_frequency": "weekly",
+        "water_intake_liters": 1.8,
+        "smoking": False,
+        "alcohol": False,
+        "stress_level": 6,
+        "created_at": now,
+        "updated_at": now,
+    })
 
     logger.info("Seed: Demo account fully initialised (user_id=%s)", user_ref)
