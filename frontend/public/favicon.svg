@@ -1,4 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 40 40">
-  <rect width="40" height="40" rx="10" fill="#E2FF32"/>
-  <path d="M10 20h4l1.2-5 2.3 12 2.5-14 2.2 7H30" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop class="bg-stop-1" offset="0%" />
+      <stop class="bg-stop-2" offset="100%" />
+    </linearGradient>
+    
+    <!-- Pulse Line Shadow for extra premium depth -->
+    <filter id="pulseGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="0.8" flood-opacity="0.15" class="shadow-color"/>
+    </filter>
+  </defs>
+  
+  <style>
+    /* Default: Light Mode style matching BrandMark light */
+    .bg-stop-1 { stop-color: #8AA624; }
+    .bg-stop-2 { stop-color: #768E1B; }
+    .pulse-line { stroke: #181F02; }
+    .shadow-color { flood-color: #000; }
+
+    /* Dark Mode style matching BrandMark dark */
+    @media (prefers-color-scheme: dark) {
+      .bg-stop-1 { stop-color: #C6D870; }
+      .bg-stop-2 { stop-color: #D3E18A; }
+      .pulse-line { stroke: #111827; }
+      .shadow-color { flood-color: #111827; flood-opacity: 0.25; }
+    }
+  </style>
+
+  <!-- Background rounded rect -->
+  <rect width="40" height="40" rx="10" fill="url(#bgGradient)" />
+
+  <!-- The EKG Pulse line -->
+  <path
+    class="pulse-line"
+    d="M10 20h4l1.2-5 2.3 12 2.5-14 2.2 7H30"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter="url(#pulseGlow)"
+  />
 </svg>
