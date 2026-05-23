@@ -139,7 +139,7 @@ const CustomTooltip = ({ active, payload, label, t }) => {
         <p className="font-semibold text-[var(--app-text)] flex items-center gap-1">
           {t('history.table.severity')}:
           <span className={colorClass}>{val}</span>
-          <span className="text-[var(--app-text-disabled)] font-normal">/10</span>
+          <span className="text-[var(--app-text-muted)] opacity-70 font-normal">/10</span>
         </p>
       </div>
     );
@@ -207,6 +207,7 @@ function DashboardInner() {
   const gradientId = useId();
   const strokeId = useId();
   const [timeRange, setTimeRange] = useState('all');
+  const [showXaiHelp, setShowXaiHelp] = useState(false);
 
   useEffect(() => {
     document.title = `Dashboard — CareTrace AI`;
@@ -406,7 +407,7 @@ function DashboardInner() {
   }, [safeSymptoms]);
 
   const driftMetric = useMemo(() => {
-    if (safeSymptoms.length < 2) return { value: '—', status: 'Steady', color: 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'Requires at least 2 logs to calculate progression trends.' };
+    if (safeSymptoms.length < 2) return { value: '—', status: 'Steady', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'Requires at least 2 logs to calculate progression trends.' };
     const sorted = [...safeSymptoms].sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime());
     const x = sorted.map(s => new Date(s?.date ?? 0).getTime());
     const y = sorted.map(s => Number(s?.severity ?? 0));
@@ -429,14 +430,14 @@ function DashboardInner() {
       return {
         value: '0%',
         status: 'Steady',
-        color: 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]',
+        color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]',
         explanation: 'Symptom severity or timestamps are stable; no linear changes.'
       };
     }
     const r = num / Math.sqrt(denX * denY);
     const strengthVal = Math.round(Math.abs(r) * 100);
     let status = 'Steady';
-    let color = 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]';
+    let color = 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]';
     let explanation = 'Symptom logs show no significant linear progression trend.';
     if (r < -0.2) {
       status = 'Improving';
@@ -745,7 +746,7 @@ function DashboardInner() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">
+            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--brand-accent)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">
               HEALTH PROFILE
             </span>
             {streak > 0 && (
@@ -755,7 +756,7 @@ function DashboardInner() {
               </span>
             )}
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-[var(--app-text)] leading-tight">
+          <h1 className="text-2xl font-black tracking-tight text-[var(--app-text-heading)] leading-tight">
             {getGreeting()}, {userProfile?.name || user?.email?.split('@')[0] || t('dashboard.greeting_default')}
           </h1>
           <p className="text-sm text-[var(--app-text-muted)] mt-1 font-medium">
@@ -795,15 +796,71 @@ function DashboardInner() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 pb-4 border-b border-[var(--app-border-soft)]">
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">ANALYTICS</span>
-                <span className="text-[10px] text-[var(--app-text-disabled)] font-mono">HEALTH PATTERN DETECTION</span>
+                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-[var(--brand-accent)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">ANALYTICS</span>
+                <span className="text-[10px] text-[var(--app-text-muted)] opacity-75 font-mono">HEALTH PATTERN DETECTION</span>
               </div>
-              <h2 className="text-lg font-bold text-[var(--app-text)] mt-1">Symptom Patterns & Trends</h2>
+              <h2 className="text-lg font-bold text-[var(--app-text-heading)] mt-1 flex items-center gap-1.5">
+                Symptom Patterns & Trends
+                <button
+                  onClick={() => setShowXaiHelp(prev => !prev)}
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold text-[var(--app-text-muted)] hover:text-[var(--brand-accent)] bg-[var(--app-surface-soft)] hover:bg-[var(--app-accent-glow)] border border-[var(--app-border)] hover:border-[var(--brand-accent)]/30 transition-all cursor-pointer focus:outline-none"
+                  title="How this analysis works (Explainable AI)"
+                  aria-label="Toggle Explainable AI help panel"
+                >
+                  ?
+                </button>
+              </h2>
             </div>
             <p className="text-xs text-[var(--app-text-muted)] max-w-sm mt-1 md:mt-0 leading-snug">
               Real-time statistical evaluation of symptom occurrences, severity shifts, and general recovery direction.
             </p>
           </div>
+
+          <AnimatePresence>
+            {showXaiHelp && (
+              <motion.div
+                initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                animate={{ height: 'auto', opacity: 1, marginBottom: 24 }}
+                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="p-4 bg-[var(--app-accent-glow)] rounded-[var(--radius-lg)] border border-[var(--brand-accent)]/20 text-sm text-[var(--app-text)]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-5 h-5 rounded-full bg-[var(--brand-accent)]/15 flex items-center justify-center border border-[var(--brand-accent)]/30 shrink-0">
+                      <svg className="w-3.5 h-3.5 text-[var(--brand-accent)] font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-bold text-[var(--app-text-heading)] tracking-tight">How we analyze your symptom patterns</h3>
+                  </div>
+                  <p className="text-xs text-[var(--app-text-muted)] mb-4 leading-relaxed">
+                    CareTrace AI runs real-time mathematical calculations on your logged symptoms to make sense of trends. Here is what each metric represents, in simple terms:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-3 bg-[var(--app-surface)] rounded-xl border border-[var(--app-border-soft)]">
+                      <span className="text-xs font-bold text-[var(--brand-accent)] block mb-1">Consistency (Routine)</span>
+                      <p className="text-[11px] text-[var(--app-text-muted)] leading-relaxed">
+                        Measures if your symptoms follow a predictable daily schedule. High consistency indicates regular timing, while low consistency indicates scattered/irregular occurrences.
+                      </p>
+                    </div>
+                    <div className="p-3 bg-[var(--app-surface)] rounded-xl border border-[var(--app-border-soft)]">
+                      <span className="text-xs font-bold text-[var(--brand-accent)] block mb-1">Volatility (Swings)</span>
+                      <p className="text-[11px] text-[var(--app-text-muted)] leading-relaxed">
+                        Measures sudden shifts or swings in how intense your symptoms feel. Low volatility means steady discomfort levels; high volatility indicates sharp spikes and drops.
+                      </p>
+                    </div>
+                    <div className="p-3 bg-[var(--app-surface)] rounded-xl border border-[var(--app-border-soft)]">
+                      <span className="text-xs font-bold text-[var(--brand-accent)] block mb-1">Progression Trend</span>
+                      <p className="text-[11px] text-[var(--app-text-muted)] leading-relaxed">
+                        Tracks the long-term direction of symptom severity. It identifies whether your condition is steadily improving (recovering), remaining steady, or escalating over time.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Pattern Consistency */}
@@ -815,11 +872,11 @@ function DashboardInner() {
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
                   <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{entropyMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">score</span>
+                  <span className="text-xs text-[var(--app-text-muted)] opacity-75">score</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{entropyMetric.explanation}</p>
               </div>
-              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                 <span>METRIC: ROUTINE SCORE</span>
                 <span>CONSISTENCY</span>
               </div>
@@ -834,11 +891,11 @@ function DashboardInner() {
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
                   <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{dispersionMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">rate</span>
+                  <span className="text-xs text-[var(--app-text-muted)] opacity-75">rate</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{dispersionMetric.explanation}</p>
               </div>
-              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                 <span>METRIC: FLUCTUATION RATE</span>
                 <span>VOLATILITY</span>
               </div>
@@ -853,11 +910,11 @@ function DashboardInner() {
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
                   <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{driftMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">trend strength</span>
+                  <span className="text-xs text-[var(--app-text-muted)] opacity-75">trend strength</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{driftMetric.explanation}</p>
               </div>
-              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                 <span>METRIC: PROGRESSION VECTOR</span>
                 <span>TREND VECTOR</span>
               </div>
@@ -894,7 +951,7 @@ function DashboardInner() {
                 <span>{t('dashboard.demo_meds.label')}</span>
                 <Badge variant="info">Sample Data</Badge>
               </p>
-              <h2 className="text-base font-medium text-[var(--app-text)]">{t('dashboard.demo_meds.title')}</h2>
+              <h2 className="text-base font-medium text-[var(--app-text-heading)]">{t('dashboard.demo_meds.title')}</h2>
             </div>
             <ul className="divide-y divide-[var(--app-border)]">
               {safeDemoMedications.map((med) => (
@@ -905,7 +962,7 @@ function DashboardInner() {
                       {med.dose} · {med.schedule}
                     </p>
                   </div>
-                  {med.notes && <p className="text-xs text-[var(--app-text-disabled)] sm:text-right max-w-md">{med.notes}</p>}
+                  {med.notes && <p className="text-xs text-[var(--app-text-muted)] sm:text-right max-w-md">{med.notes}</p>}
                 </li>
               ))}
             </ul>
@@ -1004,11 +1061,11 @@ function DashboardInner() {
             className="p-8 text-center border border-[var(--app-border)] bg-[var(--app-surface)] rounded-[var(--radius-xl)]"
           >
             <div className="w-12 h-12 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-soft)] flex items-center justify-center mx-auto mb-4">
-              <svg className="w-5 h-5 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h2 className="text-base font-medium text-[var(--app-text)] mb-1">{t('dashboard.search.no_matches')}</h2>
+            <h2 className="text-base font-medium text-[var(--app-text-heading)] mb-1">{t('dashboard.search.no_matches')}</h2>
             <p className="text-sm text-[var(--app-text-muted)] max-w-md mx-auto">
               {t('dashboard.search.no_matches_sub')}
             </p>
@@ -1051,7 +1108,7 @@ function DashboardInner() {
                                 style={{ width: `${card.percent}%` }}
                               />
                             </div>
-                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                               <span>ALIGNMENT</span>
                               <span>{card.value}</span>
                             </div>
@@ -1079,7 +1136,7 @@ function DashboardInner() {
                                 );
                               })}
                             </div>
-                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                               <span>SCALE (1-10)</span>
                               <span>{avgSev}</span>
                             </div>
@@ -1090,13 +1147,13 @@ function DashboardInner() {
                           <div className="flex gap-1.5 justify-between">
                             {last7DaysStreakLog.map((day, idx) => (
                               <div key={idx} className="flex flex-col items-center gap-0.5">
-                                <span className={`text-[8px] font-bold ${day.isToday ? 'text-[var(--brand-accent)]' : 'text-[var(--app-text-disabled)]'}`}>
+                                <span className={`text-[8px] font-bold ${day.isToday ? 'text-[var(--brand-accent)]' : 'text-[var(--app-text-muted)] opacity-85'}`}>
                                   {day.label}
                                 </span>
                                 <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${
                                   day.hasLog
                                     ? 'bg-[var(--brand-accent)] text-[var(--brand-accent-on)]'
-                                    : 'bg-[var(--app-surface-soft)] border border-[var(--app-border)] text-[var(--app-text-disabled)]'
+                                    : 'bg-[var(--app-surface-soft)] border border-[var(--app-border)] text-[var(--app-text-muted)] opacity-75'
                                 }`}>
                                   {day.hasLog ? '✓' : ''}
                                 </div>
@@ -1113,7 +1170,7 @@ function DashboardInner() {
                                 style={{ width: `${profileCompletionScore}%` }}
                               />
                             </div>
-                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono">
                               <span>COMPLETE</span>
                               <span>{profileCompletionScore}%</span>
                             </div>
@@ -1139,7 +1196,7 @@ function DashboardInner() {
                   >
                     <Card elevation={1} className="h-full flex flex-col justify-between border border-[var(--app-border-soft)]">
                       <div>
-                        <h2 className="text-lg font-bold text-[var(--app-text)] mb-1">
+                        <h2 className="text-lg font-bold text-[var(--app-text-heading)] mb-1">
                           {t('dashboard.risk.title')}
                           {analysisResult?.created_at && (
                             <span className="ml-2 text-xs font-normal text-[var(--app-text-muted)]">
@@ -1164,9 +1221,38 @@ function DashboardInner() {
                             </Button>
                           </div>
                         ) : (
-                          <p className="max-w-prose text-sm leading-relaxed text-[var(--app-text-muted)] mb-6">
-                            {analysisResult.reason}
-                          </p>
+                          <>
+                            <p className="max-w-prose text-sm leading-relaxed text-[var(--app-text-muted)] mb-6">
+                              {analysisResult.reason}
+                            </p>
+                            <div className="mt-4 p-3 bg-[var(--app-surface-soft)] rounded-xl border border-[var(--app-border-soft)]">
+                              <div className="flex items-center gap-1.5 mb-2.5">
+                                <svg className="w-3.5 h-3.5 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--app-text)] font-mono">
+                                  AI Inputs & Telemetry Analyzed
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-center">
+                                <div className="bg-[var(--app-surface)] p-2 rounded-lg border border-[var(--app-border-soft)]">
+                                  <span className="block text-xs font-bold text-[var(--app-text)] font-mono">{safeSymptoms.length}</span>
+                                  <span className="text-[9px] text-[var(--app-text-muted)] block mt-0.5 leading-tight">Logs Analyzed</span>
+                                </div>
+                                <div className="bg-[var(--app-surface)] p-2 rounded-lg border border-[var(--app-border-soft)]">
+                                  <span className="block text-xs font-bold text-[var(--app-text)] font-mono">{safeAlerts.length}</span>
+                                  <span className="text-[9px] text-[var(--app-text-muted)] block mt-0.5 leading-tight">Active Alerts</span>
+                                </div>
+                                <div className="bg-[var(--app-surface)] p-2 rounded-lg border border-[var(--app-border-soft)]">
+                                  <span className="block text-xs font-bold text-[var(--app-text)] font-mono">{profileCompletionScore}%</span>
+                                  <span className="text-[9px] text-[var(--app-text-muted)] block mt-0.5 leading-tight">Profile Context</span>
+                                </div>
+                              </div>
+                              <p className="text-[9px] text-[var(--app-text-muted)] opacity-75 mt-2 font-medium leading-normal">
+                                Diagnostic confidence increases as you complete more logs and clinical profile parameters.
+                              </p>
+                            </div>
+                          </>
                         )}
                       </div>
                       {analysisResult && (
@@ -1191,7 +1277,7 @@ function DashboardInner() {
                       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.charts.trend')}</p>
-                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.charts.severity_timeline')}</h2>
+                          <h2 className="text-base font-medium text-[var(--app-text-heading)] mt-1">{t('dashboard.charts.severity_timeline')}</h2>
                         </div>
                         <div className="flex items-center gap-1 bg-[var(--app-surface-soft)] p-0.5 rounded-lg border border-[var(--app-border)] shrink-0 self-start sm:self-center">
                           {['7d', '30d', 'all'].map((range) => (
@@ -1200,7 +1286,7 @@ function DashboardInner() {
                               onClick={() => setTimeRange(range)}
                               className={`px-2.5 py-1 text-[10px] font-bold rounded-md uppercase transition-all cursor-pointer ${
                                 timeRange === range
-                                  ? 'bg-[var(--app-surface)] text-[var(--brand-accent-on)] shadow-sm border border-[var(--app-border-soft)]'
+                                  ? 'bg-[var(--app-surface)] text-[var(--brand-accent)] shadow-sm border border-[var(--app-border-soft)]'
                                   : 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]'
                               }`}
                             >
@@ -1297,7 +1383,7 @@ function DashboardInner() {
                       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.charts.distribution')}</p>
-                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.charts.symptom_frequency')}</h2>
+                          <h2 className="text-base font-medium text-[var(--app-text-heading)] mt-1">{t('dashboard.charts.symptom_frequency')}</h2>
                         </div>
                       </div>
 
@@ -1380,7 +1466,7 @@ function DashboardInner() {
                       <div>
                         <div className="mb-6">
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.insights.title')}</p>
-                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.insights.personalized_insights')}</h2>
+                          <h2 className="text-base font-medium text-[var(--app-text-heading)] mt-1">{t('dashboard.insights.personalized_insights')}</h2>
                         </div>
 
                         <div className="flex-1 space-y-3">
@@ -1430,7 +1516,7 @@ function DashboardInner() {
                       <div className="mb-6 flex items-center justify-between">
                         <div>
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Clinical Documents</p>
-                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">Medical Reports ({reports.length})</h2>
+                          <h2 className="text-base font-medium text-[var(--app-text-heading)] mt-1">Medical Reports ({reports.length})</h2>
                         </div>
                         <Badge variant={reports.length > 0 ? 'accent' : 'pending'}>
                           {reports.length > 0 ? 'Synchronized' : 'Empty'}
@@ -1479,8 +1565,8 @@ function DashboardInner() {
                         </div>
                       ) : reports.length === 0 ? (
                         <div className="py-8 text-center bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-dashed border-[var(--app-border)]">
-                          <p className="text-xs font-medium text-[var(--app-text-disabled)]">No documents uploaded yet.</p>
-                          <p className="text-[10px] text-[var(--app-text-disabled)] mt-0.5">Upload a report to synchronize with AI diagnostic context.</p>
+                          <p className="text-xs font-medium text-[var(--app-text-muted)]">No documents uploaded yet.</p>
+                          <p className="text-[10px] text-[var(--app-text-muted)] opacity-80 mt-0.5">Upload a report to synchronize with AI diagnostic context.</p>
                         </div>
                       ) : (
                         <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
@@ -1488,7 +1574,7 @@ function DashboardInner() {
                             <div key={report.id} className="flex items-center justify-between p-2.5 border border-[var(--app-border-soft)] rounded-xl bg-[var(--app-surface-soft)] hover:bg-[var(--app-surface)] transition-all group">
                               <div className="min-w-0 flex-1 pr-2">
                                 <p className="text-xs font-semibold text-[var(--app-text)] truncate">{report.file_name}</p>
-                                <p className="text-[9px] text-[var(--app-text-disabled)] font-mono uppercase mt-0.5">
+                                <p className="text-[9px] text-[var(--app-text-muted)] opacity-75 font-mono uppercase mt-0.5">
                                   {new Date(report.uploaded_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </p>
                               </div>

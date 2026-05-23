@@ -85,6 +85,7 @@
   --app-surface-floating: rgba(255, 255, 255, 0.98);
 
   --app-text: #1C1917;
+  --app-text-heading: #0F172A;
   /* Warm dark charcoal for primary text */
   --app-text-muted: #44403C;
   /* Warm medium gray (stone-700) for secondary text */
@@ -119,6 +120,7 @@
   --app-danger-text: #991b1b;
   --app-success: var(--color-success);
   --app-success-bg: var(--color-success-bg);
+  --app-success-border: rgba(16, 185, 129, 0.15);
   --app-info: var(--color-info);
   --app-info-bg: var(--color-info-bg);
   --app-info-border: var(--color-info-border);
@@ -214,6 +216,7 @@
   --app-surface-soft: rgba(108, 95, 91, 0.15);
   --app-surface-floating: rgba(22, 21, 20, 0.98);
   --app-text: #F5F5F5;
+  --app-text-heading: #FFFFFF;
   --app-text-muted: #A8A09E;
   --app-text-tertiary: #7D7573;
   --app-text-disabled: #595250;
@@ -228,6 +231,7 @@
   --app-danger-text: #fda4af;
   --app-success: #34d399;
   --app-success-bg: rgba(52, 211, 153, 0.12);
+  --app-success-border: rgba(52, 211, 153, 0.28);
   --app-info: #63b3ed;
   --app-info-bg: rgba(99, 179, 237, 0.12);
   --app-info-border: rgba(99, 179, 237, 0.28);
@@ -1030,7 +1034,7 @@ input[type='range'] {
 }
 
 .page-title {
-  @apply text-2xl sm:text-3xl font-bold text-[var(--app-text)] leading-tight;
+  @apply text-2xl sm:text-3xl font-bold text-[var(--app-text-heading)] leading-tight;
 }
 
 .page-subtitle {
