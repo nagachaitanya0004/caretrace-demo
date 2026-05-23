@@ -2,12 +2,14 @@
 // Licensed under MIT License
 // Type definitions and component structure are original work
 
-import React, { Suspense, useContext, useDeferredValue, useEffect, useId, useMemo, useState } from 'react';
+import React, { Suspense, useContext, useDeferredValue, useEffect, useId, useMemo, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppContext } from '../AppContext';
 import { useAuth } from '../AuthContext';
+import { useNotification } from '../NotificationContext';
+import { api, unwrapApiPayload, API_BASE_URL } from '../services/api';
 import PageFrame from '../components/PageFrame';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -111,7 +113,7 @@ class WidgetErrorBoundary extends React.Component {
           <div className="w-12 h-12 bg-rose-500/10 rounded-full flex items-center justify-center mb-3">
             <svg className="w-6 h-6 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+            </svg>
           </div>
           <p className="text-sm font-semibold text-[var(--app-text)] mb-1">{this.props.title || 'Widget Error'}</p>
           <p className="text-xs text-[var(--app-text-muted)] max-w-[200px] mb-4">This component failed to load gracefully.</p>
@@ -204,6 +206,7 @@ function DashboardInner() {
   const { t, i18n } = useTranslation();
   const gradientId = useId();
   const strokeId = useId();
+  const [timeRange, setTimeRange] = useState('all');
 
   useEffect(() => {
     document.title = `Dashboard — CareTrace AI`;
@@ -247,101 +250,262 @@ function DashboardInner() {
   const avgSev = useMemo(() => safeSymptoms.length
     ? (safeSymptoms.reduce((sum, item) => sum + Number(item?.severity ?? 0), 0) / safeSymptoms.length).toFixed(1)
     : '—', [safeSymptoms]);
-  const longestRun = useMemo(() => safeSymptoms.length ? Math.max(...safeSymptoms.map((symptom) => Number(symptom?.duration ?? 0))) : 0, [safeSymptoms]);
+  // longestRun removed to satisfy lint
 
-  // Shannon Entropy Index (H = -Σ p_k log₂ p_k)
-  const entropyMetric = useMemo(() => {
-    if (safeSymptoms.length === 0) return { value: '0.00', status: 'Optimal', color: 'text-[var(--app-success)]' };
-    const counts = {};
-    safeSymptoms.forEach((s) => {
-      const name = String(s?.symptom ?? '').toLowerCase().trim();
-      if (name) {
-        counts[name] = (counts[name] ?? 0) + 1;
+  // Today Logged & Streak (Computed early to avoid TDZ ReferenceError)
+  const todayLogged = useMemo(() => {
+    return safeSymptoms.some((symptom) => new Date(symptom?.date ?? 0).toDateString() === new Date().toDateString());
+  }, [safeSymptoms]);
+
+  const streak = useMemo(() => {
+    if (!safeSymptoms.length) return 0;
+    const dates = [...new Set(safeSymptoms.map(s => {
+      const d = new Date(s?.date ?? Date.now());
+      return !isNaN(d) ? d.toDateString() : null;
+    }).filter(Boolean))]
+      .map(d => new Date(d).setHours(0, 0, 0, 0))
+      .sort((a, b) => b - a);
+
+    if (!dates.length) return 0;
+    const today = new Date().setHours(0, 0, 0, 0);
+    const yesterday = today - 86400000;
+
+    if (dates[0] < yesterday) return 0;
+
+    let streak = 1;
+    for (let i = 0; i < dates.length - 1; i++) {
+      if (dates[i] - dates[i + 1] === 86400000) streak++;
+      else break;
+    }
+    return streak;
+  }, [safeSymptoms]);
+
+  // Profile Completion Score
+  const profileCompletionScore = useMemo(() => {
+    if (!userProfile) return 0;
+    const fields = ['name', 'age', 'gender', 'lifestyle', 'height_cm', 'weight_kg'];
+    let filled = 0;
+    fields.forEach((field) => {
+      if (userProfile[field] !== undefined && userProfile[field] !== null && userProfile[field] !== '') {
+        filled++;
       }
     });
-    const total = safeSymptoms.length;
-    let h = 0;
-    Object.values(counts).forEach((count) => {
-      const p = count / total;
-      h -= p * Math.log2(p);
+    return Math.round((filled / fields.length) * 100);
+  }, [userProfile]);
+
+  // Wellness Index Calculations
+  const wellnessIndex = useMemo(() => {
+    let score = 95;
+    const severityVal = parseFloat(avgSev);
+    if (!isNaN(severityVal)) {
+      score -= severityVal * 6;
+    }
+    if (safeAlerts.length > 0) {
+      score -= Math.min(25, safeAlerts.length * 8);
+    }
+    const streakVal = todayLogged ? 5 : 0;
+    score += streakVal;
+    return Math.max(10, Math.min(100, Math.round(score)));
+  }, [avgSev, safeAlerts.length, todayLogged]);
+
+  const { wellnessStatusText, wellnessBarColor } = useMemo(() => {
+    if (wellnessIndex >= 90) return { wellnessStatusText: 'Optimal Health Alignment', wellnessBarColor: 'bg-[var(--brand-accent)]' };
+    if (wellnessIndex >= 75) return { wellnessStatusText: 'Stable Condition Profile', wellnessBarColor: 'bg-[var(--app-info)]' };
+    if (wellnessIndex >= 60) return { wellnessStatusText: 'Mild Variances Detected', wellnessBarColor: 'bg-[var(--app-warning)]' };
+    return { wellnessStatusText: 'Clinical Attention Recommended', wellnessBarColor: 'bg-[var(--app-danger)]' };
+  }, [wellnessIndex]);
+
+  const { avgSevSub, avgSevBarColor } = useMemo(() => {
+    const val = parseFloat(avgSev);
+    if (isNaN(val) || val === 0) return { avgSevSub: 'No logged symptoms', avgSevBarColor: 'bg-[var(--app-success)]' };
+    if (val < 3) return { avgSevSub: 'Mild intensity threshold', avgSevBarColor: 'bg-[var(--app-success)]' };
+    if (val < 6) return { avgSevSub: 'Moderate severity pattern', avgSevBarColor: 'bg-[var(--app-warning)]' };
+    return { avgSevSub: 'Elevated distress indicators', avgSevBarColor: 'bg-[var(--app-danger)]' };
+  }, [avgSev]);
+
+  // Mathematical Biomarkers Engine
+  const entropyMetric = useMemo(() => {
+    if (!safeSymptoms.length) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    const counts = {};
+    safeSymptoms.forEach(s => {
+      const name = String(s?.symptom ?? '').toLowerCase().trim();
+      if (name) counts[name] = (counts[name] ?? 0) + 1;
     });
-    let status = 'High Predictability';
-    let color = 'text-[var(--app-success)]';
-    if (h > 1.5) {
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    if (total === 0) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    let entropy = 0;
+    Object.values(counts).forEach(count => {
+      const p = count / total;
+      entropy -= p * Math.log2(p);
+    });
+    const rounded = parseFloat(entropy.toFixed(2));
+    let status = 'Highly Predictable';
+    let color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
+    if (rounded > 1.5) {
       status = 'High Randomness';
-      color = 'text-[var(--app-warning)]';
-    } else if (h > 0.8) {
-      status = 'Moderate Order';
-      color = 'text-[var(--app-info)]';
+      color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
+    } else if (rounded > 0.8) {
+      status = 'Moderate Variation';
+      color = 'text-[var(--badge-warning-text)] bg-[var(--badge-warning-bg)] border-[var(--app-warning-border)]';
     }
-    return { value: h.toFixed(2), status, color };
+    return {
+      value: rounded,
+      status,
+      color,
+      explanation: rounded > 1.5
+        ? 'Symptom distribution is highly random and unpredictable.'
+        : rounded > 0.8
+          ? 'Symptom distribution is structured with mild changes.'
+          : 'Symptom distribution follows a highly structured, recurring pattern.'
+    };
   }, [safeSymptoms]);
 
-  // Standard Dispersion (σ = √[Σ(x_i - μ)² / N])
   const dispersionMetric = useMemo(() => {
-    if (safeSymptoms.length === 0) return { value: '0.00', status: 'Stable', color: 'text-[var(--app-success)]' };
-    const severities = safeSymptoms.map((s) => Number(s?.severity ?? 0));
+    if (!safeSymptoms.length) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    const severities = safeSymptoms.map(s => Number(s?.severity ?? 0));
     const mean = severities.reduce((a, b) => a + b, 0) / severities.length;
-    const variance = severities.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / severities.length;
+    const variance = severities.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / severities.length;
     const stdDev = Math.sqrt(variance);
-    let status = 'Narrow Variance';
-    let color = 'text-[var(--app-success)]';
-    if (stdDev > 2.5) {
-      status = 'Wide Fluctuations';
-      color = 'text-[var(--app-danger)]';
-    } else if (stdDev > 1.2) {
-      status = 'Moderate Volatility';
-      color = 'text-[var(--app-warning)]';
+    const rounded = parseFloat(stdDev.toFixed(2));
+    let status = 'Stable Intensity';
+    let color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
+    if (rounded >= 2.0) {
+      status = 'High Volatility';
+      color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
+    } else if (rounded >= 1.0) {
+      status = 'Moderate Swings';
+      color = 'text-[var(--badge-warning-text)] bg-[var(--badge-warning-bg)] border-[var(--app-warning-border)]';
     }
-    return { value: stdDev.toFixed(2), status, color };
+    return {
+      value: rounded,
+      status,
+      color,
+      explanation: rounded >= 2.0
+        ? 'Large severity fluctuations; symptoms swing between extreme intensities.'
+        : rounded >= 1.0
+          ? 'Moderate volatility in discomfort levels.'
+          : 'Highly consistent symptom severity baseline.'
+    };
   }, [safeSymptoms]);
 
-  // Pearson Correlation Coefficient Temporal Drift (r = Cov(X,Y)/(σ_x σ_y))
   const driftMetric = useMemo(() => {
-    if (safeSymptoms.length < 2) return { value: '0.00', status: 'Stationary', color: 'text-[var(--app-text-disabled)]', direction: 'Neutral' };
-    const sorted = [...safeSymptoms]
-      .map((s) => ({
-        x: new Date(s?.date ?? 0).getTime() / (1000 * 60 * 60 * 24),
-        y: Number(s?.severity ?? 0),
-      }))
-      .sort((a, b) => a.x - b.x);
-    
+    if (safeSymptoms.length < 2) return { value: 0, status: 'Stationary', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'Requires at least 2 logs to calculate temporal trend.' };
+    const sorted = [...safeSymptoms].sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime());
+    const x = sorted.map(s => new Date(s?.date ?? 0).getTime());
+    const y = sorted.map(s => Number(s?.severity ?? 0));
     const n = sorted.length;
-    const meanX = sorted.reduce((sum, item) => sum + item.x, 0) / n;
-    const meanY = sorted.reduce((sum, item) => sum + item.y, 0) / n;
-    
+    const sumX = x.reduce((a, b) => a + b, 0);
+    const sumY = y.reduce((a, b) => a + b, 0);
+    const meanX = sumX / n;
+    const meanY = sumY / n;
     let num = 0;
     let denX = 0;
     let denY = 0;
-    sorted.forEach((item) => {
-      const dx = item.x - meanX;
-      const dy = item.y - meanY;
-      num += dx * dy;
-      denX += dx * dx;
-      denY += dy * dy;
-    });
-    
-    if (denX === 0 || denY === 0) return { value: '0.00', status: 'Stationary', color: 'text-[var(--app-text-disabled)]', direction: 'Neutral' };
-    const r = num / Math.sqrt(denX * denY);
-    
-    let status = 'Linear Drift';
-    let color = 'text-[var(--app-text)]';
-    let direction = 'Neutral';
-    if (r < -0.3) {
-      status = 'Regressing (Recovery)';
-      color = 'text-[var(--app-success)]';
-      direction = 'Negative Trend';
-    } else if (r > 0.3) {
-      status = 'Escalating (Attention)';
-      color = 'text-[var(--app-danger)]';
-      direction = 'Positive Trend';
-    } else {
-      status = 'Stationary Plateau';
-      color = 'text-[var(--app-info)]';
-      direction = 'No Drift';
+    for (let i = 0; i < n; i++) {
+      const diffX = x[i] - meanX;
+      const diffY = y[i] - meanY;
+      num += diffX * diffY;
+      denX += diffX * diffX;
+      denY += diffY * diffY;
     }
-    return { value: r.toFixed(2), status, color, direction };
+    if (denX === 0 || denY === 0) {
+      return {
+        value: 0,
+        status: 'Stationary',
+        color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]',
+        explanation: 'Symptom severity or timestamps are static.'
+      };
+    }
+    const r = num / Math.sqrt(denX * denY);
+    const rounded = parseFloat(r.toFixed(2));
+    let status = 'Stationary';
+    let color = 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]';
+    let explanation = 'Symptoms are holding at a steady baseline with no linear progression.';
+    if (rounded < -0.2) {
+      status = 'Improving (Negative)';
+      color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
+      explanation = 'Symptom severity is decreasing over time. Positive recovery velocity.';
+    } else if (rounded > 0.2) {
+      status = 'Escalating (Positive)';
+      color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
+      explanation = 'Symptom severity shows a rising trend. Clinical review advised.';
+    }
+    return { value: rounded, status, color, explanation };
   }, [safeSymptoms]);
+
+  // Medical Reports Integration
+  const [reports, setReports] = useState([]);
+  const [reportsLoading, setReportsLoading] = useState(true);
+  const [uploadingReport, setUploadingReport] = useState(false);
+  const [selectedReportFile, setSelectedReportFile] = useState(null);
+  const reportFileInputRef = useRef(null);
+  const { addNotification: notify } = useNotification() || { addNotification: () => {} };
+
+  const fetchReports = async () => {
+    setReportsLoading(true);
+    try {
+      const res = await api.get('/api/medical-reports');
+      const data = unwrapApiPayload(res) || [];
+      setReports([...data].sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at)));
+    } catch {
+      setReports([]);
+    } finally {
+      setReportsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const handleReportFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
+    const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png'];
+    const MAX_SIZE = 10 * 1024 * 1024;
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!ALLOWED_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(ext)) {
+      notify(t('reports.error.invalid_type', 'Only PDF, JPG, and PNG files are allowed'), 'error');
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      notify(t('reports.error.too_large', 'File size must be under 10 MB'), 'error');
+      return;
+    }
+    setSelectedReportFile(file);
+  };
+
+  const handleReportUpload = async () => {
+    if (!selectedReportFile) return;
+    setUploadingReport(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedReportFile);
+      await api.uploadFile('/api/medical-reports/upload', formData);
+      notify(t('reports.upload_success', 'Medical report uploaded successfully'), 'success');
+      setSelectedReportFile(null);
+      await fetchReports();
+    } catch (err) {
+      notify(err.message || t('reports.upload_error', 'Failed to upload file'), 'error');
+    } finally {
+      setUploadingReport(false);
+    }
+  };
+
+  const handleReportView = (report) => {
+    window.open(`${API_BASE_URL}/api/medical-reports/${report.id}/download?inline=true`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleReportDownload = (report) => {
+    const a = document.createElement('a');
+    a.href = `${API_BASE_URL}/api/medical-reports/${report.id}/download`;
+    a.download = report.file_name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const chartData = useMemo(() => [...safeSymptoms]
     .sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime())
@@ -350,11 +514,25 @@ function DashboardInner() {
       severity: parseInt(symptom?.severity ?? 0, 10) || 0,
       symptom: symptom?.symptom ?? '',
       duration: Number(symptom?.duration ?? 0),
+      rawDate: symptom?.date ?? 0,
     })), [safeSymptoms, i18n.language]);
 
   const filteredChartData = useMemo(() => chartData.filter((entry) =>
     matchesSearch(searchQuery, entry.symptom, entry.name, entry.severity, entry.duration)
   ), [chartData, searchQuery]);
+
+  const filteredByTimeRangeChartData = useMemo(() => {
+    const rawData = hasSearchQuery ? filteredChartData : chartData;
+    if (timeRange === 'all') return rawData;
+    const now = new Date();
+    const cutoff = new Date();
+    if (timeRange === '7d') {
+      cutoff.setDate(now.getDate() - 7);
+    } else if (timeRange === '30d') {
+      cutoff.setDate(now.getDate() - 30);
+    }
+    return rawData.filter((d) => new Date(d.rawDate).getTime() >= cutoff.getTime());
+  }, [chartData, filteredChartData, hasSearchQuery, timeRange]);
 
   const frequencyData = useMemo(() => {
     const map = {};
@@ -379,7 +557,6 @@ function DashboardInner() {
   const nameLengths = (hasSearchQuery ? filteredFrequencyData : frequencyData).map(d => d.name.length);
   const dynamicYAxisWidth = nameLengths.length > 0 ? Math.min(Math.max(...nameLengths) * 7 + 16, 160) : 160;
 
-  const todayLogged = safeSymptoms.some((symptom) => new Date(symptom?.date ?? 0).toDateString() === new Date().toDateString());
   const showReminder = !todayLogged && !reminderDismissed;
 
   const handleDismissReminder = () => {
@@ -393,71 +570,79 @@ function DashboardInner() {
     setSearchParams(nextParams, { replace: true });
   };
 
-  const quickActions = useMemo(() => [
-    {
-      key: 'log-symptom',
-      label: t('dashboard.log_symptom'),
-      keywords: [t('dashboard.stats.logged'), t('dashboard.stats.all_time'), 'logged', 'symptoms'],
-      intent: 'cta',
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>,
-      onClick: () => navigate('/symptoms'),
-    },
-    {
-      key: 'run-analysis',
-      label: t('dashboard.run_analysis'),
-      keywords: ['analysis', 'risk', 'scan', 'insights', 'report'],
-      intent: 'ghost',
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
-      onClick: () => navigate('/analysis'),
-    },
-    {
-      key: 'timeline',
-      label: t('dashboard.view_timeline'),
-      keywords: ['timeline', 'history', 'dates', 'recent', 'symptoms'],
-      intent: 'ghost',
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
-      onClick: () => navigate('/timeline'),
-    },
-  ], [t, navigate]);
 
-  const visibleQuickActions = useMemo(() => quickActions.filter((action) =>
-    matchesSearch(searchQuery, action.label, action.keywords)
-  ), [searchQuery, quickActions]);
 
   const statCards = useMemo(() => [
     {
-      key: 'symptoms-logged',
-      label: t('dashboard.stats.logged'),
-      value: safeSymptoms.length,
-      sub: t('dashboard.stats.all_time'),
-      icon: <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
-      path: '/history'
+      key: 'wellness-index',
+      label: t('dashboard.stats.wellness_index', 'Wellness Index'),
+      value: `${wellnessIndex}%`,
+      sub: wellnessStatusText,
+      icon: (
+        <div className="w-8 h-8 rounded-lg bg-[var(--app-accent-glow)] flex items-center justify-center border border-[var(--brand-accent)]/20">
+          <svg className="w-4 h-4 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+      ),
+      path: '/analysis',
+      keywords: ['wellness', 'health', 'index', 'score', 'status'],
+      barColor: wellnessBarColor,
+      percent: wellnessIndex
     },
     {
       key: 'avg-severity',
-      label: t('dashboard.stats.avg_sev'),
-      value: avgSev,
-      sub: t('dashboard.stats.across_logs'),
-      icon: <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
-      path: '/timeline'
+      label: t('dashboard.stats.avg_sev', 'Mean Severity'),
+      value: `${avgSev} / 10`,
+      sub: avgSevSub,
+      icon: (
+        <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
+          <svg className="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+      ),
+      path: '/timeline',
+      keywords: ['severity', 'average', 'mean', 'symptoms'],
+      barColor: avgSevBarColor,
+      percent: parseFloat(avgSev) ? parseFloat(avgSev) * 10 : 0
     },
     {
-      key: 'longest-duration',
-      label: t('dashboard.stats.longest'),
-      value: longestRun ? `${longestRun}d` : '—',
-      sub: t('dashboard.stats.single_run'),
-      icon: <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-      path: '/history'
+      key: 'logging-streak',
+      label: t('dashboard.stats.streak', 'Activity Streak'),
+      value: t('dashboard.stats.streak_value', '{{count}} Days', { count: streak }),
+      sub: todayLogged ? t('dashboard.stats.streak_logged', 'Today logged ✓') : t('dashboard.stats.streak_pending', 'Awaiting log today'),
+      icon: (
+        <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+          <svg className="w-4 h-4 text-amber-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+      ),
+      path: '/symptoms',
+      keywords: ['streak', 'activity', 'days', 'logging', 'history'],
+      barColor: 'bg-amber-500',
+      percent: Math.min(100, (streak / 7) * 100)
     },
     {
-      key: 'active-alerts',
-      label: t('dashboard.stats.alerts'),
-      value: String(safeAlerts.length),
-      sub: hasAlert() ? t('dashboard.stats.needs_attention') : t('dashboard.stats.all_clear'),
-      icon: <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
-      path: '/alerts'
-    },
-  ], [t, safeSymptoms.length, avgSev, longestRun, safeAlerts.length, hasAlert]);
+      key: 'profile-completion',
+      label: t('dashboard.stats.profile_completion', 'Profile Context'),
+      value: `${profileCompletionScore}%`,
+      sub: profileCompletionScore === 100 ? t('dashboard.stats.profile_completed', 'Full clinical precision') : t('dashboard.stats.profile_incomplete', 'Complete to optimize AI'),
+      icon: (
+        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+          <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+      ),
+      path: '/profile',
+      keywords: ['profile', 'completion', 'context', 'setup'],
+      barColor: 'bg-blue-500',
+      percent: profileCompletionScore
+    }
+  ], [t, wellnessIndex, wellnessStatusText, wellnessBarColor, avgSev, avgSevSub, avgSevBarColor, streak, todayLogged, profileCompletionScore]);
 
   const visibleStatCards = useMemo(() => statCards.filter((card) =>
     matchesSearch(searchQuery, card.label, card.sub, card.keywords)
@@ -514,7 +699,6 @@ function DashboardInner() {
     || matchesSearch(searchQuery, t('dashboard.insights.title'), ['insights', 'guidance', 'profile', 'report']);
 
   const hasSearchMatches = [
-    visibleQuickActions.length > 0,
     showAlertBanner,
     showReminderBanner,
     visibleStatCards.length > 0,
@@ -531,49 +715,145 @@ function DashboardInner() {
     return t('dashboard.greeting.evening');
   };
 
-  const getStreak = () => {
-    if (!safeSymptoms.length) return 0;
-    const dates = [...new Set(safeSymptoms.map(s => {
-      const d = new Date(s?.date ?? Date.now());
-      return !isNaN(d) ? d.toDateString() : null;
-    }).filter(Boolean))]
-      .map(d => new Date(d).setHours(0,0,0,0))
-      .sort((a, b) => b - a);
-    
-    if (!dates.length) return 0;
-    const today = new Date().setHours(0,0,0,0);
-    const yesterday = today - 86400000;
-    
-    if (dates[0] < yesterday) return 0;
-    
-    let streak = 1;
-    for (let i = 0; i < dates.length - 1; i++) {
-      if (dates[i] - dates[i+1] === 86400000) streak++;
-      else break;
-    }
-    return streak;
-  };
-
-  const streak = getStreak();
   const dateStr = new Date().toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const subtitle = (
-    <span className="flex items-center gap-3">
-      <span>{dateStr}</span>
-      {streak > 0 && <Badge variant="accent">{streak}-day streak</Badge>}
-    </span>
+
+  // Greeting Welcome Hero card markup
+  const welcomeHeroCard = (
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+      className="p-6 rounded-[var(--radius-xl)] bg-gradient-to-r from-[var(--brand-accent)]/12 via-[var(--app-surface-soft)] to-[var(--app-info)]/10 border border-[var(--brand-accent)]/15 shadow-[var(--shadow-l1)] relative overflow-hidden"
+    >
+      <div className="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-gradient-to-br from-[var(--brand-accent)]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/20 border border-[var(--brand-accent)]/30 rounded-full">
+              HEALTH PROFILE
+            </span>
+            {streak > 0 && (
+              <span className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
+                <svg className="w-3.5 h-3.5 fill-current animate-pulse" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                {streak}-day active streak
+              </span>
+            )}
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-[var(--app-text)] leading-tight">
+            {getGreeting()}, {userProfile?.name || user?.email?.split('@')[0] || t('dashboard.greeting_default')}
+          </h1>
+          <p className="text-sm text-[var(--app-text-muted)] mt-1 font-medium">
+            {dateStr} · Real-time AI diagnostic telemetry active.
+          </p>
+        </div>
+
+        <div className="bg-[var(--app-surface)]/80 backdrop-blur-md border border-[var(--app-border)] p-4 rounded-2xl flex items-center justify-between gap-4 w-full md:w-auto shadow-sm shrink-0">
+          <div>
+            <p className="text-xs font-bold text-[var(--app-text)] uppercase tracking-wider">DAILY CHECK-IN</p>
+            <p className="text-[10px] text-[var(--app-text-muted)] mt-0.5">How are you feeling today?</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.04, y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigate('/symptoms')}
+            className="px-4 py-2 text-xs font-bold text-[var(--brand-accent-on)] bg-[var(--brand-accent)] hover:bg-[var(--app-accent-hover)] rounded-xl shadow-[var(--shadow-l1)] hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
+            Log How You Feel
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
   );
 
-  const quickActionsJSX = visibleQuickActions.map((action) => (
-    <Button
-      key={action.key}
-      intent={action.intent}
-      size="md"
-      onClick={action.onClick}
-    >
-      {action.icon}
-      {action.label}
-    </Button>
-  ));
+  // Biomarkers card markup
+  const biomarkerPanelJSX = (
+    <WidgetErrorBoundary title="Biomarker Dynamics">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.3 }}
+        className="mt-6"
+      >
+        <Card elevation={1} className="relative overflow-hidden border border-[var(--app-border-soft)] hover:border-[var(--brand-accent)]/30 transition-all duration-300">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-[var(--brand-accent)]/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 pb-4 border-b border-[var(--app-border-soft)]">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/15 border border-[var(--brand-accent)]/20 rounded">BIOMARKERS</span>
+                <span className="text-[10px] text-[var(--app-text-disabled)] font-mono">v1.2 // CLINICAL PROTOCOL</span>
+              </div>
+              <h2 className="text-lg font-bold text-[var(--app-text)] mt-1">Biomarker Dynamics & Advanced Diagnostics</h2>
+            </div>
+            <p className="text-xs text-[var(--app-text-muted)] max-w-sm mt-1 md:mt-0 leading-snug">
+              Real-time statistical validation of symptom occurrences, severity volatility, and regression vector drift.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Entropy */}
+            <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Entropy Index (H)</span>
+                  <Badge className={`text-[10px] px-2 py-0.5 border ${entropyMetric.color}`}>{entropyMetric.status}</Badge>
+                </div>
+                <div className="flex items-baseline gap-1.5 my-2">
+                  <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{entropyMetric.value}</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">bits</span>
+                </div>
+                <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{entropyMetric.explanation}</p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                <span>FORMULA: -∑ p_i log₂ p_i</span>
+                <span>PREDICTABILITY</span>
+              </div>
+            </div>
+
+            {/* Dispersion */}
+            <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Dispersion (σ)</span>
+                  <Badge className={`text-[10px] px-2 py-0.5 border ${dispersionMetric.color}`}>{dispersionMetric.status}</Badge>
+                </div>
+                <div className="flex items-baseline gap-1.5 my-2">
+                  <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{dispersionMetric.value}</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">severity</span>
+                </div>
+                <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{dispersionMetric.explanation}</p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                <span>FORMULA: √Var(X)</span>
+                <span>VOLATILITY</span>
+              </div>
+            </div>
+
+            {/* Drift */}
+            <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Temporal Drift (r)</span>
+                  <Badge className={`text-[10px] px-2 py-0.5 border ${driftMetric.color}`}>{driftMetric.status}</Badge>
+                </div>
+                <div className="flex items-baseline gap-1.5 my-2">
+                  <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{driftMetric.value > 0 ? `+${driftMetric.value}` : driftMetric.value}</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">coeff</span>
+                </div>
+                <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{driftMetric.explanation}</p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                <span>FORMULA: Cov(X,Y)/σₓσy</span>
+                <span>RECOVERY RATE</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </motion.div>
+    </WidgetErrorBoundary>
+  );
+
+
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -581,338 +861,282 @@ function DashboardInner() {
 
   return (
     <PageFrame
-      title={`${getGreeting()}, ${userProfile?.name || user?.email?.split('@')[0] || t('dashboard.greeting_default')}`}
-      subtitle={subtitle}
-      actions={quickActionsJSX}
+      title=""
+      subtitle=""
+      actions={null}
       maxWidthClass="max-w-5xl"
     >
+      {welcomeHeroCard}
 
-        {!hasSearchQuery && safeDemoMedications.length > 0 && (
-          <WidgetErrorBoundary title="Demo Medications">
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
-              className="p-6 bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
-            >
-              <div className="mb-4">
-                <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider mb-1 flex justify-between items-center">
-                  <span>{t('dashboard.demo_meds.label')}</span>
-                  <Badge variant="info">Sample Data</Badge>
-                </p>
-                <h2 className="text-base font-medium text-[var(--app-text)]">{t('dashboard.demo_meds.title')}</h2>
+      {!hasSearchQuery && safeDemoMedications.length > 0 && (
+        <WidgetErrorBoundary title="Demo Medications">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+            className="p-6 bg-[var(--app-surface)] border border-[var(--app-border)] rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
+          >
+            <div className="mb-4">
+              <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider mb-1 flex justify-between items-center">
+                <span>{t('dashboard.demo_meds.label')}</span>
+                <Badge variant="info">Sample Data</Badge>
+              </p>
+              <h2 className="text-base font-medium text-[var(--app-text)]">{t('dashboard.demo_meds.title')}</h2>
             </div>
-              <ul className="divide-y divide-[var(--app-border)]">
+            <ul className="divide-y divide-[var(--app-border)]">
               {safeDemoMedications.map((med) => (
                 <li key={med.name} className="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                   <div>
-                       <p className="font-medium text-sm text-[var(--app-text)]">{med.name}</p>
-                       <p className="text-xs text-[var(--app-text-muted)]">
-                       {med.dose} · {med.schedule}
-                     </p>
-                   </div>
-                    {med.notes && <p className="text-xs text-[var(--app-text-disabled)] sm:text-right max-w-md">{med.notes}</p>}
+                    <p className="font-medium text-sm text-[var(--app-text)]">{med.name}</p>
+                    <p className="text-xs text-[var(--app-text-muted)]">
+                      {med.dose} · {med.schedule}
+                    </p>
+                  </div>
+                  {med.notes && <p className="text-xs text-[var(--app-text-disabled)] sm:text-right max-w-md">{med.notes}</p>}
                 </li>
               ))}
             </ul>
-            </motion.div>
-          </WidgetErrorBoundary>
-        )}
+          </motion.div>
+        </WidgetErrorBoundary>
+      )}
 
-        {hasSearchQuery && (
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
-              className="border border-[var(--app-border)] bg-[var(--app-surface)] p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
-            >
-            <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--app-text-muted)]">{t('dashboard.search.title')}</p>
-                <p className="text-sm text-[var(--app-text)] mt-1">
-                {t('dashboard.search.results', { query: searchLabel })}
-              </p>
-            </div>
+      {hasSearchQuery && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+          className="border border-[var(--app-border)] bg-[var(--app-surface)] p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--app-text-muted)]">{t('dashboard.search.title')}</p>
+            <p className="text-sm text-[var(--app-text)] mt-1">
+              {t('dashboard.search.results', { query: searchLabel })}
+            </p>
+          </div>
+          <Button
+            onClick={clearDashboardSearch}
+            intent="ghost"
+            size="sm"
+            className="shrink-0 w-full sm:w-auto"
+          >
+            {t('dashboard.search.clear')}
+          </Button>
+        </motion.div>
+      )}
+
+      {showAlertBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+          className="border border-[var(--app-danger)]/20 bg-[var(--app-danger-bg)] p-4 flex items-start gap-4 rounded-[var(--radius-xl)]"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className="w-8 h-8 bg-[var(--app-danger)]/10 rounded-lg flex items-center justify-center shrink-0 border border-[var(--app-danger)]/20">
+            <svg className="w-4 h-4 text-[var(--app-danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="font-medium text-[var(--app-danger)] text-sm">{t('dashboard.alert_title')}</h3>
+            <p className="text-[var(--app-danger)]/80 text-xs mt-1">{t('dashboard.alert_body')}</p>
+          </div>
+          <Button
+            onClick={() => navigate('/alerts')}
+            intent="ghost"
+            size="sm"
+            className="shrink-0 text-[var(--app-danger)] bg-[var(--app-danger)]/10 hover:bg-[var(--app-danger)]/20"
+          >
+            {t('dashboard.alert_view')}
+          </Button>
+        </motion.div>
+      )}
+
+      {showReminderBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.1 }}
+          className="border border-[var(--app-border)] bg-[var(--app-surface)] p-4 flex items-center gap-4 rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
+        >
+          <div className="w-8 h-8 bg-[var(--app-surface-soft)] rounded-lg flex items-center justify-center shrink-0 border border-[var(--app-border)]">
+            <svg className="w-4 h-4 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="font-medium text-[var(--app-text)] text-sm">{t('dashboard.reminder_title')}</p>
+            <p className="text-[var(--app-text-muted)] text-xs mt-1">{t('dashboard.reminder_body')}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
             <Button
-              onClick={clearDashboardSearch}
-              intent="ghost"
+              onClick={() => navigate('/symptoms')}
+              intent="cta"
               size="sm"
-              className="shrink-0 w-full sm:w-auto"
             >
-              {t('dashboard.search.clear')}
+              {t('dashboard.reminder_log')}
             </Button>
-            </motion.div>
-        )}
-
-        {showAlertBanner && (
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
-              className="border border-[var(--app-danger)]/20 bg-[var(--app-danger-bg)] p-4 flex items-start gap-4 rounded-[var(--radius-xl)]"
-              role="alert"
-              aria-live="assertive"
+            <button
+              onClick={handleDismissReminder}
+              className="text-[var(--app-text-muted)] hover:text-[var(--app-text)] transition-colors min-h-[32px] flex items-center px-2 animate-none"
+              aria-label="Dismiss reminder"
             >
-              <div className="w-8 h-8 bg-[var(--app-danger)]/10 rounded-lg flex items-center justify-center shrink-0 border border-[var(--app-danger)]/20">
-                <svg className="w-4 h-4 text-[var(--app-danger)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium text-[var(--app-danger)] text-sm">{t('dashboard.alert_title')}</h3>
-                <p className="text-[var(--app-danger)]/80 text-xs mt-1">{t('dashboard.alert_body')}</p>
-              </div>
-              <Button
-                onClick={() => navigate('/alerts')}
-                intent="ghost"
-                size="sm"
-                className="shrink-0 text-[var(--app-danger)] bg-[var(--app-danger)]/10 hover:bg-[var(--app-danger)]/20"
-              >
-                {t('dashboard.alert_view')}
-              </Button>
-            </motion.div>
-        )}
+            </button>
+          </div>
+        </motion.div>
+      )}
 
-        {showReminderBanner && (
-            <motion.div 
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.1 }}
-              className="border border-[var(--app-border)] bg-[var(--app-surface)] p-4 flex items-center gap-4 rounded-[var(--radius-xl)] shadow-[var(--shadow-l1)]"
-            >
-              <div className="w-8 h-8 bg-[var(--app-surface-soft)] rounded-lg flex items-center justify-center shrink-0 border border-[var(--app-border)]">
-                <svg className="w-4 h-4 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-[var(--app-text)] text-sm">{t('dashboard.reminder_title')}</p>
-                <p className="text-[var(--app-text-muted)] text-xs mt-1">{t('dashboard.reminder_body')}</p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <Button
-                  onClick={() => navigate('/symptoms')}
-                  intent="cta"
-                  size="sm"
-                >
-                  {t('dashboard.reminder_log')}
-                </Button>
-                <button
-                  onClick={handleDismissReminder}
-                  className="text-[var(--app-text-muted)] hover:text-[var(--app-text)] transition-colors min-h-[32px] flex items-center px-2"
-                  aria-label="Dismiss reminder"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
-        )}
-
-        {!hasSearchMatches && hasSearchQuery ? (
-          <WidgetErrorBoundary title="Search Results">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
-              className="p-8 text-center border border-[var(--app-border)] bg-[var(--app-surface)] rounded-[var(--radius-xl)]"
-            >
-              <div className="w-12 h-12 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-soft)] flex items-center justify-center mx-auto mb-4">
-                <svg className="w-5 h-5 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      {!hasSearchMatches && hasSearchQuery ? (
+        <WidgetErrorBoundary title="Search Results">
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}
+            className="p-8 text-center border border-[var(--app-border)] bg-[var(--app-surface)] rounded-[var(--radius-xl)]"
+          >
+            <div className="w-12 h-12 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-soft)] flex items-center justify-center mx-auto mb-4">
+              <svg className="w-5 h-5 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              </div>
-              <h2 className="text-base font-medium text-[var(--app-text)] mb-1">{t('dashboard.search.no_matches')}</h2>
-              <p className="text-sm text-[var(--app-text-muted)] max-w-md mx-auto">
+            </div>
+            <h2 className="text-base font-medium text-[var(--app-text)] mb-1">{t('dashboard.search.no_matches')}</h2>
+            <p className="text-sm text-[var(--app-text-muted)] max-w-md mx-auto">
               {t('dashboard.search.no_matches_sub')}
             </p>
-            </motion.div>
-          </WidgetErrorBoundary>
-        ) : (
-          <>
-            {visibleStatCards.length > 0 && (
-              <WidgetErrorBoundary title="Statistics Overview">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {visibleStatCards.map((card) => (
-                    <motion.button 
-                      key={card.key}
-                      whileHover={{ y: -4, scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-                      onClick={() => navigate(card.path)} 
-                      className="text-left w-full h-full block focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] rounded-[var(--radius-xl)] cursor-pointer"
-                      aria-label={`${card.label}: ${card.value} ${card.sub}`}
-                    >
-                      <Card elevation={1} className="h-full flex flex-col justify-between hover:shadow-[var(--shadow-l2)] transition-shadow">
-                        <div className="flex justify-between items-start mb-6">
-                          <span className="text-xs uppercase tracking-wider text-[var(--app-text-muted)] font-medium">{card.label}</span>
+          </motion.div>
+        </WidgetErrorBoundary>
+      ) : (
+        <>
+          {visibleStatCards.length > 0 && (
+            <WidgetErrorBoundary title="Statistics Overview">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {visibleStatCards.map((card) => (
+                  <motion.button
+                    key={card.key}
+                    whileHover={{ y: -6, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    onClick={() => navigate(card.path)}
+                    className="text-left w-full h-full block focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] rounded-[var(--radius-xl)] cursor-pointer"
+                    aria-label={`${card.label}: ${card.value} ${card.sub}`}
+                  >
+                    <Card elevation={1} className="h-full flex flex-col justify-between hover:shadow-[var(--shadow-l2)] transition-shadow border border-[var(--app-border-soft)] hover:border-[var(--brand-accent)]/20">
+                      <div>
+                        <div className="flex justify-between items-start mb-4">
+                          <span className="text-xs uppercase tracking-wider text-[var(--app-text-muted)] font-bold">{card.label}</span>
                           <div aria-hidden="true">{card.icon}</div>
                         </div>
                         <div>
-                          <span className="text-2xl tracking-tight text-[var(--app-text)] font-bold tabular-nums">{card.value}</span>
-                          {card.sub && <p className="text-xs text-[var(--app-text-muted)] mt-1">{card.sub}</p>}
+                          <span className="text-3xl tracking-tight text-[var(--app-text)] font-black tabular-nums">{card.value}</span>
+                          {card.sub && <p className="text-xs font-semibold text-[var(--app-text-muted)] mt-1">{card.sub}</p>}
                         </div>
-                      </Card>
-                    </motion.button>
-                  ))}
-                </div>
-              </WidgetErrorBoundary>
-            )}
+                      </div>
 
-            {/* Advanced Mathematical Diagnostics Biomarkers Section */}
-            <WidgetErrorBoundary title="Mathematical Health Biomarkers">
-              <motion.div 
-                initial={{ opacity: 0, y: 16 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.15 }}
-                className="mt-6"
-              >
-                <Card elevation={2} className="relative overflow-hidden border border-[var(--app-border)] bg-[var(--app-surface)]">
-                  {/* Geometric background grid vector */}
-                  <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--app-text) 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-                  
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[var(--app-border)] pb-4 mb-6">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--brand-accent)] font-semibold">Analytical Modeling Engine v1.0.4</span>
-                      <h3 className="text-base font-bold text-[var(--app-text)] mt-0.5">Biomarker Dynamics & Mathematical Diagnostics</h3>
-                    </div>
-                    <Badge variant="accent" className="font-mono text-[10px] tracking-wider mt-2 md:mt-0">Ecosystem Stability: Active</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Entropy Meter */}
-                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Information Entropy</span>
-                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">H = -Σ p_i log₂ p_i</span>
+                      <div className="mt-5 pt-3 border-t border-[var(--app-border-soft)]">
+                        <div className="w-full h-1.5 bg-[var(--app-surface-soft)] rounded-full overflow-hidden border border-[var(--app-border-soft)]">
+                          <div
+                            className={`h-full ${card.barColor} transition-all duration-500 ease-out`}
+                            style={{ width: `${card.percent}%` }}
+                          />
                         </div>
-                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
-                          Measures the structural randomness of symptom occurrences. Lower values indicate highly structured and predictable patterns.
-                        </p>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
-                        <div>
-                          <span className={`text-2xl font-bold tracking-tight ${entropyMetric.color}`}>{entropyMetric.value}</span>
-                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">bits</span>
+                        <div className="flex justify-between items-center mt-1 text-[9px] text-[var(--app-text-disabled)] font-mono">
+                          <span>RATIO</span>
+                          <span>{card.percent}%</span>
                         </div>
-                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{entropyMetric.status}</span>
                       </div>
-                    </div>
-
-                    {/* Dispersion Meter */}
-                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Severity Dispersion</span>
-                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">σ = √[Σ(x_i-μ)²/N]</span>
-                        </div>
-                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
-                          Quantifies the standard deviation of symptom intensities. Lower values denote stable, uniform severity thresholds.
-                        </p>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
-                        <div>
-                          <span className={`text-2xl font-bold tracking-tight ${dispersionMetric.color}`}>{dispersionMetric.value}</span>
-                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">points</span>
-                        </div>
-                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{dispersionMetric.status}</span>
-                      </div>
-                    </div>
-
-                    {/* Temporal Drift */}
-                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Temporal Drift Coefficient</span>
-                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">r = Cov(X,Y)/(σ_x σ_y)</span>
-                        </div>
-                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
-                          Measures linear correlation of severity over time. A negative drift indicates a trend towards recovery.
-                        </p>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
-                        <div>
-                          <span className={`text-2xl font-bold tracking-tight ${driftMetric.color}`}>{driftMetric.value}</span>
-                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">coeff</span>
-                        </div>
-                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{driftMetric.status}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
+                    </Card>
+                  </motion.button>
+                ))}
+              </div>
             </WidgetErrorBoundary>
+          )}
 
+          {biomarkerPanelJSX}
 
-            {(showRiskCard || showTrendChart) && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6">
-                {showRiskCard && (
-                  <WidgetErrorBoundary title={t('dashboard.risk.title')}>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.2 }}
-                      className="h-full"
-                    >
-                      <Card elevation={1} className="h-full flex flex-col justify-between">
-                        <div>
-                          <h2 className="text-lg font-bold text-[var(--app-text)] mb-1">
-                            {t('dashboard.risk.title')}
-                            {analysisResult?.created_at && (
-                              <span className="ml-2 text-xs font-normal text-[var(--app-text-muted)]">
-                                Last updated {new Date(analysisResult.created_at).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })}
-                              </span>
-                            )}
-                          </h2>
-                          <div className="mt-4 mb-4">
-                            <Badge variant={risk ? risk.toLowerCase() : 'pending'}>
-                              {risk ? t(`dashboard.risk.${risk.toLowerCase()}`, { defaultValue: risk }) : t('dashboard.risk.not_assessed')}
-                            </Badge>
-                          </div>
-
-                    {!analysisResult ? (
-                        <div className="flex flex-col items-center justify-center py-6 text-center">
-                          <svg className="w-10 h-10 text-[var(--app-text-disabled)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                          </svg>
-                          <p className="text-sm text-[var(--app-text-muted)] mb-4">{t('dashboard.risk.action_pending')}</p>
-                          <Button intent="primary" size="sm" onClick={() => navigate('/analysis')}>
-                          {t('dashboard.run_analysis')}
-                          </Button>
-                      </div>
-                    ) : (
-                          <p className="max-w-prose text-sm leading-relaxed text-[var(--app-text-muted)] mb-6">
-                              {analysisResult.reason}
-                            </p>
-                    )}
+          {(showRiskCard || showTrendChart) && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6">
+              {showRiskCard && (
+                <WidgetErrorBoundary title={t('dashboard.risk.title')}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.2 }}
+                    className="h-full"
+                  >
+                    <Card elevation={1} className="h-full flex flex-col justify-between border border-[var(--app-border-soft)]">
+                      <div>
+                        <h2 className="text-lg font-bold text-[var(--app-text)] mb-1">
+                          {t('dashboard.risk.title')}
+                          {analysisResult?.created_at && (
+                            <span className="ml-2 text-xs font-normal text-[var(--app-text-muted)]">
+                              Last updated {new Date(analysisResult.created_at).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })}
+                            </span>
+                          )}
+                        </h2>
+                        <div className="mt-4 mb-4">
+                          <Badge variant={risk ? risk.toLowerCase() : 'pending'}>
+                            {risk ? t(`dashboard.risk.${risk.toLowerCase()}`, { defaultValue: risk }) : t('dashboard.risk.not_assessed')}
+                          </Badge>
                         </div>
-                        {analysisResult && (
-                          <div>
-                            <Button intent="ghost" size="sm" onClick={() => navigate('/analysis')}>
-                              {t('analysis.report.view_full_report', 'View Full Report')}
+
+                        {!analysisResult ? (
+                          <div className="flex flex-col items-center justify-center py-6 text-center">
+                            <svg className="w-10 h-10 text-[var(--app-text-disabled)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                            <p className="text-sm text-[var(--app-text-muted)] mb-4">{t('dashboard.risk.action_pending')}</p>
+                            <Button intent="primary" size="sm" onClick={() => navigate('/analysis')}>
+                              {t('dashboard.run_analysis')}
                             </Button>
                           </div>
+                        ) : (
+                          <p className="max-w-prose text-sm leading-relaxed text-[var(--app-text-muted)] mb-6">
+                            {analysisResult.reason}
+                          </p>
                         )}
-                      </Card>
-                    </motion.div>
-                  </WidgetErrorBoundary>
-                )}
+                      </div>
+                      {analysisResult && (
+                        <div>
+                          <Button intent="ghost" size="sm" onClick={() => navigate('/analysis')}>
+                            {t('analysis.report.view_full_report', 'View Full Report')}
+                          </Button>
+                        </div>
+                      )}
+                    </Card>
+                  </motion.div>
+                </WidgetErrorBoundary>
+              )}
 
-                {showTrendChart && (
-                  <WidgetErrorBoundary title={t('dashboard.charts.severity_timeline')}>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.25 }}
-                      className="h-full"
-                    >
-                      <Card elevation={1} className="h-full flex flex-col" role="img" aria-label={t('dashboard.charts.severity_timeline')}>
-                      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <div>
+              {showTrendChart && (
+                <WidgetErrorBoundary title={t('dashboard.charts.severity_timeline')}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.25 }}
+                    className="h-full"
+                  >
+                    <Card elevation={1} className="h-full flex flex-col border border-[var(--app-border-soft)]" role="img" aria-label={t('dashboard.charts.severity_timeline')}>
+                      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.charts.trend')}</p>
                           <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.charts.severity_timeline')}</h2>
+                        </div>
+                        <div className="flex items-center gap-1 bg-[var(--app-surface-soft)] p-0.5 rounded-lg border border-[var(--app-border)] shrink-0 self-start sm:self-center">
+                          {['7d', '30d', 'all'].map((range) => (
+                            <button
+                              key={range}
+                              onClick={() => setTimeRange(range)}
+                              className={`px-2.5 py-1 text-[10px] font-bold rounded-md uppercase transition-all cursor-pointer ${
+                                timeRange === range
+                                  ? 'bg-[var(--app-surface)] text-[var(--brand-accent-on)] shadow-sm border border-[var(--app-border-soft)]'
+                                  : 'text-[var(--app-text-muted)] hover:text-[var(--app-text)]'
+                              }`}
+                            >
+                              {range === 'all' ? 'All' : range.toUpperCase()}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                        <span className="text-xs text-[var(--app-text-disabled)]">
-                        {t('dashboard.charts.data_points', { count: (hasSearchQuery ? filteredChartData : chartData).length })}
-                      </span>
-                    </div>
 
-                    {(hasSearchQuery ? filteredChartData : chartData).length > 0 ? (
+                      {filteredByTimeRangeChartData.length > 0 ? (
                         <div className="flex-1 flex flex-col">
                           <div className="min-h-[288px] w-full flex-1">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart
-                              data={hasSearchQuery ? filteredChartData : chartData}
-                              margin={{ top: 8, right: 8, bottom: 8, left: 0 }}
-                            >
-                              <defs>
+                            <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart
+                                data={filteredByTimeRangeChartData}
+                                margin={{ top: 8, right: 8, bottom: 8, left: 0 }}
+                              >
+                                <defs>
                                   <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
                                     <stop offset="0%" stopColor="var(--app-chart-secondary)" />
                                     <stop offset="100%" stopColor="var(--app-chart-primary)" />
@@ -920,203 +1144,307 @@ function DashboardInner() {
                                   <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stopColor="var(--app-chart-primary)" stopOpacity={0.15} />
                                     <stop offset="100%" stopColor="var(--app-chart-primary)" stopOpacity={0} />
-                                </linearGradient>
-                              </defs>
+                                  </linearGradient>
+                                </defs>
                                 <CartesianGrid strokeDasharray="3 3" stroke="var(--app-chart-grid)" vertical={false} />
-                              <XAxis
-                                dataKey="name"
+                                <XAxis
+                                  dataKey="name"
                                   tick={{ fill: 'var(--app-chart-axis)', fontSize: 11 }}
-                                tickLine={false}
+                                  tickLine={false}
                                   axisLine={{ stroke: 'var(--app-border)' }}
                                   dy={10}
-                              />
-                              <YAxis
-                                domain={[0, 10]}
+                                />
+                                <YAxis
+                                  domain={[0, 10]}
                                   tick={{ fill: 'var(--app-chart-axis)', fontSize: 11 }}
-                                tickLine={false}
+                                  tickLine={false}
                                   axisLine={{ stroke: 'var(--app-border)' }}
                                   width={24}
-                              />
-                                <Tooltip 
-                                  content={<CustomTooltip t={t} />} 
+                                />
+                                <Tooltip
+                                  content={<CustomTooltip t={t} />}
                                   animationDuration={0}
                                   cursor={{ stroke: 'var(--app-border)', strokeWidth: 1 }}
                                 />
-                              <Area
+                                <Area
                                   type="basis"
-                                dataKey="severity"
-                                name={t('history.table.severity')}
+                                  dataKey="severity"
+                                  name={t('history.table.severity')}
                                   stroke={`url(#${strokeId})`}
-                                strokeWidth={2.5}
-                                fill={`url(#${gradientId})`}
+                                  strokeWidth={2.5}
+                                  fill={`url(#${gradientId})`}
                                   dot={false}
                                   activeDot={{ r: 4, fill: 'var(--app-chart-primary)', stroke: 'var(--app-chart-dot)', strokeWidth: 2 }}
                                   isAnimationActive={false}
-                              />
-                            </AreaChart>
-                          </ResponsiveContainer>
-                        </div>
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
                           <p className="mt-4 text-xs text-[var(--app-text-muted)] leading-relaxed">
-                          Severity (0–10)
-                        </p>
-                      </div>
-                    ) : (
+                            Severity (0–10)
+                          </p>
+                        </div>
+                      ) : (
                         <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-[var(--app-border)] rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] py-12 text-center h-72">
                           <svg className="w-8 h-8 text-[var(--app-text-disabled)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 12l3-3 3 3 4-4" />
                           </svg>
                           <p className="text-sm font-medium text-[var(--app-text)]">
-                          {hasSearchQuery ? t('dashboard.charts.no_match') : t('dashboard.charts.no_data')}
-                        </p>
+                            {hasSearchQuery ? t('dashboard.charts.no_match') : t('dashboard.charts.no_data')}
+                          </p>
                           <p className="text-xs text-[var(--app-text-muted)] mt-1">
-                          {hasSearchQuery ? t('dashboard.charts.no_match_sub') : t('dashboard.charts.no_data_sub')}
-                        </p>
-                      </div>
-                    )}
-                      </Card>
-                    </motion.div>
-                  </WidgetErrorBoundary>
-                )}
-              </div>
-            )}
+                            {hasSearchQuery ? t('dashboard.charts.no_match_sub') : t('dashboard.charts.no_data_sub')}
+                          </p>
+                        </div>
+                      )}
+                    </Card>
+                  </motion.div>
+                </WidgetErrorBoundary>
+              )}
+            </div>
+          )}
 
-            {(showDistributionCard || showInsightsCard) && (
-              <div className={`grid grid-cols-1 items-stretch gap-6 ${showDistributionCard && showInsightsCard ? 'md:grid-cols-2' : ''}`}>
-                {showDistributionCard && (
-                  <WidgetErrorBoundary title={t('dashboard.charts.symptom_frequency')}>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.3 }}
-                      className="h-full"
-                    >
-                      <Card elevation={1} className="h-full flex flex-col justify-between" role="img" aria-label={t('dashboard.charts.symptom_frequency')}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+              {showDistributionCard && (
+                <WidgetErrorBoundary title={t('dashboard.charts.symptom_frequency')}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.3 }}
+                    className="h-full"
+                  >
+                    <Card elevation={1} className="h-full flex flex-col justify-between border border-[var(--app-border-soft)]" role="img" aria-label={t('dashboard.charts.symptom_frequency')}>
                       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
+                        <div>
                           <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.charts.distribution')}</p>
                           <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.charts.symptom_frequency')}</h2>
+                        </div>
                       </div>
-                    </div>
 
-                    {(hasSearchQuery ? filteredFrequencyData : frequencyData).length > 0 ? (
+                      {(hasSearchQuery ? filteredFrequencyData : frequencyData).length > 0 ? (
                         <div className="flex-1 flex flex-col">
                           <div className="min-h-[288px] w-full flex-1">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart
-                              data={hasSearchQuery ? filteredFrequencyData : frequencyData}
-                              margin={{ top: 8, right: 16, left: 4, bottom: 8 }}
-                              layout="vertical"
-                            >
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                data={hasSearchQuery ? filteredFrequencyData : frequencyData}
+                                margin={{ top: 8, right: 16, left: 4, bottom: 8 }}
+                                layout="vertical"
+                              >
                                 <CartesianGrid strokeDasharray="3 3" stroke="var(--app-chart-grid)" horizontal={false} />
-                              <XAxis
-                                type="number"
+                                <XAxis
+                                  type="number"
                                   tick={{ fill: 'var(--app-chart-axis)', fontSize: 11 }}
-                                tickLine={false}
+                                  tickLine={false}
                                   axisLine={{ stroke: 'var(--app-border)' }}
-                                allowDecimals={false}
-                              />
-                              <YAxis
-                                dataKey="name"
-                                type="category"
+                                  allowDecimals={false}
+                                />
+                                <YAxis
+                                  dataKey="name"
+                                  type="category"
                                   width={dynamicYAxisWidth}
                                   tick={{ fill: 'var(--app-text)', fontSize: 11 }}
-                                axisLine={false}
-                                tickLine={false}
-                              />
-                              <Tooltip
+                                  axisLine={false}
+                                  tickLine={false}
+                                />
+                                <Tooltip
                                   cursor={{ fill: 'var(--app-chart-grid)' }}
                                   contentStyle={{ backgroundColor: 'var(--app-surface)', borderColor: 'var(--app-border)', color: 'var(--app-text)', fontSize: '12px' }}
                                   animationDuration={0}
-                              />
-                              <Bar
-                                dataKey="count"
-                                name={t('charts.y_count')}
+                                />
+                                <Bar
+                                  dataKey="count"
+                                  name={t('charts.y_count')}
                                   fill="var(--app-chart-primary)"
                                   radius={[0, 4, 4, 0]}
                                   barSize={16}
                                   isAnimationActive={false}
-                              />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
+                                />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
                           <p className="mt-4 text-xs text-[var(--app-text-muted)] leading-relaxed">
-                          {t('charts.caption_bars')}
-                        </p>
-                      </div>
-                    ) : (
+                            {t('charts.caption_bars')}
+                          </p>
+                        </div>
+                      ) : (
                         <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-[var(--app-border)] rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] py-12 text-center h-72">
                           <svg className="w-8 h-8 text-[var(--app-text-disabled)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                           </svg>
                           <p className="text-sm font-medium text-[var(--app-text)]">
-                          {hasSearchQuery ? t('dashboard.charts.no_freq_match') : t('dashboard.charts.no_freq_data')}
-                        </p>
-                        <p className="text-xs text-[var(--app-text-muted)] mt-1">
-                        {t('dashboard.charts.no_freq_sub')}
-                      </p>
-                      </div>
-                    )}
-
-                        <div className="mt-6">
-                          <Button intent="ghost" size="sm" onClick={() => navigate('/timeline')} className="w-full">
-                            {t('dashboard.charts.view_timeline')}
-                          </Button>
+                            {hasSearchQuery ? t('dashboard.charts.no_freq_match') : t('dashboard.charts.no_freq_data')}
+                          </p>
+                          <p className="text-xs text-[var(--app-text-muted)] mt-1">
+                            {t('dashboard.charts.no_freq_sub')}
+                          </p>
                         </div>
-                      </Card>
-                    </motion.div>
-                  </WidgetErrorBoundary>
-                )}
+                      )}
 
-                {showInsightsCard && (
-                  <WidgetErrorBoundary title={t('dashboard.insights.title')}>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.35 }}
-                      className="h-full"
-                    >
-                      <Card elevation={1} className="h-full flex flex-col justify-between">
-                        <div>
-                      <div className="mb-6">
-                            <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.insights.title')}</p>
-                            <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.insights.personalized_insights')}</h2>
-                    </div>
+                      <div className="mt-6">
+                        <Button intent="ghost" size="sm" onClick={() => navigate('/timeline')} className="w-full">
+                          {t('dashboard.charts.view_timeline')}
+                        </Button>
+                      </div>
+                    </Card>
+                  </motion.div>
+                </WidgetErrorBoundary>
+              )}
 
-                      <div className="flex-1 space-y-3">
-                      {visibleInsights.length > 0 ? (
-                        visibleInsights.map((insight) => (
+              {showInsightsCard && (
+                <WidgetErrorBoundary title={t('dashboard.insights.title')}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.35 }}
+                    className="h-full"
+                  >
+                    <Card elevation={1} className="h-full flex flex-col justify-between border border-[var(--app-border-soft)]">
+                      <div>
+                        <div className="mb-6">
+                          <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">{t('dashboard.insights.title')}</p>
+                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">{t('dashboard.insights.personalized_insights')}</h2>
+                        </div>
+
+                        <div className="flex-1 space-y-3">
+                          {visibleInsights.length > 0 ? (
+                            visibleInsights.map((insight) => (
                               <div key={insight.key} className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border)]">
-                            <div className="flex items-start gap-3">
+                                <div className="flex items-start gap-3">
                                   <div className="w-8 h-8 rounded-md bg-[var(--app-surface)] flex items-center justify-center shrink-0 border border-[var(--app-border)]">
-                                {insight.icon}
-                              </div>
-                              <div>
+                                    {insight.icon}
+                                  </div>
+                                  <div>
                                     <p className="text-sm font-medium text-[var(--app-text)] mb-1">{insight.title}</p>
                                     <p className="text-xs text-[var(--app-text-muted)] leading-relaxed">{insight.body}</p>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
+                            ))
+                          ) : (
                             <div className="py-12 text-center bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-dashed border-[var(--app-border)]">
                               <p className="text-sm font-medium text-[var(--app-text)]">{t('dashboard.charts.no_insight_match')}</p>
                               <p className="text-xs text-[var(--app-text-muted)] mt-1">{t('dashboard.charts.no_insight_sub')}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mt-6">
+                        <Button intent="ghost" size="sm" onClick={() => navigate('/analysis')} className="w-full">
+                          {t('dashboard.run_analysis')}
+                        </Button>
+                      </div>
+                    </Card>
+                  </motion.div>
+                </WidgetErrorBoundary>
+              )}
+
+              {/* Medical Reports & Documents Integration Panel */}
+              <WidgetErrorBoundary title="Clinical Reports">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.4 }}
+                  className="h-full"
+                >
+                  <Card elevation={1} className="h-full flex flex-col justify-between border border-[var(--app-border-soft)]">
+                    <div>
+                      <div className="mb-6 flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Clinical Documents</p>
+                          <h2 className="text-base font-medium text-[var(--app-text)] mt-1">Medical Reports ({reports.length})</h2>
+                        </div>
+                        <Badge variant={reports.length > 0 ? 'accent' : 'pending'}>
+                          {reports.length > 0 ? 'Synchronized' : 'Empty'}
+                        </Badge>
+                      </div>
+
+                      <div className="mb-4">
+                        <input
+                          ref={reportFileInputRef}
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          className="sr-only"
+                          onChange={handleReportFileSelect}
+                          aria-label="Upload Report from Dashboard"
+                        />
+                        {!selectedReportFile ? (
+                          <button
+                            type="button"
+                            onClick={() => reportFileInputRef.current?.click()}
+                            disabled={uploadingReport}
+                            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-dashed border-[var(--app-border)] hover:border-[var(--brand-accent)] rounded-[var(--radius-md)] text-xs text-[var(--app-text-muted)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)] transition-all cursor-pointer focus:outline-none disabled:opacity-50"
+                          >
+                            <svg className="w-4 h-4 text-[var(--app-text-disabled)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Upload a medical report</span>
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-2 p-2 border border-[var(--app-border)] rounded-[var(--radius-md)] bg-[var(--app-surface-soft)]">
+                            <span className="text-xs text-[var(--app-text)] truncate flex-1 font-medium">{selectedReportFile.name}</span>
+                            <div className="flex gap-1">
+                              <Button intent="primary" size="sm" onClick={handleReportUpload} loading={uploadingReport} className="!py-1 !px-2.5 !text-[10px]">
+                                {uploadingReport ? '...' : 'Upload'}
+                              </Button>
+                              <Button intent="ghost" size="sm" onClick={() => setSelectedReportFile(null)} disabled={uploadingReport} className="!py-1 !px-2.5 !text-[10px]">
+                                Cancel
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {reportsLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                          <div className="w-5 h-5 border-2 border-[var(--app-border)] border-t-[var(--brand-accent)] rounded-full animate-spin" />
+                        </div>
+                      ) : reports.length === 0 ? (
+                        <div className="py-8 text-center bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-dashed border-[var(--app-border)]">
+                          <p className="text-xs font-medium text-[var(--app-text-disabled)]">No documents uploaded yet.</p>
+                          <p className="text-[10px] text-[var(--app-text-disabled)] mt-0.5">Upload a report to synchronize with AI diagnostic context.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                          {reports.slice(0, 3).map((report) => (
+                            <div key={report.id} className="flex items-center justify-between p-2.5 border border-[var(--app-border-soft)] rounded-xl bg-[var(--app-surface-soft)] hover:bg-[var(--app-surface)] transition-all group">
+                              <div className="min-w-0 flex-1 pr-2">
+                                <p className="text-xs font-semibold text-[var(--app-text)] truncate">{report.file_name}</p>
+                                <p className="text-[9px] text-[var(--app-text-disabled)] font-mono uppercase mt-0.5">
+                                  {new Date(report.uploaded_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </p>
+                              </div>
+                              <div className="flex gap-1 shrink-0">
+                                <button
+                                  onClick={() => handleReportView(report)}
+                                  className="p-1 text-[var(--app-text-muted)] hover:text-[var(--brand-accent)] hover:bg-[var(--app-surface)] rounded-md transition-colors cursor-pointer"
+                                  title="View"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                                <button
+                                  onClick={() => handleReportDownload(report)}
+                                  className="p-1 text-[var(--app-text-muted)] hover:text-[var(--brand-accent)] hover:bg-[var(--app-surface)] rounded-md transition-colors cursor-pointer"
+                                  title="Download"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
-                        </div>
 
-                        <div className="mt-6">
-                          <Button intent="ghost" size="sm" onClick={() => navigate('/analysis')} className="w-full">
-                            {t('dashboard.run_analysis')}
-                          </Button>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  </WidgetErrorBoundary>
-                )}
-              </div>
-            )}
+                    <div className="mt-6 pt-4 border-t border-[var(--app-border-soft)]">
+                      <Button intent="ghost" size="sm" onClick={() => navigate('/reports')} className="w-full">
+                        Manage All Documents
+                      </Button>
+                    </div>
+                  </Card>
+                </motion.div>
+              </WidgetErrorBoundary>
+            </div>
           </>
         )}
-      </PageFrame>
-    );
+    </PageFrame>
+  );
 }
 
 export default function Dashboard() {
