@@ -29,7 +29,7 @@ vi.mock('../components/TestimonialsSection', () => ({
 
 // Mock IntersectionObserver
 beforeEach(() => {
-  global.IntersectionObserver = class IntersectionObserver {
+  window.IntersectionObserver = class IntersectionObserver {
     constructor() {}
     disconnect() {}
     observe() {}

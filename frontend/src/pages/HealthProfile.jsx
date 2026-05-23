@@ -428,8 +428,6 @@ export default function HealthProfile() {
   const bmiCategory = getBMICategory(bmi);
 
   // ── derived lifestyle helpers ──
-  const stressLevel = lifestyle?.stress_level;
-  const stressPercent = stressLevel != null ? (stressLevel / 10) * 100 : null;
 
   // ── loading state ──
   if (loading) {

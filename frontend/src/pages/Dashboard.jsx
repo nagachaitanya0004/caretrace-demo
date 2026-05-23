@@ -158,7 +158,7 @@ const matchesSearch = (query, ...values) => {
 const formatShortDate = (date, language) => {
   try {
     return new Date(date || Date.now()).toLocaleDateString(language, { month: 'short', day: 'numeric' });
-  } catch (e) {
+  } catch {
     return '';
   }
 };
@@ -179,7 +179,7 @@ const StatCardSkeleton = () => (
 const ChartSkeleton = () => (
   <div className="h-72 w-full flex items-end gap-2 pt-4 px-2">
     {[...Array(12)].map((_, i) => (
-      <div key={i} className="bg-[var(--app-surface-soft)] rounded-t animate-pulse flex-1" style={{ height: `${Math.random() * 60 + 20}%` }} />
+      <div key={i} className="bg-[var(--app-surface-soft)] rounded-t animate-pulse flex-1" style={{ height: `${((i * 17) % 60) + 20}%` }} />
     ))}
   </div>
 );
@@ -231,24 +231,23 @@ function DashboardInner() {
     const dismissedDate = localStorage.getItem('caretrace_reminder_dismissed_date');
     if (dismissedDate !== today) {
       localStorage.removeItem('caretrace_reminder_dismissed_date');
-      setReminderDismissed(false);
     }
   }, []);
 
   // Absolute Null-Safety Wrappers
-  const safeSymptoms = symptoms ?? [];
-  const safeDemoMedications = demoMedications ?? [];
-  const safeAlerts = alerts ?? [];
+  const safeSymptoms = useMemo(() => symptoms ?? [], [symptoms]);
+  const safeDemoMedications = useMemo(() => demoMedications ?? [], [demoMedications]);
+  const safeAlerts = useMemo(() => alerts ?? [], [alerts]);
 
   const searchLabel = searchParams.get('q')?.trim() ?? '';
   const searchQuery = useDeferredValue(searchLabel.toLowerCase());
   const hasSearchQuery = searchLabel.length > 0;
 
   const risk = analysisResult?.risk || null;
-  const avgSev = safeSymptoms.length
+  const avgSev = useMemo(() => safeSymptoms.length
     ? (safeSymptoms.reduce((sum, item) => sum + Number(item?.severity ?? 0), 0) / safeSymptoms.length).toFixed(1)
-    : '—';
-  const longestRun = safeSymptoms.length ? Math.max(...safeSymptoms.map((symptom) => Number(symptom?.duration ?? 0))) : 0;
+    : '—', [safeSymptoms]);
+  const longestRun = useMemo(() => safeSymptoms.length ? Math.max(...safeSymptoms.map((symptom) => Number(symptom?.duration ?? 0))) : 0, [safeSymptoms]);
 
   const chartData = useMemo(() => [...safeSymptoms]
     .sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime())
@@ -300,7 +299,7 @@ function DashboardInner() {
     setSearchParams(nextParams, { replace: true });
   };
 
-  const quickActions = [
+  const quickActions = useMemo(() => [
     {
       key: 'log-symptom',
       label: t('dashboard.log_symptom'),
@@ -325,13 +324,13 @@ function DashboardInner() {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
       onClick: () => navigate('/timeline'),
     },
-  ];
+  ], [t, navigate]);
 
   const visibleQuickActions = useMemo(() => quickActions.filter((action) =>
     matchesSearch(searchQuery, action.label, action.keywords)
-  ), [searchQuery, t]);
+  ), [searchQuery, quickActions]);
 
-  const statCards = [
+  const statCards = useMemo(() => [
     {
       key: 'symptoms-logged',
       label: t('dashboard.stats.logged'),
@@ -364,13 +363,13 @@ function DashboardInner() {
       icon: <svg className="w-5 h-5 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>,
       path: '/alerts'
     },
-  ];
+  ], [t, safeSymptoms.length, avgSev, longestRun, safeAlerts.length, hasAlert]);
 
   const visibleStatCards = useMemo(() => statCards.filter((card) =>
     matchesSearch(searchQuery, card.label, card.sub, card.keywords)
-  ), [searchQuery, safeSymptoms, safeAlerts, t]);
+  ), [searchQuery, statCards]);
 
-  const insights = [
+  const insights = useMemo(() => [
     {
       key: 'profile-guidance',
       title: t('dashboard.insights.profile_title'),
@@ -380,11 +379,11 @@ function DashboardInner() {
       keywords: [t('dashboard.insights.profile_title'), 'profile', 'guidance', 'lifestyle'],
       icon: <svg className="w-4 h-4 text-[var(--app-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
     }
-  ];
+  ], [t, userProfile]);
 
-  const visibleInsights = insights.filter((insight) =>
+  const visibleInsights = useMemo(() => insights.filter((insight) =>
     matchesSearch(searchQuery, insight.title, insight.body, insight.keywords)
-  );
+  ), [searchQuery, insights]);
 
   const showAlertBanner = hasAlert() && matchesSearch(
     searchQuery,

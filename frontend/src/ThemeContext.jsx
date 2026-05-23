@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 
 const THEME_STORAGE_KEY = 'theme';
 const ThemeContext = createContext({ theme: 'light', toggleTheme: () => {} });
@@ -11,7 +11,9 @@ const getInitialTheme = () => {
     if (storedTheme === 'dark' || storedTheme === 'light') {
       return storedTheme;
     }
-  } catch {}
+  } catch {
+    // Ignore localStorage access errors
+  }
   return 'light';
 };
 
@@ -35,7 +37,7 @@ export function ThemeProvider({ children }) {
     }
   }, [theme]);
 
-  const toggleTheme = (event) => {
+  const toggleTheme = useCallback((event) => {
     const targetTheme = theme === 'light' ? 'dark' : 'light';
     
     // Fallback for browsers that don't support View Transitions
@@ -63,9 +65,9 @@ export function ThemeProvider({ children }) {
     document.startViewTransition(() => {
       setTheme(targetTheme);
     });
-  };
+  }, [theme]);
 
-  const value = useMemo(() => ({ theme, toggleTheme }), [theme]);
+  const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
 
   return (
     <ThemeContext.Provider value={value}>
