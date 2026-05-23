@@ -249,6 +249,100 @@ function DashboardInner() {
     : '—', [safeSymptoms]);
   const longestRun = useMemo(() => safeSymptoms.length ? Math.max(...safeSymptoms.map((symptom) => Number(symptom?.duration ?? 0))) : 0, [safeSymptoms]);
 
+  // Shannon Entropy Index (H = -Σ p_k log₂ p_k)
+  const entropyMetric = useMemo(() => {
+    if (safeSymptoms.length === 0) return { value: '0.00', status: 'Optimal', color: 'text-[var(--app-success)]' };
+    const counts = {};
+    safeSymptoms.forEach((s) => {
+      const name = String(s?.symptom ?? '').toLowerCase().trim();
+      if (name) {
+        counts[name] = (counts[name] ?? 0) + 1;
+      }
+    });
+    const total = safeSymptoms.length;
+    let h = 0;
+    Object.values(counts).forEach((count) => {
+      const p = count / total;
+      h -= p * Math.log2(p);
+    });
+    let status = 'High Predictability';
+    let color = 'text-[var(--app-success)]';
+    if (h > 1.5) {
+      status = 'High Randomness';
+      color = 'text-[var(--app-warning)]';
+    } else if (h > 0.8) {
+      status = 'Moderate Order';
+      color = 'text-[var(--app-info)]';
+    }
+    return { value: h.toFixed(2), status, color };
+  }, [safeSymptoms]);
+
+  // Standard Dispersion (σ = √[Σ(x_i - μ)² / N])
+  const dispersionMetric = useMemo(() => {
+    if (safeSymptoms.length === 0) return { value: '0.00', status: 'Stable', color: 'text-[var(--app-success)]' };
+    const severities = safeSymptoms.map((s) => Number(s?.severity ?? 0));
+    const mean = severities.reduce((a, b) => a + b, 0) / severities.length;
+    const variance = severities.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / severities.length;
+    const stdDev = Math.sqrt(variance);
+    let status = 'Narrow Variance';
+    let color = 'text-[var(--app-success)]';
+    if (stdDev > 2.5) {
+      status = 'Wide Fluctuations';
+      color = 'text-[var(--app-danger)]';
+    } else if (stdDev > 1.2) {
+      status = 'Moderate Volatility';
+      color = 'text-[var(--app-warning)]';
+    }
+    return { value: stdDev.toFixed(2), status, color };
+  }, [safeSymptoms]);
+
+  // Pearson Correlation Coefficient Temporal Drift (r = Cov(X,Y)/(σ_x σ_y))
+  const driftMetric = useMemo(() => {
+    if (safeSymptoms.length < 2) return { value: '0.00', status: 'Stationary', color: 'text-[var(--app-text-disabled)]', direction: 'Neutral' };
+    const sorted = [...safeSymptoms]
+      .map((s) => ({
+        x: new Date(s?.date ?? 0).getTime() / (1000 * 60 * 60 * 24),
+        y: Number(s?.severity ?? 0),
+      }))
+      .sort((a, b) => a.x - b.x);
+    
+    const n = sorted.length;
+    const meanX = sorted.reduce((sum, item) => sum + item.x, 0) / n;
+    const meanY = sorted.reduce((sum, item) => sum + item.y, 0) / n;
+    
+    let num = 0;
+    let denX = 0;
+    let denY = 0;
+    sorted.forEach((item) => {
+      const dx = item.x - meanX;
+      const dy = item.y - meanY;
+      num += dx * dy;
+      denX += dx * dx;
+      denY += dy * dy;
+    });
+    
+    if (denX === 0 || denY === 0) return { value: '0.00', status: 'Stationary', color: 'text-[var(--app-text-disabled)]', direction: 'Neutral' };
+    const r = num / Math.sqrt(denX * denY);
+    
+    let status = 'Linear Drift';
+    let color = 'text-[var(--app-text)]';
+    let direction = 'Neutral';
+    if (r < -0.3) {
+      status = 'Regressing (Recovery)';
+      color = 'text-[var(--app-success)]';
+      direction = 'Negative Trend';
+    } else if (r > 0.3) {
+      status = 'Escalating (Attention)';
+      color = 'text-[var(--app-danger)]';
+      direction = 'Positive Trend';
+    } else {
+      status = 'Stationary Plateau';
+      color = 'text-[var(--app-info)]';
+      direction = 'No Drift';
+    }
+    return { value: r.toFixed(2), status, color, direction };
+  }, [safeSymptoms]);
+
   const chartData = useMemo(() => [...safeSymptoms]
     .sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime())
     .map((symptom) => ({
@@ -628,29 +722,118 @@ function DashboardInner() {
           <>
             {visibleStatCards.length > 0 && (
               <WidgetErrorBoundary title="Statistics Overview">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {visibleStatCards.map((card) => (
-                  <button 
-                    key={card.key}
-                    onClick={() => navigate(card.path)} 
-                    className="text-left w-full h-full block focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] rounded-[var(--radius-xl)]"
-                    aria-label={`${card.label}: ${card.value} ${card.sub}`}
-                  >
-                    <Card elevation={1} className="h-full flex flex-col justify-between hover:shadow-[var(--shadow-l2)] transition-shadow">
-                      <div className="flex justify-between items-start mb-6">
-                        <span className="text-xs uppercase tracking-wider text-[var(--app-text-muted)] font-medium">{card.label}</span>
-                        <div aria-hidden="true">{card.icon}</div>
-                      </div>
-                      <div>
+                    <motion.button 
+                      key={card.key}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                      onClick={() => navigate(card.path)} 
+                      className="text-left w-full h-full block focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-accent)] rounded-[var(--radius-xl)] cursor-pointer"
+                      aria-label={`${card.label}: ${card.value} ${card.sub}`}
+                    >
+                      <Card elevation={1} className="h-full flex flex-col justify-between hover:shadow-[var(--shadow-l2)] transition-shadow">
+                        <div className="flex justify-between items-start mb-6">
+                          <span className="text-xs uppercase tracking-wider text-[var(--app-text-muted)] font-medium">{card.label}</span>
+                          <div aria-hidden="true">{card.icon}</div>
+                        </div>
+                        <div>
                           <span className="text-2xl tracking-tight text-[var(--app-text)] font-bold tabular-nums">{card.value}</span>
-                        {card.sub && <p className="text-xs text-[var(--app-text-muted)] mt-1">{card.sub}</p>}
-                      </div>
-                    </Card>
-                  </button>
-                ))}
-              </div>
+                          {card.sub && <p className="text-xs text-[var(--app-text-muted)] mt-1">{card.sub}</p>}
+                        </div>
+                      </Card>
+                    </motion.button>
+                  ))}
+                </div>
               </WidgetErrorBoundary>
             )}
+
+            {/* Advanced Mathematical Diagnostics Biomarkers Section */}
+            <WidgetErrorBoundary title="Mathematical Health Biomarkers">
+              <motion.div 
+                initial={{ opacity: 0, y: 16 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.15 }}
+                className="mt-6"
+              >
+                <Card elevation={2} className="relative overflow-hidden border border-[var(--app-border)] bg-[var(--app-surface)]">
+                  {/* Geometric background grid vector */}
+                  <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--app-text) 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+                  
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[var(--app-border)] pb-4 mb-6">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--brand-accent)] font-semibold">Analytical Modeling Engine v1.0.4</span>
+                      <h3 className="text-base font-bold text-[var(--app-text)] mt-0.5">Biomarker Dynamics & Mathematical Diagnostics</h3>
+                    </div>
+                    <Badge variant="accent" className="font-mono text-[10px] tracking-wider mt-2 md:mt-0">Ecosystem Stability: Active</Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Entropy Meter */}
+                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Information Entropy</span>
+                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">H = -Σ p_i log₂ p_i</span>
+                        </div>
+                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
+                          Measures the structural randomness of symptom occurrences. Lower values indicate highly structured and predictable patterns.
+                        </p>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
+                        <div>
+                          <span className={`text-2xl font-bold tracking-tight ${entropyMetric.color}`}>{entropyMetric.value}</span>
+                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">bits</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{entropyMetric.status}</span>
+                      </div>
+                    </div>
+
+                    {/* Dispersion Meter */}
+                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Severity Dispersion</span>
+                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">σ = √[Σ(x_i-μ)²/N]</span>
+                        </div>
+                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
+                          Quantifies the standard deviation of symptom intensities. Lower values denote stable, uniform severity thresholds.
+                        </p>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
+                        <div>
+                          <span className={`text-2xl font-bold tracking-tight ${dispersionMetric.color}`}>{dispersionMetric.value}</span>
+                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">points</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{dispersionMetric.status}</span>
+                      </div>
+                    </div>
+
+                    {/* Temporal Drift */}
+                    <div className="p-5 rounded-[var(--radius-lg)] bg-[var(--app-surface-soft)] border border-[var(--app-border-soft)] flex flex-col justify-between h-full relative group hover:border-[var(--brand-accent)] transition-colors">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Temporal Drift Coefficient</span>
+                          <span className="font-mono text-[9px] text-[var(--app-text-disabled)] bg-[var(--app-surface)] px-1.5 py-0.5 rounded">r = Cov(X,Y)/(σ_x σ_y)</span>
+                        </div>
+                        <p className="text-xs text-[var(--app-text-disabled)] leading-relaxed mt-1">
+                          Measures linear correlation of severity over time. A negative drift indicates a trend towards recovery.
+                        </p>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-end">
+                        <div>
+                          <span className={`text-2xl font-bold tracking-tight ${driftMetric.color}`}>{driftMetric.value}</span>
+                          <span className="text-[10px] font-mono text-[var(--app-text-disabled)] ml-1">coeff</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-[var(--app-text-muted)] bg-[var(--app-surface)] px-2 py-1 rounded-full">{driftMetric.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            </WidgetErrorBoundary>
+
 
             {(showRiskCard || showTrendChart) && (
               <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6">
