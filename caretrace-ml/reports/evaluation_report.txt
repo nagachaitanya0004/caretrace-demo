@@ -1,18 +1,18 @@
 CareTrace AI Model Evaluation Report
 ==================================================
 
-Accuracy:  0.9100
-Weighted F1-Score: 0.9083
-Weighted Precision: 0.9188
-Weighted Recall: 0.9100
+Accuracy:  0.4702
+Weighted F1-Score: 0.3652
+Weighted Precision: 0.3698
+Weighted Recall: 0.4702
 
 Classification Report Detail:
               precision    recall  f1-score   support
 
-        high       1.00      0.81      0.90        16
-         low       0.87      1.00      0.93        52
-      medium       0.96      0.81      0.88        32
+        high       0.17      0.00      0.01      4001
+         low       0.49      0.88      0.63      9919
+      medium       0.30      0.11      0.17      6080
 
-    accuracy                           0.91       100
-   macro avg       0.94      0.88      0.90       100
-weighted avg       0.92      0.91      0.91       100
+    accuracy                           0.47     20000
+   macro avg       0.32      0.33      0.27     20000
+weighted avg       0.37      0.47      0.37     20000
