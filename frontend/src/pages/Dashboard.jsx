@@ -280,6 +280,23 @@ function DashboardInner() {
     return streak;
   }, [safeSymptoms]);
 
+  const last7DaysStreakLog = useMemo(() => {
+    const days = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(now.getDate() - i);
+      const dateString = d.toDateString();
+      const hasLog = safeSymptoms.some(s => new Date(s?.date ?? 0).toDateString() === dateString);
+      days.push({
+        label: d.toLocaleDateString(i18n.language, { weekday: 'narrow' }), // e.g. "M", "T"
+        hasLog,
+        isToday: i === 0,
+      });
+    }
+    return days;
+  }, [safeSymptoms, i18n.language]);
+
   // Profile Completion Score
   const profileCompletionScore = useMemo(() => {
     if (!userProfile) return 0;
@@ -325,71 +342,71 @@ function DashboardInner() {
 
   // Mathematical Biomarkers Engine
   const entropyMetric = useMemo(() => {
-    if (!safeSymptoms.length) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    if (!safeSymptoms.length) return { value: '—', status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
     const counts = {};
     safeSymptoms.forEach(s => {
       const name = String(s?.symptom ?? '').toLowerCase().trim();
       if (name) counts[name] = (counts[name] ?? 0) + 1;
     });
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    if (total === 0) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    if (total === 0) return { value: '—', status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
     let entropy = 0;
     Object.values(counts).forEach(count => {
       const p = count / total;
       entropy -= p * Math.log2(p);
     });
-    const rounded = parseFloat(entropy.toFixed(2));
-    let status = 'Highly Predictable';
+    const consistencyScore = Math.max(0, Math.min(100, Math.round((1 - entropy / 2.0) * 100)));
+    let status = 'Consistent';
     let color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
-    if (rounded > 1.5) {
-      status = 'High Randomness';
+    if (consistencyScore < 50) {
+      status = 'Highly Variable';
       color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
-    } else if (rounded > 0.8) {
-      status = 'Moderate Variation';
+    } else if (consistencyScore < 80) {
+      status = 'Moderate Changes';
       color = 'text-[var(--badge-warning-text)] bg-[var(--badge-warning-bg)] border-[var(--app-warning-border)]';
     }
     return {
-      value: rounded,
+      value: `${consistencyScore}%`,
       status,
       color,
-      explanation: rounded > 1.5
-        ? 'Symptom distribution is highly random and unpredictable.'
-        : rounded > 0.8
-          ? 'Symptom distribution is structured with mild changes.'
-          : 'Symptom distribution follows a highly structured, recurring pattern.'
+      explanation: consistencyScore >= 80
+        ? 'Your symptom patterns follow a highly consistent, predictable routine.'
+        : consistencyScore >= 50
+          ? 'Your symptom patterns show moderate day-to-day changes.'
+          : 'Your symptom occurrences are highly variable and scattered.'
     };
   }, [safeSymptoms]);
 
   const dispersionMetric = useMemo(() => {
-    if (!safeSymptoms.length) return { value: 0, status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
+    if (!safeSymptoms.length) return { value: '—', status: 'N/A', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'No symptoms logged' };
     const severities = safeSymptoms.map(s => Number(s?.severity ?? 0));
     const mean = severities.reduce((a, b) => a + b, 0) / severities.length;
     const variance = severities.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / severities.length;
     const stdDev = Math.sqrt(variance);
-    const rounded = parseFloat(stdDev.toFixed(2));
-    let status = 'Stable Intensity';
+    const volatilityScore = Math.max(0, Math.min(100, Math.round((stdDev / 5.0) * 100)));
+    let status = 'Low Volatility';
     let color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
-    if (rounded >= 2.0) {
-      status = 'High Volatility';
+    if (volatilityScore >= 40) {
+      status = 'High Swings';
       color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
-    } else if (rounded >= 1.0) {
+    } else if (volatilityScore >= 20) {
       status = 'Moderate Swings';
       color = 'text-[var(--badge-warning-text)] bg-[var(--badge-warning-bg)] border-[var(--app-warning-border)]';
     }
     return {
-      value: rounded,
+      value: `${volatilityScore}%`,
       status,
       color,
-      explanation: rounded >= 2.0
-        ? 'Large severity fluctuations; symptoms swing between extreme intensities.'
-        : rounded >= 1.0
-          ? 'Moderate volatility in discomfort levels.'
-          : 'Highly consistent symptom severity baseline.'
+      explanation: volatilityScore >= 40
+        ? 'Large severity fluctuations; discomfort levels swing between extreme intensities.'
+        : volatilityScore >= 20
+          ? 'Moderate volatility in logged symptom severity levels.'
+          : 'Highly consistent symptom severity; discomfort holds at a flat baseline.'
     };
   }, [safeSymptoms]);
 
   const driftMetric = useMemo(() => {
-    if (safeSymptoms.length < 2) return { value: 0, status: 'Stationary', color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'Requires at least 2 logs to calculate temporal trend.' };
+    if (safeSymptoms.length < 2) return { value: '—', status: 'Steady', color: 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]', explanation: 'Requires at least 2 logs to calculate progression trends.' };
     const sorted = [...safeSymptoms].sort((a, b) => new Date(a?.date ?? 0).getTime() - new Date(b?.date ?? 0).getTime());
     const x = sorted.map(s => new Date(s?.date ?? 0).getTime());
     const y = sorted.map(s => Number(s?.severity ?? 0));
@@ -410,27 +427,27 @@ function DashboardInner() {
     }
     if (denX === 0 || denY === 0) {
       return {
-        value: 0,
-        status: 'Stationary',
-        color: 'text-[var(--app-text-muted)] bg-[var(--app-surface-soft)] border-[var(--app-border)]',
-        explanation: 'Symptom severity or timestamps are static.'
+        value: '0%',
+        status: 'Steady',
+        color: 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]',
+        explanation: 'Symptom severity or timestamps are stable; no linear changes.'
       };
     }
     const r = num / Math.sqrt(denX * denY);
-    const rounded = parseFloat(r.toFixed(2));
-    let status = 'Stationary';
+    const strengthVal = Math.round(Math.abs(r) * 100);
+    let status = 'Steady';
     let color = 'text-[var(--app-text-disabled)] bg-[var(--app-surface-soft)] border-[var(--app-border)]';
-    let explanation = 'Symptoms are holding at a steady baseline with no linear progression.';
-    if (rounded < -0.2) {
-      status = 'Improving (Negative)';
+    let explanation = 'Symptom logs show no significant linear progression trend.';
+    if (r < -0.2) {
+      status = 'Improving';
       color = 'text-[var(--badge-success-text)] bg-[var(--badge-success-bg)] border-[var(--app-success-border)]';
-      explanation = 'Symptom severity is decreasing over time. Positive recovery velocity.';
-    } else if (rounded > 0.2) {
-      status = 'Escalating (Positive)';
+      explanation = 'Symptom severity is decreasing over time, showing a positive recovery trend.';
+    } else if (r > 0.2) {
+      status = 'Increasing';
       color = 'text-[var(--badge-danger-text)] bg-[var(--badge-danger-bg)] border-[var(--app-danger-border)]';
-      explanation = 'Symptom severity shows a rising trend. Clinical review advised.';
+      explanation = 'Symptom severity shows a rising trend over time; closer monitoring advised.';
     }
-    return { value: rounded, status, color, explanation };
+    return { value: `${strengthVal}%`, status, color, explanation };
   }, [safeSymptoms]);
 
   // Medical Reports Integration
@@ -723,17 +740,16 @@ function DashboardInner() {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 120, damping: 14 }}
-      className="p-6 rounded-[var(--radius-xl)] bg-gradient-to-r from-[var(--brand-accent)]/12 via-[var(--app-surface-soft)] to-[var(--app-info)]/10 border border-[var(--brand-accent)]/15 shadow-[var(--shadow-l1)] relative overflow-hidden"
+      className="p-6 rounded-[var(--radius-xl)] bg-[var(--app-surface)] border border-[var(--app-border-soft)] shadow-sm relative overflow-hidden"
     >
-      <div className="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-gradient-to-br from-[var(--brand-accent)]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/20 border border-[var(--brand-accent)]/30 rounded-full">
+            <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">
               HEALTH PROFILE
             </span>
             {streak > 0 && (
-              <span className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
+              <span className="flex items-center gap-1 text-[10px] font-semibold text-[var(--badge-warning-text)] bg-[var(--badge-warning-bg)] border border-[var(--app-warning-border)] px-2.5 py-0.5 rounded-full">
                 <svg className="w-3.5 h-3.5 fill-current animate-pulse" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 {streak}-day active streak
               </span>
@@ -743,23 +759,23 @@ function DashboardInner() {
             {getGreeting()}, {userProfile?.name || user?.email?.split('@')[0] || t('dashboard.greeting_default')}
           </h1>
           <p className="text-sm text-[var(--app-text-muted)] mt-1 font-medium">
-            {dateStr} · Real-time AI diagnostic telemetry active.
+            {dateStr} · Real-time AI diagnostic context active.
           </p>
         </div>
 
-        <div className="bg-[var(--app-surface)]/80 backdrop-blur-md border border-[var(--app-border)] p-4 rounded-2xl flex items-center justify-between gap-4 w-full md:w-auto shadow-sm shrink-0">
+        <div className="bg-[var(--app-surface-soft)] border border-[var(--app-border)] p-4 rounded-2xl flex items-center justify-between gap-6 w-full md:w-auto shrink-0">
           <div>
             <p className="text-xs font-bold text-[var(--app-text)] uppercase tracking-wider">DAILY CHECK-IN</p>
             <p className="text-[10px] text-[var(--app-text-muted)] mt-0.5">How are you feeling today?</p>
           </div>
           <motion.button
-            whileHover={{ scale: 1.04, y: -1 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/symptoms')}
-            className="px-4 py-2 text-xs font-bold text-[var(--brand-accent-on)] bg-[var(--brand-accent)] hover:bg-[var(--app-accent-hover)] rounded-xl shadow-[var(--shadow-l1)] hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-3.5 py-1.5 text-xs font-bold text-[var(--brand-accent-on)] bg-[var(--brand-accent)] hover:bg-[var(--app-accent-hover)] rounded-xl transition-all flex items-center gap-1.5 cursor-pointer border border-[var(--brand-accent)]/20"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
-            Log How You Feel
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
+            Log Symptoms
           </motion.button>
         </div>
       </div>
@@ -768,83 +784,82 @@ function DashboardInner() {
 
   // Biomarkers card markup
   const biomarkerPanelJSX = (
-    <WidgetErrorBoundary title="Biomarker Dynamics">
+    <WidgetErrorBoundary title="Symptom Patterns & Trends">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.3 }}
         className="mt-6"
       >
-        <Card elevation={1} className="relative overflow-hidden border border-[var(--app-border-soft)] hover:border-[var(--brand-accent)]/30 transition-all duration-300">
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-[var(--brand-accent)]/5 rounded-full blur-2xl pointer-events-none" />
+        <Card elevation={1} className="relative overflow-hidden border border-[var(--app-border-soft)] hover:border-[var(--brand-accent)]/20 transition-all duration-300">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 pb-4 border-b border-[var(--app-border-soft)]">
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/15 border border-[var(--brand-accent)]/20 rounded">BIOMARKERS</span>
-                <span className="text-[10px] text-[var(--app-text-disabled)] font-mono">v1.2 // CLINICAL PROTOCOL</span>
+                <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-[var(--brand-accent-on)] bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 rounded">ANALYTICS</span>
+                <span className="text-[10px] text-[var(--app-text-disabled)] font-mono">HEALTH PATTERN DETECTION</span>
               </div>
-              <h2 className="text-lg font-bold text-[var(--app-text)] mt-1">Biomarker Dynamics & Advanced Diagnostics</h2>
+              <h2 className="text-lg font-bold text-[var(--app-text)] mt-1">Symptom Patterns & Trends</h2>
             </div>
             <p className="text-xs text-[var(--app-text-muted)] max-w-sm mt-1 md:mt-0 leading-snug">
-              Real-time statistical validation of symptom occurrences, severity volatility, and regression vector drift.
+              Real-time statistical evaluation of symptom occurrences, severity shifts, and general recovery direction.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Entropy */}
+            {/* Pattern Consistency */}
             <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Entropy Index (H)</span>
+                  <span className="text-xs font-bold text-[var(--app-text-muted)] uppercase tracking-wider">Pattern Consistency</span>
                   <Badge className={`text-[10px] px-2 py-0.5 border ${entropyMetric.color}`}>{entropyMetric.status}</Badge>
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
                   <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{entropyMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">bits</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">score</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{entropyMetric.explanation}</p>
               </div>
               <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
-                <span>FORMULA: -∑ p_i log₂ p_i</span>
-                <span>PREDICTABILITY</span>
+                <span>METRIC: ROUTINE SCORE</span>
+                <span>CONSISTENCY</span>
               </div>
             </div>
 
-            {/* Dispersion */}
+            {/* Severity Volatility */}
             <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Dispersion (σ)</span>
+                  <span className="text-xs font-bold text-[var(--app-text-muted)] uppercase tracking-wider">Severity Volatility</span>
                   <Badge className={`text-[10px] px-2 py-0.5 border ${dispersionMetric.color}`}>{dispersionMetric.status}</Badge>
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
                   <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{dispersionMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">severity</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">rate</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{dispersionMetric.explanation}</p>
               </div>
               <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
-                <span>FORMULA: √Var(X)</span>
+                <span>METRIC: FLUCTUATION RATE</span>
                 <span>VOLATILITY</span>
               </div>
             </div>
 
-            {/* Drift */}
+            {/* Progression Trend */}
             <div className="p-4 bg-[var(--app-surface-soft)] rounded-[var(--radius-lg)] border border-[var(--app-border-soft)] flex flex-col justify-between hover:shadow-sm transition-all duration-200 group">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[var(--app-text-muted)] uppercase tracking-wider">Temporal Drift (r)</span>
+                  <span className="text-xs font-bold text-[var(--app-text-muted)] uppercase tracking-wider">Progression Trend</span>
                   <Badge className={`text-[10px] px-2 py-0.5 border ${driftMetric.color}`}>{driftMetric.status}</Badge>
                 </div>
                 <div className="flex items-baseline gap-1.5 my-2">
-                  <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{driftMetric.value > 0 ? `+${driftMetric.value}` : driftMetric.value}</span>
-                  <span className="text-xs text-[var(--app-text-disabled)]">coeff</span>
+                  <span className="text-3xl font-extrabold text-[var(--app-text)] tracking-tight font-mono">{driftMetric.value}</span>
+                  <span className="text-xs text-[var(--app-text-disabled)]">trend strength</span>
                 </div>
                 <p className="text-xs text-[var(--app-text-muted)] leading-relaxed mt-2">{driftMetric.explanation}</p>
               </div>
               <div className="mt-4 pt-3 border-t border-[var(--app-border-soft)] flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
-                <span>FORMULA: Cov(X,Y)/σₓσy</span>
-                <span>RECOVERY RATE</span>
+                <span>METRIC: PROGRESSION VECTOR</span>
+                <span>TREND VECTOR</span>
               </div>
             </div>
           </div>
@@ -1026,17 +1041,84 @@ function DashboardInner() {
                         </div>
                       </div>
 
+                      {/* Custom Visual Trackers */}
                       <div className="mt-5 pt-3 border-t border-[var(--app-border-soft)]">
-                        <div className="w-full h-1.5 bg-[var(--app-surface-soft)] rounded-full overflow-hidden border border-[var(--app-border-soft)]">
-                          <div
-                            className={`h-full ${card.barColor} transition-all duration-500 ease-out`}
-                            style={{ width: `${card.percent}%` }}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center mt-1 text-[9px] text-[var(--app-text-disabled)] font-mono">
-                          <span>RATIO</span>
-                          <span>{card.percent}%</span>
-                        </div>
+                        {card.key === 'wellness-index' && (
+                          <div className="flex flex-col gap-1.5">
+                            <div className="w-full h-1.5 bg-[var(--app-surface-soft)] rounded-full overflow-hidden border border-[var(--app-border-soft)]">
+                              <div
+                                className={`h-full ${card.barColor} transition-all duration-500 ease-out`}
+                                style={{ width: `${card.percent}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                              <span>ALIGNMENT</span>
+                              <span>{card.value}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {card.key === 'avg-severity' && (
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1">
+                              {[...Array(10)].map((_, idx) => {
+                                const dotValue = idx + 1;
+                                const valNum = parseFloat(avgSev);
+                                let colorClass = 'bg-[var(--app-surface-soft)] border border-[var(--app-border)]';
+                                if (!isNaN(valNum) && dotValue <= Math.round(valNum)) {
+                                  colorClass = valNum < 3 ? 'bg-[var(--badge-success-text)]'
+                                               : valNum < 6 ? 'bg-[var(--badge-warning-text)]'
+                                               : 'bg-[var(--badge-danger-text)]';
+                                }
+                                return (
+                                  <div
+                                    key={idx}
+                                    className={`w-2.5 h-2.5 rounded-full ${colorClass} transition-colors duration-300`}
+                                    title={`Severity ${dotValue}`}
+                                  />
+                                );
+                              })}
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                              <span>SCALE (1-10)</span>
+                              <span>{avgSev}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {card.key === 'logging-streak' && (
+                          <div className="flex gap-1.5 justify-between">
+                            {last7DaysStreakLog.map((day, idx) => (
+                              <div key={idx} className="flex flex-col items-center gap-0.5">
+                                <span className={`text-[8px] font-bold ${day.isToday ? 'text-[var(--brand-accent)]' : 'text-[var(--app-text-disabled)]'}`}>
+                                  {day.label}
+                                </span>
+                                <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${
+                                  day.hasLog
+                                    ? 'bg-[var(--brand-accent)] text-[var(--brand-accent-on)]'
+                                    : 'bg-[var(--app-surface-soft)] border border-[var(--app-border)] text-[var(--app-text-disabled)]'
+                                }`}>
+                                  {day.hasLog ? '✓' : ''}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {card.key === 'profile-completion' && (
+                          <div className="flex flex-col gap-1.5">
+                            <div className="w-full h-1.5 bg-[var(--app-surface-soft)] rounded-full overflow-hidden border border-[var(--app-border-soft)]">
+                              <div
+                                className="h-full bg-blue-500 transition-all duration-500 ease-out"
+                                style={{ width: `${profileCompletionScore}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] text-[var(--app-text-disabled)] font-mono">
+                              <span>COMPLETE</span>
+                              <span>{profileCompletionScore}%</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </Card>
                   </motion.button>
