@@ -305,11 +305,11 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="flex h-full flex-col justify-center bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
+    <div className="flex h-full flex-col bg-[var(--app-bg)] px-4 py-12 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
       <div className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 max-w-7xl mx-auto w-full">
         <PublicNavbar embedded hideNavAuth />
       </div>
-      <div className="card-premium relative mx-auto w-full max-w-xl p-8 transition-opacity duration-300 slide-up sm:p-10">
+      <div className="card-premium relative mx-auto my-auto w-full max-w-xl p-8 transition-opacity duration-300 slide-up sm:p-10">
         <CloudSyncIcon onRetry={handleRetry} />
 
         <div className="mb-8">

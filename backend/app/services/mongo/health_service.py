@@ -24,6 +24,8 @@ class HealthService:
     async def create_health_metrics(user_ref: str, payload: Any) -> Dict[str, Any]:
         db = get_database()
         doc = payload.model_dump(exclude_none=True)
+        if 'blood_sugar_mg_dl' in doc and doc['blood_sugar_mg_dl'] is not None:
+            doc['blood_sugar_mg_dl'] = float(doc['blood_sugar_mg_dl'])
         now = datetime.utcnow()
         doc.update({'user_id': user_ref, 'recorded_at': now, 'created_at': now})
         result = await db.health_metrics.insert_one(doc)

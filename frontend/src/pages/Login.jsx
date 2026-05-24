@@ -116,12 +116,12 @@ function Login() {
   };
 
   return (
-    <div className="h-full bg-[var(--app-bg)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
+    <div className="flex h-full flex-col bg-[var(--app-bg)] py-12 px-4 sm:px-6 lg:px-8 relative overflow-y-auto overflow-x-hidden">
       <div className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 max-w-7xl mx-auto w-full">
         <PublicNavbar variant="light" embedded hideNavAuth />
       </div>
 
-      <div className="relative w-full max-w-md mx-auto pt-20 sm:pt-24">
+      <div className="relative w-full max-w-md mx-auto my-auto pt-20 sm:pt-24">
         <div className="text-center mb-8 fade-in">
           <h1 className="text-3xl font-bold text-[var(--app-text)] tracking-tight mb-2">{t('auth.login_title')}</h1>
           <p className="text-[var(--app-text-muted)] text-sm">{t('auth.login_subtitle')}</p>

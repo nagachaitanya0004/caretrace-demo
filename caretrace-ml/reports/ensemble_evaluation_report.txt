@@ -1,0 +1,11 @@
+Classification Report - ensemble
+========================================
+              precision    recall  f1-score   support
+
+        high       0.21      0.05      0.08       800
+         low       0.50      0.78      0.61      1984
+      medium       0.29      0.17      0.21      1216
+
+    accuracy                           0.45      4000
+   macro avg       0.33      0.33      0.30      4000
+weighted avg       0.38      0.45      0.38      4000

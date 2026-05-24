@@ -1,0 +1,24 @@
+{
+    "winning_model": "xgboost",
+    "evaluation_metrics": {
+        "xgboost": {
+            "accuracy": 0.377,
+            "macro_f1": 0.33586867307097207,
+            "weighted_f1": 0.38037127240506363,
+            "macro_auc": 0.5026763062705343
+        },
+        "lightgbm": {
+            "accuracy": 0.3535,
+            "macro_f1": 0.32422156847013145,
+            "weighted_f1": 0.36201226122380686,
+            "macro_auc": 0.4983168749734042
+        },
+        "ensemble": {
+            "accuracy": 0.4475,
+            "macro_f1": 0.30018148513398774,
+            "weighted_f1": 0.38246575302722324,
+            "macro_auc": 0.49437880086793795
+        }
+    },
+    "evaluation_timestamp": "2026-05-23T14:53:46.272146"
+}

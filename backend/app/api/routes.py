@@ -309,7 +309,12 @@ async def update_user(request: Request, payload: UserUpdate, current_user: dict 
     weight = updated.get('weight_kg') or current_user.get('weight_kg')
     bmi = compute_bmi(height, weight)
     if bmi is not None:
-        updated['bmi'] = bmi
+        updated['bmi'] = float(bmi)
+        
+    if 'height_cm' in updated and updated['height_cm'] is not None:
+        updated['height_cm'] = float(updated['height_cm'])
+    if 'weight_kg' in updated and updated['weight_kg'] is not None:
+        updated['weight_kg'] = float(updated['weight_kg'])
     
     # Update via Service (Primary: MongoDB)
     updated_user = await UserService.update_profile(oid, updated)
@@ -568,6 +573,10 @@ async def upsert_lifestyle(request: Request, payload: LifestyleDataUpsert, curre
     user_ref = get_user_ref(current_user)
     now = datetime.utcnow()
     fields = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if 'sleep_hours' in fields and fields['sleep_hours'] is not None:
+        fields['sleep_hours'] = float(fields['sleep_hours'])
+    if 'water_intake_liters' in fields and fields['water_intake_liters'] is not None:
+        fields['water_intake_liters'] = float(fields['water_intake_liters'])
     existing = await db.lifestyle_data.find_one({'user_id': user_ref})
     if existing:
         fields['updated_at'] = now

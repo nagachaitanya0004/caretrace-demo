@@ -1,0 +1,11 @@
+Classification Report - xgboost
+========================================
+              precision    recall  f1-score   support
+
+        high       0.20      0.22      0.21       800
+         low       0.51      0.48      0.50      1984
+      medium       0.30      0.31      0.30      1216
+
+    accuracy                           0.38      4000
+   macro avg       0.34      0.34      0.34      4000
+weighted avg       0.38      0.38      0.38      4000

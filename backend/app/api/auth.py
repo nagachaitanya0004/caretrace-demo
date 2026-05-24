@@ -90,13 +90,18 @@ async def signup(request: Request, payload: UserCreate):
         "email": email_norm,
         "name": payload_data.get("name", ""),
         "hashed_password": hashed_pw,
-        "age": payload_data.get("age"),
-        "gender": normalize_gender(payload_data.get("gender", "")),
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
         "is_onboarded": False,
         "meta": {}
     }
+    
+    if "age" in payload_data and payload_data["age"] is not None:
+        mongo_doc["age"] = payload_data["age"]
+    if "gender" in payload_data and payload_data["gender"]:
+        mongo_doc["gender"] = normalize_gender(payload_data["gender"])
+    if "lifestyle" in payload_data and payload_data["lifestyle"]:
+        mongo_doc["lifestyle"] = payload_data["lifestyle"]
 
     try:
         result = await db.users.insert_one(mongo_doc)

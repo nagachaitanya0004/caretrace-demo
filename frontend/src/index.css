@@ -390,7 +390,48 @@ textarea {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── Button Glow Classes (Removed in favor of Tailwind tokens) ───────────────────── */
+/* ─── Interactive Element Cursors and Hover Polish ─── */
+button,
+a,
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"],
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+a:disabled,
+select:disabled,
+input:disabled,
+[role="button"]:disabled,
+button[disabled],
+a[disabled],
+select[disabled],
+[role="button"][disabled] {
+  cursor: not-allowed !important;
+}
+
+/* Premium micro-interactions on hover/active for buttons and role="button" components */
+button:not(:disabled):hover,
+input[type="button"]:not(:disabled):hover,
+input[type="submit"]:not(:disabled):hover,
+input[type="reset"]:not(:disabled):hover,
+[role="button"]:not(:disabled):hover {
+  transform: translateY(-1.5px);
+}
+
+button:not(:disabled):active,
+input[type="button"]:not(:disabled):active,
+input[type="submit"]:not(:disabled):active,
+input[type="reset"]:not(:disabled):active,
+[role="button"]:not(:disabled):active {
+  transform: translateY(0) scale(0.97);
+}
 
 /* ─── Dark Mode Glow Overrides (Removed in favor of Tailwind) ───────────────────── */
 
